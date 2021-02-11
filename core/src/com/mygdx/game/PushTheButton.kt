@@ -16,7 +16,7 @@ class PushTheButton : ApplicationAdapter() {
 
     val id = "PC de Hadrien"
     val ip = "157.159.41.36" //L'ip de mon PC fixe
-    val port = 9201
+    val port = 6969
 
     override fun create() {
         batch = SpriteBatch()

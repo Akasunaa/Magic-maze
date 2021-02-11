@@ -10,6 +10,14 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
+// Cette classe existe uniquement parce que j'ai aucune idée de comment faire ça en Kotlin
+// Si jamais on arrive à le faire, cette classe pourra être supprimée simplement
+// Mais en attendant, petit message informatif
+// Quand j'ai écrit ce code, seuls quelques dieux et moi le comprennaient
+// Maintenant, seuls les dieux le comprennent
+// Alors je vous conseille de prier très fort Athéna pour qu'elle vous aide
+// Cordialement
+
 public class ThreadMaker {
     private Thread thread;
     ThreadMaker (final int port) {
@@ -20,23 +28,21 @@ public class ThreadMaker {
                 // 0 means no timeout.  Probably not the greatest idea in production!
                 serverSocketHint.acceptTimeout = 0;
 
-                // Create the socket server using TCP protocol and listening on 9021
-                // Only one app can listen to a port at a time, keep in mind many ports are reserved
-                // especially in the lower numbers ( like 21, 80, etc )
+                // On créé la socket serveur en utilisant le protocol TCP, et en écoutant le port donné
                 ServerSocket serverSocket = Gdx.net.newServerSocket(Net.Protocol.TCP, port, serverSocketHint);
 
-                // Loop forever
+                // Loopity loop
                 while (true) {
-                    // Create a socket
+                    // On créé une socket
                     Socket socket = serverSocket.accept(null);
 
-                    // Read data from the socket into a BufferedReader
+                    // On lit la data depuis la socket dans un buffer
                     BufferedReader buffer = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 
                     try {
-                        // Read to the next newline (\n) and display that text on labelMessage
+                        // Affiche la ligne lue
                         System.out.println(buffer.readLine());
-                    } catch (IOException e) {
+                    } catch (IOException e) { //ça c'est les erreurs classique IO
                         e.printStackTrace();
                     }
                 }

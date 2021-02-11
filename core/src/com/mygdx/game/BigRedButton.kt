@@ -59,6 +59,8 @@ class BigRedButton(idleTexture: Texture, pushedTexture: Texture, x:Float, y:Floa
     fun isClicked(iX:Float, iY:Float, id:String, ip:String) {
         if (x <= iX && iX <= x + width) {
                 if (y <= iY && iY <= y + height) {
+                    // Peut être voir pour faire de cela une fonction à part entière ?
+                    // Pour que ce soit plus propre peut être ?
                     val textToSend = "Button Pressed by $id! \n"
                     val socketHints = SocketHints()
                     socketHints.connectTimeout = 4000
@@ -68,6 +70,7 @@ class BigRedButton(idleTexture: Texture, pushedTexture: Texture, x:Float, y:Floa
                     } catch(e: IOException) {
                         e.printStackTrace()
                     }
+                    // Fin de l'envoi du message
                     active = pushed
                     counter++
                 }
