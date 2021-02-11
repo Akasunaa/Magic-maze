@@ -12,7 +12,7 @@ import java.io.InputStreamReader;
 
 public class ThreadMaker {
     private Thread thread;
-    ThreadMaker () {
+    ThreadMaker (final int port) {
         thread = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -23,7 +23,7 @@ public class ThreadMaker {
                 // Create the socket server using TCP protocol and listening on 9021
                 // Only one app can listen to a port at a time, keep in mind many ports are reserved
                 // especially in the lower numbers ( like 21, 80, etc )
-                ServerSocket serverSocket = Gdx.net.newServerSocket(Net.Protocol.TCP, 9021, serverSocketHint);
+                ServerSocket serverSocket = Gdx.net.newServerSocket(Net.Protocol.TCP, port, serverSocketHint);
 
                 // Loop forever
                 while (true) {

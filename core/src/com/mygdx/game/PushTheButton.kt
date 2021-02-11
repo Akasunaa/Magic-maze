@@ -14,8 +14,9 @@ class PushTheButton : ApplicationAdapter() {
     lateinit var coordButton: BitmapFont
     lateinit var coordMouse: BitmapFont
 
-    var id = "PC de Hadrien"
-    var ip = "157.159.193.94" //L'ip de mon PC fixe
+    val id = "PC de Hadrien"
+    val ip = "157.159.41.36" //L'ip de mon PC fixe
+    val port = 9201
 
     override fun create() {
         batch = SpriteBatch()
@@ -27,7 +28,7 @@ class PushTheButton : ApplicationAdapter() {
         coordMouse = BitmapFont()
         coordButton.setColor(0f,0f,0f,1f)
         coordMouse.setColor(0f,0f,0f,1f)
-        ThreadMaker().getThread().start()
+        ThreadMaker(port).getThread().start()
     }
 
     override fun render() {
