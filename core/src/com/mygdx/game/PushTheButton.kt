@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input
 import com.badlogic.gdx.graphics.GL20
+import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.BitmapFont
 
 class PushTheButton : ApplicationAdapter() {
@@ -13,14 +14,20 @@ class PushTheButton : ApplicationAdapter() {
     lateinit var coordButton: BitmapFont
     lateinit var coordMouse: BitmapFont
 
+    var id = "PC de Hadrien"
+    var ip = "157.159.193.94" //L'ip de mon PC fixe
+
     override fun create() {
         batch = SpriteBatch()
-        button = BigRedButton(250f, 0f, 200f, 450f)
+        button = BigRedButton(
+                Texture("redButtonIdle.png"),
+                Texture("redButtonPushed.png"),
+                250f, 0f, 200f, 450f)
         coordButton = BitmapFont()
         coordMouse = BitmapFont()
         coordButton.setColor(0f,0f,0f,1f)
         coordMouse.setColor(0f,0f,0f,1f)
-
+        ThreadMaker().getThread().start()
     }
 
     override fun render() {
@@ -35,18 +42,8 @@ class PushTheButton : ApplicationAdapter() {
         if (button.isClickable())
             if (Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
                 //println("Souris")
-                button.isClicked(Gdx.input.getX().toFloat(), Gdx.input.getY().toFloat())
+                button.isClicked(Gdx.input.getX().toFloat(), Gdx.input.getY().toFloat(), id, ip)
             }
-
-        // Useless but worth keeping
-        if (Gdx.input.isKeyPressed(Input.Keys.LEFT))
-            button.translateX( -1 )
-        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT))
-            button.translateX( 1 )
-        if (Gdx.input.isKeyPressed(Input.Keys.UP))
-            button.translateY( 1 )
-        if (Gdx.input.isKeyPressed(Input.Keys.DOWN))
-            button.translateY( -1 )
 
         button.update(batch)
         batch.end()
