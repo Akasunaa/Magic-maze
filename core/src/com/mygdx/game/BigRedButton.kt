@@ -63,6 +63,7 @@ class BigRedButton(idleTexture: Texture, pushedTexture: Texture, x:Float, y:Floa
         socketHints.connectTimeout = 4000
         val socket = Gdx.net.newClientSocket(Net.Protocol.TCP,ip,port,socketHints)
         try {
+            println("Sending Message")
             socket.getOutputStream().write(message.toByteArray())
         } catch(e: IOException) {
             e.printStackTrace()

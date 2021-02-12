@@ -32,8 +32,7 @@ class PushTheButton : ApplicationAdapter() {
         coordButton.setColor(0f,0f,0f,1f)
         coordMouse.setColor(0f,0f,0f,1f)
         if (isServer) {
-            val thread = ThreadMaker(port, button).makeThread()
-            thread.start()
+            ThreadMaker(port, button).thread.start()
         } // On commence l'écoute
     }
 
