@@ -7,6 +7,7 @@ import com.badlogic.gdx.Input
 import com.badlogic.gdx.graphics.GL20
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.BitmapFont
+import java.net.InetAddress
 
 class PushTheButton : ApplicationAdapter() {
     lateinit var batch: SpriteBatch
@@ -14,8 +15,9 @@ class PushTheButton : ApplicationAdapter() {
     lateinit var coordButton: BitmapFont
     lateinit var coordMouse: BitmapFont
 
-    val id = "PC de Hadrien"
     val ip = "157.159.41.36" //L'ip de mon PC fixe
+    val myIp = InetAddress.getLocalHost()
+    val id = myIp.getHostName()
     val port = 6969
 
     override fun create() {
