@@ -28,7 +28,7 @@ class PushTheButton : ApplicationAdapter() {
         coordMouse = BitmapFont()
         coordButton.setColor(0f,0f,0f,1f)
         coordMouse.setColor(0f,0f,0f,1f)
-        //ThreadMaker(port).getThread().start() // On commence l'écoute
+        ThreadMaker(port).getThread().start() // On commence l'écoute
     }
 
     override fun render() {
