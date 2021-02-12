@@ -15,10 +15,11 @@ class PushTheButton : ApplicationAdapter() {
     lateinit var coordButton: BitmapFont
     lateinit var coordMouse: BitmapFont
 
-    val ip = "157.159.41.36" //L'ip de mon PC fixe
-    val myIp = InetAddress.getLocalHost()
-    val id = myIp.getHostName()
+    val serverIP = "157.159.41.36" //L'ip de mon PC fixe
+    val ip = InetAddress.getLocalHost()
+    val id = ip.hostName
     val port = 6969
+    val isServer = true
 
     override fun create() {
         batch = SpriteBatch()
@@ -30,7 +31,7 @@ class PushTheButton : ApplicationAdapter() {
         coordMouse = BitmapFont()
         coordButton.setColor(0f,0f,0f,1f)
         coordMouse.setColor(0f,0f,0f,1f)
-        ThreadMaker(port, button).getThread().start() // On commence l'écoute
+        if (isServer) ThreadMaker(port, button).makeThread().start() // On commence l'écoute
     }
 
     override fun render() {
@@ -45,7 +46,7 @@ class PushTheButton : ApplicationAdapter() {
         if (button.isClickable() && Gdx.input.isButtonPressed(Input.Buttons.LEFT))
             if (button.isClicked(Gdx.input.getX().toFloat(), Gdx.input.getY().toFloat())) {
                 //println("Souris")
-                button.onClickedLocally(id, ip, port)
+                button.onClickedLocally(id, serverIP, port)
                 //button.onClickedRemotely()
             }
 

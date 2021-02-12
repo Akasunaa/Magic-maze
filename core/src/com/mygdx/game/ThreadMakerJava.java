@@ -18,9 +18,11 @@ import java.io.InputStreamReader;
 // Alors je vous conseille de prier très fort Athéna pour qu'elle vous aide
 // Cordialement
 
-public class ThreadMaker {
-    private Thread thread;
-    ThreadMaker (final int port, final BigRedButton button) {
+public class ThreadMakerJava {
+    Thread thread;
+    BigRedButton button;
+    ThreadMakerJava(final int port, final BigRedButton button) {
+        this.button = button;
         thread = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -41,6 +43,8 @@ public class ThreadMaker {
 
                     try {
                         // Affiche la ligne lue
+                        // Je vais sans doute créer une fonction plus tard,
+                        // dont le but sera de récupérer le buffer.readLine() et fera les bonnes actions avec ça
                         System.out.println(buffer.readLine());
                         button.onClickedRemotely();
                     } catch (IOException e) { //ça c'est les erreurs classique IO
@@ -49,9 +53,5 @@ public class ThreadMaker {
                 }
             }
         });
-    }
-
-    public Thread getThread() {
-        return thread;
     }
 }
