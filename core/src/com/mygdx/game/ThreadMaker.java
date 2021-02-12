@@ -49,8 +49,8 @@ public class ThreadMaker {
                         dont le but sera de récupérer le buffer.readLine()
                         et fera les bonnes actions avec ça
                          */
-                        String message = (buffer.readLine());
-                        System.out.println(message);
+
+                        System.out.println(buffer.readLine());
                         //key.decryptMessage(message,button);
                         button.onClickedRemotely();
                     } catch (IOException e) { //ça c'est les erreurs classique IO
