@@ -12,24 +12,25 @@ import java.lang.System.load
 
 
 
-class BigRedButton(idleTexture: Texture, pushedTexture: Texture, x:Float, y:Float, width:Float, height:Float) {
+class BigRedButton(idleTexture: Texture, pushedTexture: Texture, x:Float, y:Float, width:Float, height:Float, cooldown: Int) {
     var x:Float
     var y:Float
     var width:Float
     var height:Float
-    var counter:Int = 0
 
     val idle :  Sprite = Sprite(idleTexture)
     val pushed: Sprite = Sprite(pushedTexture)
     var active:Sprite = idle
 
-
+    var startTime:Long = 0 // Utile pour le cooldown
+    val cooldown:Int
 
     init {
         this.x = x
         this.y = y
         this.width = width
         this.height = height
+        this.cooldown = cooldown
         updateSprite()
     }
 
@@ -44,49 +45,53 @@ class BigRedButton(idleTexture: Texture, pushedTexture: Texture, x:Float, y:Floa
         this.x = x
         this.y = y
     }
+    fun setSize(width:Float, height:Float) {
+        this.width = width
+        this.height = height
+    }
 
     fun stringPosition (): String {
         return "x = $x; y = $y"
     }
 
-    fun setSize(width:Float, height:Float) {
-        this.width = width
-        this.height = height
-    }
     fun update(batch: SpriteBatch) {
         active.draw(batch)
     }
-    fun isClicked(iX:Float, iY:Float, id:String, ip:String) {
+
+    fun sendMessage(message:String, ip:String, port:Int) {
+        val socketHints = SocketHints()
+        socketHints.connectTimeout = 4000
+        val socket = Gdx.net.newClientSocket(Net.Protocol.TCP,ip,port,socketHints)
+        try {
+            socket.getOutputStream().write(message.toByteArray())
+        } catch(e: IOException) {
+            e.printStackTrace()
+        }
+    }
+
+    fun isClickedLocally(iX:Float, iY:Float, id:String, ip:String,port:Int) {
         if (x <= iX && iX <= x + width) {
                 if (y <= iY && iY <= y + height) {
-                    // Peut être voir pour faire de cela une fonction à part entière ?
-                    // Pour que ce soit plus propre peut être ?
+                    // Envoie du message
                     val textToSend = "Button Pressed by $id! \n"
-                    val socketHints = SocketHints()
-                    socketHints.connectTimeout = 4000
-                    val socket = Gdx.net.newClientSocket(Net.Protocol.TCP,ip,9201,socketHints)
-                    try {
-                        socket.getOutputStream().write(textToSend.toByteArray())
-                    } catch(e: IOException) {
-                        e.printStackTrace()
-                    }
+                    sendMessage(textToSend,ip,port)
                     // Fin de l'envoi du message
                     active = pushed
-                    counter++
+                    startTime = System.currentTimeMillis()
                 }
             }
         }
 
+    fun isClickedRemotely() {
+        active = pushed
+        startTime = System.currentTimeMillis()
+    }
+
     fun isClickable(): Boolean {
-        if (counter > 30) {
-            counter = 0
+        if (System.currentTimeMillis() - startTime > cooldown) {
             active = idle
-        }
-        if (counter == 0) return true
-        else {
-            counter ++
-            return false
-        }
+            return true
+        } else return false
     }
 
     fun dispose() {
