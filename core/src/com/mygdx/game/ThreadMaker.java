@@ -20,7 +20,7 @@ import java.io.InputStreamReader;
 
 public class ThreadMaker {
     private Thread thread;
-    ThreadMaker (final int port) {
+    ThreadMaker (final int port, final BigRedButton button) {
         thread = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -42,6 +42,7 @@ public class ThreadMaker {
                     try {
                         // Affiche la ligne lue
                         System.out.println(buffer.readLine());
+                        button.onClickedRemotely();
                     } catch (IOException e) { //ça c'est les erreurs classique IO
                         e.printStackTrace();
                     }

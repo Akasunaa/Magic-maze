@@ -28,7 +28,7 @@ class PushTheButton : ApplicationAdapter() {
         coordMouse = BitmapFont()
         coordButton.setColor(0f,0f,0f,1f)
         coordMouse.setColor(0f,0f,0f,1f)
-        ThreadMaker(port).getThread().start() // On commence l'écoute
+        ThreadMaker(port, button).getThread().start() // On commence l'écoute
     }
 
     override fun render() {
@@ -40,11 +40,11 @@ class PushTheButton : ApplicationAdapter() {
         coordButton.draw(batch, button.stringPosition(), 100f,100f)
         coordMouse.draw(batch, stringMousePosition(), 100f,150f)
 
-        if (button.isClickable())
-            if (Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
+        if (button.isClickable() && Gdx.input.isButtonPressed(Input.Buttons.LEFT))
+            if (button.isClicked(Gdx.input.getX().toFloat(), Gdx.input.getY().toFloat())) {
                 //println("Souris")
-                //button.isClickedLocally(Gdx.input.getX().toFloat(), Gdx.input.getY().toFloat(), id, ip, port)
-                button.isClickedRemotely()
+                button.onClickedLocally(id, ip, port)
+                //button.onClickedRemotely()
             }
 
         button.update(batch)

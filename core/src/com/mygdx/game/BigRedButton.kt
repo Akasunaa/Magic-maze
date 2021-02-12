@@ -69,20 +69,18 @@ class BigRedButton(idleTexture: Texture, pushedTexture: Texture, x:Float, y:Floa
         }
     }
 
-    fun isClickedLocally(iX:Float, iY:Float, id:String, ip:String,port:Int) {
-        if (x <= iX && iX <= x + width) {
-                if (y <= iY && iY <= y + height) {
-                    // Envoie du message
-                    val textToSend = "Button Pressed by $id! \n"
-                    sendMessage(textToSend,ip,port)
-                    // Fin de l'envoi du message
-                    active = pushed
-                    startTime = System.currentTimeMillis()
-                }
-            }
-        }
+    fun isClicked(iX:Float, iY:Float): Boolean {return ((x <= iX && iX <= x + width) &&  (y <= iY && iY <= y + height))}
 
-    fun isClickedRemotely() {
+    fun onClickedLocally(id:String, ip:String,port:Int) {
+        // Envoie du message
+        val textToSend = "Button Pressed by $id! \n"
+        sendMessage(textToSend,ip,port)
+        // Fin de l'envoi du message
+        active = pushed
+        startTime = System.currentTimeMillis()
+    }
+
+    fun onClickedRemotely() {
         active = pushed
         startTime = System.currentTimeMillis()
     }
