@@ -19,7 +19,7 @@ class PushTheButton : ApplicationAdapter() {
     val ip = InetAddress.getLocalHost().hostAddress
     val id = InetAddress.getLocalHost().hostName
     val port = 6969
-    val isServer = true
+    val isServer = false
 
     override fun create() {
         batch = SpriteBatch()
