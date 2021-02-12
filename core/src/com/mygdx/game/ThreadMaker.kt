@@ -41,7 +41,6 @@ class ThreadMaker internal constructor(val port: Int, val button: BigRedButton) 
                     et fera les bonnes actions avec ça
                      */
                     decryptMessage(buffer.readLine())
-                    button.onClickedRemotely()
                 } catch (e: IOException) { //ça c'est les erreurs classique IO
                     e.printStackTrace()
                 }
@@ -52,8 +51,14 @@ class ThreadMaker internal constructor(val port: Int, val button: BigRedButton) 
 
     fun decryptMessage(message: String) {
         println(message)
-        when (message) {
-            "test" -> println("Tout à fait")
+        val sender = message.split(' ')[0]
+        val action = message.split(' ')[1]
+        //val receiver = message.split(' ')[2]
+        when (action) {
+            "pressed" -> {
+                println("Bouton pressé par $sender")
+                button.onClickedRemotely()
+            }
             else -> println("Nope, not at all")
         }
     }

@@ -16,8 +16,8 @@ class PushTheButton : ApplicationAdapter() {
     lateinit var coordMouse: BitmapFont
 
     val serverIP = "157.159.41.36" //L'ip de mon PC fixe
-    val ip = InetAddress.getLocalHost()
-    val id = ip.hostName
+    val ip = InetAddress.getLocalHost().hostAddress
+    val id = InetAddress.getLocalHost().hostName
     val port = 6969
     val isServer = true
 
@@ -31,7 +31,10 @@ class PushTheButton : ApplicationAdapter() {
         coordMouse = BitmapFont()
         coordButton.setColor(0f,0f,0f,1f)
         coordMouse.setColor(0f,0f,0f,1f)
-        if (isServer) ThreadMaker(port, button).makeThread().start() // On commence l'écoute
+        if (isServer) {
+            val thread = ThreadMaker(port, button).makeThread()
+            thread.start()
+        } // On commence l'écoute
     }
 
     override fun render() {
