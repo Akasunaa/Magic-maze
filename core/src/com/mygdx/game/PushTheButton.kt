@@ -21,6 +21,11 @@ class PushTheButton : ApplicationAdapter() {
     val port = 6969
     val isServer = true
 
+    var nothingDone = true
+
+    lateinit var courrier: Courrier
+    val clientList  = ClientList(2)
+
     override fun create() {
         batch = SpriteBatch()
         button = BigRedButton(
@@ -31,9 +36,12 @@ class PushTheButton : ApplicationAdapter() {
         coordMouse = BitmapFont()
         coordButton.setColor(0f,0f,0f,1f)
         coordMouse.setColor(0f,0f,0f,1f)
+
         if (isServer) {
-            ThreadMaker(port, button).thread.start()
+            ThreadMaker(port, button, clientList).thread.start()
         } // On commence l'écoute
+        courrier = Courrier(id,port,serverIP)
+
     }
 
     override fun render() {
@@ -48,10 +56,11 @@ class PushTheButton : ApplicationAdapter() {
         if (button.isClickable() && Gdx.input.isButtonPressed(Input.Buttons.LEFT))
             if (button.isClicked(Gdx.input.getX().toFloat(), Gdx.input.getY().toFloat())) {
                 //println("Souris")
-                button.onClickedLocally(id, serverIP, port)
+                button.onClickedLocally(courrier)
+                nothingDone = false
                 //button.onClickedRemotely()
             }
-
+        if (nothingDone) courrier.sendMessage("nothing done")
         button.update(batch)
         batch.end()
     }

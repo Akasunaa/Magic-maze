@@ -20,10 +20,11 @@ import java.io.InputStreamReader;
 
 public class ThreadMaker {
     Thread thread;
-    BigRedButton button;
+    //BigRedButton button;
     Decryptor key = new Decryptor();
-    ThreadMaker(final int port, final BigRedButton button) {
-        this.button = button;
+    //ClientList clientList;
+    ThreadMaker(final int port, final BigRedButton button, final ClientList clientList) {
+        //this.button = button;
         thread = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -33,32 +34,36 @@ public class ThreadMaker {
 
                 // On créé la socket serveur en utilisant le protocol TCP, et en écoutant le port donné
                 ServerSocket serverSocket = Gdx.net.newServerSocket(Net.Protocol.TCP, port, serverSocketHint);
+                Socket socket;
+                Client client;
 
-                // Loopity loop
-                while (true) {
-                    // On créé une socket
-                    Socket socket = serverSocket.accept(null);
-
-                    // On lit la data depuis la socket dans un buffer
-                    BufferedReader buffer = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-
-                    try {
-                        /*
-                        Affiche la ligne lue
-                        Je vais sans doute créer une fonction plus tard,
-                        dont le but sera de récupérer le buffer.readLine()
-                        et fera les bonnes actions avec ça
-                         */
-
-                        System.out.println(buffer.readLine());
-                        //key.decryptMessage(message,button);
-                        button.onClickedRemotely();
-                    } catch (IOException e) { //ça c'est les erreurs classique IO
-                        e.printStackTrace();
+                // Première boucle pour récupérer tous les clients
+                while (!clientList.isFull()) {
+                    socket = serverSocket.accept(null); // On récupère une socket qui demande une connection
+                    client = new Client(socket);
+                    if (! clientList.isIn(client)) {
+                        clientList.addClient(client); // On vérifie si le client n'est pas dans la liste, et on l'ajoute
+                        System.out.println("Client added: " + client.getIp());
                     }
+                }
+
+                // Deuxième boucle pour regarder les actions des clients
+                while (true) {
+                    for (Client tempClient : clientList.clientList) {
+                        socket = tempClient.getSocket(); // On prends la socket du client
+                        // On lit la data depuis la socket dans un buffer
+                        BufferedReader buffer = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                        try {
+                            System.out.println(buffer.readLine());
+                            //key.decryptMessage(message,button);
+                            //button.onClickedRemotely();
+                        } catch (IOException e) { //ça c'est les erreurs classique IO
+                            e.printStackTrace();
+                        }
+                    }
+
                 }
             }
         });
     }
-
 }

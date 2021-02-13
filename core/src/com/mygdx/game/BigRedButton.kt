@@ -58,24 +58,13 @@ class BigRedButton(idleTexture: Texture, pushedTexture: Texture, x:Float, y:Floa
         active.draw(batch)
     }
 
-    fun sendMessage(message:String, ip:String, port:Int) {
-        val socketHints = SocketHints()
-        socketHints.connectTimeout = 4000
-        val socket = Gdx.net.newClientSocket(Net.Protocol.TCP,ip,port,socketHints)
-        try {
-            println("Sending Message")
-            socket.getOutputStream().write(message.toByteArray())
-        } catch(e: IOException) {
-            e.printStackTrace()
-        }
-    }
-
     fun isClicked(iX:Float, iY:Float): Boolean {return ((x <= iX && iX <= x + width) &&  (y <= iY && iY <= y + height))}
 
-    fun onClickedLocally(id:String, ip:String,port:Int) {
+    fun onClickedLocally(courrier:Courrier) {
         // Envoie du message
-        val textToSend = "$id pressed button"
-        sendMessage(textToSend,ip,port)
+        println("Button Clicked Locally")
+        val textToSend = "pressed button"
+        courrier.sendMessage(textToSend)
         // Fin de l'envoi du message
         active = pushed
         startTime = System.currentTimeMillis()
