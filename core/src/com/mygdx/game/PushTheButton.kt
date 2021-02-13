@@ -61,6 +61,10 @@ class PushTheButton : ApplicationAdapter() {
                 //button.onClickedRemotely()
             }
         if (nothingDone) courrier.sendMessage("nothing done")
+        // On envoie une notification que rien n'est fait,
+        // C'est super moche, j'ai honte de moi, mais ça devrait fonctionner ?
+        // Edit: ça ne fonctionne qu'à moitié, à méditer
+
         button.update(batch)
         batch.end()
     }
