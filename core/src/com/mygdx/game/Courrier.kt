@@ -22,7 +22,7 @@ class Courrier(val id: String, val port: Int, val ip: String){
 
     fun sendMessage(message: String) {
         try {
-            println("Sending message to server")
+            //println("Sending message to server")
             socket.getOutputStream().write(("$id $message \n").toByteArray())
         } catch (e: IOException) {
             e.printStackTrace()

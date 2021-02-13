@@ -54,8 +54,8 @@ public class ThreadMaker {
                         // On lit la data depuis la socket dans un buffer
                         BufferedReader buffer = new BufferedReader(new InputStreamReader(socket.getInputStream()));
                         try {
-                            System.out.println(buffer.readLine());
-                            //key.decryptMessage(message,button);
+                            //System.out.println(buffer.readLine());
+                            key.decryptMessage(buffer.readLine(),button);
                             //button.onClickedRemotely();
                         } catch (IOException e) { //ça c'est les erreurs classique IO
                             e.printStackTrace();

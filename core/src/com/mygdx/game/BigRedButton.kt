@@ -63,8 +63,7 @@ class BigRedButton(idleTexture: Texture, pushedTexture: Texture, x:Float, y:Floa
     fun onClickedLocally(courrier:Courrier) {
         // Envoie du message
         println("Button Clicked Locally")
-        val textToSend = "pressed button"
-        courrier.sendMessage(textToSend)
+        courrier.sendMessage("pressed button")
         // Fin de l'envoi du message
         active = pushed
         startTime = System.currentTimeMillis()
