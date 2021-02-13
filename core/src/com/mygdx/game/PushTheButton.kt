@@ -45,6 +45,7 @@ class PushTheButton : ApplicationAdapter() {
     }
 
     override fun render() {
+        nothingDone = true
         Gdx.gl.glClearColor(1f, 1f, 1f, 1f)
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT)
         batch.begin()
@@ -60,7 +61,7 @@ class PushTheButton : ApplicationAdapter() {
                 nothingDone = false
                 //button.onClickedRemotely()
             }
-        if (nothingDone) courrier.sendMessage("nothing done")
+        //if (nothingDone) courrier.sendMessage("nothing done")
         // On envoie une notification que rien n'est fait,
         // C'est super moche, j'ai honte de moi, mais ça devrait fonctionner ?
         // Edit: ça ne fonctionne qu'à moitié, à méditer

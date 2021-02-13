@@ -8,6 +8,7 @@ import com.badlogic.gdx.net.Socket;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 
 // Cette classe existe uniquement parce que j'ai aucune idée de comment faire ça en Kotlin
@@ -46,18 +47,21 @@ public class ThreadMaker {
                         System.out.println("Client added: " + client.getIp());
                     }
                 }
-
+                BufferedReader buffer; // Le Buffer
+                InputStream inputStream; // Et l'InputStream
                 // Deuxième boucle pour regarder les actions des clients
                 while (true) {
                     for (Client tempClient : clientList.clientList) {
                         socket = tempClient.getSocket(); // On prends la socket du client
-                        // On lit la data depuis la socket dans un buffer
-                        BufferedReader buffer = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                        inputStream = socket.getInputStream();
                         try {
-                            //System.out.println(buffer.readLine());
-                            key.decryptMessage(buffer.readLine(),button);
-                            //button.onClickedRemotely();
-                        } catch (IOException e) { //ça c'est les erreurs classique IO
+                            if (inputStream.available() != 0) {
+                                // On lit la data depuis la socket dans un buffer
+                                buffer = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                                //Et on la décrypte
+                                key.decryptMessage(buffer.readLine(), button);
+                            }
+                        } catch (IOException e) { //Standard Procedure for dealing with Sockets
                             e.printStackTrace();
                         }
                     }
