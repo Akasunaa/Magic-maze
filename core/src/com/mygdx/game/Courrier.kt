@@ -9,7 +9,7 @@ import java.io.IOException
 // Le but de cette classe est d'éviter de recréer une socket à chaque fois
 // Et de faciliter l'envois de messages.
 
-class Courrier(val id: String, val port: Int, val ip: String){
+class Courrier(val id: String, port: Int, ip: String){
     var socket: Socket
     val socketHints: SocketHints
     init {
@@ -27,6 +27,5 @@ class Courrier(val id: String, val port: Int, val ip: String){
         } catch (e: IOException) {
             e.printStackTrace()
         }
-
     }
 }

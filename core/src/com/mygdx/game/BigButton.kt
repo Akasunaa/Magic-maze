@@ -2,35 +2,27 @@ package com.mygdx.game
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input
-import com.badlogic.gdx.Net
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.Sprite
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
-import com.badlogic.gdx.net.SocketHints
-import java.io.IOException
 import java.lang.System.load
 
 
 
-class BigRedButton(idleTexture: Texture, pushedTexture: Texture, x:Float, y:Float, width:Float, height:Float, cooldown: Int) {
-    var x:Float
-    var y:Float
-    var width:Float
-    var height:Float
+class BigButton(idleTexture: Texture, pushedTexture: Texture,
+                var x:Float, var y:Float,
+                var width:Float, var height:Float,
+                val cooldown: Int, val id: String) {
+
+
 
     val idle :  Sprite = Sprite(idleTexture)
     val pushed: Sprite = Sprite(pushedTexture)
     var active:Sprite = idle
 
     var startTime:Long = 0 // Utile pour le cooldown
-    val cooldown:Int
 
     init {
-        this.x = x
-        this.y = y
-        this.width = width
-        this.height = height
-        this.cooldown = cooldown
         updateSprite()
     }
 
@@ -62,15 +54,15 @@ class BigRedButton(idleTexture: Texture, pushedTexture: Texture, x:Float, y:Floa
 
     fun onClickedLocally(courrier:Courrier) {
         // Envoie du message
-        println("Button Clicked Locally")
-        courrier.sendMessage("pressed button")
+        println("$id Clicked Locally")
+        courrier.sendMessage("pressed $id")
         // Fin de l'envoi du message
         active = pushed
         startTime = System.currentTimeMillis()
     }
 
     fun onClickedRemotely() {
-        println("Clicked")
+        println("$id Clicked Remotely")
         active = pushed
         startTime = System.currentTimeMillis()
     }
@@ -82,8 +74,18 @@ class BigRedButton(idleTexture: Texture, pushedTexture: Texture, x:Float, y:Floa
         } else return false
     }
 
+    fun check(courrier: Courrier) {
+        if (isClickable() && Gdx.input.isButtonPressed(Input.Buttons.LEFT))
+            if (isClicked(Gdx.input.getX().toFloat(), Gdx.input.getY().toFloat())) {
+                //println("Souris")
+                onClickedLocally(courrier)
+                //button.onClickedRemotely()
+            }
+    }
     fun dispose() {
         idle.texture.dispose()
         pushed.texture.dispose()
     }
+
+    fun getID(): String {return id}
 }

@@ -19,13 +19,13 @@ import java.io.InputStreamReader;
 // Alors je vous conseille de prier très fort Athéna pour qu'elle vous aide
 // Cordialement
 
-public class ThreadMaker {
+public class ServerMaker {
     Thread thread;
-    //BigRedButton button;
-    Decryptor key = new Decryptor();
+    //Decryptor key;
     //ClientList clientList;
-    ThreadMaker(final int port, final BigRedButton button, final ClientList clientList) {
-        //this.button = button;
+    ServerMaker(final int port, final ClientList clientList, final Decryptor key) {
+        //clientList = cL;
+        //this.key = key;
         thread = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -43,10 +43,11 @@ public class ThreadMaker {
                     socket = serverSocket.accept(null); // On récupère une socket qui demande une connection
                     client = new Client(socket);
                     if (! clientList.isIn(client)) {
-                        clientList.addClient(client); // On vérifie si le client n'est pas dans la liste, et on l'ajoute
+                        clientList.add(client); // On vérifie si le client n'est pas dans la liste, et on l'ajoute
                         System.out.println("Client added: " + client.getIp());
                     }
                 }
+
                 BufferedReader buffer; // Le Buffer
                 InputStream inputStream; // Et l'InputStream
                 // Deuxième boucle pour regarder les actions des clients
@@ -57,9 +58,9 @@ public class ThreadMaker {
                         try {
                             if (inputStream.available() != 0) {
                                 // On lit la data depuis la socket dans un buffer
-                                buffer = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                                buffer = new BufferedReader(new InputStreamReader(inputStream));
                                 //Et on la décrypte
-                                key.decryptMessage(buffer.readLine(), button);
+                                key.decryptMessage(buffer.readLine());
                             }
                         } catch (IOException e) { //Standard Procedure for dealing with Sockets
                             e.printStackTrace();
