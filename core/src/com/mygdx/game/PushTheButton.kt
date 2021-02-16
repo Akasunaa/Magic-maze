@@ -11,9 +11,10 @@ import java.net.InetAddress
 
 class PushTheButton : ApplicationAdapter() {
     lateinit var batch: SpriteBatch
-    lateinit var button: BigRedButton
-    lateinit var coordButton: BitmapFont
+    lateinit var redButton: BigButton
+    lateinit var bluButton: BigButton
     lateinit var coordMouse: BitmapFont
+    lateinit var buttonList:ButtonList
 
     val serverIP = "157.159.41.36" //L'ip de mon PC fixe
     val ip = InetAddress.getLocalHost().hostAddress
@@ -21,58 +22,52 @@ class PushTheButton : ApplicationAdapter() {
     val port = 6969
     val isServer = true
 
-    var nothingDone = true
-
     lateinit var courrier: Courrier
-    val clientList  = ClientList(2)
+    val clientList  = ClientList(1)
+
 
     override fun create() {
         batch = SpriteBatch()
-        button = BigRedButton(
+        redButton = BigButton(
                 Texture("redButtonIdle.png"),
                 Texture("redButtonPushed.png"),
-                250f, 0f, 200f, 450f, 1000)
-        coordButton = BitmapFont()
+                200f, 0f, 200f, 450f,
+                1000, "RedButton")
+        bluButton = BigButton(
+                Texture("bluButtonIdle.png"),
+                Texture("bluButtonPushed.png"),
+                400f, 0f, 200f, 450f,
+                500, "BluButton")
+        buttonList = ButtonList(redButton,bluButton)
         coordMouse = BitmapFont()
-        coordButton.setColor(0f,0f,0f,1f)
         coordMouse.setColor(0f,0f,0f,1f)
 
-        if (isServer) {
-            ThreadMaker(port, button, clientList).thread.start()
-        } // On commence l'écoute
+        if (isServer) ThreadMaker(port, redButton, clientList, buttonList).thread.start()
+        // On commence l'écoute
         courrier = Courrier(id,port,serverIP)
 
     }
 
     override fun render() {
-        nothingDone = true
         Gdx.gl.glClearColor(1f, 1f, 1f, 1f)
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT)
         batch.begin()
 
         // Drawing the coordinates
-        coordButton.draw(batch, button.stringPosition(), 100f,100f)
-        coordMouse.draw(batch, stringMousePosition(), 100f,150f)
+        coordMouse.draw(batch, stringMousePosition(), 50f,150f)
 
-        if (button.isClickable() && Gdx.input.isButtonPressed(Input.Buttons.LEFT))
-            if (button.isClicked(Gdx.input.getX().toFloat(), Gdx.input.getY().toFloat())) {
-                //println("Souris")
-                button.onClickedLocally(courrier)
-                nothingDone = false
-                //button.onClickedRemotely()
-            }
-        //if (nothingDone) courrier.sendMessage("nothing done")
-        // On envoie une notification que rien n'est fait,
-        // C'est super moche, j'ai honte de moi, mais ça devrait fonctionner ?
-        // Edit: ça ne fonctionne qu'à moitié, à méditer
+        redButton.check(courrier)
+        bluButton.check(courrier)
 
-        button.update(batch)
+
+        redButton.update(batch)
+        bluButton.update(batch)
         batch.end()
     }
 
     override fun dispose() {
         batch.dispose()
-        button.dispose()
+        redButton.dispose()
     }
 
     fun stringMousePosition(): String {

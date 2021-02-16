@@ -22,9 +22,11 @@ import java.io.InputStreamReader;
 public class ThreadMaker {
     Thread thread;
     //BigRedButton button;
-    Decryptor key = new Decryptor();
-    //ClientList clientList;
-    ThreadMaker(final int port, final BigRedButton button, final ClientList clientList) {
+    Decryptor key;
+    ClientList clientList;
+    ThreadMaker(final int port, final BigButton button, final ClientList cL, final ButtonList bL) {
+        clientList = cL;
+        key = new Decryptor(bL);
         //this.button = button;
         thread = new Thread(new Runnable() {
             @Override
@@ -47,6 +49,7 @@ public class ThreadMaker {
                         System.out.println("Client added: " + client.getIp());
                     }
                 }
+
                 BufferedReader buffer; // Le Buffer
                 InputStream inputStream; // Et l'InputStream
                 // Deuxième boucle pour regarder les actions des clients
@@ -57,9 +60,9 @@ public class ThreadMaker {
                         try {
                             if (inputStream.available() != 0) {
                                 // On lit la data depuis la socket dans un buffer
-                                buffer = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                                buffer = new BufferedReader(new InputStreamReader(inputStream));
                                 //Et on la décrypte
-                                key.decryptMessage(buffer.readLine(), button);
+                                key.decryptMessage(buffer.readLine());
                             }
                         } catch (IOException e) { //Standard Procedure for dealing with Sockets
                             e.printStackTrace();
