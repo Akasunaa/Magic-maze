@@ -10,18 +10,18 @@ public class ButtonList {
     ButtonList(BigButton... args) {
         buttonList = new ArrayList<>();
         for (BigButton button : args) {
-            addButton(button);
+            add(button);
         }
     }
 
-    public void addButton(BigButton button) {
+    public void add(BigButton button) {
         buttonList.add(button);
         numberButton++;
     }
 
     public boolean isIn(BigButton button) {
         for (BigButton comparator : buttonList) {
-            if (comparator.getId() == button.getID()) {
+            if (comparator.getId().equals(button.getID())) {
                 return true;
             }
         }

@@ -19,15 +19,13 @@ import java.io.InputStreamReader;
 // Alors je vous conseille de prier très fort Athéna pour qu'elle vous aide
 // Cordialement
 
-public class ThreadMaker {
+public class ServerMaker {
     Thread thread;
-    //BigRedButton button;
-    Decryptor key;
-    ClientList clientList;
-    ThreadMaker(final int port, final BigButton button, final ClientList cL, final ButtonList bL) {
-        clientList = cL;
-        key = new Decryptor(bL);
-        //this.button = button;
+    //Decryptor key;
+    //ClientList clientList;
+    ServerMaker(final int port, final ClientList clientList, final Decryptor key) {
+        //clientList = cL;
+        //this.key = key;
         thread = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -45,7 +43,7 @@ public class ThreadMaker {
                     socket = serverSocket.accept(null); // On récupère une socket qui demande une connection
                     client = new Client(socket);
                     if (! clientList.isIn(client)) {
-                        clientList.addClient(client); // On vérifie si le client n'est pas dans la liste, et on l'ajoute
+                        clientList.add(client); // On vérifie si le client n'est pas dans la liste, et on l'ajoute
                         System.out.println("Client added: " + client.getIp());
                     }
                 }
