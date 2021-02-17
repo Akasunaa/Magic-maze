@@ -22,7 +22,7 @@ class PushTheButton : ApplicationAdapter() {
 
     lateinit var courrier: Courrier
     lateinit var key: Decryptor
-    val clientList  = ClientList(1)
+    val clientList  = ClientList(2)
     val buttonList = ButtonList()
 
     override fun create() {
@@ -61,18 +61,20 @@ class PushTheButton : ApplicationAdapter() {
         // Drawing the coordinates
         coordMouse.draw(batch, stringMousePosition(), 50f,150f)
 
-        redButton.check(courrier)
-        bluButton.check(courrier)
 
+        for (button in buttonList.buttonList) {
+            button.check(courrier)
+            button.update(batch)
+        }
 
-        redButton.update(batch)
-        bluButton.update(batch)
         batch.end()
     }
 
     override fun dispose() {
         batch.dispose()
-        redButton.dispose()
+        for (button in buttonList.buttonList) {
+            button.dispose()
+        }
     }
 
     fun stringMousePosition(): String {
