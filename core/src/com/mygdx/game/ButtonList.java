@@ -19,6 +19,12 @@ public class ButtonList {
         numberButton++;
     }
 
+    public void add (BigButton... args) {
+        for (BigButton button : args) {
+            buttonList.add(button);
+        }
+    }
+
     public boolean isIn(BigButton button) {
         for (BigButton comparator : buttonList) {
             if (comparator.getId().equals(button.getID())) {

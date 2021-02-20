@@ -1,12 +1,16 @@
 package com.mygdx.game
 
 import com.badlogic.gdx.ApplicationAdapter
-import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.GL20
+import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.BitmapFont
+import com.badlogic.gdx.graphics.g2d.SpriteBatch
+import com.badlogic.gdx.math.Vector3
 import java.net.InetAddress
+
+
 
 class PushTheButton : ApplicationAdapter() {
     lateinit var batch: SpriteBatch
@@ -14,31 +18,40 @@ class PushTheButton : ApplicationAdapter() {
     lateinit var bluButton: BigButton
     lateinit var coordMouse: BitmapFont
 
-    val serverIP = "157.159.41.36" //L'ip de mon PC fixe
-    val ip = InetAddress.getLocalHost().hostAddress
-    val id = InetAddress.getLocalHost().hostName
-    val port = 6969
+    val serverIP = "157.159.41.36" // L'ip de mon PC fixe
+    val ip = InetAddress.getLocalHost().hostAddress // L'ip de ce pc ? I guess ?
+    val id = InetAddress.getLocalHost().hostName // L'id de ce pc
+    val port = 6969 // Le port du serveur
     val isServer = true
 
     lateinit var courrier: Courrier
     lateinit var key: Decryptor
-    val clientList  = ClientList(2)
+    val clientList  = ClientList(1)
     val buttonList = ButtonList()
 
+    val windowWidth = 1280f
+    val windowHeight = 720f
+    lateinit var camera: OrthographicCamera
+    fun getMouseX(): Float {return camera.unproject(Vector3(Gdx.input.x.toFloat(), Gdx.input.y.toFloat(), 0f)).x}
+    fun getMouseY(): Float {return camera.unproject(Vector3(Gdx.input.x.toFloat(), Gdx.input.y.toFloat(), 0f)).y}
+
+
     override fun create() {
+        camera = OrthographicCamera(Gdx.graphics.width.toFloat(), Gdx.graphics.height.toFloat())
+        camera.setToOrtho(false, Gdx.graphics.width.toFloat(), Gdx.graphics.height.toFloat())
+        // Cette caméra nous sert à avoir le bon système de coordonées
         batch = SpriteBatch()
         redButton = BigButton(
                 Texture("redButtonIdle.png"),
                 Texture("redButtonPushed.png"),
-                200f, 0f, 200f, 450f,
+                200f, 0f, 207f, 200f,
                 1000, "RedButton")
         bluButton = BigButton(
                 Texture("bluButtonIdle.png"),
                 Texture("bluButtonPushed.png"),
-                400f, 0f, 200f, 450f,
+                400f, 0f, 207f, 570f,
                 500, "BluButton")
-        buttonList.add(bluButton)
-        buttonList.add(redButton)
+        buttonList.add(bluButton,redButton)
         key = Decryptor(buttonList,clientList)
         coordMouse = BitmapFont()
         coordMouse.setColor(0f,0f,0f,1f)
@@ -56,6 +69,7 @@ class PushTheButton : ApplicationAdapter() {
     override fun render() {
         Gdx.gl.glClearColor(1f, 1f, 1f, 1f)
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT)
+        batch.setProjectionMatrix(camera.combined ) // On change le système de coordonées
         batch.begin()
 
         // Drawing the coordinates
@@ -63,7 +77,7 @@ class PushTheButton : ApplicationAdapter() {
 
 
         for (button in buttonList.buttonList) {
-            button.check(courrier)
+            button.check(courrier, getMouseX(), getMouseY())
             button.update(batch)
         }
 
@@ -78,8 +92,8 @@ class PushTheButton : ApplicationAdapter() {
     }
 
     fun stringMousePosition(): String {
-        val x = Gdx.input.getX()
-        val y = Gdx.input.getY()
+        val x = getMouseX().toInt()
+        val y = getMouseY().toInt()
         return "x = $x; y = $y"
     }
 }
