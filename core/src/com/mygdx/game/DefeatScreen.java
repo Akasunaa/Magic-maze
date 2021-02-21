@@ -20,14 +20,14 @@ public class DefeatScreen extends BaseScreen {
     @Override
     public void create() {
 
-        instrumental = Gdx.audio.newMusic(Gdx.files.internal("core\\assets\\Music&Sound/VictoryMusic.wav"));
+        instrumental = Gdx.audio.newMusic(Gdx.files.internal("Music&Sound/VictoryMusic.wav"));
         instrumental.setLooping(true);
         instrumental.play();
 
         Label defeatLabel = new Label( "Défaite...", game.skin, "uiLabelStyle" );
 
         BaseActor background = new BaseActor();
-        background.setTexture( new Texture(Gdx.files.internal("core\\assets\\GameAssets/DefeatImage.jpg")) );
+        background.setTexture( new Texture(Gdx.files.internal("GameAssets/DefeatImage.jpg")) );
         uiStage.addActor( background );
 
         background.toBack();

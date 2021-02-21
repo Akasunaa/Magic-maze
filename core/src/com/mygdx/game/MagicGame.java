@@ -22,7 +22,7 @@ public class MagicGame extends BaseGame
     public void create()
     {
         // initialize resources common to multiple screens and store to skin database
-        BitmapFont uiFont = new BitmapFont(Gdx.files.internal("core/assets/GameUIAssets/fontTest.fnt"));
+        BitmapFont uiFont = new BitmapFont(Gdx.files.internal("GameUIAssets/fontTest.fnt"));
         uiFont.getRegion().getTexture().setFilter(TextureFilter.Linear,
                 TextureFilter.Linear);
         skin.add("uiFont", uiFont);
@@ -32,26 +32,26 @@ public class MagicGame extends BaseGame
         TextButtonStyle uiTextButtonStyle = new TextButtonStyle();
         uiTextButtonStyle.font = uiFont;
         uiTextButtonStyle.fontColor = Color.NAVY;
-        Texture upTex = new Texture(Gdx.files.internal("core/assets/GameUIAssets/ninepatch-1.png"));
+        Texture upTex = new Texture(Gdx.files.internal("GameUIAssets/ninepatch-1.png"));
         skin.add("buttonUp", new NinePatch(upTex, 26,26,16,20));
         uiTextButtonStyle.up = skin.getDrawable("buttonUp");
 
-        Texture overTex = new Texture(Gdx.files.internal("core/assets/GameUIAssets/ninepatch-2.png"));
+        Texture overTex = new Texture(Gdx.files.internal("GameUIAssets/ninepatch-2.png"));
         skin.add("buttonOver", new NinePatch(overTex, 26,26,16,20) );
         uiTextButtonStyle.over = skin.getDrawable("buttonOver");
         uiTextButtonStyle.overFontColor = Color.BLUE;
 
-        Texture downTex = new Texture(Gdx.files.internal("core/assets/GameUIAssets/ninepatch-3.png"));
+        Texture downTex = new Texture(Gdx.files.internal("GameUIAssets/ninepatch-3.png"));
         skin.add("buttonDown", new NinePatch(downTex, 26,26,16,20) );
         uiTextButtonStyle.down = skin.getDrawable("buttonDown");
         uiTextButtonStyle.downFontColor = Color.BLUE;
         skin.add("uiTextButtonStyle", uiTextButtonStyle);
 
         SliderStyle uiSliderStyle = new SliderStyle();
-        skin.add("sliderBack", new Texture(Gdx.files.internal("core/assets/GameUIAssets/grey_sliderHorizontal.png")) );
-        skin.add("sliderKnob", new Texture(Gdx.files.internal("core/assets/GameUIAssets/red_sliderDown.png")) );
-        skin.add("sliderBefore", new Texture(Gdx.files.internal("core/assets/GameUIAssets/red_sliderHorizontal.png")) );
-        skin.add("sliderAfter", new Texture(Gdx.files.internal("core/assets/GameUIAssets/grey_sliderHorizontal.png")) );
+        skin.add("sliderBack", new Texture(Gdx.files.internal("GameUIAssets/grey_sliderHorizontal.png")) );
+        skin.add("sliderKnob", new Texture(Gdx.files.internal("GameUIAssets/red_sliderDown.png")) );
+        skin.add("sliderBefore", new Texture(Gdx.files.internal("GameUIAssets/red_sliderHorizontal.png")) );
+        skin.add("sliderAfter", new Texture(Gdx.files.internal("GameUIAssets/grey_sliderHorizontal.png")) );
         uiSliderStyle.background = skin.getDrawable("sliderBack");
         uiSliderStyle.knob = skin.getDrawable("sliderKnob");
         uiSliderStyle.knobAfter = skin.getDrawable("sliderAfter");

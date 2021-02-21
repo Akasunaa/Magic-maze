@@ -43,30 +43,30 @@ public class MainMenu extends BaseScreen
         currentAvatarNumber = 0;
 
         // passer audio volume en variable globale de MagicGame.java
-        instrumental = Gdx.audio.newMusic(Gdx.files.internal("core\\assets\\Music&Sound/MusicMenu.wav"));
+        instrumental = Gdx.audio.newMusic(Gdx.files.internal("Music&Sound/MusicMenu.wav"));
         audioVolume = 0.80f;
         instrumental.setLooping(true);
         instrumental.setVolume(audioVolume);
         instrumental.play();
 
         BaseActor background = new BaseActor();
-        background.setTexture( new Texture(Gdx.files.internal("core\\assets\\MenuAssets/BlurryMallBackground.jpg")) );
+        background.setTexture( new Texture(Gdx.files.internal("MenuAssets/BlurryMallBackground.jpg")) );
         uiStage.addActor( background );
 
-        Texture titleText = new Texture(Gdx.files.internal("core\\assets\\MenuAssets/MagicLogo.png"));
+        Texture titleText = new Texture(Gdx.files.internal("MenuAssets/MagicLogo.png"));
         titleText.setFilter(TextureFilter.Linear, TextureFilter.Linear);
         Image titleImage = new Image(titleText);
 
-        Texture genint = new Texture(Gdx.files.internal("core\\assets\\MenuAssets/genintLogo.png"));
+        Texture genint = new Texture(Gdx.files.internal("MenuAssets/genintLogo.png"));
         genint.setFilter(TextureFilter.Linear, TextureFilter.Linear);
         Image genintImage = new Image(genint);
 
-        Texture group = new Texture(Gdx.files.internal("core/assets/MenuAssets/MagicGroup.png"));
+        Texture group = new Texture(Gdx.files.internal("MenuAssets/MagicGroup.png"));
         group.setFilter(TextureFilter.Linear, TextureFilter.Linear);
         Image groupImage1 = new Image(group);
         Image groupImage2 = new Image(group);
 
-        final Sound buttonHover = Gdx.audio.newSound(Gdx.files.internal("core/assets/Music&Sound/buttonHover.mp3"));
+        final Sound buttonHover = Gdx.audio.newSound(Gdx.files.internal("Music&Sound/buttonHover.mp3"));
 
         TextButton startButton = new TextButton("Demarrer une partie", game.skin, "uiTextButtonStyle");
         startButton.addListener(new InputListener()
@@ -218,14 +218,14 @@ public class MainMenu extends BaseScreen
         stacker.add(uiTable);
         stacker.add(optionOverlay);
 
-        game.skin.add("white", new Texture( Gdx.files.internal("core/assets/GameUIAssets/white4px.png")) );
+        game.skin.add("white", new Texture( Gdx.files.internal("GameUIAssets/white4px.png")) );
         Drawable optionBackground = game.skin.newDrawable("white", new Color(0,0,0,0.8f) );
 
         optionOverlay.setBackground(optionBackground);
 
         background.toBack();
 
-        Texture leftArrowTexture = new Texture(Gdx.files.internal("core/assets/MenuAssets/arrowSilver_left.png"));
+        Texture leftArrowTexture = new Texture(Gdx.files.internal("MenuAssets/arrowSilver_left.png"));
         game.skin.add("leftArrow", leftArrowTexture );
         Button.ButtonStyle leftArrowStyle = new Button.ButtonStyle();
         leftArrowStyle.up = game.skin.getDrawable("leftArrow");
@@ -255,7 +255,7 @@ public class MainMenu extends BaseScreen
                     }
                 });
 
-        Texture rightArrowTexture = new Texture(Gdx.files.internal("core/assets/MenuAssets/arrowSilver_right.png"));
+        Texture rightArrowTexture = new Texture(Gdx.files.internal("MenuAssets/arrowSilver_right.png"));
         game.skin.add("rightArrow", rightArrowTexture );
         Button.ButtonStyle rightArrowStyle = new Button.ButtonStyle();
         rightArrowStyle.up = game.skin.getDrawable("rightArrow");
@@ -285,7 +285,7 @@ public class MainMenu extends BaseScreen
                     }
                 });
 
-        Skin uiSkin = new Skin(Gdx.files.internal("core/assets/GameUIAssets/uiskin.json"));
+        Skin uiSkin = new Skin(Gdx.files.internal("GameUIAssets/uiskin.json"));
         usernameTextField = new TextField("Pseudo...", uiSkin);
         Gdx.input.setInputProcessor(uiStage);
 

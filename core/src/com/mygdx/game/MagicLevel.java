@@ -74,19 +74,19 @@ public class MagicLevel extends BaseScreen
         remainingTime = 20;
 
         floor = new BaseActor();
-        floor.setTexture(new Texture(Gdx.files.internal("core\\assets/GameAssets/tiles.jpg")));
+        floor.setTexture(new Texture(Gdx.files.internal("GameAssets/tiles.jpg")));
         floor.setPosition(0, 0);
         mainStage.addActor(floor);
 
         cheese = new BaseActor();
-        cheese.setTexture(new Texture(Gdx.files.internal("core\\assets/GameAssets/star.png")));
+        cheese.setTexture(new Texture(Gdx.files.internal("GameAssets/star.png")));
         cheese.setPosition(400, 300);
         cheese.setOrigin(cheese.getWidth() / 2, cheese.getHeight() / 2);
         mainStage.addActor(cheese);
         mousey = new AnimatedActor();
         TextureRegion[] frames = new TextureRegion[4];
         for (int n = 0; n < 4; n++) {
-            String fileName = "core\\assets/GameAssets/mouse" + n + ".png";
+            String fileName = "GameAssets/mouse" + n + ".png";
             Texture tex = new Texture(Gdx.files.internal(fileName));
             tex.setFilter(TextureFilter.Linear, TextureFilter.Linear);
             frames[n] = new TextureRegion(tex);
@@ -108,7 +108,7 @@ public class MagicLevel extends BaseScreen
 
         win = false;
 
-        instrumental = Gdx.audio.newMusic(Gdx.files.internal("core\\assets\\Music&Sound/Gaur_Plain.ogg"));
+        instrumental = Gdx.audio.newMusic(Gdx.files.internal("Music&Sound/Gaur_Plain.ogg"));
         audioVolume = 0.80f;
         instrumental.setLooping(true);
         instrumental.setVolume(audioVolume);
@@ -126,7 +126,7 @@ public class MagicLevel extends BaseScreen
                     }
                 });
 
-        Texture pauseTexture = new Texture(Gdx.files.internal("core\\assets/GameUIAssets/barsHorizontal.png"));
+        Texture pauseTexture = new Texture(Gdx.files.internal("GameUIAssets/barsHorizontal.png"));
         game.skin.add("pauseImage", pauseTexture );
         ButtonStyle pauseStyle = new ButtonStyle();
         pauseStyle.up = game.skin.getDrawable("pauseImage");
@@ -151,7 +151,7 @@ public class MagicLevel extends BaseScreen
         stacker.add(uiTable);
         stacker.add(pauseOverlay);
 
-        game.skin.add("white", new Texture( Gdx.files.internal("core/assets/GameUIAssets/white4px.png")) );
+        game.skin.add("white", new Texture( Gdx.files.internal("GameUIAssets/white4px.png")) );
         Drawable pauseBackground = game.skin.newDrawable("white", new Color(0,0,0,0.8f) );
 
         Label pauseLabel = new Label("Paused", game.skin, "uiLabelStyle");
