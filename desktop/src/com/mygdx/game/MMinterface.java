@@ -58,7 +58,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
         phaseB.setPosition(viewWidth,viewHeight);
         phaseB.setVisible(false);
         uiStage.addActor(phaseB);
-
+//osef
         restart = new IBaseActor();
         restart.setTexture(new Texture(Gdx.files.internal("C:\\Users\\user\\Documents\\Projet info\\images\\interface\\restart-button.png")));
         restart.setPosition(0,0);
