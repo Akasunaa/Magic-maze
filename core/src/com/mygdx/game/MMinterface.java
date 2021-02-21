@@ -16,14 +16,14 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
     private IBaseActor phaseB;
     private IBaseActor log;
     private IBaseActor restart;
-    private IBaseActor hautparleur;
-    private IBaseActor zoomplus;
-    private IBaseActor zoommoins;
+    private IBaseActor hautParleur;
+    private IBaseActor zoomPlus;
+    private IBaseActor zoomMoins;
     private IBaseActor avatar1;
     private IBaseActor avatar2;
     private IBaseActor avatar3;
     private IBaseActor avatar4;
-    private IBaseActor prochaineplaque;
+    private IBaseActor prochainePlaque;
     private IBaseActor sablier;
 
     private IBaseActor haut;
@@ -35,7 +35,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
     private IBaseActor escalator;
 
     //compteur de plaques restantes à placer
-    private Label plaquesrestantesLabel;
+    private Label plaquesRestantesLabel;
     private int plaquesrestantes;
 
 
@@ -47,120 +47,120 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
     @Override
     public void create() {
         phaseA = new IBaseActor();
-        phaseA.setTexture(new Texture(Gdx.files.internal("C:\\Users\\user\\Documents\\Projet info\\images\\interface\\phaseA.jpg")));
+        phaseA.setTexture(new Texture(Gdx.files.internal("interface/phaseA.jpg")));
         //phaseA.setOrigin(phaseA.getWidth(), phaseA.getHeight());
         phaseA.setPosition(viewWidth - phaseA.getWidth(),viewHeight - phaseA.getHeight());
         uiStage.addActor(phaseA);
 
         phaseB = new IBaseActor();
-        phaseB.setTexture(new Texture(Gdx.files.internal("C:\\Users\\user\\Documents\\Projet info\\images\\interface\\phaseB.jpg")));
+        phaseB.setTexture(new Texture(Gdx.files.internal("interface/phaseB.jpg")));
         phaseB.setOrigin(phaseB.getWidth(), phaseB.getHeight());
         phaseB.setPosition(viewWidth,viewHeight);
         phaseB.setVisible(false);
         uiStage.addActor(phaseB);
 //osef
         restart = new IBaseActor();
-        restart.setTexture(new Texture(Gdx.files.internal("C:\\Users\\user\\Documents\\Projet info\\images\\interface\\restart-button.png")));
+        restart.setTexture(new Texture(Gdx.files.internal("interface/restart-button.png")));
         restart.setPosition(0,0);
         //restart.setVisible(false);
         uiStage.addActor(restart);
 
         log = new IBaseActor();
-        log.setTexture(new Texture(Gdx.files.internal("C:\\Users\\user\\Documents\\Projet info\\images\\interface\\log.png")));
+        log.setTexture(new Texture(Gdx.files.internal("interface/log.png")));
         log.setPosition(0,restart.getHeight());
         //log.setVisible(false);
         uiStage.addActor(log);
 
         sablier = new IBaseActor();
-        sablier.setTexture(new Texture(Gdx.files.internal("C:\\Users\\user\\Documents\\Projet info\\images\\interface\\sablier.jpg")));
+        sablier.setTexture(new Texture(Gdx.files.internal("interface/sablier.jpg")));
         //sablier.setOrigin(sablier.getWidth(), sablier.getHeight());
         sablier.setPosition(viewWidth - sablier.getWidth(),viewHeight - phaseA.getHeight() - sablier.getHeight());
         //sablier.setVisible(false);
         uiStage.addActor(sablier);
 
-        zoommoins = new IBaseActor();
-        zoommoins.setTexture(new Texture(Gdx.files.internal("C:\\Users\\user\\Documents\\Projet info\\images\\interface\\zoommoins.jpg")));
+        zoomMoins = new IBaseActor();
+        zoomMoins.setTexture(new Texture(Gdx.files.internal("interface/zoommoins.jpg")));
         //zoommoins.setOrigin(zoommoins.getWidth(), zoommoins.getHeight());
-        zoommoins.setPosition(viewWidth - sablier.getWidth() - zoommoins.getWidth(),viewHeight - phaseA.getHeight() - zoommoins.getHeight());
+        zoomMoins.setPosition(viewWidth - sablier.getWidth() - zoomMoins.getWidth(),viewHeight - phaseA.getHeight() - zoomMoins.getHeight());
         //zoommoins.setVisible(false);
-        uiStage.addActor(zoommoins);
+        uiStage.addActor(zoomMoins);
 
-        zoomplus = new IBaseActor();
-        zoomplus.setTexture(new Texture(Gdx.files.internal("C:\\Users\\user\\Documents\\Projet info\\images\\interface\\zoomplus.jpg")));
-        zoomplus.setOrigin(zoomplus.getWidth(), zoomplus.getHeight());
-        zoomplus.setPosition(viewWidth - sablier.getWidth() - zoommoins.getWidth() - zoomplus.getWidth(),viewHeight - phaseA.getHeight() - zoomplus.getHeight());
+        zoomPlus = new IBaseActor();
+        zoomPlus.setTexture(new Texture(Gdx.files.internal("interface/zoomplus.jpg")));
+        zoomPlus.setOrigin(zoomPlus.getWidth(), zoomPlus.getHeight());
+        zoomPlus.setPosition(viewWidth - sablier.getWidth() - zoomMoins.getWidth() - zoomPlus.getWidth(),viewHeight - phaseA.getHeight() - zoomPlus.getHeight());
         //zoomplus.setVisible(false);
-        uiStage.addActor(zoomplus);
+        uiStage.addActor(zoomPlus);
 
 
-        hautparleur = new IBaseActor();
-        hautparleur.setTexture(new Texture(Gdx.files.internal("C:\\Users\\user\\Documents\\Projet info\\images\\interface\\haut-parleur.png")));
-        hautparleur.setOrigin(hautparleur.getWidth(), hautparleur.getHeight());
-        hautparleur.setPosition(viewWidth - sablier.getWidth() - zoommoins.getWidth() - zoomplus.getWidth() - hautparleur.getWidth(),viewHeight - phaseA.getHeight() - hautparleur.getHeight());
+        hautParleur = new IBaseActor();
+        hautParleur.setTexture(new Texture(Gdx.files.internal("interface/haut-parleur.png")));
+        hautParleur.setOrigin(hautParleur.getWidth(), hautParleur.getHeight());
+        hautParleur.setPosition(viewWidth - sablier.getWidth() - zoomMoins.getWidth() - zoomPlus.getWidth() - hautParleur.getWidth(),viewHeight - phaseA.getHeight() - hautParleur.getHeight());
         //hautparleur.setVisible(false);
-        uiStage.addActor(hautparleur);
+        uiStage.addActor(hautParleur);
 
 
         avatar1 = new IBaseActor();
         //avatar1.setVisible(false);
-        avatar1.setTexture(new Texture(Gdx.files.internal("C:\\Users\\user\\Documents\\Projet info\\images\\interface\\kuro1.png")));
+        avatar1.setTexture(new Texture(Gdx.files.internal("interface/kuro1.png")));
         //avatar1.setOrigin(avatar1.getWidth()/2, avatar1.getHeight()/2);
         avatar1.setPosition(viewWidth - avatar1.getWidth() - 10,viewHeight - avatar1.getHeight() - 164);
         uiStage.addActor(avatar1);
 
         haut = new IBaseActor();
-        haut.setTexture(new Texture(Gdx.files.internal("C:\\Users\\user\\Documents\\Projet info\\images\\interface\\flechehaut.png")));
+        haut.setTexture(new Texture(Gdx.files.internal("interface/flechehaut.png")));
         haut.setPosition(viewWidth - avatar1.getWidth() - 13,viewHeight - avatar1.getHeight() - 160);
         uiStage.addActor(haut);
 
         avatar2 = new IBaseActor();
         //avatar2.setVisible(false);
-        avatar2.setTexture(new Texture(Gdx.files.internal("C:\\Users\\user\\Documents\\Projet info\\images\\interface\\kuro2.png")));
+        avatar2.setTexture(new Texture(Gdx.files.internal("interface/kuro2.png")));
         //avatar2.setOrigin(avatar2.getWidth()/2, avatar2.getHeight()/2);
         avatar2.setPosition(viewWidth - avatar1.getWidth() - avatar2.getWidth() - 20,viewHeight - avatar2.getHeight() - 164);
         uiStage.addActor(avatar2);
 
         gauche = new IBaseActor();
-        gauche.setTexture(new Texture(Gdx.files.internal("C:\\Users\\user\\Documents\\Projet info\\images\\interface\\gauche.png")));
+        gauche.setTexture(new Texture(Gdx.files.internal("interface/gauche.png")));
         gauche.setPosition(viewWidth - avatar1.getWidth() - avatar2.getWidth() - 25,viewHeight - avatar2.getHeight() - 150 );
         uiStage.addActor(gauche);
 
         teleportation = new IBaseActor();
-        teleportation.setTexture(new Texture(Gdx.files.internal("C:\\Users\\user\\Documents\\Projet info\\images\\interface\\teleport.png")));
+        teleportation.setTexture(new Texture(Gdx.files.internal("interface/teleport.png")));
         teleportation.setPosition(viewWidth - avatar1.getWidth() - avatar2.getWidth() - 25,viewHeight - avatar2.getHeight() - 170 );
         uiStage.addActor(teleportation);
 
         avatar3 = new IBaseActor();
         //avatar3.setVisible(false);
-        avatar3.setTexture(new Texture(Gdx.files.internal("C:\\Users\\user\\Documents\\Projet info\\images\\interface\\kuro3.png")));
+        avatar3.setTexture(new Texture(Gdx.files.internal("interface/kuro3.png")));
         //avatar3.setOrigin(avatar3.getWidth()/2, avatar3.getHeight()/2);
         avatar3.setPosition(viewWidth - avatar1.getWidth() - 10,viewHeight - avatar1.getHeight() - avatar3.getHeight() - 194);
         uiStage.addActor(avatar3);
 
         bas = new IBaseActor();
-        bas.setTexture(new Texture(Gdx.files.internal("C:\\Users\\user\\Documents\\Projet info\\images\\interface\\bas.png")));
+        bas.setTexture(new Texture(Gdx.files.internal("interface/bas.png")));
         bas.setPosition(viewWidth - avatar1.getWidth() - 15,viewHeight - avatar1.getHeight() - avatar3.getHeight() - 180);
         uiStage.addActor(bas);
 
         loupe = new IBaseActor();
-        loupe.setTexture(new Texture(Gdx.files.internal("C:\\Users\\user\\Documents\\Projet info\\images\\interface\\loupa.png")));
+        loupe.setTexture(new Texture(Gdx.files.internal("interface/loupa.png")));
         loupe.setPosition(viewWidth - avatar1.getWidth() - 15,viewHeight - avatar1.getHeight() - avatar3.getHeight() - 200);
         uiStage.addActor(loupe);
 
         avatar4 = new IBaseActor();
         //avatar4.setVisible(false);
-        avatar4.setTexture(new Texture(Gdx.files.internal("C:\\Users\\user\\Documents\\Projet info\\images\\interface\\kuro4.png")));
+        avatar4.setTexture(new Texture(Gdx.files.internal("interface/kuro4.png")));
         //avatar4.setOrigin(avatar4.getWidth()/2, avatar4.getHeight()/2);
         avatar4.setPosition(viewWidth - avatar1.getWidth() - avatar2.getWidth() - 20,viewHeight - avatar1.getHeight() - avatar3.getHeight() - 194);
         uiStage.addActor(avatar4);
 
         droite = new IBaseActor();
-        droite.setTexture(new Texture(Gdx.files.internal("C:\\Users\\user\\Documents\\Projet info\\images\\interface\\droite.png")));
+        droite.setTexture(new Texture(Gdx.files.internal("interface/droite.png")));
         droite.setPosition(viewWidth - avatar1.getWidth() - avatar2.getWidth() - 25,viewHeight - avatar1.getHeight() - avatar3.getHeight() - 180);
         uiStage.addActor(droite);
 
         escalator = new IBaseActor();
-        escalator.setTexture(new Texture(Gdx.files.internal("C:\\Users\\user\\Documents\\Projet info\\images\\interface\\escalator.png")));
+        escalator.setTexture(new Texture(Gdx.files.internal("interface/escalator.png")));
         escalator.setPosition(viewWidth - avatar1.getWidth() - avatar2.getWidth() - 25,viewHeight - avatar1.getHeight() - avatar3.getHeight() - 195);
         uiStage.addActor(escalator);
 
@@ -168,19 +168,19 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
         LabelStyle style = new LabelStyle(font, Color.VIOLET);
 
         plaquesrestantes = 10;
-        plaquesrestantesLabel = new Label("Plaques restantes: 10", style);
-        plaquesrestantesLabel.setFontScale(1);
-        plaquesrestantesLabel.setOrigin(plaquesrestantesLabel.getWidth(),0);
-        plaquesrestantesLabel.setPosition(viewWidth - plaquesrestantesLabel.getWidth() - 5,0);
+        plaquesRestantesLabel = new Label("Plaques restantes: 10", style);
+        plaquesRestantesLabel.setFontScale(1);
+        plaquesRestantesLabel.setOrigin(plaquesRestantesLabel.getWidth(),0);
+        plaquesRestantesLabel.setPosition(viewWidth - plaquesRestantesLabel.getWidth() - 5,0);
         //plaquesrestantesLabel.setVisible(false);
-        uiStage.addActor(plaquesrestantesLabel);
+        uiStage.addActor(plaquesRestantesLabel);
 
-        prochaineplaque = new IBaseActor();
-        prochaineplaque.setTexture(new Texture(Gdx.files.internal("C:\\Users\\user\\Documents\\Projet info\\images\\interface\\plaque3.jpg")));
+        prochainePlaque = new IBaseActor();
+        prochainePlaque.setTexture(new Texture(Gdx.files.internal("interface/plaque3.jpg")));
         //prochaineplaque.setOrigin(prochaineplaque.getWidth(), 0 );
-        prochaineplaque.setPosition(viewWidth - prochaineplaque.getWidth() - 25, plaquesrestantesLabel.getHeight() + 10);
+        prochainePlaque.setPosition(viewWidth - prochainePlaque.getWidth() - 25, plaquesRestantesLabel.getHeight() + 10);
         //prochaineplaque.setVisible(false);
-        uiStage.addActor(prochaineplaque);
+        uiStage.addActor(prochainePlaque);
     }
 
     public void update(float dt){
