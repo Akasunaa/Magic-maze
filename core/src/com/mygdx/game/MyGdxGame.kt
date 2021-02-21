@@ -14,9 +14,15 @@ import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.math.Rectangle;
 import kotlin.properties.Delegates
 import com.badlogic.gdx.math.Vector3
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer
+import ktx.app.KtxApplicationAdapter
 
+data class Pion(val x:Float, val y:Float)
 
 class MyGdxGame : ApplicationAdapter() {
+    private lateinit var renderer: ShapeRenderer
+    //pion
+    private var pion = Pion(400f,0f)
 
     //fond
     private var texture: Texture? = null
@@ -27,8 +33,6 @@ class MyGdxGame : ApplicationAdapter() {
 
     //camera
     lateinit var camera: OrthographicCamera
-
-
 
     //représentation tuile
     val colonne0: IntArray = intArrayOf(1,0,1,0,1)
@@ -46,12 +50,12 @@ class MyGdxGame : ApplicationAdapter() {
         camera = OrthographicCamera(Gdx.graphics.width.toFloat(), Gdx.graphics.height.toFloat())
         camera.setToOrtho(false, Gdx.graphics.width.toFloat(), Gdx.graphics.height.toFloat())
         //fond
-        val worldFile = Gdx.files.internal("Sans titre 1.png")
-        texture = Texture(worldFile)
+        val grille = Gdx.files.internal("Sans titre 1.png")
+        texture = Texture(grille)
+        //setposition??
         //pion
         val pion = Gdx.files.internal("pion.png")
         Pion= Sprite(Texture(pion))
-
     }
 
     override fun dispose() {
@@ -59,42 +63,44 @@ class MyGdxGame : ApplicationAdapter() {
         texture!!.dispose()
     }
 
-
-
-
     override fun render() {
         //gestion camera
         batch!!.setProjectionMatrix(camera.combined)
-        //affichage sprite
-        batch!!.begin()
-        batch!!.draw(texture, 0.toFloat(), 0.toFloat())
-        batch!!.draw(Pion,450.toFloat(),450.toFloat())
-        batch!!.end()
-        //Coordonnée souris
 
-
-        val estTouche = Gdx.input.isTouched
-        if(estTouche) {
-            //val X = Gdx.input.x.toFloat()
-            //val Y = Gdx.graphics.getHeight() - Gdx.input.y.toFloat() pour inverser l'origine du click
-
-            val X=getMouseX()
-            val Y=getMouseY()
-            val x = (X / 100).toInt()
-            val y = (Y / 100).toInt()
-            println(x)
-            println(y)
-            if (tab[x][y] == 0) {
-                var pionx = (x*100+25).toFloat()
-                var piony = (y*100+25).toFloat()
-                batch!!.begin()
-                batch!!.draw(Pion,pionx,piony)
-                batch!!.end()
-            }
-        }
+        handleInput()
+        draw()
     }
+
     //coordonnée souris
     fun getMouseX(): Float {return camera.unproject(Vector3(Gdx.input.x.toFloat(), Gdx.input.y.toFloat(), 0f)).x}
     fun getMouseY(): Float {return camera.unproject(Vector3(Gdx.input.x.toFloat(), Gdx.input.y.toFloat(), 0f)).y}
+
+    //test si on click avec la souris
+    private fun handleInput() {
+        val estTouche = Gdx.input.isTouched
+        if (estTouche) {
+            //ancienne coordonée
+            //val X = Gdx.input.x.toFloat()
+            //val Y = Gdx.graphics.getHeight() - Gdx.input.y.toFloat() pour inverser l'origine du click
+            val X = getMouseX()
+            val Y = getMouseY()
+            val x = (X / 100).toInt()
+            val y = (Y / 100).toInt()
+            //println(x)
+            //println(y)
+            if (tab[x][y] == 0) {
+                pion = Pion((x * 100 + 25).toFloat(), (y * 100 + 25).toFloat())
+            }
+        }
+    }
+
+     private fun draw(){
+         batch!!.begin()
+         batch!!.draw(texture, 0.toFloat(), 0.toFloat())
+         batch!!.draw( Pion,pion.x,pion.y)
+         batch!!.end()
+     }
+
+
 
 }
