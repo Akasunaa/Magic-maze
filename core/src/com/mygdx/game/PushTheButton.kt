@@ -15,6 +15,7 @@ class PushTheButton : ApplicationAdapter() {
     lateinit var batch: SpriteBatch
     lateinit var redButton: BigButton
     lateinit var bluButton: BigButton
+    lateinit var greenButton: BigButton
     lateinit var coordMouse: BitmapFont
 
     val serverIP = "157.159.41.36" // L'ip de mon PC fixe
@@ -31,13 +32,9 @@ class PushTheButton : ApplicationAdapter() {
     val windowWidth = 1280f
     val windowHeight = 720f
     lateinit var camera: OrthographicCamera
-    fun getMouseX(): Float {
-        return camera.unproject(Vector3(Gdx.input.x.toFloat(), Gdx.input.y.toFloat(), 0f)).x
-    }
+    fun getMouseX(): Float = camera.unproject(Vector3(Gdx.input.x.toFloat(), Gdx.input.y.toFloat(), 0f)).x
 
-    fun getMouseY(): Float {
-        return camera.unproject(Vector3(Gdx.input.x.toFloat(), Gdx.input.y.toFloat(), 0f)).y
-    }
+    fun getMouseY(): Float = camera.unproject(Vector3(Gdx.input.x.toFloat(), Gdx.input.y.toFloat(), 0f)).y
 
 
     override fun create() {
@@ -46,15 +43,21 @@ class PushTheButton : ApplicationAdapter() {
         // Cette caméra nous sert à avoir le bon système de coordonées
         batch = SpriteBatch()
         redButton = BigButton(
-                Texture("redButtonIdle.png"),
-                Texture("redButtonPushed.png"),
-                200f, 0f, 207f, 200f,
+                Texture("button/redButtonIdle.png"),
+                Texture("button/redButtonPushed.png"),
+                200f, 0f, 207f, 570f,
                 1000, "RedButton")
         bluButton = BigButton(
-                Texture("bluButtonIdle.png"),
-                Texture("bluButtonPushed.png"),
-                400f, 0f, 207f, 570f,
+                Texture("button/bluButtonIdle.png"),
+                Texture("button/bluButtonPushed.png"),
+                450f, 0f, 207f, 570f,
                 500, "BluButton")
+        greenButton = BigButton(
+                Texture("button/greenButtonIdle.png"),
+                Texture("button/greenButtonPushed.png"),
+                700f, 0f, 207f, 570f,
+                500, "GreenButton")
+        // C'est ce dernier bouton qu'on va envoyer au client
         buttonList.add(bluButton, redButton)
         key = Decryptor(buttonList, clientList)
         coordMouse = BitmapFont()
