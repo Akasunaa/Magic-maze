@@ -77,8 +77,6 @@ class BigButton(idleTexture: Texture, pushedTexture: Texture,
     fun check(courrier: Courrier,inputX: Float,inputY:Float) {
         if (isClickable() && Gdx.input.isButtonPressed(Input.Buttons.LEFT))
             if (isClicked(inputX,inputY)) {
-                // Gdx.graphics.getHeight()-
-                // Code Spaghetti Right here, le Y du curseur n'est pas le même y que les sprites, parce que why not
                 onClickedLocally(courrier)
             }
     }

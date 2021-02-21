@@ -19,7 +19,7 @@ class PushTheButton : ApplicationAdapter() {
     lateinit var coordMouse: BitmapFont
 
     val serverIP = "157.159.41.36" // L'ip de mon PC fixe
-    val ip = InetAddress.getLocalHost().hostAddress // L'ip de ce pc ? I guess ?
+    val ip = InetAddress.getLocalHost().hostAddress // L'ip de ce pc
     val id = InetAddress.getLocalHost().hostName // L'id de ce pc
     val port = 6969 // Le port du serveur
     val isServer = true
