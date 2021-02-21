@@ -3,45 +3,35 @@ package com.mygdx.game
 import com.badlogic.gdx.ApplicationAdapter
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.Gdx
-import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.files.FileHandle
 import com.badlogic.gdx.Game;
-import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.TextureArray
 import com.badlogic.gdx.graphics.g2d.Sprite
 import com.badlogic.gdx.Input.Keys;
-import com.badlogic.gdx.graphics.OrthographicCamera
+import com.badlogic.gdx.graphics.*
 import com.badlogic.gdx.math.Rectangle;
 import kotlin.properties.Delegates
 import com.badlogic.gdx.math.Vector3
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import ktx.app.KtxApplicationAdapter
-
-data class Pion(val x:Float, val y:Float)
+import ktx.graphics.use
 
 class MyGdxGame : ApplicationAdapter() {
     private lateinit var renderer: ShapeRenderer
     //pion
-    private var pion = Pion(400f,0f)
-
+    private lateinit var Pion: Sprite
+    private var pion = Pion(25f,325f)
     //fond
-    private var texture: Texture? = null
-    private var batch: SpriteBatch? = null
-
-    //pion
-    private var Pion: Sprite? = null
-
+    private lateinit var texture: Texture
+    private lateinit var batch: SpriteBatch
     //camera
     lateinit var camera: OrthographicCamera
-
     //représentation tuile
-    val colonne0: IntArray = intArrayOf(1,0,1,0,1)
-    val colonne1: IntArray = intArrayOf(0,0,0,0,0)
-    val colonne2: IntArray = intArrayOf(1,1,1,1,1)
-    val colonne3: IntArray = intArrayOf(0,0,0,0,0)
-    val colonne4: IntArray = intArrayOf(0,0,0,0,0)
+    val colonne0: IntArray = intArrayOf(1,0,1,1,0)
+    val colonne1: IntArray = intArrayOf(1,0,1,1,0)
+    val colonne2: IntArray = intArrayOf(1,0,1,1,0)
+    val colonne3: IntArray = intArrayOf(1,0,0,0,0)
+    val colonne4: IntArray = intArrayOf(1,1,1,1,1)
     val tab: Array<IntArray> = arrayOf(colonne0,colonne1,colonne2,colonne3,colonne4)
-
 
 
     override fun create() {
@@ -50,30 +40,29 @@ class MyGdxGame : ApplicationAdapter() {
         camera = OrthographicCamera(Gdx.graphics.width.toFloat(), Gdx.graphics.height.toFloat())
         camera.setToOrtho(false, Gdx.graphics.width.toFloat(), Gdx.graphics.height.toFloat())
         //fond
-        val grille = Gdx.files.internal("Sans titre 1.png")
+        val grille = Gdx.files.internal("Sans titre 2.png")
         texture = Texture(grille)
-        //setposition??
         //pion
         val pion = Gdx.files.internal("pion.png")
         Pion= Sprite(Texture(pion))
     }
 
     override fun dispose() {
-        batch!!.dispose()
-        texture!!.dispose()
+        batch.dispose()
+        texture.dispose()
     }
 
     override fun render() {
         //gestion camera
-        batch!!.setProjectionMatrix(camera.combined)
-
+        batch.setProjectionMatrix(camera.combined)
+        //fonction boucle
         handleInput()
         draw()
     }
 
     //coordonnée souris
-    fun getMouseX(): Float {return camera.unproject(Vector3(Gdx.input.x.toFloat(), Gdx.input.y.toFloat(), 0f)).x}
-    fun getMouseY(): Float {return camera.unproject(Vector3(Gdx.input.x.toFloat(), Gdx.input.y.toFloat(), 0f)).y}
+    fun getMouseX(): Float = camera.unproject(Vector3(Gdx.input.x.toFloat(), Gdx.input.y.toFloat(), 0f)).x
+    fun getMouseY(): Float = camera.unproject(Vector3(Gdx.input.x.toFloat(), Gdx.input.y.toFloat(), 0f)).y
 
     //test si on click avec la souris
     private fun handleInput() {
@@ -94,11 +83,13 @@ class MyGdxGame : ApplicationAdapter() {
         }
     }
 
+    //dessin
      private fun draw(){
-         batch!!.begin()
-         batch!!.draw(texture, 0.toFloat(), 0.toFloat())
-         batch!!.draw( Pion,pion.x,pion.y)
-         batch!!.end()
+         batch.begin()
+         batch.draw(texture, 0.toFloat(), 0.toFloat())
+         batch.draw( Pion,pion.x,pion.y)
+         batch.end()
+
      }
 
 
