@@ -1,4 +1,4 @@
-package com.mygdx.game;
+package com.magic.maze;
 
 import java.util.ArrayList;
 import java.util.List;

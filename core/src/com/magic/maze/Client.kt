@@ -1,4 +1,4 @@
-package com.mygdx.game
+package com.magic.maze
 
 import com.badlogic.gdx.net.Socket
 

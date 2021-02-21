@@ -1,6 +1,7 @@
-package com.mygdx.game;
+package com.magic.maze;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class ButtonList {
@@ -20,9 +21,7 @@ public class ButtonList {
     }
 
     public void add(BigButton... args) {
-        for (BigButton button : args) {
-            buttonList.add(button);
-        }
+        Collections.addAll(buttonList, args);
     }
 
     public boolean isIn(BigButton button) {

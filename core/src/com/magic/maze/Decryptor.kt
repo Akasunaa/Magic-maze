@@ -1,6 +1,4 @@
-package com.mygdx.game
-
-import java.io.IOException
+package com.magic.maze
 
 class Decryptor(val buttonList: ButtonList, val clientList: ClientList) {
     fun decryptMessage(message: String) {
