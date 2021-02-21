@@ -13,7 +13,9 @@ public class ClientList {
         maxClient = max;
     }
 
-    public boolean isFull() { return numberClient >= maxClient; }
+    public boolean isFull() {
+        return numberClient >= maxClient;
+    }
 
     public void add(Client client) {
         clientList.add(client);

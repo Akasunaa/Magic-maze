@@ -11,7 +11,6 @@ import com.badlogic.gdx.math.Vector3
 import java.net.InetAddress
 
 
-
 class PushTheButton : ApplicationAdapter() {
     lateinit var batch: SpriteBatch
     lateinit var redButton: BigButton
@@ -26,14 +25,19 @@ class PushTheButton : ApplicationAdapter() {
 
     lateinit var courrier: Courrier
     lateinit var key: Decryptor
-    val clientList  = ClientList(1)
+    val clientList = ClientList(1)
     val buttonList = ButtonList()
 
     val windowWidth = 1280f
     val windowHeight = 720f
     lateinit var camera: OrthographicCamera
-    fun getMouseX(): Float {return camera.unproject(Vector3(Gdx.input.x.toFloat(), Gdx.input.y.toFloat(), 0f)).x}
-    fun getMouseY(): Float {return camera.unproject(Vector3(Gdx.input.x.toFloat(), Gdx.input.y.toFloat(), 0f)).y}
+    fun getMouseX(): Float {
+        return camera.unproject(Vector3(Gdx.input.x.toFloat(), Gdx.input.y.toFloat(), 0f)).x
+    }
+
+    fun getMouseY(): Float {
+        return camera.unproject(Vector3(Gdx.input.x.toFloat(), Gdx.input.y.toFloat(), 0f)).y
+    }
 
 
     override fun create() {
@@ -51,10 +55,10 @@ class PushTheButton : ApplicationAdapter() {
                 Texture("bluButtonPushed.png"),
                 400f, 0f, 207f, 570f,
                 500, "BluButton")
-        buttonList.add(bluButton,redButton)
-        key = Decryptor(buttonList,clientList)
+        buttonList.add(bluButton, redButton)
+        key = Decryptor(buttonList, clientList)
         coordMouse = BitmapFont()
-        coordMouse.setColor(0f,0f,0f,1f)
+        coordMouse.setColor(0f, 0f, 0f, 1f)
 
         if (isServer) ServerMaker(port, clientList, key).thread.start()
         //else ClientListener(key,courrier.socket).thread.start()
@@ -62,18 +66,18 @@ class PushTheButton : ApplicationAdapter() {
         // Il faudrait mieux faire une socket Client -> Serveur et une socket Serveur -> Client ????
         // On commence l'écoute
 
-        courrier = Courrier(id,port,serverIP)
+        courrier = Courrier(id, port, serverIP)
 
     }
 
     override fun render() {
         Gdx.gl.glClearColor(1f, 1f, 1f, 1f)
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT)
-        batch.setProjectionMatrix(camera.combined ) // On change le système de coordonées
+        batch.setProjectionMatrix(camera.combined) // On change le système de coordonées
         batch.begin()
 
         // Drawing the coordinates
-        coordMouse.draw(batch, stringMousePosition(), 50f,150f)
+        coordMouse.draw(batch, stringMousePosition(), 50f, 150f)
 
 
         for (button in buttonList.buttonList) {

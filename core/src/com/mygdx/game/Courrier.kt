@@ -9,13 +9,14 @@ import java.io.IOException
 // Le but de cette classe est d'éviter de recréer une socket à chaque fois
 // Et de faciliter l'envois de messages.
 
-class Courrier(val id: String, port: Int, ip: String){
-    var socket: Socket
+class Courrier(val id: String, port: Int, ip: String) {
+    val socket: Socket
     val socketHints: SocketHints
+
     init {
         socketHints = SocketHints()
         socketHints.connectTimeout = 4000
-        socket = Gdx.net.newClientSocket(Net.Protocol.TCP,ip,port,socketHints)
+        socket = Gdx.net.newClientSocket(Net.Protocol.TCP, ip, port, socketHints)
         //sendMessage("connected $ip")
     }
 

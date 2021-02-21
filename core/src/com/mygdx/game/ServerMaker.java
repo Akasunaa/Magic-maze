@@ -21,6 +21,7 @@ import java.io.InputStreamReader;
 
 public class ServerMaker {
     Thread thread;
+
     //Decryptor key;
     //ClientList clientList;
     ServerMaker(final int port, final ClientList clientList, final Decryptor key) {
@@ -42,7 +43,7 @@ public class ServerMaker {
                 while (!clientList.isFull()) {
                     socket = serverSocket.accept(null); // On récupère une socket qui demande une connection
                     client = new Client(socket);
-                    if (! clientList.isIn(client)) {
+                    if (!clientList.isIn(client)) {
                         clientList.add(client); // On vérifie si le client n'est pas dans la liste, et on l'ajoute
                         System.out.println("Client added: " + client.getIp());
                     }

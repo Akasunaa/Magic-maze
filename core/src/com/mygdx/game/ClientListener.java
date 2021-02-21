@@ -9,6 +9,7 @@ import java.io.InputStreamReader;
 
 public class ClientListener {
     public Thread thread;
+
     //private Decryptor key;
     //private Socket socket;
     ClientListener(final Decryptor key, final Socket socket) {
@@ -24,8 +25,7 @@ public class ClientListener {
                         inputStream = socket.getInputStream();
                         buffer = new BufferedReader(new InputStreamReader(inputStream));
                         key.decryptMessage(buffer.readLine());
-                    }
-                    catch (IOException e) {
+                    } catch (IOException e) {
                         e.printStackTrace();
                     }
                 }

@@ -19,7 +19,7 @@ public class ButtonList {
         numberButton++;
     }
 
-    public void add (BigButton... args) {
+    public void add(BigButton... args) {
         for (BigButton button : args) {
             buttonList.add(button);
         }
@@ -48,6 +48,5 @@ public class ButtonList {
             System.out.println(button.getID());
         }
     }
-
 
 }

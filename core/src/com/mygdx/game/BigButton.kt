@@ -8,51 +8,51 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import java.lang.System.load
 
 
-
 class BigButton(idleTexture: Texture, pushedTexture: Texture,
-                var x:Float, var y:Float,
-                var width:Float, var height:Float,
+                var x: Float, var y: Float,
+                var width: Float, var height: Float,
                 val cooldown: Int, val id: String) {
 
 
-
-    val idle :  Sprite = Sprite(idleTexture)
+    val idle: Sprite = Sprite(idleTexture)
     val pushed: Sprite = Sprite(pushedTexture)
-    var active:Sprite = idle
+    var active: Sprite = idle
 
-    var startTime:Long = 0 // Utile pour le cooldown
+    var startTime: Long = 0L // Utile pour le cooldown
 
     init {
         updateSprite()
     }
 
     fun updateSprite() {
-        idle.setPosition(x,y)
-        pushed.setPosition(x,y)
+        idle.setPosition(x, y)
+        pushed.setPosition(x, y)
         idle.setSize(width, height)
         pushed.setSize(width, height)
     }
 
-    fun setPosition(x:Float, y:Float) {
+    fun setPosition(x: Float, y: Float) {
         this.x = x
         this.y = y
     }
-    fun setSize(width:Float, height:Float) {
+
+    fun setSize(width: Float, height: Float) {
         this.width = width
         this.height = height
     }
 
-    fun stringPosition (): String {
+    fun stringPosition(): String {
         return "x = $x; y = $y"
     }
+    // Those three aren't needed anymore, but who knows, they might just be someday
 
     fun update(batch: SpriteBatch) {
         active.draw(batch)
     }
 
-    fun isClicked(iX:Float, iY:Float): Boolean {return ((x <= iX && iX <= x + width) &&  (y <= iY && iY <= y + height))}
+    fun isClicked(iX: Float, iY: Float): Boolean = (x <= iX && iX <= x + width) && (y <= iY && iY <= y + height)
 
-    fun onClickedLocally(courrier:Courrier) {
+    fun onClickedLocally(courrier: Courrier) {
         // Envoie du message
         println("$id Clicked Locally")
         courrier.sendMessage("pressed $id")
@@ -67,23 +67,26 @@ class BigButton(idleTexture: Texture, pushedTexture: Texture,
         startTime = System.currentTimeMillis()
     }
 
-    fun isClickable(): Boolean {
+    fun isClickable(): Boolean =
         if (System.currentTimeMillis() - startTime > cooldown) {
             active = idle
-            return true
-        } else return false
+            true
+        } else {
+            false
+        }
+
+
+    fun check(courrier: Courrier, inputX: Float, inputY: Float) {
+        if (isClickable() && Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
+            if (isClicked(inputX, inputY))
+                onClickedLocally(courrier)
+        }
     }
 
-    fun check(courrier: Courrier,inputX: Float,inputY:Float) {
-        if (isClickable() && Gdx.input.isButtonPressed(Input.Buttons.LEFT))
-            if (isClicked(inputX,inputY)) {
-                onClickedLocally(courrier)
-            }
-    }
     fun dispose() {
         idle.texture.dispose()
         pushed.texture.dispose()
     }
 
-    fun getID(): String {return id}
+    fun getID(): String = id
 }
