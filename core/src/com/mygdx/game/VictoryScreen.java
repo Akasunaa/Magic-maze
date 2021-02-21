@@ -31,7 +31,7 @@ public class VictoryScreen extends BaseScreen {
         uiStage.addActor( background );
 
         background.toBack();
-
+//
         uiTable.add(victoryLabel);
 
         Action fadeInColorCycleForever = Actions.sequence(
