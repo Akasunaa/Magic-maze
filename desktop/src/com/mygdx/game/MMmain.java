@@ -16,7 +16,7 @@ public class MMmain {
 
         MMgame MM = new MMgame();
         // C'est techniquement inutile de créer cette variable MM
-        // Rappel sur les conventions: les variables commencent toujours par une minuscule >:(
+        // Rappel sur les conventions: les variables commencent toujours par une minuscule >>:(
         LwjglApplication launcher = new LwjglApplication(MM, config);
     }
 }
