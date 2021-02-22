@@ -66,8 +66,8 @@ class MyGdxGame : ApplicationAdapter() {
 
     //test si on click avec la souris
     private fun handleInput() {
-        val estTouche = Gdx.input.isTouched
-        if (estTouche) {
+        val click = Gdx.input.isTouched
+        if (click) {
             //ancienne coordonée
             //val X = Gdx.input.x.toFloat()
             //val Y = Gdx.graphics.getHeight() - Gdx.input.y.toFloat() pour inverser l'origine du click
