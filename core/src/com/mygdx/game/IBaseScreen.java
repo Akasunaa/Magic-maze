@@ -10,8 +10,8 @@ public abstract class IBaseScreen implements Screen, InputProcessor {
     protected Stage mainStage;
     protected Stage uiStage;
 
-    public final int viewWidth = 640;
-    public final int viewHeight = 480;
+    public final int viewWidth = 1280;
+    public final int viewHeight = 720;
 
 
     public IBaseScreen(Game g) {
