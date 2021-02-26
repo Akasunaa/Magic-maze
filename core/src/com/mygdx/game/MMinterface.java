@@ -6,6 +6,10 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.scenes.scene2d.Action;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 
@@ -161,7 +165,8 @@ public class MMinterface extends IBaseScreen {
         uiStage.addActor(prochainePlaque);
     }
 
-    public void update(float dt) {}
+    public void update(float dt) {
+    }
 
     public boolean keyDown(int keycode){
         if (keycode == Input.Keys.A){
@@ -171,6 +176,54 @@ public class MMinterface extends IBaseScreen {
         return false;
     }
 
+    @Override
+    public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+
+        final Action ping = Actions.sequence(
+                Actions.color(new Color(1,0,0,1),1),
+                Actions.color(new Color(1,1,1,1),1)
+        );
+        avatar1.addListener(
+                new InputListener()
+                {
+                    public boolean touchDown(InputEvent ev, float x, float y, int pointer, int button) {
+                        avatar1.addAction(ping);
+                        return true;
+                    }
+                }
+        );
+
+        avatar2.addListener(
+                new InputListener()
+                {
+                    public boolean touchDown(InputEvent ev, float x, float y, int pointer, int button) {
+                        avatar2.addAction(ping);
+                        return true;
+                    }
+                }
+        );
+
+        avatar3.addListener(
+                new InputListener()
+                {
+                    public boolean touchDown(InputEvent ev, float x, float y, int pointer, int button) {
+                        avatar3.addAction(ping);
+                        return true;
+                    }
+                }
+        );
+
+        avatar4.addListener(
+                new InputListener()
+                {
+                    public boolean touchDown(InputEvent ev, float x, float y, int pointer, int button) {
+                        avatar4.addAction(ping);
+                        return true;
+                    }
+                }
+        );
+        return false;
+    }
 
     @Override
     public boolean scrolled(float amountX, float amountY) {
