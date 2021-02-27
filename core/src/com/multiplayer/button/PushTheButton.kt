@@ -1,4 +1,4 @@
-package com.magic.maze
+package com.multiplayer.button
 
 import com.badlogic.gdx.ApplicationAdapter
 import com.badlogic.gdx.Gdx
@@ -64,6 +64,8 @@ class PushTheButton : ApplicationAdapter() {
         coordMouse.setColor(0f, 0f, 0f, 1f)
 
         if (isServer) ServerMaker(port, clientList, key).thread.start()
+        // Il faut abandonner les mutilples thread et juste le faire dans render
+
         //else ClientListener(key,courrier.socket).thread.start()
         // Le principe du ClientListener est peut être nul en fait
         // Il faudrait mieux faire une socket Client -> Serveur et une socket Serveur -> Client ????

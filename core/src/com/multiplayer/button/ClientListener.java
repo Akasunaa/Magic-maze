@@ -1,4 +1,4 @@
-package com.magic.maze;
+package com.multiplayer.button;
 
 import com.badlogic.gdx.net.Socket;
 

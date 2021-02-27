@@ -1,4 +1,4 @@
-package com.magic.maze;
+package com.multiplayer.button;
 
 import java.util.ArrayList;
 import java.util.Collections;

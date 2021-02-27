@@ -1,4 +1,4 @@
-package com.magic.maze
+package com.multiplayer.button
 
 class Decryptor(val buttonList: ButtonList, val clientList: ClientList) {
     fun decryptMessage(message: String) {

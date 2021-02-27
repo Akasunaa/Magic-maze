@@ -1,4 +1,4 @@
-package com.magic.maze
+package com.multiplayer.button
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input
