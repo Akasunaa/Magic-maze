@@ -48,7 +48,7 @@ public class Tile implements Serializable {
     public void handleInput (Batch batch, float mouseX, float mouseY, BitmapFont numberCase) {
         Case tempCase;
         // Puis si on clique gauche, boum, le pathfinding
-        if ((Gdx.input.isButtonPressed(Input.Buttons.LEFT)) && (System.currentTimeMillis() - cooldown2 > 500)) {
+        if ((Gdx.input.isButtonJustPressed(Input.Buttons.LEFT))) {
             try {
                 tempCase = getCase(mouseX - getX(), mouseY - getY());
                 tempCase.show(batch);
@@ -59,24 +59,21 @@ public class Tile implements Serializable {
         }
 
         // On gère la rotation
-        if (Gdx.input.isKeyPressed(Input.Keys.E)) rotate(-1);
-        if (Gdx.input.isKeyPressed(Input.Keys.A)) rotate(+1);
+        if (Gdx.input.isKeyJustPressed(Input.Keys.E)) rotate(-1);
+        if (Gdx.input.isKeyJustPressed(Input.Keys.A)) rotate(+1);
         // Et la taille (deprecated, on devrait plus à avoir à faire ça maintenant)
-        if (Gdx.input.isKeyPressed(Input.Keys.PLUS)) resize(+50f);
-        if (Gdx.input.isKeyPressed(Input.Keys.NUMPAD_SUBTRACT)) resize(-50f);
+        if (Gdx.input.isKeyJustPressed(Input.Keys.NUMPAD_ADD)) resize(+50f);
+        if (Gdx.input.isKeyJustPressed(Input.Keys.NUMPAD_SUBTRACT)) resize(-50f);
     }
-    
+
     public void resize(float size) {
-        if (System.currentTimeMillis() - cooldown > 100) { // Comme d'hab, le cooldown
-            setSize(sprite.getWidth() + size);
-            for (Case[] ligne : caseList) {
-                for (Case tempCase : ligne) {
-                    tempCase.setSize(128*sprite.getWidth()/600);
-                    // On scale la taille des cases avec la taille de la tuile
-                    tempCase.updateCoordinates();
-                }
+        setSize(sprite.getWidth() + size);
+        for (Case[] ligne : caseList) {
+            for (Case tempCase : ligne) {
+                tempCase.setSize(128 * sprite.getWidth() / 600);
+                // On scale la taille des cases avec la taille de la tuile
+                tempCase.updateCoordinates();
             }
-            cooldown = System.currentTimeMillis();
         }
     }
     
@@ -188,21 +185,16 @@ public class Tile implements Serializable {
         // C'est du calcul simple, si tu comprends pas retourne en maternelle
     }
 
-    private long cooldown = 0L;
-
     public void rotate(int angle) {
-        // J'ai mis un cooldown de 200ms, je pense que c'est approprié
-        if (System.currentTimeMillis() - cooldown > 200) {
-            rotation += angle;
-            rotation = (rotation%4 + 4) % 4; // Java et les modulos...
-            sprite.rotate(angle * 90); // Dans le sens trigo
-            for (Case[] ligne : caseList) {
-                for (Case tempCase : ligne)
-                    tempCase.updateCoordinates();
-            }
-            cooldown = System.currentTimeMillis();
+        rotation += angle;
+        rotation = (rotation % 4 + 4) % 4; // Java et les modulos...
+        sprite.rotate(angle * 90); // Dans le sens trigo
+        for (Case[] ligne : caseList) {
+            for (Case tempCase : ligne)
+                tempCase.updateCoordinates();
         }
     }
+
 
     private void complete() {
         // Petite fonction pour rajouter les escalators et les raccourcis
