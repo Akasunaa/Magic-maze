@@ -20,8 +20,11 @@ class FindThePath : ApplicationAdapter() {
     // tempCase sera utilisé plus tard pour stocker une case en mémoire
     lateinit var tempCase: Case
 
-    // La Case qu'on affiche ici, rappel qu'on fait tout en déboguage pour le moment
-    lateinit var tile: Tile
+    // La liste des Tuiles qu'on va afficher
+    lateinit var tileList: ArrayList<Tile> // Uh ça marche tiens, je pensais pas que Kotlin accepterait ça... On va pas se plaindre
+
+    // La pile de carte
+    lateinit var queue: Queue
 
     // La caméra, toi même tu sais
     lateinit var camera: OrthographicCamera
@@ -35,10 +38,18 @@ class FindThePath : ApplicationAdapter() {
         camera.setToOrtho(false, Gdx.graphics.width.toFloat(), Gdx.graphics.height.toFloat())
         // Cette caméra nous sert à avoir le bon système de coordonées
 
-        tile = Tile(2)
-        tile.load()
+//        tile = Tile(2)
+//        tile.load()
+        tileList = ArrayList<Tile>()
+        for (tile in tileList) tile.load()
         // On sélectionne le bon numéro de case et on la charge
         // Le chargement est nécessaire pour le rendre sérializable
+
+        queue = Queue(3) // J'ai fait les cases uniquement jusqu'à la 9
+        queue.load()
+        queue.setSize(200f)
+        queue.setCoordinates(700f,400f)
+
 
         // Bon là c'ets le batch et des trucs pour écrire, rien d'important
         batch = SpriteBatch()
@@ -58,17 +69,12 @@ class FindThePath : ApplicationAdapter() {
         batch.begin()
         coordMouse.draw(batch, stringMousePosition(), 700f, 150f) // On écrit les coordonées
 
-        tile.draw(batch) // On dessine la tuile
 
-        // Puis si on clique gauche, boum, le pathfinding
-        if (Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
-            try {
-                tempCase = tile.getCase(getMouseX() - tile.x, getMouseY() - tile.y)
-                tempCase.show(batch)
-                tempCase.explore(batch,true,false,false,false,false,true)
-                numberCase.draw(batch, "x = ${tempCase.x}; y = ${tempCase.y}; couleur = ${tempCase.color}, portal = ${tempCase.hasPortal}",700f, 200f)
-            } catch (e: ArrayIndexOutOfBoundsException) {}
-            // Bah oui parce que si on est pas dans les bornes de la tuile forcément getCase fonctionne moins bien lol
+        queue.draw(batch)
+        queue.handleInput(getMouseX(),getMouseY(), tileList)
+        for (tile in tileList) {
+            tile.draw(batch) // On dessine la tuile
+            tile.handleInput(batch, getMouseX(),getMouseY(),numberCase) // On gère l'input
         }
 
         batch.end()
@@ -76,7 +82,9 @@ class FindThePath : ApplicationAdapter() {
 
     override fun dispose() {
         batch.dispose()
-        tile.dispose()
+        for (tile in tileList) {
+            tile.dispose()
+        }
     }
 
 }

@@ -12,7 +12,7 @@ public class Case implements Serializable {
     public int x;
     public int y;
 
-    public boolean accessible;
+    public boolean accessible; // Je suis même pas sûr qu'on l'utilise ça
     public boolean hasPortal;
     public Case shortcut;
     public Case elevator;
@@ -56,17 +56,49 @@ public class Case implements Serializable {
         else caseList[3] = tile.caseList[y][x-1];
     }
 
-    public void load() {
+    public void load() { // Comme d'habitude, obligatoire pour la sérialization
         greenDot = new Sprite(new Texture("tuiles/greenDot.png"));
-        greenDot.setX(tile.getX() + 40 + x*130);
-        greenDot.setY(tile.getY() + 40 + y*130);
         redDot = new Sprite(new Texture("tuiles/redDot.png"));
-        redDot.setX(tile.getX() + 40 + x*130);
-        redDot.setY(tile.getY() + 40 + y*130);
         blueDot = new Sprite(new Texture("tuiles/blueDot.png"));
-        blueDot.setX(tile.getX() + 40 + x*130);
-        blueDot.setY(tile.getY() + 40 + y*130);
+        setSpriteCoordinates(x,y);
         // Le blueDot est inutile pour le moment mais sait-on jamais
+    }
+    private void setSpriteCoordinates(int x, int y) { // self explanatory
+        float offset = 40 * tile.getWidth() / 600;
+        float tileSize = (tile.getWidth() - 2 * offset) / 4;
+        greenDot.setX(tile.getX() + offset + x * tileSize);
+        greenDot.setY(tile.getY() + offset + y * tileSize);
+        redDot.setX(tile.getX() + offset + x * tileSize);
+        redDot.setY(tile.getY() + offset + y * tileSize);
+        blueDot.setX(tile.getX() + offset + x * tileSize);
+        blueDot.setY(tile.getY() + offset + y * tileSize);
+    }
+
+    public void setSize(float size) {
+        greenDot.setSize(size,size);
+        blueDot.setSize(size,size);
+        redDot.setSize(size,size);
+    }
+    public void updateCoordinates() {
+        // Cette fonction met à jour les coordonées des sprites lorsque la tuile est tournée
+        int[] xy = tile.getCaseCoordinates(this);
+        if (tile.rotation == 0) {
+            x = xy[0];
+            y = xy[1];
+        }
+        if (tile.rotation == 3) {
+            x = xy[1];
+            y = 3-xy[0];
+        }
+        if (tile.rotation == 2) {
+            x = 3-xy[0];
+            y = 3-xy[1];
+        }
+        if (tile.rotation == 1) {
+            x = 3-xy[1];
+            y = xy[0];
+        }
+        setSpriteCoordinates(x,y);
     }
 
     public void show(Batch batch) {
@@ -75,6 +107,7 @@ public class Case implements Serializable {
 
     public void explored(Batch batch) {
         if (accessible) greenDot.draw(batch); // On va pas explorer des cases innacessibles quand même
+        // Ah bah si tiens je m'en sert
     }
 
     private void exploreSpecial(Batch batch,
@@ -92,42 +125,49 @@ public class Case implements Serializable {
                         boolean shortcutTaker, boolean escalatorTaker) {
         // C'est moche mais on fait comme ça pour éviter les NullPointerException
         // C'est fait pour ! Comme ça on a pas à checker que les prochaines cases existent, c'est automatique
+        // Et j'ai vraiment la flemme de checker si la prochaine case existe à chaque fois
+        int index; // On utilise index pour éviter de devoir réécrire les modulos trop de fois
         try {
             if (north) {
-                caseList[(2 + tile.rotation) % 4].explored(batch);
-                caseList[(2 + tile.rotation) % 4].explore(batch, north, south, east, west, shortcutTaker, escalatorTaker);
+                index = (2 + tile.rotation) % 4;
+                caseList[index].explored(batch);
+                caseList[index].explore(batch, north, south, east, west, shortcutTaker, escalatorTaker);
             }
-        }catch (Exception e) {}
+        }catch (NullPointerException e) {}
         try {
             if (west) {
-                caseList[(1 + tile.rotation) % 4].explored(batch);
-                caseList[(1 + tile.rotation) % 4].explore(batch, north, south, east, west, shortcutTaker, escalatorTaker);
+                index = ((3 - tile.rotation) % 4 +4) % 4;
+                // Les modulos en Java fonctionnent bizarrement, c'est pour s'assurer d'avoir un truc positif
+                caseList[index].explored(batch);
+                caseList[index].explore(batch, north, south, east, west, shortcutTaker, escalatorTaker);
             }
-        }catch (Exception e) {}
+        }catch (NullPointerException e) {}
         try {
             if (south) {
-                caseList[(tile.rotation) % 4].explored(batch);
-                caseList[(tile.rotation) % 4].explore(batch, north, south, east, west, shortcutTaker, escalatorTaker);
+                index = (tile.rotation %4);
+                caseList[index].explored(batch);
+                caseList[index].explore(batch, north, south, east, west, shortcutTaker, escalatorTaker);
             }
-        }catch (Exception e) {}
+        }catch (NullPointerException e) {}
         try {
             if (east) {
-                caseList[(3 + tile.rotation) % 4].explored(batch);
-                caseList[(3 + tile.rotation) % 4].explore(batch, north, south, east, west, shortcutTaker, escalatorTaker);
+                index = ((1 - tile.rotation) % 4 +4) % 4;
+                caseList[index].explored(batch);
+                caseList[index].explore(batch, north, south, east, west, shortcutTaker, escalatorTaker);
             }
-        }catch (Exception e) {}
+        }catch (NullPointerException e) {}
         try {
             if (escalatorTaker) {
                 elevator.explored(batch);
                 elevator.explore(batch, north, south, east, west, shortcutTaker, !escalatorTaker);
             }
-        } catch (Exception e) {}
+        } catch (NullPointerException e) {}
         try {
             if (shortcutTaker) {
                 shortcut.explored(batch);
                 shortcut.explore(batch, north, south, east, west, !shortcutTaker, escalatorTaker);
             }
-        } catch (Exception e) {}
+        } catch (NullPointerException e) {}
     }
 
     // Je les fait en statique parce que c'est plus pratique

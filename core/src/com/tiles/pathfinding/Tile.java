@@ -1,18 +1,27 @@
 package com.tiles.pathfinding;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 
 import java.io.Serializable;
 
 public class Tile implements Serializable {
-    private int number;
-    private String path;
+    private int number; // numéro de tuile
+    private String path; // path de la tuile
     private transient Sprite sprite; // transient ça veut dire qu'on le stock pas dans la serialization
-    public Case[][] caseList;
+    public Sprite getSprite() {return sprite;} // On en a besoin pour la pile
+    public Case[][] caseList; // Un tableau de 4x4 avec les cases
+    public int rotation = 0; // Indicateur de rotation (dans le sens trigonométrique)
 
-    public int rotation = 0;
+    private long cooldown2;
+    public void startCooldown() {cooldown2 = System.currentTimeMillis();}
+    // L'utilité de cette variable et de cette méthode est questionnable
+    // Elles sont utiles pour éviter un phénomène que j'appelle le blinking
+    // Qui fait que, au moment où on dépose la carte, les trucs du pathfinding apparaissent
 
     public float getX() {
         return sprite.getX();
@@ -29,13 +38,53 @@ public class Tile implements Serializable {
     public float getHeight() {
         return sprite.getHeight();
     }
+
+    public void setSize(float size) {
+        sprite.setSize(size, size);
+    }
+
     // fonctions classiques j'ai envie de dire
+
+    public void handleInput (Batch batch, float mouseX, float mouseY, BitmapFont numberCase) {
+        Case tempCase;
+        // Puis si on clique gauche, boum, le pathfinding
+        if ((Gdx.input.isButtonPressed(Input.Buttons.LEFT)) && (System.currentTimeMillis() - cooldown2 > 500)) {
+            try {
+                tempCase = getCase(mouseX - getX(), mouseY - getY());
+                tempCase.show(batch);
+                tempCase.explore(batch,false,false,true,false,false,false);
+                numberCase.draw(batch, "x = "+tempCase.x+"; y = "+tempCase.y+"; couleur = "+tempCase.color+", portal = "+tempCase.hasPortal,700f, 200f);
+            } catch (ArrayIndexOutOfBoundsException e) {}
+            // Bah oui parce que si on est pas dans les bornes de la tuile forcément getCase fonctionne moins bien lol
+        }
+
+        // On gère la rotation
+        if (Gdx.input.isKeyPressed(Input.Keys.E)) rotate(-1);
+        if (Gdx.input.isKeyPressed(Input.Keys.A)) rotate(+1);
+        // Et la taille (deprecated, on devrait plus à avoir à faire ça maintenant)
+        if (Gdx.input.isKeyPressed(Input.Keys.PLUS)) resize(+50f);
+        if (Gdx.input.isKeyPressed(Input.Keys.NUMPAD_SUBTRACT)) resize(-50f);
+    }
+    
+    public void resize(float size) {
+        if (System.currentTimeMillis() - cooldown > 100) { // Comme d'hab, le cooldown
+            setSize(sprite.getWidth() + size);
+            for (Case[] ligne : caseList) {
+                for (Case tempCase : ligne) {
+                    tempCase.setSize(128*sprite.getWidth()/600);
+                    // On scale la taille des cases avec la taille de la tuile
+                    tempCase.updateCoordinates();
+                }
+            }
+            cooldown = System.currentTimeMillis();
+        }
+    }
+    
 
     Tile(int number) {
         this.number = number;
         // Bon on stock le path quelque part quand même
         path = "tuiles/tile" + number + ".jpg";
-
         /* Et maintenant, on construit allégrement la tuile
         Je vais maintenant expliquer comment on utilise le système de tableau
         On a un tableau 4x4 pour les cases, et pour les murs...
@@ -62,11 +111,13 @@ public class Tile implements Serializable {
          - 3 -> orange
          */
         caseList = new Case[4][4];
+        // On commence par créer le tableau de cases avec des Case à l'intérieur
         for (int tempX = 0; tempX < 4; tempX++) {
             for (int tempY = 0; tempY < 4; tempY++) {
                 caseList[tempY][tempX] = new Case(TileArray.getArray(number)[tempY][tempX], this);
             }
         }
+        // Puis on créé les liaisons entre les cases
         for (Case[] ligne : caseList) {
             for (Case tempCase : ligne) {
                 tempCase.getNeighbours(
@@ -78,7 +129,7 @@ public class Tile implements Serializable {
         complete();
     }
 
-    public void load() {
+    public void load() { // Obligatoire pour la serialization
         sprite = new Sprite(new Texture(path)); // On se charge soit même
         for (Case[] ligne : caseList) {
             for (Case tempCase : ligne)
@@ -114,8 +165,43 @@ public class Tile implements Serializable {
     }
 
     public Case getCase(float x, float y) {
-        return caseList[((int) y - 40) / 130][((int) x - 40) / 130];
+        float offset = 40 * getWidth() / 600;
+        float tileSize = (getWidth() - 2 * offset) / 4;
+        int tempX = (int) ((x - offset) / tileSize);
+        int tempY = (int) ((y - offset) / tileSize);
+        int buffer;
+        if (rotation == 1) {
+            buffer = tempX;
+            tempX = tempY;
+            tempY = 3-buffer;
+        }
+        if (rotation == 2) {
+            tempX = 3-tempX;
+            tempY = 3-tempY;
+        }
+        if (rotation == 3) {
+            buffer = tempX;
+            tempX = 3-tempY;
+            tempY = buffer;
+        }
+        return caseList[tempY][tempX];
         // C'est du calcul simple, si tu comprends pas retourne en maternelle
+    }
+
+    private long cooldown = 0L;
+
+    public void rotate(int angle) {
+        // J'ai mis un cooldown de 200ms, je pense que c'est approprié
+        if (System.currentTimeMillis() - cooldown > 200) {
+            rotation += angle;
+            rotation = (rotation%4 + 4) % 4; // Java et les modulos...
+            sprite.rotate(angle * 90); // Dans le sens trigo
+            for (Case[] ligne : caseList) {
+                for (Case tempCase : ligne)
+                    tempCase.updateCoordinates();
+            }
+            cooldown = System.currentTimeMillis();
+        }
     }
 
     private void complete() {
@@ -141,7 +227,7 @@ public class Tile implements Serializable {
         if (number == 24) Case.makeShortcut(caseList[0][2], caseList[0][3]);
     }
 
-    public void dispose() {
+    public void dispose() { // fonction dispose classique
         sprite.getTexture().dispose();
         for (Case[] ligne : caseList) {
             for (Case tempCase : ligne)
