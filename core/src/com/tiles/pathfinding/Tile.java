@@ -13,11 +13,7 @@ public class Tile implements Serializable {
     private int number; // numéro de tuile
     private String path; // path de la tuile
     private transient Sprite sprite; // transient ça veut dire qu'on le stock pas dans la serialization
-
-    public Sprite getSprite() {
-        return sprite;
-    } // On en a besoin pour la pile
-
+    public Sprite getSprite() {return sprite;} // On en a besoin pour la pile
     public Case[][] caseList; // Un tableau de 4x4 avec les cases
     public int rotation = 0; // Indicateur de rotation (dans le sens trigonométrique)
 
@@ -70,8 +66,8 @@ public class Tile implements Serializable {
         if (Gdx.input.isKeyJustPressed(Input.Keys.E)) rotate(-1);
         if (Gdx.input.isKeyJustPressed(Input.Keys.A)) rotate(+1);
         // Et la taille (deprecated, on devrait plus à avoir à faire ça maintenant)
-        if (Gdx.input.isKeyJustPressed(Input.Keys.PLUS)) resize(+50f);
         if (Gdx.input.isKeyJustPressed(Input.Keys.NUMPAD_SUBTRACT)) resize(-50f);
+        if (Gdx.input.isKeyJustPressed(Input.Keys.NUMPAD_ADD)) resize(+50f);
     }
 
     public void resize(float size) {
@@ -84,7 +80,7 @@ public class Tile implements Serializable {
             }
         }
     }
-
+    
 
     Tile(int number) {
         this.number = number;
@@ -203,6 +199,7 @@ public class Tile implements Serializable {
                 tempCase.updateCoordinates();
         }
     }
+
 
     private void complete() {
         // Petite fonction pour rajouter les escalators et les raccourcis
