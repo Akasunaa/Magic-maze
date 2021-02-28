@@ -28,6 +28,10 @@ public class Queue implements Serializable {
     private boolean isMovable = false;
     private boolean isEmpty = false;
 
+    // Booléen pour savoir si la prochaine carte est visible ou non
+    private boolean isHidden = true;
+    private transient Sprite hidden;
+
     // Un cooldown, c'est classique
     private long cooldown = 0L;
 
@@ -38,6 +42,7 @@ public class Queue implements Serializable {
 
     private void updateSpriteSize() {
         sprite.setSize(size, size);
+        hidden.setSize(size,size);
     }
 
 
@@ -50,6 +55,8 @@ public class Queue implements Serializable {
     private void updateCoordinates() {
         sprite.setX(x);
         sprite.setY(y);
+        hidden.setX(x);
+        hidden.setY(y);
     }
 
 
@@ -65,7 +72,7 @@ public class Queue implements Serializable {
         this.tail = tail.tail;
 
         // Et on recharge le sprite
-        load();
+        loadSprite();
         this.updateSpriteSize();
         this.updateCoordinates();
     }
@@ -89,14 +96,19 @@ public class Queue implements Serializable {
         for (Tile tile : tempList) add(tile);
         add(new Tile(1)); // On commence toujours par la case numéro 1 I guess
     }
+    public void load() { // Serialization
+        hidden = new Sprite(new Texture("tuiles/hiddenOrange.png"));
+        loadSprite();
+    }
 
-    public void load() { // Obligatoire pour la sérialization
+    private void loadSprite() { // Obligatoire pour la sérialization
         head.load();
         sprite = head.getSprite();
     }
 
     public void draw(Batch batch) {
-        sprite.draw(batch);
+        if (isHidden) hidden.draw(batch);
+        else sprite.draw(batch);
     }
 
     public void handleInput(float mouseX, float mouseY, ArrayList<Tile> tileList) {
@@ -106,6 +118,7 @@ public class Queue implements Serializable {
                 sprite.setY(mouseY - size / 2);
                 if (Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
                     isMovable = false;
+                    isHidden = true;
                     try {
                         tileList.add(head);
                         head.resize(0f); // Pour mettre à jour les cases, tu peux essayer sans pour voir ce que ça fait
@@ -117,16 +130,23 @@ public class Queue implements Serializable {
                         updateSpriteSize();
                         updateCoordinates();
                         isEmpty = true;
+                        isHidden = false;
                     }
                 }
             }
             if (System.currentTimeMillis() - cooldown > 1000) { // Un cooldown d'une seconde
-                isMovable = isMovable ||
+                isMovable = isMovable || !isHidden &&
                         (Gdx.input.isButtonPressed(Input.Buttons.RIGHT) &&
                                 (x < mouseX) && (mouseX < x + size &&
                                 (y < mouseY) && (mouseY < y + size)));
                 // Java est paresseux, donc tout ce qu'il y a après le || n'est pas vérifié
                 // si isMovable est true
+                if (isHidden && (Gdx.input.isButtonPressed(Input.Buttons.RIGHT) &&
+                        (x < mouseX) && (mouseX < x + size &&
+                        (y < mouseY) && (mouseY < y + size)))) {
+                    isHidden = false;
+                    cooldown = System.currentTimeMillis();
+                }
             }
         }
     }
