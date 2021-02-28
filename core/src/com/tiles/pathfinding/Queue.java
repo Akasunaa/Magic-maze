@@ -32,9 +32,6 @@ public class Queue implements Serializable {
     private boolean isHidden = true;
     private transient Sprite hidden;
 
-    // Un cooldown, c'est classique
-    private long cooldown = 0L;
-
     public void setSize(float size) {
         this.size = size;
         updateSpriteSize();
@@ -42,7 +39,7 @@ public class Queue implements Serializable {
 
     private void updateSpriteSize() {
         sprite.setSize(size, size);
-        hidden.setSize(size,size);
+        hidden.setSize(size, size);
     }
 
 
@@ -96,6 +93,7 @@ public class Queue implements Serializable {
         for (Tile tile : tempList) add(tile);
         add(new Tile(1)); // On commence toujours par la case numéro 1 I guess
     }
+
     public void load() { // Serialization
         hidden = new Sprite(new Texture("tuiles/hiddenOrange.png"));
         loadSprite();
@@ -116,7 +114,7 @@ public class Queue implements Serializable {
             if (isMovable) {
                 sprite.setX(mouseX - size / 2);
                 sprite.setY(mouseY - size / 2);
-                if (Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
+                if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
                     isMovable = false;
                     isHidden = true;
                     try {
@@ -134,19 +132,16 @@ public class Queue implements Serializable {
                     }
                 }
             }
-            if (System.currentTimeMillis() - cooldown > 1000) { // Un cooldown d'une seconde
-                isMovable = isMovable || !isHidden &&
-                        (Gdx.input.isButtonPressed(Input.Buttons.RIGHT) &&
-                                (x < mouseX) && (mouseX < x + size &&
-                                (y < mouseY) && (mouseY < y + size)));
-                // Java est paresseux, donc tout ce qu'il y a après le || n'est pas vérifié
-                // si isMovable est true
-                if (isHidden && (Gdx.input.isButtonPressed(Input.Buttons.RIGHT) &&
-                        (x < mouseX) && (mouseX < x + size &&
-                        (y < mouseY) && (mouseY < y + size)))) {
-                    isHidden = false;
-                    cooldown = System.currentTimeMillis();
-                }
+            isMovable = isMovable || !isHidden &&
+                    (Gdx.input.isButtonJustPressed(Input.Buttons.RIGHT) &&
+                            (x < mouseX) && (mouseX < x + size &&
+                            (y < mouseY) && (mouseY < y + size)));
+            // Java est paresseux, donc tout ce qu'il y a après le || n'est pas vérifié
+            // si isMovable est true
+            if (isHidden && (Gdx.input.isButtonJustPressed(Input.Buttons.RIGHT) &&
+                    (x < mouseX) && (mouseX < x + size &&
+                    (y < mouseY) && (mouseY < y + size)))) {
+                isHidden = false;
             }
         }
     }
