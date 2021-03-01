@@ -1,10 +1,13 @@
 package com.tiles.pathfinding;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 public class Pawn implements Serializable {
     private String color; // La couleur du pion
@@ -20,6 +23,9 @@ public class Pawn implements Serializable {
     public void setSize() {
         setSize(setCase.tileSize()/2);
     }
+
+    private boolean isMovable = false;
+
     public void load() {
         sprite = new Sprite(new Texture("pions/"+color+".png"));
         setSize();
@@ -35,5 +41,45 @@ public class Pawn implements Serializable {
     }
     public void dispose() {
         sprite.getTexture().dispose();
+    }
+
+    private boolean hasExplored = false;
+    public void handleInput(Player player, float mouseX, float mouseY, ArrayList<Tile> tileList) {
+        if (isMovable) {
+            sprite.setX(mouseX - sprite.getWidth() / 2);
+            sprite.setY(mouseY - sprite.getHeight() / 2);
+            if (!hasExplored) {
+                setCase.show();
+                setCase.explore(player);
+                hasExplored = true;
+            }
+            if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
+                try {
+                    Case nextCase = findCase(mouseX,mouseY, tileList);
+                    if (nextCase.isValid) {
+                        setCase.revert(player);
+                        setCase.hide();
+                        setCase = nextCase;
+                        hasExplored = false;
+                        isMovable = false;
+                        updateCoordinates();
+                    }
+                } catch( NullPointerException e) {
+
+                }
+            }
+        }
+        else isMovable =(Gdx.input.isButtonJustPressed(Input.Buttons.RIGHT) &&
+                        (sprite.getX() < mouseX) && (mouseX < sprite.getX() + sprite.getWidth() &&
+                        (sprite.getY() < mouseY) && (mouseY < sprite.getY() + sprite.getHeight())));
+    }
+
+    public Case findCase(float x, float y, ArrayList<Tile> tileList) {
+        for (Tile tile : tileList) {
+            if (tile.getX() <= x && x <= tile.getX() + tile.getWidth() || tile.getY() <= y && y <= tile.getY() + tile.getHeight()) {
+                return tile.getCase(x,y);
+            }
+        }
+        return null;
     }
 }

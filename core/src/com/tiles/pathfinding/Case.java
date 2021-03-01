@@ -12,12 +12,13 @@ public class Case implements Serializable {
     public int x;
     public int y;
 
-    public boolean accessible; // Je suis même pas sûr qu'on l'utilise ça
+    public boolean isAccessible; // Je suis même pas sûr qu'on l'utilise ça
     public boolean hasPortal;
+    public boolean isValid = false; // Utiler pour le déplacement du pion
+    private boolean isShowed = false;
     public Case shortcut;
     public Case elevator;
     public String color;
-
     private Tile tile;
 
     private transient Sprite greenDot;
@@ -26,7 +27,7 @@ public class Case implements Serializable {
 
     Case (int number, Tile tile) {
         this.tile = tile;
-        accessible = (number != 0);
+        isAccessible = (number != 0);
         if (number < 10) {
             color = "none";
         }
@@ -110,71 +111,116 @@ public class Case implements Serializable {
         setSpriteCoordinates(x,y);
     }
 
-    public void show(Batch batch) {
-        redDot.draw(batch); // Pour indiquer laquelle qu'on clique dessus quand même
+    public void show() {
+        isShowed = true;
+        isValid = true;
     }
 
-    public void explored(Batch batch) {
-        if (accessible) greenDot.draw(batch); // On va pas explorer des cases innacessibles quand même
-        // Ah bah si tiens je m'en sert
+    public void hide() {
+        isShowed = false;
+        isValid = false;
+    }
+    public void explored() {
+        isValid = true && isAccessible;
+    }
+    public void unexplored() {
+        isValid = false;
     }
 
-    private void exploreSpecial(Batch batch,
-                                boolean north, boolean south, boolean east, boolean west,
-                                boolean shortcutTaker, boolean escalatorTaker){
-        // Cette fonction est nécessaire pour éviter les StackOverflow à cause des shortcuts ou des escaliers
-        // En effet, c'est le seul déplacement qui permet de revenir à son propre état
-        // D'où la nécessité de ne pas, sous aucun prétexte, utiliser explore pour explorer un shortcut ou escalier
-        // Pour le moment je vais me contenter de désactiver la capacité de prendre les escaliers après en avoir pris une première fois
-        // Ca devrait pas être la mort
+    public void draw(Batch batch) {
+        if (isShowed) redDot.draw(batch);
+        else if (isValid && isAccessible) greenDot.draw(batch);
     }
 
-    public void explore(Batch batch,
-                        boolean north, boolean south, boolean east, boolean west,
-                        boolean shortcutTaker, boolean escalatorTaker) {
+    public void revert(Player player) {
+        int index; // On utilise index pour éviter de devoir réécrire les modulos trop de fois
+        try {
+            if (player.north) {
+                index = (2 + tile.rotation) % 4;
+                caseList[index].unexplored();
+                caseList[index].revert(player);
+            }
+        }catch (NullPointerException e) {}
+        try {
+            if (player.west) {
+                index = ((3 - tile.rotation) % 4 +4) % 4;
+                // Les modulos en Java fonctionnent bizarrement, c'est pour s'assurer d'avoir un truc positif
+                caseList[index].unexplored();
+                caseList[index].revert(player);
+            }
+        }catch (NullPointerException e) {}
+        try {
+            if (player.south) {
+                index = (tile.rotation %4);
+                caseList[index].unexplored();
+                caseList[index].revert(player);
+            }
+        }catch (NullPointerException e) {}
+        try {
+            if (player.east) {
+                index = ((1 - tile.rotation) % 4 +4) % 4;
+                caseList[index].unexplored();
+                caseList[index].revert(player);
+            }
+        }catch (NullPointerException e) {}
+        try {
+            if (player.escalatorTaker) {
+                elevator.unexplored();
+                elevator.revert(player.copyEscalator());
+            }
+        } catch (NullPointerException e) {}
+        try {
+            if (player.shortcutTaker) {
+                shortcut.unexplored();
+                shortcut.revert(player.copyShortcut());
+            }
+        } catch (NullPointerException e) {}
+    }
+
+    public void explore(Player player) {
         // C'est moche mais on fait comme ça pour éviter les NullPointerException
         // C'est fait pour ! Comme ça on a pas à checker que les prochaines cases existent, c'est automatique
         // Et j'ai vraiment la flemme de checker si la prochaine case existe à chaque fois
         int index; // On utilise index pour éviter de devoir réécrire les modulos trop de fois
         try {
-            if (north) {
+            if (player.north) {
                 index = (2 + tile.rotation) % 4;
-                caseList[index].explored(batch);
-                caseList[index].explore(batch, north, south, east, west, shortcutTaker, escalatorTaker);
+                caseList[index].explored();
+                caseList[index].explore(player);
             }
         }catch (NullPointerException e) {}
         try {
-            if (west) {
+            if (player.west) {
                 index = ((3 - tile.rotation) % 4 +4) % 4;
                 // Les modulos en Java fonctionnent bizarrement, c'est pour s'assurer d'avoir un truc positif
-                caseList[index].explored(batch);
-                caseList[index].explore(batch, north, south, east, west, shortcutTaker, escalatorTaker);
+                caseList[index].explored();
+                caseList[index].explore(player);
             }
         }catch (NullPointerException e) {}
         try {
-            if (south) {
+            if (player.south) {
                 index = (tile.rotation %4);
-                caseList[index].explored(batch);
-                caseList[index].explore(batch, north, south, east, west, shortcutTaker, escalatorTaker);
+                caseList[index].explored();
+                caseList[index].explore(player);
             }
         }catch (NullPointerException e) {}
         try {
-            if (east) {
+            if (player.east) {
                 index = ((1 - tile.rotation) % 4 +4) % 4;
-                caseList[index].explored(batch);
-                caseList[index].explore(batch, north, south, east, west, shortcutTaker, escalatorTaker);
+                caseList[index].explored();
+                caseList[index].explore(player);
             }
         }catch (NullPointerException e) {}
         try {
-            if (escalatorTaker) {
-                elevator.explored(batch);
-                elevator.explore(batch, north, south, east, west, shortcutTaker, !escalatorTaker);
+            if (player.escalatorTaker) {
+                elevator.explored();
+                elevator.explore(player.copyEscalator());
             }
         } catch (NullPointerException e) {}
         try {
-            if (shortcutTaker) {
-                shortcut.explored(batch);
-                shortcut.explore(batch, north, south, east, west, !shortcutTaker, escalatorTaker);
+            if (player.shortcutTaker) {
+                shortcut.explored();
+                shortcut.explore(player.copyShortcut());
             }
         } catch (NullPointerException e) {}
     }

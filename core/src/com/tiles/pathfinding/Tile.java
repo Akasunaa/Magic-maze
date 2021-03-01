@@ -48,14 +48,14 @@ public class Tile implements Serializable {
 
     // fonctions classiques j'ai envie de dire
 
-    public void handleInput(Batch batch, float mouseX, float mouseY, BitmapFont numberCase) {
+    public void handleInput(Batch batch, Player player, float mouseX, float mouseY, BitmapFont numberCase) {
         Case tempCase;
         // Puis si on clique gauche, boum, le pathfinding
         if ((Gdx.input.isButtonPressed(Input.Buttons.LEFT)) && (System.currentTimeMillis() - cooldown > 500)) {
             try {
                 tempCase = getCase(mouseX - getX(), mouseY - getY());
-                tempCase.show(batch);
-                tempCase.explore(batch, false, false, true, false, false, false);
+                tempCase.show();
+                tempCase.explore(player);
                 numberCase.draw(batch, "x = " + tempCase.x + "; y = " + tempCase.y + "; couleur = " + tempCase.color + ", portal = " + tempCase.hasPortal, 700f, 200f);
             } catch (ArrayIndexOutOfBoundsException e) {
             }
@@ -142,12 +142,16 @@ public class Tile implements Serializable {
 
     public void draw(Batch batch) {
         sprite.draw(batch);
+        for (Case[] ligne : caseList) {
+            for (Case tempCase : ligne)
+                tempCase.draw(batch);
+        }
     }
 
     public void showAll(Batch batch) { // Truc de déboguage
         for (Case[] ligne : caseList) {
             for (Case tempCase : ligne)
-                tempCase.show(batch);
+                tempCase.show();
         }
     }
 
