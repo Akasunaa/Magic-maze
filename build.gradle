@@ -11,12 +11,14 @@ buildscript {
     }
     dependencies {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
-
+        classpath "org.jetbrains.kotlin:kotlin-serialization:$kotlinVersion"
     }
 }
 
 allprojects {
     apply plugin: "eclipse"
+    apply plugin: 'kotlin' // or 'kotlin-multiplatform' for multiplatform projects
+    apply plugin: 'kotlinx-serialization'
 
     version = '1.0'
     ext {
@@ -37,6 +39,9 @@ allprojects {
         google()
         maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
         maven { url "https://oss.sonatype.org/content/repositories/releases/" }
+    }
+    dependencies {
+        implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:1.1.0"
     }
 }
 
@@ -85,6 +90,7 @@ project(":core") {
         implementation "io.github.libktx:ktx-tiled:$ktxVersion"
         implementation "io.github.libktx:ktx-vis:$ktxVersion"
         implementation "io.github.libktx:ktx-vis-style:$ktxVersion"
+        implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.2'
 
         api "com.badlogicgames.gdx:gdx:$gdxVersion"
         api "com.badlogicgames.gdx:gdx-box2d:$gdxVersion"

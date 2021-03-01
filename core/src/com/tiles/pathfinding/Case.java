@@ -149,7 +149,7 @@ public class Case implements Serializable {
 
     public void revert(Player player) {
         int index; // On utilise index pour éviter de devoir réécrire les modulos trop de fois
-        if (player.north) {
+        if (player.getNorth()) {
             index = (2 + tile.rotation) % 4;
             if (caseList[index] != null) {
                 caseList[index].unexplored();
@@ -157,7 +157,7 @@ public class Case implements Serializable {
             }
         }
 
-        if (player.west) {
+        if (player.getWest()) {
             index = ((3 - tile.rotation) % 4 + 4) % 4;
             // Les modulos en Java fonctionnent bizarrement, c'est pour s'assurer d'avoir un truc positif
             if (caseList[index] != null) {
@@ -166,7 +166,7 @@ public class Case implements Serializable {
             }
         }
 
-        if (player.south) {
+        if (player.getSouth()) {
             index = (tile.rotation % 4);
             if (caseList[index] != null) {
                 caseList[index].unexplored();
@@ -174,21 +174,21 @@ public class Case implements Serializable {
             }
         }
 
-        if (player.east) {
+        if (player.getEast()) {
             index = ((1 - tile.rotation) % 4 + 4) % 4;
             if (caseList[index] != null) {
                 caseList[index].unexplored();
                 caseList[index].revert(player);
             }
         }
-        if (player.escalatorTaker) {
+        if (player.getEscalatorTaker()) {
             if (elevator != null) {
                 elevator.unexplored();
                 elevator.revert(player.copyEscalator());
             }
         }
 
-        if (player.shortcutTaker) {
+        if (player.getShortcutTaker()) {
             if (shortcut != null) {
                 shortcut.unexplored();
                 shortcut.revert(player.copyShortcut());
@@ -201,7 +201,7 @@ public class Case implements Serializable {
         // C'est fait pour ! Comme ça on a pas à checker que les prochaines cases existent, c'est automatique
         // Et j'ai vraiment la flemme de checker si la prochaine case existe à chaque fois
         int index; // On utilise index pour éviter de devoir réécrire les modulos trop de fois
-        if (player.north) {
+        if (player.getNorth()) {
             index = (2 + tile.rotation) % 4;
             if (caseList[index] != null) {
                 caseList[index].explored();
@@ -209,7 +209,7 @@ public class Case implements Serializable {
             }
         }
 
-        if (player.west) {
+        if (player.getWest()) {
             index = ((3 - tile.rotation) % 4 + 4) % 4;
             // Les modulos en Java fonctionnent bizarrement, c'est pour s'assurer d'avoir un truc positif
             if (caseList[index] != null) {
@@ -218,7 +218,7 @@ public class Case implements Serializable {
             }
         }
 
-        if (player.south) {
+        if (player.getSouth()) {
             index = (tile.rotation % 4);
             if (caseList[index] != null) {
                 caseList[index].explored();
@@ -226,21 +226,21 @@ public class Case implements Serializable {
             }
         }
 
-        if (player.east) {
+        if (player.getEast()) {
             index = ((1 - tile.rotation) % 4 + 4) % 4;
             if (caseList[index] != null) {
                 caseList[index].explored();
                 caseList[index].explore(player);
             }
         }
-        if (player.escalatorTaker) {
+        if (player.getEscalatorTaker()) {
             if (elevator != null) {
                 elevator.explored();
                 elevator.explore(player.copyEscalator());
             }
         }
 
-        if (player.shortcutTaker) {
+        if (player.getShortcutTaker()) {
             if (shortcut != null) {
                 shortcut.explored();
                 shortcut.explore(player.copyShortcut());

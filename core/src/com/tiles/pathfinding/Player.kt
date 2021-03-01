@@ -1,25 +1,14 @@
-package com.tiles.pathfinding;
+package com.tiles.pathfinding
+import kotlinx.serialization.*
+import kotlinx.serialization.json.*
 
-public class Player {
-    public boolean north;
-    public boolean south;
-    public boolean east;
-    public boolean west;
-    public boolean shortcutTaker;
-    public boolean escalatorTaker;
-    Player(boolean north, boolean south, boolean east, boolean west, boolean shortcutTaker, boolean escalatorTaker) {
-        this.north = north;
-        this.south = south;
-        this.east = east;
-        this.west = west;
-        this.escalatorTaker = escalatorTaker;
-        this.shortcutTaker = shortcutTaker;
-    }
+@Serializable
+class Player (
+        val north: Boolean, val south: Boolean,
+        val east: Boolean, val west: Boolean,
+        val shortcutTaker: Boolean, val escalatorTaker: Boolean) {
 
-    public Player copyEscalator() {
-        return new Player(north,south,east,west,shortcutTaker,false);
-    }
-    public Player copyShortcut() {
-        return new Player(north,south,east,west,false,escalatorTaker);
-    }
+    fun copyEscalator()= Player(north, south, east, west, shortcutTaker, false)
+
+    fun copyShortcut()= Player(north, south, east, west, false, escalatorTaker)
 }
