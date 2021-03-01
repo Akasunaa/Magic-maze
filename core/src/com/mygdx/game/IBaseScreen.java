@@ -1,5 +1,7 @@
 package com.mygdx.game;
 
+// ça c'est la classe abstraite qui est exdent par chaque écran, natahn doit avoir un truc similaire
+
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -13,6 +15,7 @@ public abstract class IBaseScreen implements Screen, InputProcessor {
     public final int viewWidth = 1280;
     public final int viewHeight = 720;
 
+    //on crée les différentes stages, moi j'utilise pour l'instant que l'interface donc que la uistage
 
     public IBaseScreen(Game g) {
         game = g;
@@ -29,7 +32,8 @@ public abstract class IBaseScreen implements Screen, InputProcessor {
 
     public abstract void update(float dt);
 
-    //gameloop
+    //gameloop qui affiche l'écran
+
     public void render(float dt) {
         uiStage.act(dt);
 
