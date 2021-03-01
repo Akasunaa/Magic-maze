@@ -58,7 +58,7 @@ class FindThePath : ApplicationAdapter() {
         queue = Queue(3) // J'ai fait les cases uniquement jusqu'à la 9
         queue.load()
         queue.setSize(200f)
-        queue.setCoordinates(700f,400f)
+        queue.setCoordinates(700f, 400f)
 
 
         // Bon là c'ets le batch et des trucs pour écrire, rien d'important
@@ -81,13 +81,13 @@ class FindThePath : ApplicationAdapter() {
 
 
         queue.draw(batch)
-        queue.handleInput(getMouseX(),getMouseY(), tileList)
+        queue.handleInput(getMouseX(), getMouseY(), tileList)
         for (tile in tileList) {
             tile.draw(batch) // On dessine la tuile
             //tile.handleInput(batch, player, getMouseX(),getMouseY(),numberCase) // On gère l'input
         }
         greenPawn.draw(batch)
-        greenPawn.handleInput(player, getMouseX(),getMouseY(), tileList)
+        greenPawn.handleInput(player, getMouseX(), getMouseY(), tileList)
         batch.end()
     }
 

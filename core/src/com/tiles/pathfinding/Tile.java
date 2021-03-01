@@ -13,7 +13,11 @@ public class Tile implements Serializable {
     private int number; // numéro de tuile
     private String path; // path de la tuile
     private transient Sprite sprite; // transient ça veut dire qu'on le stock pas dans la serialization
-    public Sprite getSprite() {return sprite;} // On en a besoin pour la pile
+
+    public Sprite getSprite() {
+        return sprite;
+    } // On en a besoin pour la pile
+
     public Case[][] caseList; // Un tableau de 4x4 avec les cases
     public int rotation = 0; // Indicateur de rotation (dans le sens trigonométrique)
 
@@ -26,23 +30,33 @@ public class Tile implements Serializable {
     // Elles sont utiles pour éviter un phénomène que j'appelle le blinking
     // Qui fait que, au moment où on dépose la carte, les trucs du pathfinding apparaissent
 
+    private float x = 0;
+    private float y = 0;
+    private float size;
+
     public float getX() {
-        return sprite.getX();
+        return x;
     }
 
     public float getY() {
-        return sprite.getY();
+        return y;
+    }
+
+    private void updateCoordinates() {
+        sprite.setX(x);
+        sprite.setY(y);
     }
 
     public float getWidth() {
-        return sprite.getWidth();
+        return size;
     }
 
     public float getHeight() {
-        return sprite.getHeight();
+        return size;
     }
 
     public void setSize(float size) {
+        this.size = size;
         sprite.setSize(size, size);
     }
 
@@ -80,7 +94,7 @@ public class Tile implements Serializable {
             }
         }
     }
-    
+
 
     Tile(int number) {
         this.number = number;
@@ -132,12 +146,12 @@ public class Tile implements Serializable {
 
     public void load() { // Obligatoire pour la serialization
         sprite = new Sprite(new Texture(path)); // On se charge soit même
+        size = sprite.getWidth();
         for (Case[] ligne : caseList) {
             for (Case tempCase : ligne)
                 tempCase.load(); // et on charge toutes les cases
         }
-        sprite.setX(0);
-        sprite.setY(0);
+        updateCoordinates();
     }
 
     public void draw(Batch batch) {
