@@ -147,103 +147,108 @@ public class Case implements Serializable {
         else if (isValid && isAccessible) greenDot.draw(batch);
     }
 
-    public void revert(Player player) {
+    private boolean seen = false;
+
+    public void explore(Player player) {
         int index; // On utilise index pour éviter de devoir réécrire les modulos trop de fois
-        if (player.getNorth()) {
-            index = (2 + tile.rotation) % 4;
-            if (caseList[index] != null) {
-                caseList[index].unexplored();
-                caseList[index].revert(player);
+        if (!seen) {
+            seen = true; // Parcours de graphe classique pour éviter les StackOverflow
+            if (player.getNorth()) {
+                index = (2 + tile.rotation) % 4;
+                if (caseList[index] != null) {
+                    caseList[index].explored();
+                    caseList[index].explore(player);
+                }
             }
-        }
 
-        if (player.getWest()) {
-            index = ((3 - tile.rotation) % 4 + 4) % 4;
-            // Les modulos en Java fonctionnent bizarrement, c'est pour s'assurer d'avoir un truc positif
-            if (caseList[index] != null) {
-                caseList[index].unexplored();
-                caseList[index].revert(player);
+            if (player.getWest()) {
+                index = ((3 - tile.rotation) % 4 + 4) % 4;
+                // Les modulos en Java fonctionnent bizarrement, c'est pour s'assurer d'avoir un truc positif
+                if (caseList[index] != null) {
+                    caseList[index].explored();
+                    caseList[index].explore(player);
+                }
             }
-        }
 
-        if (player.getSouth()) {
-            index = (tile.rotation % 4);
-            if (caseList[index] != null) {
-                caseList[index].unexplored();
-                caseList[index].revert(player);
+            if (player.getSouth()) {
+                index = (tile.rotation % 4);
+                if (caseList[index] != null) {
+                    caseList[index].explored();
+                    caseList[index].explore(player);
+                }
             }
-        }
 
-        if (player.getEast()) {
-            index = ((1 - tile.rotation) % 4 + 4) % 4;
-            if (caseList[index] != null) {
-                caseList[index].unexplored();
-                caseList[index].revert(player);
+            if (player.getEast()) {
+                index = ((1 - tile.rotation) % 4 + 4) % 4;
+                if (caseList[index] != null) {
+                    caseList[index].explored();
+                    caseList[index].explore(player);
+                }
             }
-        }
-        if (player.getEscalatorTaker()) {
-            if (elevator != null) {
-                elevator.unexplored();
-                elevator.revert(player.copyEscalator());
+            if (player.getEscalatorTaker()) {
+                if (elevator != null) {
+                    elevator.explored();
+                    elevator.explore(player);
+                }
             }
-        }
 
-        if (player.getShortcutTaker()) {
-            if (shortcut != null) {
-                shortcut.unexplored();
-                shortcut.revert(player.copyShortcut());
+            if (player.getShortcutTaker()) {
+                if (shortcut != null) {
+                    shortcut.explored();
+                    shortcut.explore(player);
+                }
             }
         }
     }
 
-    public void explore(Player player) {
-        // C'est moche mais on fait comme ça pour éviter les NullPointerException
-        // C'est fait pour ! Comme ça on a pas à checker que les prochaines cases existent, c'est automatique
-        // Et j'ai vraiment la flemme de checker si la prochaine case existe à chaque fois
+    public void revert(Player player) {
         int index; // On utilise index pour éviter de devoir réécrire les modulos trop de fois
-        if (player.getNorth()) {
-            index = (2 + tile.rotation) % 4;
-            if (caseList[index] != null) {
-                caseList[index].explored();
-                caseList[index].explore(player);
+        if (seen) {
+            seen = false;
+            if (player.getNorth()) {
+                index = (2 + tile.rotation) % 4;
+                if (caseList[index] != null) {
+                    caseList[index].unexplored();
+                    caseList[index].revert(player);
+                }
             }
-        }
 
-        if (player.getWest()) {
-            index = ((3 - tile.rotation) % 4 + 4) % 4;
-            // Les modulos en Java fonctionnent bizarrement, c'est pour s'assurer d'avoir un truc positif
-            if (caseList[index] != null) {
-                caseList[index].explored();
-                caseList[index].explore(player);
+            if (player.getWest()) {
+                index = ((3 - tile.rotation) % 4 + 4) % 4;
+                // Les modulos en Java fonctionnent bizarrement, c'est pour s'assurer d'avoir un truc positif
+                if (caseList[index] != null) {
+                    caseList[index].unexplored();
+                    caseList[index].revert(player);
+                }
             }
-        }
 
-        if (player.getSouth()) {
-            index = (tile.rotation % 4);
-            if (caseList[index] != null) {
-                caseList[index].explored();
-                caseList[index].explore(player);
+            if (player.getSouth()) {
+                index = (tile.rotation % 4);
+                if (caseList[index] != null) {
+                    caseList[index].unexplored();
+                    caseList[index].revert(player);
+                }
             }
-        }
 
-        if (player.getEast()) {
-            index = ((1 - tile.rotation) % 4 + 4) % 4;
-            if (caseList[index] != null) {
-                caseList[index].explored();
-                caseList[index].explore(player);
+            if (player.getEast()) {
+                index = ((1 - tile.rotation) % 4 + 4) % 4;
+                if (caseList[index] != null) {
+                    caseList[index].unexplored();
+                    caseList[index].revert(player);
+                }
             }
-        }
-        if (player.getEscalatorTaker()) {
-            if (elevator != null) {
-                elevator.explored();
-                elevator.explore(player.copyEscalator());
+            if (player.getEscalatorTaker()) {
+                if (elevator != null) {
+                    elevator.unexplored();
+                    elevator.revert(player);
+                }
             }
-        }
 
-        if (player.getShortcutTaker()) {
-            if (shortcut != null) {
-                shortcut.explored();
-                shortcut.explore(player.copyShortcut());
+            if (player.getShortcutTaker()) {
+                if (shortcut != null) {
+                    shortcut.unexplored();
+                    shortcut.revert(player);
+                }
             }
         }
     }

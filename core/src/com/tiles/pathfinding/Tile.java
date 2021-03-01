@@ -10,7 +10,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import java.io.Serializable;
 
 public class Tile implements Serializable {
-    private int number; // numéro de tuile
+    public int number; // numéro de tuile
     private String path; // path de la tuile
     private transient Sprite sprite; // transient ça veut dire qu'on le stock pas dans la serialization
 
@@ -30,9 +30,9 @@ public class Tile implements Serializable {
     // Elles sont utiles pour éviter un phénomène que j'appelle le blinking
     // Qui fait que, au moment où on dépose la carte, les trucs du pathfinding apparaissent
 
-    private float x = 0;
-    private float y = 0;
-    private float size;
+    public float x = 0;
+    public float y = 0;
+    public float size;
 
     public float getX() {
         return x;
@@ -42,9 +42,17 @@ public class Tile implements Serializable {
         return y;
     }
 
+    public void updateAll() {
+        sprite.setX(x);
+        sprite.setY(y);
+        sprite.setSize(size, size);
+        updateAllCases();
+    }
+
     private void updateCoordinates() {
         sprite.setX(x);
         sprite.setY(y);
+        updateAllCases();
     }
 
     public float getWidth() {
@@ -58,6 +66,12 @@ public class Tile implements Serializable {
     public void setSize(float size) {
         this.size = size;
         sprite.setSize(size, size);
+        updateAllCases();
+    }
+
+    public void resize(float size) {
+        setSize(sprite.getWidth() + size);
+        updateAllCases();
     }
 
     // fonctions classiques j'ai envie de dire
@@ -82,17 +96,6 @@ public class Tile implements Serializable {
         // Et la taille (deprecated, on devrait plus à avoir à faire ça maintenant)
         if (Gdx.input.isKeyJustPressed(Input.Keys.NUMPAD_SUBTRACT)) resize(-50f);
         if (Gdx.input.isKeyJustPressed(Input.Keys.NUMPAD_ADD)) resize(+50f);
-    }
-
-    public void resize(float size) {
-        setSize(sprite.getWidth() + size);
-        for (Case[] ligne : caseList) {
-            for (Case tempCase : ligne) {
-                tempCase.setSize(128 * sprite.getWidth() / 600);
-                // On scale la taille des cases avec la taille de la tuile
-                tempCase.updateCoordinates();
-            }
-        }
     }
 
 
@@ -186,8 +189,8 @@ public class Tile implements Serializable {
     public Case getCase(float x, float y) {
         float offset = 40 * getWidth() / 600;
         float tileSize = (getWidth() - 2 * offset) / 4;
-        int tempX = (int) ((x - offset) / tileSize);
-        int tempY = (int) ((y - offset) / tileSize);
+        int tempX = (int) ((x-this.x - offset) / tileSize);
+        int tempY = (int) ((y-this.y - offset) / tileSize);
         int buffer;
         if (rotation == 1) {
             buffer = tempX;
@@ -212,9 +215,15 @@ public class Tile implements Serializable {
         rotation += angle;
         rotation = (rotation % 4 + 4) % 4; // Java et les modulos...
         sprite.rotate(angle * 90); // Dans le sens trigo
+        updateAllCases();
+    }
+
+    private void updateAllCases() {
         for (Case[] ligne : caseList) {
-            for (Case tempCase : ligne)
+            for (Case tempCase : ligne) {
                 tempCase.updateCoordinates();
+                tempCase.setSize(128 * sprite.getWidth() / 600);
+            }
         }
     }
 

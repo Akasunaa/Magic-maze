@@ -119,7 +119,10 @@ public class Queue implements Serializable {
                     isHidden = true;
                     try {
                         tileList.add(head);
-                        head.resize(0f); // Pour mettre à jour les cases, tu peux essayer sans pour voir ce que ça fait
+                        head.x = mouseX - size / 2;
+                        head.y = mouseY - size / 2;
+                        head.size = size;
+                        head.updateAll();
                         head.startCooldown();
                         remove();
                     } catch (NullPointerException e) {

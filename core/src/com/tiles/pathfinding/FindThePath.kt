@@ -46,19 +46,22 @@ class FindThePath : ApplicationAdapter() {
 
         tileList = ArrayList<Tile>()
         tileList.add(Tile(2))
-        for (tile in tileList) tile.load()
+        for (tile in tileList) {
+            tile.load()
+            tile.setSize(400f)
+        }
         greenPawn = Pawn("green")
         greenPawn.setCase = tileList.get(0).caseList[0][2]
         greenPawn.load()
         // On sélectionne le bon numéro de case et on la charge
         // Le chargement est nécessaire pour le rendre sérializable
 
-        player = Player(true, false, false, true, false, true)
+        player = Player(true, true, true, true, true, true)
 
         queue = Queue(3) // J'ai fait les cases uniquement jusqu'à la 9
         queue.load()
-        queue.setSize(200f)
-        queue.setCoordinates(700f, 400f)
+        queue.setSize(300f)
+        queue.setCoordinates(700f, 200f)
 
 
         // Bon là c'ets le batch et des trucs pour écrire, rien d'important

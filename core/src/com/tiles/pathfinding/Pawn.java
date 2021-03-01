@@ -24,6 +24,8 @@ public class Pawn implements Serializable {
     }
 
     private float size;
+    // Je le met parce que Compte me l'a demandé
+    // mais je pense pas que ça vaille le coup vu qu'il est forcèment chargé ?
 
     private void setSize(float size) {
         this.size = size;
@@ -33,10 +35,11 @@ public class Pawn implements Serializable {
     public void setSize() {
         setSize(setCase.tileSize() / 2);
     }
+    // Fonctions classiques pour gérer la taille
 
-    private boolean isMovable = false;
+    private boolean isMovable = false; // Même principe que pour la Queue
 
-    public void load() {
+    public void load() { // Pour la sérialization
         sprite = new Sprite(new Texture("pions/" + color + ".png"));
         setSize();
         updateCoordinates();
@@ -55,30 +58,30 @@ public class Pawn implements Serializable {
         sprite.getTexture().dispose();
     }
 
-    private boolean hasExplored = false;
+    private boolean hasExplored = false; // Pour regarder si on a déjà fait le pathfinding et éviter de le faire trop de fois
 
     public void handleInput(Player player, float mouseX, float mouseY, ArrayList<Tile> tileList) {
         if (isMovable) {
             sprite.setX(mouseX - sprite.getWidth() / 2);
             sprite.setY(mouseY - sprite.getHeight() / 2);
-            if (!hasExplored) {
-                setCase.show();
-                setCase.explore(player);
-                hasExplored = true;
+            if (!hasExplored) { // On fait le pathfinding une seule fois
+                setCase.show(); // On montre la case de départ
+                setCase.explore(player); // On lance le pathfinding (structure récursive)
+                hasExplored = true; // Et on montre qu'on a déjà fait le pathfinding
             }
-            if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
+            if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) { // Puis si on clique quelque part
                 try {
-                    Case nextCase = findCase(mouseX, mouseY, tileList);
-                    if (nextCase.isValid) {
-                        setCase.revert(player);
-                        setCase.hide();
-                        setCase = nextCase;
-                        hasExplored = false;
+                    Case nextCase = findCase(mouseX, mouseY, tileList); // Est-on sur une case ?
+                    if (nextCase.isValid) { // Si elle existe et est non nulle
+                        setCase.revert(player); // On annule le pathfinding... avec un autre pathfinding
+                        setCase.hide(); // On cache la case de départ
+                        setCase = nextCase; // On change la case
+                        hasExplored = false; // On réinitialise les variables booléennes
                         isMovable = false;
-                        updateCoordinates();
+                        updateCoordinates(); // Et on met à jour les coordonées, qui sont entièrement calculées à partir de la case
                     }
                 } catch (NullPointerException e) {
-                    System.out.println("No valid case in Pawn.handleInput");
+                    System.out.println("No Tile found in Pawn.handleInput");
                 }
             }
         } else isMovable = (Gdx.input.isButtonJustPressed(Input.Buttons.RIGHT) &&
@@ -88,8 +91,12 @@ public class Pawn implements Serializable {
 
     public Case findCase(float x, float y, ArrayList<Tile> tileList) {
         for (Tile tile : tileList) {
-            if (tile.getX() <= x && x <= tile.getX() + tile.getWidth() || tile.getY() <= y && y <= tile.getY() + tile.getHeight()) {
-                return tile.getCase(x, y);
+            if (tile.getX() <= x && x <= tile.getX() + tile.getWidth() && tile.getY() <= y && y <= tile.getY() + tile.getHeight()) {
+                try {
+                    return tile.getCase(x, y);
+                } catch (ArrayIndexOutOfBoundsException e) {
+                    System.out.println("Clicked border of Tile n°" + tile.number + " in Pawn.findCase");
+                }
             }
         }
         return null;
