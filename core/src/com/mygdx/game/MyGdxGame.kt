@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.files.FileHandle
 import com.badlogic.gdx.Game;
+import com.badlogic.gdx.Input
 import com.badlogic.gdx.graphics.g2d.Sprite
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.*
@@ -18,8 +19,7 @@ import ktx.graphics.use
 class MyGdxGame : ApplicationAdapter() {
     private lateinit var renderer: ShapeRenderer
     //pion
-    private lateinit var Pion: Sprite
-    private var pion = Pion(25f,325f)
+    private lateinit var pion: Pion
     //fond
     private lateinit var texture: Texture
     private lateinit var batch: SpriteBatch
@@ -33,6 +33,8 @@ class MyGdxGame : ApplicationAdapter() {
     val colonne4: IntArray = intArrayOf(1,1,1,1,1)
     val tab: Array<IntArray> = arrayOf(colonne0,colonne1,colonne2,colonne3,colonne4)
 
+    var startTime: Long = 0L // Utile pour le cooldown
+
 
     override fun create() {
         batch = SpriteBatch()
@@ -43,8 +45,8 @@ class MyGdxGame : ApplicationAdapter() {
         val grille = Gdx.files.internal("Sans titre 2.png")
         texture = Texture(grille)
         //pion
-        val pion = Gdx.files.internal("pion.png")
-        Pion= Sprite(Texture(pion))
+        //val pion = Gdx.files.internal("pion.png")
+        pion= Pion(Texture("pion.png"),0f,0f,50f,50f,500,"rouge")
     }
 
     override fun dispose() {
@@ -56,42 +58,23 @@ class MyGdxGame : ApplicationAdapter() {
         //gestion camera
         batch.setProjectionMatrix(camera.combined)
         //fonction boucle
-        handleInput()
-        draw()
+        batch.begin()
+
+        if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)){
+            pion.movePawn(getMouseX(),getMouseY())
+        }
+        batch.draw(texture, 0.toFloat(), 0.toFloat())
+        pion.update(batch)
+
+        batch.end()
+
+        //println(pion.x)
     }
+
 
     //coordonnée souris
     fun getMouseX(): Float = camera.unproject(Vector3(Gdx.input.x.toFloat(), Gdx.input.y.toFloat(), 0f)).x
     fun getMouseY(): Float = camera.unproject(Vector3(Gdx.input.x.toFloat(), Gdx.input.y.toFloat(), 0f)).y
-
-    //test si on click avec la souris
-    private fun handleInput() {
-        val click = Gdx.input.isTouched
-        if (click) {
-            //ancienne coordonée
-            //val X = Gdx.input.x.toFloat()
-            //val Y = Gdx.graphics.getHeight() - Gdx.input.y.toFloat() pour inverser l'origine du click
-            val X = getMouseX()
-            val Y = getMouseY()
-            val x = (X / 100).toInt()
-            val y = (Y / 100).toInt()
-            //println(x)
-            //println(y)
-            if (tab[x][y] == 0) {
-                pion = Pion((x * 100 + 25).toFloat(), (y * 100 + 25).toFloat())
-            }
-        }
-    }
-
-    //dessin
-     private fun draw(){
-         batch.begin()
-         batch.draw(texture, 0.toFloat(), 0.toFloat())
-         batch.draw( Pion,pion.x,pion.y)
-         batch.end()
-
-     }
-
 
 
 }
