@@ -31,9 +31,9 @@ public class Case implements Serializable {
             color = "none";
         }
         else {
-            if (number%10 == 0) color = "vert";
-            if (number%10 == 1) color = "violet";
-            if (number%10 == 2) color = "jaune";
+            if (number%10 == 0) color = "green";
+            if (number%10 == 1) color = "purple";
+            if (number%10 == 2) color = "yellow";
             if (number%10 == 3) color = "orange";
         }
         hasPortal = number/10==2;
@@ -63,15 +63,20 @@ public class Case implements Serializable {
         setSpriteCoordinates(x,y);
         // Le blueDot est inutile pour le moment mais sait-on jamais
     }
+
+    public float offset() {return 40 * tile.getWidth() / 600;}
+    public float tileSize() {return (tile.getWidth() - 2 * offset()) / 4;}
+    public float getX(int x) {return tile.getX() + offset() + (x * tileSize());}
+    public float getY(int y) {return tile.getY() + offset() + (y * tileSize());}
     private void setSpriteCoordinates(int x, int y) { // self explanatory
-        float offset = 40 * tile.getWidth() / 600;
-        float tileSize = (tile.getWidth() - 2 * offset) / 4;
-        greenDot.setX(tile.getX() + offset + x * tileSize);
-        greenDot.setY(tile.getY() + offset + y * tileSize);
-        redDot.setX(tile.getX() + offset + x * tileSize);
-        redDot.setY(tile.getY() + offset + y * tileSize);
-        blueDot.setX(tile.getX() + offset + x * tileSize);
-        blueDot.setY(tile.getY() + offset + y * tileSize);
+        float tempX = getX(x);
+        float tempY = getY(y);
+        greenDot.setX(tempX);
+        greenDot.setY(tempY);
+        redDot.setX(tempX);
+        redDot.setY(tempY);
+        blueDot.setX(tempX);
+        blueDot.setY(tempY);
     }
 
     public void setSize(float size) {
@@ -79,8 +84,7 @@ public class Case implements Serializable {
         blueDot.setSize(size,size);
         redDot.setSize(size,size);
     }
-    public void updateCoordinates() {
-        // Cette fonction met à jour les coordonées des sprites lorsque la tuile est tournée
+    public int[] getRotatedCoordinates() {
         int[] xy = tile.getCaseCoordinates(this);
         if (tile.rotation == 0) {
             x = xy[0];
@@ -98,6 +102,11 @@ public class Case implements Serializable {
             x = 3-xy[1];
             y = xy[0];
         }
+        return new int[]{x, y};
+    }
+    public void updateCoordinates() {
+        // Cette fonction met à jour les coordonées des sprites lorsque la tuile est tournée
+        int[] xy = getRotatedCoordinates();
         setSpriteCoordinates(x,y);
     }
 
