@@ -9,8 +9,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.math.Vector3
-import com.tiles.pathfinding.NeededConstants.batch
-import com.tiles.pathfinding.NeededConstants.mouseInput
+import com.tiles.pathfinding.NeededConstants.*
 
 class FindThePath : ApplicationAdapter() {
     lateinit var batch: SpriteBatch
@@ -88,14 +87,13 @@ class FindThePath : ApplicationAdapter() {
         batch.setProjectionMatrix(camera.combined) // On change le système de coordonées
 
         batch.begin()
-        coordMouse.draw(batch, stringMousePosition(), 700f, 150f) // On écrit les coordonées
+        coordMouse.draw(batch, stringMousePosition() + "\n$origin", 700f, 150f) // On écrit les coordonées
 
 
         queue.draw()
         queue.handleInput()
         for (tile in tileList) {
             tile.draw() // On dessine la tuile
-            //tile.handleInput(batch, player, getMouseX(),getMouseY(),numberCase) // On gère l'input
         }
 //        greenPawn.draw()
 //        greenPawn.handleInput(player)
@@ -108,6 +106,7 @@ class FindThePath : ApplicationAdapter() {
         if (Gdx.input.isKeyPressed(Input.Keys.Q)) displacement.add(-step, 0f)
         if (Gdx.input.isKeyPressed(Input.Keys.S)) displacement.add(0f, -step)
         if (Gdx.input.isKeyPressed(Input.Keys.D)) displacement.add(step, 0f)
+        displacement.scl(camera.zoom)
         if (!displacement.isZero()) {
             for (i in 1..10) {
                 camera.translate(displacement)

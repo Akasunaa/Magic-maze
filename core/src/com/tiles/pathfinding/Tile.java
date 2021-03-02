@@ -10,6 +10,9 @@ import com.badlogic.gdx.math.Vector2;
 
 import java.io.Serializable;
 
+import static com.tiles.pathfinding.NeededConstants.*;
+import static jdk.internal.dynalink.support.Guards.isNull;
+
 public class Tile implements Serializable {
     public int number; // numéro de tuile
     private String path; // path de la tuile
@@ -21,6 +24,11 @@ public class Tile implements Serializable {
 
     public Case[][] caseList; // Un tableau de 4x4 avec les cases
     public int rotation = 0; // Indicateur de rotation (dans le sens trigonométrique)
+    public boolean[] exits;
+    // Exit représente où sont les sorties de cette tuile
+    // Comme d'habitude, 0 est le Sud, et on tourne dans le sens trigo
+    public int entrance;
+    // L'entrée représente la direction cardinale de la tuile
 
     private long cooldown;
 
@@ -81,8 +89,6 @@ public class Tile implements Serializable {
             // Bah oui parce que si on est pas dans les bornes de la tuile forcément getCase fonctionne moins bien lol
         }
         // On gère la rotation
-        if (Gdx.input.isKeyJustPressed(Input.Keys.E)) rotate(-1);
-        if (Gdx.input.isKeyJustPressed(Input.Keys.A)) rotate(+1);
     }
 
 
@@ -132,10 +138,22 @@ public class Tile implements Serializable {
         }
         // Et on rajoute les raccourcis et escalators
         complete();
+
+        exits = new boolean[]{caseList[0][1].isExit, caseList[1][3].isExit,caseList[3][2].isExit, caseList[2][0].isExit};
+
+        System.out.println("Tile number " + number + " has exits " + exits[0] + " "+ exits[1] + " "+ exits[2] + " "+ exits[3]);
+
+        if (caseList[0][1].isEntrance) entrance = 0;
+        if (caseList[1][3].isEntrance) entrance = 1;
+        if (caseList[3][2].isEntrance) entrance = 2;
+        if (caseList[2][0].isEntrance) entrance = 3;
+        System.out.println("Tile number " + number + " has entrance number " + entrance);
+        // On récupère la coordonée d'entrée
     }
 
     public void load() { // Obligatoire pour la serialization
         sprite = new Sprite(new Texture(path)); // On se charge soit même
+        sprite.setOrigin(tileSize/2, tileSize/2);
         for (Case[] ligne : caseList) {
             for (Case tempCase : ligne)
                 tempCase.load(); // et on charge toutes les cases
@@ -243,5 +261,37 @@ public class Tile implements Serializable {
             for (Case tempCase : ligne)
                 tempCase.dispose();
         }
+    }
+
+    private static boolean isValidPlacement(Tile tileToPlace, Tile tileToJoin) {
+        if (tileToJoin == null) return false;
+        return tileToJoin.exits[((2+tileToPlace.entrance - tileToPlace.rotation + tileToJoin.rotation)%4 +4)%4];
+    }
+
+    private Tile[] getNeighbouringTiles() {
+        Vector2 mousePosition = mouseInput();
+        mousePosition.sub(NeededConstants.origin);
+        mousePosition.sub(tileSize/2, tileSize/2);
+        mousePosition.mul(NeededConstants.newBaseInvert);
+        int x = Math.round(mousePosition.x);
+        int y = Math.round(mousePosition.y);
+        return new Tile[]{
+                getTile(new Vector2(x,y-1).mul(NeededConstants.newBase).add(NeededConstants.origin).add(tileSize/2, tileSize/2)),
+                getTile(new Vector2(x+1,y).mul(NeededConstants.newBase).add(NeededConstants.origin).add(tileSize/2, tileSize/2)),
+                getTile(new Vector2(x,y+1).mul(NeededConstants.newBase).add(NeededConstants.origin).add(tileSize/2, tileSize/2)),
+                getTile(new Vector2(x-1,y).mul(NeededConstants.newBase).add(NeededConstants.origin).add(tileSize/2, tileSize/2)),
+        };
+    }
+
+    private boolean noOverlap() {
+        for (Tile tile : tileList) {
+            if (!tile.equals(this) && ((tile.x < mouseInput().x) && (mouseInput().x < tile.x + tileSize) && (tile.y < mouseInput().y) && (mouseInput().y < tile.y + tileSize))) {
+                return false;
+            }
+        }
+        return true;
+    }
+    public boolean canPlaceThere() {
+        return isValidPlacement(this, getNeighbouringTiles()[((entrance+rotation)%4 + 4)%4]) && noOverlap();
     }
 }

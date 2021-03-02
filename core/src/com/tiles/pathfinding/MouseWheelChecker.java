@@ -53,7 +53,7 @@ public class MouseWheelChecker implements InputProcessor {
     @Override
     public boolean scrolled(float amountX, float amountY) {
         System.out.println("Scrolled by " + amountX + " and " + amountY);
-        camera.zoom += amountY*0.1;
+        if (camera.zoom >= 0.2 || amountY >= 0) camera.zoom += amountY*0.1;
         camera.update();
         return false;
     }

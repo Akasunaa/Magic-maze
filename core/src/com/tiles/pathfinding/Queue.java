@@ -65,13 +65,20 @@ public class Queue implements Serializable {
 
     private void remove() {
         // On enlève la tête, on devient la queue
-        this.head = tail.head;
-        this.tail = tail.tail;
+        try {
+            this.head = tail.head;
+            this.tail = tail.tail;
+            // Et on recharge le sprite
+            loadSprite();
+        } catch (NullPointerException e) { // S'il n'y a pas de queue, c'est qu'elle est vide
+            System.out.println("File vide !");
+            sprite = new Sprite(new Texture("tuiles/blueDot.png"));
+            isEmpty = true; // On fait plus rien pour le futur
+            isHidden = false;
+        }
 
-        // Et on recharge le sprite
-        loadSprite();
-        this.updateSpriteSize();
-        this.updateCoordinates();
+        updateSpriteSize();
+        updateCoordinates();
     }
 
     private Queue copy() {
@@ -110,6 +117,15 @@ public class Queue implements Serializable {
         else sprite.draw(NeededConstants.batch);
     }
 
+    private void place(Vector2 mousePosition) {
+        tileList.add(head); // On pose la tuile
+        head.x = mousePosition.x; //Bon c'est classique ça
+        head.y = mousePosition.y;
+        head.updateAll(); // Mise à jour
+        head.startCooldown(); // On peut pas le blinking
+        remove(); // Et on enlève la tête
+    }
+
     public void handleInput() {
         // Uh, this is going to be fun
         Vector2 mousePosition = mouseInput();
@@ -119,30 +135,22 @@ public class Queue implements Serializable {
                 mousePosition.sub(tileSize/2,tileSize/2); // Pour que le sprite soit centré sur la souris
                 sprite.setX(mousePosition.x); // On suit la souris
                 sprite.setY(mousePosition.y);
+                if (Gdx.input.isKeyJustPressed(Input.Keys.E)) head.rotate(+1);
+                if (Gdx.input.isKeyJustPressed(Input.Keys.A)) head.rotate(-1);
                 if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) { // si on sélectionne un endroit
-                    isMovable = false; // Voilà voilà
-                    isHidden = true;
-                    try {
-                        tileList.add(head); // On pose la tuile
-                        if (isFirst) {
-                            origin.add(mousePosition); // Si c'est la première, on stock ses coordonées
-                            isFirst = false; // Et c'est plus la rmière après, logique
-                        }
-                        else {
-                            snap(mousePosition); // sinon, tu alignes les coordonées sur la "grille"
-                        }
-                        head.x = mousePosition.x; //Bon c'est classique ça
-                        head.y = mousePosition.y;
-                        head.updateAll(); // Mise à jour
-                        head.startCooldown(); // On peut pas le blinking
-                        remove(); // Et on enlève la tête
-                    } catch (NullPointerException e) { // si elle est vide
-                        System.out.println("File vide !");
-                        sprite = new Sprite(new Texture("tuiles/blueDot.png"));
-                        updateSpriteSize();
-                        updateCoordinates();
-                        isEmpty = true; // On fait plus rien pour le futur
-                        isHidden = false;
+                    if (isFirst) {
+                        isMovable = false; // Voilà voilà
+                        isHidden = true;
+                        isFirst = false;
+                        origin.add(mousePosition);// Si c'est la première, on stock ses coordonées
+                        place(mousePosition); // On pose la tuile
+                    }
+                    else if (head.canPlaceThere()) {
+                        System.out.println("Yes you can");
+                        isMovable = false; // Voilà voilà
+                        isHidden = true;
+                        snap(mousePosition); // Tu alignes les coordonées sur la "grille"
+                        place(mousePosition);
                     }
                 }
             }

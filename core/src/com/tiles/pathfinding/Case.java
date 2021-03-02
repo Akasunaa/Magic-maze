@@ -16,6 +16,9 @@ public class Case implements Serializable {
 
     public boolean isAccessible; // Je suis même pas sûr qu'on l'utilise ça
     public boolean hasPortal;
+    public boolean isExit;
+    public boolean isEntrance;
+
     public boolean isValid = false; // Utiler pour le déplacement du pion
     private boolean isShowed = false;
     public Case shortcut;
@@ -38,6 +41,8 @@ public class Case implements Serializable {
             if (number % 10 == 2) color = "yellow";
             if (number % 10 == 3) color = "orange";
         }
+        isEntrance = number == 2;
+        isExit = number / 10 == 1;
         hasPortal = number / 10 == 2;
     }
 
