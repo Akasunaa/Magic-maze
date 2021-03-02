@@ -1,7 +1,10 @@
 package com.tiles.pathfinding;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.math.Vector2;
 
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
@@ -50,7 +53,7 @@ public class MouseWheelChecker implements InputProcessor {
     @Override
     public boolean scrolled(float amountX, float amountY) {
         System.out.println("Scrolled by " + amountX + " and " + amountY);
-        camera.zoom += amountY*0.01;
+        camera.zoom += amountY*0.1;
         camera.update();
         return false;
     }

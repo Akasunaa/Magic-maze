@@ -7,8 +7,8 @@ import com.badlogic.gdx.graphics.GL20
 import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.graphics.g2d.BitmapFont
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
+import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.math.Vector3
-import java.awt.event.MouseWheelListener
 
 
 class FindThePath : ApplicationAdapter() {
@@ -97,10 +97,20 @@ class FindThePath : ApplicationAdapter() {
         greenPawn.draw(batch)
         greenPawn.handleInput(player, getMouseX(), getMouseY(), tileList)
 
-        // Et la taille (deprecated, on devrait plus à avoir à faire ça maintenant)
-        if (Gdx.input.isKeyJustPressed(Input.Keys.NUMPAD_SUBTRACT)) camera.zoom --
-        if (Gdx.input.isKeyJustPressed(Input.Keys.NUMPAD_ADD)) camera.zoom ++
-        camera.update()
+
+        // Gestion du déplacement de la caméra
+        val step = 1f
+        var displacement = Vector2()
+        if (Gdx.input.isKeyPressed(Input.Keys.Z)) displacement.add( 0f, step)
+        if (Gdx.input.isKeyPressed(Input.Keys.Q)) displacement.add(-step, 0f)
+        if (Gdx.input.isKeyPressed(Input.Keys.S)) displacement.add(0f, -step)
+        if (Gdx.input.isKeyPressed(Input.Keys.D)) displacement.add(step, 0f)
+        if (!displacement.isZero()) {
+            for (i in 1..10) {
+                camera.translate(displacement)
+                camera.update()
+            }
+        }
         batch.end()
     }
 
