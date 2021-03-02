@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.graphics.g2d.BitmapFont
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.math.Vector3
+import java.awt.event.MouseWheelListener
 
 
 class FindThePath : ApplicationAdapter() {
@@ -38,11 +39,15 @@ class FindThePath : ApplicationAdapter() {
     fun getMouseY(): Float = camera.unproject(Vector3(Gdx.input.x.toFloat(), Gdx.input.y.toFloat(), 0f)).y
     fun stringMousePosition(): String = "x = ${getMouseX().toInt()}; y = ${getMouseY().toInt()}"
 
+    // Le truc pour faire le zoom
+    lateinit var mouseWheelChecker: MouseWheelChecker
 
     override fun create() {
         camera = OrthographicCamera(Gdx.graphics.width.toFloat(), Gdx.graphics.height.toFloat())
         camera.setToOrtho(false, Gdx.graphics.width.toFloat(), Gdx.graphics.height.toFloat())
         // Cette caméra nous sert à avoir le bon système de coordonées
+        mouseWheelChecker = MouseWheelChecker(camera)
+        Gdx.input.setInputProcessor(mouseWheelChecker)
 
         tileList = ArrayList<Tile>()
         tileList.add(Tile(2))
@@ -91,6 +96,11 @@ class FindThePath : ApplicationAdapter() {
         }
         greenPawn.draw(batch)
         greenPawn.handleInput(player, getMouseX(), getMouseY(), tileList)
+
+        // Et la taille (deprecated, on devrait plus à avoir à faire ça maintenant)
+        if (Gdx.input.isKeyJustPressed(Input.Keys.NUMPAD_SUBTRACT)) camera.zoom --
+        if (Gdx.input.isKeyJustPressed(Input.Keys.NUMPAD_ADD)) camera.zoom ++
+        camera.update()
         batch.end()
     }
 
