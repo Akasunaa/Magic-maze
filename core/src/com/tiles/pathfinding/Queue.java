@@ -111,35 +111,37 @@ public class Queue implements Serializable {
     }
 
     public void handleInput() {
+        // Uh, this is going to be fun
         Vector2 mousePosition = mouseInput();
-        if (!isEmpty) {
-            if (isMovable) {
-                mousePosition.sub(tileSize/2,tileSize/2);
-                sprite.setX(mousePosition.x);
+        // Je le sauvegarde parce qu'on va le modifier
+        if (!isEmpty) { // On fait rien si elle est vide
+            if (isMovable) { // Truc classique pour avoir deux comportements sur un seul objet
+                mousePosition.sub(tileSize/2,tileSize/2); // Pour que le sprite soit centré sur la souris
+                sprite.setX(mousePosition.x); // On suit la souris
                 sprite.setY(mousePosition.y);
-                if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
-                    isMovable = false;
+                if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) { // si on sélectionne un endroit
+                    isMovable = false; // Voilà voilà
                     isHidden = true;
                     try {
-                        tileList.add(head);
+                        tileList.add(head); // On pose la tuile
                         if (isFirst) {
-                            origin.add(mousePosition);
-                            isFirst = false;
+                            origin.add(mousePosition); // Si c'est la première, on stock ses coordonées
+                            isFirst = false; // Et c'est plus la rmière après, logique
                         }
                         else {
-                            snap(mousePosition);
+                            snap(mousePosition); // sinon, tu alignes les coordonées sur la "grille"
                         }
-                        head.x = mousePosition.x;
+                        head.x = mousePosition.x; //Bon c'est classique ça
                         head.y = mousePosition.y;
-                        head.updateAll();
-                        head.startCooldown();
-                        remove();
-                    } catch (NullPointerException e) {
+                        head.updateAll(); // Mise à jour
+                        head.startCooldown(); // On peut pas le blinking
+                        remove(); // Et on enlève la tête
+                    } catch (NullPointerException e) { // si elle est vide
                         System.out.println("File vide !");
                         sprite = new Sprite(new Texture("tuiles/blueDot.png"));
                         updateSpriteSize();
                         updateCoordinates();
-                        isEmpty = true;
+                        isEmpty = true; // On fait plus rien pour le futur
                         isHidden = false;
                     }
                 }
