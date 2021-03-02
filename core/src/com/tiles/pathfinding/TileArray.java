@@ -33,6 +33,32 @@ public class TileArray {
         return answer;
     }
 
+    /* Et maintenant, on construit allégrement la tuile
+        Je vais maintenant expliquer comment on utilise le système de tableau
+        On a un tableau 4x4 pour les cases, et pour les murs...
+        Un tableau de 3x4 pour ceux verticaux
+        Un tableau de 4x3 pour ceux horizontaux
+        Pour le mur: 1 = un mur, 0 = pas de mur
+        Pour les cases:
+         - 0 = innacessible
+         - 1 = accessible, case normale
+         - 2 = une entrée
+         // les racourcis et les escalators sont rajoutés à la main
+         - 7 = un sablier
+         - 8 = boule de crystal
+         - 9 = caméra
+         - 1x = une sortie normale
+         - 2x = un téléporteur (voir comment les coder plus tard)
+         - 3x = une arme
+         - 4x = une sortie de joueur
+
+         pour les grands nombres, on a
+         - 0 -> vert
+         - 1 -> violet
+         - 2 -> jaune
+         - 3 -> orange
+        */
+
     private static int[][] getArrayTemp(int number) {
         if (number == 0) {
             return new int[][]{

@@ -52,21 +52,21 @@ class FindThePath : ApplicationAdapter() {
         Gdx.input.setInputProcessor(mouseWheelChecker)
 
         tileList = ArrayList()
-        tileList.add(Tile(2))
+        //tileList.add(Tile(2))
         for (tile in tileList) {
             tile.load()
         }
         NeededConstants.tileList = tileList
 
-        greenPawn = Pawn("green")
-        greenPawn.setCase = tileList.get(0).caseList[0][2]
-        greenPawn.load()
+//        greenPawn = Pawn("green")
+//        greenPawn.setCase = tileList.get(0).caseList[0][2]
+//        greenPawn.load()
         // On sélectionne le bon numéro de case et on la charge
         // Le chargement est nécessaire pour le rendre sérializable
 
         player = Player(true, true, true, true, true, true)
 
-        queue = Queue(3) // J'ai fait les cases uniquement jusqu'à la 9
+        queue = Queue(9) // J'ai fait les cases uniquement jusqu'à la 9
         queue.load()
         queue.setCoordinates(700f, 200f)
 
@@ -82,7 +82,7 @@ class FindThePath : ApplicationAdapter() {
     }
 
     override fun render() {
-        Gdx.gl.glClearColor(1f, 1f, 1f, 1f)
+        Gdx.gl.glClearColor(125f/255, 125f/255, 125f/255, 1f)
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT)
         // Couleur d'arrière plan, et on clear tout
         batch.setProjectionMatrix(camera.combined) // On change le système de coordonées
@@ -92,13 +92,13 @@ class FindThePath : ApplicationAdapter() {
 
 
         queue.draw()
-        queue.handleInput(getMouseX(), getMouseY())
+        queue.handleInput()
         for (tile in tileList) {
             tile.draw() // On dessine la tuile
             //tile.handleInput(batch, player, getMouseX(),getMouseY(),numberCase) // On gère l'input
         }
-        greenPawn.draw()
-        greenPawn.handleInput(player)
+//        greenPawn.draw()
+//        greenPawn.handleInput(player)
 
 
         // Gestion du déplacement de la caméra

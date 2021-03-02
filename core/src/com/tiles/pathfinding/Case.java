@@ -6,6 +6,8 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 
 import java.io.Serializable;
 
+import static com.tiles.pathfinding.NeededConstants.*;
+
 public class Case implements Serializable {
     private Case[] caseList = new Case[4];
 
@@ -64,20 +66,12 @@ public class Case implements Serializable {
         // Le blueDot est inutile pour le moment mais sait-on jamais
     }
 
-    public float offset() {
-        return 40 * tile.getSize() / 600;
-    }
-
-    public float caseSize() {
-        return (tile.getSize() - 2 * offset()) / 4;
-    }
-
     public float getX(int x) {
-        return tile.getX() + offset() + (x * caseSize());
+        return tile.getX() + offset + (x * caseSize);
     }
 
     public float getY(int y) {
-        return tile.getY() + offset() + (y * caseSize());
+        return tile.getY() + offset + (y * caseSize);
     }
 
     private void setSpriteCoordinates(int x, int y) { // self explanatory
@@ -143,8 +137,8 @@ public class Case implements Serializable {
     }
 
     public void draw() {
-        if (isShowed) redDot.draw(NeededConstants.batch);
-        else if (isValid && isAccessible) greenDot.draw(NeededConstants.batch);
+        if (isShowed) redDot.draw(batch);
+        else if (isValid && isAccessible) greenDot.draw(batch);
     }
 
     private boolean seen = false;

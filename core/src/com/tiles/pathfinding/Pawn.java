@@ -10,8 +10,7 @@ import com.badlogic.gdx.math.Vector2;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-import static com.tiles.pathfinding.NeededConstants.mouseInput;
-import static com.tiles.pathfinding.NeededConstants.tileList;
+import static com.tiles.pathfinding.NeededConstants.*;
 
 public class Pawn implements Serializable {
     private String color; // La couleur du pion
@@ -37,7 +36,7 @@ public class Pawn implements Serializable {
     }
 
     public void setSize() {
-        setSize(setCase.caseSize() / 2);
+        setSize(caseSize / 2);
     }
     // Fonctions classiques pour gérer la taille
 
@@ -54,8 +53,8 @@ public class Pawn implements Serializable {
     }
 
     public void updateCoordinates() {
-        sprite.setX(setCase.getX(setCase.getRotatedCoordinates()[0]) + (setCase.caseSize() - sprite.getWidth()) / 2);
-        sprite.setY(setCase.getY(setCase.getRotatedCoordinates()[1]) + setCase.caseSize() / 3);
+        sprite.setX(setCase.getX(setCase.getRotatedCoordinates()[0]) + (caseSize - sprite.getWidth()) / 2);
+        sprite.setY(setCase.getY(setCase.getRotatedCoordinates()[1]) + caseSize / 3);
     }
 
     public void dispose() {
