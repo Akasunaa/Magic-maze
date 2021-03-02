@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.math.Vector2;
 
 import java.io.Serializable;
 
@@ -32,7 +33,7 @@ public class Tile implements Serializable {
 
     public float x = 0;
     public float y = 0;
-    public float size;
+    private float size = NeededConstants.tileSize;
 
     public float getX() {
         return x;
@@ -45,8 +46,7 @@ public class Tile implements Serializable {
     public void updateAll() {
         sprite.setX(x);
         sprite.setY(y);
-        sprite.setSize(size, size);
-        updateAllCases();
+        updateSize();
     }
 
     private void updateCoordinates() {
@@ -55,47 +55,34 @@ public class Tile implements Serializable {
         updateAllCases();
     }
 
-    public float getWidth() {
+    public float getSize() {
         return size;
     }
 
-    public float getHeight() {
-        return size;
-    }
-
-    public void setSize(float size) {
-        this.size = size;
+    public void updateSize() {
         sprite.setSize(size, size);
-        updateAllCases();
-    }
-
-    public void resize(float size) {
-        setSize(sprite.getWidth() + size);
         updateAllCases();
     }
 
     // fonctions classiques j'ai envie de dire
 
-    public void handleInput(Batch batch, Player player, float mouseX, float mouseY, BitmapFont numberCase) {
+    public void handleInput(Player player, Vector2 mouseInput, BitmapFont numberCase) {
         Case tempCase;
         // Puis si on clique gauche, boum, le pathfinding
         if ((Gdx.input.isButtonPressed(Input.Buttons.LEFT)) && (System.currentTimeMillis() - cooldown > 500)) {
             try {
-                tempCase = getCase(mouseX - getX(), mouseY - getY());
+                mouseInput.add(-x,-y);
+                tempCase = getCase(mouseInput);
                 tempCase.show();
                 tempCase.explore(player);
-                numberCase.draw(batch, "x = " + tempCase.x + "; y = " + tempCase.y + "; couleur = " + tempCase.color + ", portal = " + tempCase.hasPortal, 700f, 200f);
+                numberCase.draw(NeededConstants.batch, "x = " + tempCase.x + "; y = " + tempCase.y + "; couleur = " + tempCase.color + ", portal = " + tempCase.hasPortal, 700f, 200f);
             } catch (ArrayIndexOutOfBoundsException e) {
             }
             // Bah oui parce que si on est pas dans les bornes de la tuile forcément getCase fonctionne moins bien lol
         }
-
         // On gère la rotation
         if (Gdx.input.isKeyJustPressed(Input.Keys.E)) rotate(-1);
         if (Gdx.input.isKeyJustPressed(Input.Keys.A)) rotate(+1);
-        // Et la taille (deprecated, on devrait plus à avoir à faire ça maintenant)
-        if (Gdx.input.isKeyJustPressed(Input.Keys.NUMPAD_SUBTRACT)) resize(-50f);
-        if (Gdx.input.isKeyJustPressed(Input.Keys.NUMPAD_ADD)) resize(+50f);
     }
 
 
@@ -149,19 +136,18 @@ public class Tile implements Serializable {
 
     public void load() { // Obligatoire pour la serialization
         sprite = new Sprite(new Texture(path)); // On se charge soit même
-        size = sprite.getWidth();
         for (Case[] ligne : caseList) {
             for (Case tempCase : ligne)
                 tempCase.load(); // et on charge toutes les cases
         }
-        updateCoordinates();
+        updateAll();
     }
 
-    public void draw(Batch batch) {
-        sprite.draw(batch);
+    public void draw() {
+        sprite.draw(NeededConstants.batch);
         for (Case[] ligne : caseList) {
             for (Case tempCase : ligne)
-                tempCase.draw(batch);
+                tempCase.draw();
         }
     }
 
@@ -186,11 +172,11 @@ public class Tile implements Serializable {
         return xy;
     }
 
-    public Case getCase(float x, float y) {
-        float offset = 40 * getWidth() / 600;
-        float tileSize = (getWidth() - 2 * offset) / 4;
-        int tempX = (int) ((x-this.x - offset) / tileSize);
-        int tempY = (int) ((y-this.y - offset) / tileSize);
+    public Case getCase(Vector2 mouseInput) {
+        float offset = 40 * size / 600;
+        float caseSize = (size - 2 * offset) / 4;
+        int tempX = (int) ((mouseInput.x - x - offset) / caseSize);
+        int tempY = (int) ((mouseInput.y - y - offset) / caseSize);
         int buffer;
         if (rotation == 1) {
             buffer = tempX;

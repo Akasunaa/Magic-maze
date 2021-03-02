@@ -9,7 +9,8 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.math.Vector3
-
+import com.tiles.pathfinding.NeededConstants.batch
+import com.tiles.pathfinding.NeededConstants.mouseInput
 
 class FindThePath : ApplicationAdapter() {
     lateinit var batch: SpriteBatch
@@ -37,7 +38,7 @@ class FindThePath : ApplicationAdapter() {
     lateinit var camera: OrthographicCamera
     fun getMouseX(): Float = camera.unproject(Vector3(Gdx.input.x.toFloat(), Gdx.input.y.toFloat(), 0f)).x
     fun getMouseY(): Float = camera.unproject(Vector3(Gdx.input.x.toFloat(), Gdx.input.y.toFloat(), 0f)).y
-    fun stringMousePosition(): String = "x = ${getMouseX().toInt()}; y = ${getMouseY().toInt()}"
+    fun stringMousePosition(): String = "x = ${mouseInput().x.toInt()}; y = ${mouseInput().y.toInt()}"
 
     // Le truc pour faire le zoom
     lateinit var mouseWheelChecker: MouseWheelChecker
@@ -45,16 +46,18 @@ class FindThePath : ApplicationAdapter() {
     override fun create() {
         camera = OrthographicCamera(Gdx.graphics.width.toFloat(), Gdx.graphics.height.toFloat())
         camera.setToOrtho(false, Gdx.graphics.width.toFloat(), Gdx.graphics.height.toFloat())
+        NeededConstants.camera = camera
         // Cette caméra nous sert à avoir le bon système de coordonées
         mouseWheelChecker = MouseWheelChecker(camera)
         Gdx.input.setInputProcessor(mouseWheelChecker)
 
-        tileList = ArrayList<Tile>()
+        tileList = ArrayList()
         tileList.add(Tile(2))
         for (tile in tileList) {
             tile.load()
-            tile.setSize(400f)
         }
+        NeededConstants.tileList = tileList
+
         greenPawn = Pawn("green")
         greenPawn.setCase = tileList.get(0).caseList[0][2]
         greenPawn.load()
@@ -65,12 +68,12 @@ class FindThePath : ApplicationAdapter() {
 
         queue = Queue(3) // J'ai fait les cases uniquement jusqu'à la 9
         queue.load()
-        queue.setSize(300f)
         queue.setCoordinates(700f, 200f)
 
 
         // Bon là c'ets le batch et des trucs pour écrire, rien d'important
         batch = SpriteBatch()
+        NeededConstants.batch = batch
         coordMouse = BitmapFont()
         coordMouse.setColor(0f, 0f, 0f, 1f)
         numberCase = BitmapFont()
@@ -88,14 +91,14 @@ class FindThePath : ApplicationAdapter() {
         coordMouse.draw(batch, stringMousePosition(), 700f, 150f) // On écrit les coordonées
 
 
-        queue.draw(batch)
-        queue.handleInput(getMouseX(), getMouseY(), tileList)
+        queue.draw()
+        queue.handleInput(getMouseX(), getMouseY())
         for (tile in tileList) {
-            tile.draw(batch) // On dessine la tuile
+            tile.draw() // On dessine la tuile
             //tile.handleInput(batch, player, getMouseX(),getMouseY(),numberCase) // On gère l'input
         }
-        greenPawn.draw(batch)
-        greenPawn.handleInput(player, getMouseX(), getMouseY(), tileList)
+        greenPawn.draw()
+        greenPawn.handleInput(player)
 
 
         // Gestion du déplacement de la caméra

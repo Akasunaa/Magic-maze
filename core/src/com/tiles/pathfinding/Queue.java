@@ -5,10 +5,14 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.math.Vector2;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
+
+import static com.tiles.pathfinding.NeededConstants.tileList;
+import static com.tiles.pathfinding.NeededConstants.tileSize;
 
 
 public class Queue implements Serializable {
@@ -22,7 +26,9 @@ public class Queue implements Serializable {
     // Coordonées et taille
     private float x;
     private float y;
-    private float size;
+    private float size = tileSize;
+    private boolean isFirstPlaced = false;
+    // Pour placer le premier
 
     // Booléens pour savoir si on est en train de placer la tuile, et si la liste est vide
     private boolean isMovable = false;
@@ -32,10 +38,6 @@ public class Queue implements Serializable {
     private boolean isHidden = true;
     private transient Sprite hidden;
 
-    public void setSize(float size) {
-        this.size = size;
-        updateSpriteSize();
-    }
 
     private void updateSpriteSize() {
         sprite.setSize(size, size);
@@ -97,6 +99,7 @@ public class Queue implements Serializable {
     public void load() { // Serialization
         hidden = new Sprite(new Texture("tuiles/hiddenOrange.png"));
         loadSprite();
+        updateSpriteSize();
     }
 
     private void loadSprite() { // Obligatoire pour la sérialization
@@ -104,14 +107,15 @@ public class Queue implements Serializable {
         sprite = head.getSprite();
     }
 
-    public void draw(Batch batch) {
-        if (isHidden) hidden.draw(batch);
-        else sprite.draw(batch);
+    public void draw() {
+        if (isHidden) hidden.draw(NeededConstants.batch);
+        else sprite.draw(NeededConstants.batch);
     }
 
-    public void handleInput(float mouseX, float mouseY, ArrayList<Tile> tileList) {
+    public void handleInput(float mouseX, float mouseY) {
         if (!isEmpty) {
             if (isMovable) {
+                Vector2 mousePosition = new Vector2(mouseX - size/2, mouseY - size/2);
                 sprite.setX(mouseX - size / 2);
                 sprite.setY(mouseY - size / 2);
                 if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
@@ -121,7 +125,6 @@ public class Queue implements Serializable {
                         tileList.add(head);
                         head.x = mouseX - size / 2;
                         head.y = mouseY - size / 2;
-                        head.size = size;
                         head.updateAll();
                         head.startCooldown();
                         remove();
@@ -147,5 +150,12 @@ public class Queue implements Serializable {
                 isHidden = false;
             }
         }
+    }
+
+    private void snap(Vector2 mousePosition) {
+
+        int k = 0;
+        int n = 0;
+
     }
 }

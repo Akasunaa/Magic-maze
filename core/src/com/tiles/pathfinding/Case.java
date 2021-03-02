@@ -65,19 +65,19 @@ public class Case implements Serializable {
     }
 
     public float offset() {
-        return 40 * tile.getWidth() / 600;
+        return 40 * tile.getSize() / 600;
     }
 
-    public float tileSize() {
-        return (tile.getWidth() - 2 * offset()) / 4;
+    public float caseSize() {
+        return (tile.getSize() - 2 * offset()) / 4;
     }
 
     public float getX(int x) {
-        return tile.getX() + offset() + (x * tileSize());
+        return tile.getX() + offset() + (x * caseSize());
     }
 
     public float getY(int y) {
-        return tile.getY() + offset() + (y * tileSize());
+        return tile.getY() + offset() + (y * caseSize());
     }
 
     private void setSpriteCoordinates(int x, int y) { // self explanatory
@@ -142,9 +142,9 @@ public class Case implements Serializable {
         isValid = false;
     }
 
-    public void draw(Batch batch) {
-        if (isShowed) redDot.draw(batch);
-        else if (isValid && isAccessible) greenDot.draw(batch);
+    public void draw() {
+        if (isShowed) redDot.draw(NeededConstants.batch);
+        else if (isValid && isAccessible) greenDot.draw(NeededConstants.batch);
     }
 
     private boolean seen = false;
