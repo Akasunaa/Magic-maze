@@ -9,7 +9,7 @@ import java.io.Serializable;
 import static com.tiles.pathfinding.NeededConstants.*;
 
 public class Case implements Serializable {
-    public Case[] caseList = new Case[4];
+    public transient Case[] caseList = new Case[4];
 
     public int x;
     public int y;
@@ -21,10 +21,10 @@ public class Case implements Serializable {
 
     public boolean isValid = false; // Utiler pour le déplacement du pion
     private boolean isShowed = false;
-    public Case shortcut;
-    public Case elevator;
+    public transient Case shortcut;
+    public transient Case elevator;
     public String color;
-    private Tile tile;
+    private transient Tile tile; // Il faut éviter de faire un StackOverFlowError lors de la conversion en Json ou de la serialization
 
     private transient Sprite greenDot;
     private transient Sprite redDot;
@@ -63,7 +63,9 @@ public class Case implements Serializable {
         else caseList[3] = tile.caseList[y][x - 1];
     }
 
-    public void load() { // Comme d'habitude, obligatoire pour la sérialization
+    public void load(Tile tile, Case[] caseList) {// Comme d'habitude, obligatoire pour la sérialization
+        this.tile = tile;
+        this.caseList = caseList;
         greenDot = new Sprite(new Texture("tuiles/greenDot.png"));
         redDot = new Sprite(new Texture("tuiles/redDot.png"));
         blueDot = new Sprite(new Texture("tuiles/blueDot.png"));

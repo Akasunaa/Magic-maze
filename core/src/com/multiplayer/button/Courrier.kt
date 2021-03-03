@@ -22,7 +22,7 @@ class Courrier(val id: String, port: Int, ip: String) {
 
     init {
         socketHints = SocketHints()
-        socketHints.connectTimeout = 4000
+        socketHints.connectTimeout = 0
         sendingSocket = Gdx.net.newClientSocket(Net.Protocol.TCP, ip, port, socketHints)
         sendMessage("connected $ip")
         val waitForIt = BufferedReader(InputStreamReader(sendingSocket.inputStream)).readLine()

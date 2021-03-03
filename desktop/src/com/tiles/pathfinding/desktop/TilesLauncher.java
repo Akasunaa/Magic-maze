@@ -5,11 +5,11 @@ import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import com.tiles.pathfinding.FindThePath;
 
 
-public class DesktopLauncher {
+public class TilesLauncher {
     public static void main(String[] arg) {
         LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
-        config.height = 600;
-        config.width = 1000;
+        config.height = 900;
+        config.width = 1800;
         config.forceExit = false;
         new LwjglApplication(new FindThePath(), config);
     }

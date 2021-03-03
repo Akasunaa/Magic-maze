@@ -10,6 +10,10 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.math.Vector3
 import com.tiles.pathfinding.NeededConstants.*
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
+import java.io.File
+import com.fasterxml.jackson.databind.ObjectMapper
 
 class FindThePath : ApplicationAdapter() {
     lateinit var batch: SpriteBatch
@@ -29,11 +33,14 @@ class FindThePath : ApplicationAdapter() {
 
     // Le pion
     lateinit var greenPawn: Pawn
+    var pawntimeBaby = false;
 
     // Le joueur
     lateinit var player: Player
 
     var tempTile: Tile? = null
+
+    val mapper = ObjectMapper()
 
     // La caméra, toi même tu sais
     lateinit var camera: OrthographicCamera
@@ -69,7 +76,7 @@ class FindThePath : ApplicationAdapter() {
 
         queue = Queue(9) // J'ai fait les cases uniquement jusqu'à la 9
         queue.load()
-        queue.setCoordinates(700f, 200f)
+        queue.setCoordinates(1800f-tileSize-50f, 50f)
 
 
         // Bon là c'ets le batch et des trucs pour écrire, rien d'important
@@ -98,11 +105,25 @@ class FindThePath : ApplicationAdapter() {
             tile.draw() // On dessine la tuile
         }
 
-        tempTile = getTile()
-        tempTile?.handleInput(player,numberCase)
-//        greenPawn.draw()
-//        greenPawn.handleInput(player)
+        if (pawntimeBaby) {
+            greenPawn.draw()
+            greenPawn.handleInput(player)
+        }
+        else {
+            tempTile = getTile()
+            tempTile?.handleInput(player,numberCase)
+            if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
+                pawntimeBaby = true
+                greenPawn = Pawn("green")
+                greenPawn.setCase = tileList.get(0).caseList[0][0]
+                greenPawn.load()
+            }
+        }
 
+
+        if (Gdx.input.isKeyPressed(Input.Keys.ENTER)) {
+            mapper.writerWithDefaultPrettyPrinter().writeValue(File("core/assets/tuiles/tile${queue.head.number}.json"), queue.head)
+        }
 
         // Gestion du déplacement de la caméra
         val step = 1f

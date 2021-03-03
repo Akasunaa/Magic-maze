@@ -11,7 +11,6 @@ class Client(var ip: String, val sendingSocket: Socket, var id: String) {
         ip = waitForIt[2]
     }
     lateinit var receivingSocket: Socket
-    lateinit var receivingIp: String
     fun receiveSocket(socket: Socket) {
         receivingSocket = socket
     }

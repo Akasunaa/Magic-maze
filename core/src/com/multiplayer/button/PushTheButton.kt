@@ -4,11 +4,12 @@ import com.badlogic.gdx.ApplicationAdapter
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.GL20
 import com.badlogic.gdx.graphics.OrthographicCamera
-import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.BitmapFont
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
-import com.badlogic.gdx.math.Vector3
+import com.multiplayer.button.NeededConstants.isServer
 import com.multiplayer.button.NeededConstants.mouseInput
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import java.net.InetAddress
 
 
@@ -21,9 +22,10 @@ class PushTheButton : ApplicationAdapter() {
 
     val serverIP = "157.159.41.36" // L'ip de mon PC fixe
     val ip = InetAddress.getLocalHost().hostAddress // L'ip de ce pc
-    val id = InetAddress.getLocalHost().hostName // L'id de ce pc
+    //val id = InetAddress.getLocalHost().hostName // L'id de ce pc
     val port = 6969 // Le port du serveur
-    val isServer = true
+    val id = "PC-Fixe-Server=$isServer"
+
 
     lateinit var courrier: Courrier
     lateinit var key: Decryptor
@@ -66,6 +68,7 @@ class PushTheButton : ApplicationAdapter() {
         coordMouse.setColor(0f, 0f, 0f, 1f)
 
         if (isServer) ServerMaker(port, clientList).thread.start()
+
         // Il faut abandonner les mutilples thread et juste le faire dans render
 
         //else ClientListener(key,courrier.socket).thread.start()
@@ -81,8 +84,8 @@ class PushTheButton : ApplicationAdapter() {
         NeededConstants.clientList = clientList
         NeededConstants.batch = batch
         NeededConstants.key = key
-
     }
+
 
     override fun render() {
         Gdx.gl.glClearColor(1f, 1f, 1f, 1f)
@@ -93,14 +96,16 @@ class PushTheButton : ApplicationAdapter() {
         // Drawing the coordinates
         coordMouse.draw(batch, stringMousePosition(), 50f, 150f)
 
-        if (redButton.checkAll()) {
-            if (count == 1) courrier.sendObject(greenButton)
-            if (count == 2) courrier.sendObject(bluButton)
+
+        if (redButton.isClickedAndValid()) {
+            if (count == 1) GlobalScope.launch { courrier.sendObject(greenButton) }
+            if (count == 2) GlobalScope.launch { courrier.sendObject(bluButton) }
             count ++
+
         }
         for (button in buttonList.buttonList) {
             button.check()
-            button.update()
+            button.draw()
         }
         buttonList.load()
 

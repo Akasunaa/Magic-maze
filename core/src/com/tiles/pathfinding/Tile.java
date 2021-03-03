@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Json;
 
 import java.io.Serializable;
 
@@ -23,6 +24,7 @@ public class Tile implements Serializable {
     } // On en a besoin pour la pile
 
     public Case[][] caseList; // Un tableau de 4x4 avec les cases
+    private Case[][][] caseListofCases; // Pour la serialization
     public int rotation = 0; // Indicateur de rotation (dans le sens trigonométrique)
     public boolean[] exits;
     public Case[] exitCases;
@@ -40,6 +42,7 @@ public class Tile implements Serializable {
     // L'utilité de cette variable et de cette méthode est questionnable
     // Elles sont utiles pour éviter un phénomène que j'appelle le blinking
     // Qui fait que, au moment où on dépose la carte, les trucs du pathfinding apparaissent
+
 
     public float x = 0;
     public float y = 0;
@@ -131,10 +134,13 @@ public class Tile implements Serializable {
          - 3 -> orange
          */
         caseList = new Case[4][4];
+        caseListofCases = new Case[4][4][4];
+
         // On commence par créer le tableau de cases avec des Case à l'intérieur
         for (int tempX = 0; tempX < 4; tempX++) {
             for (int tempY = 0; tempY < 4; tempY++) {
                 caseList[tempY][tempX] = new Case(TileArray.getArray(number)[tempY][tempX], this);
+                caseListofCases[tempY][tempX] = caseList[tempY][tempX].caseList;
             }
         }
         // Puis on créé les liaisons entre les cases
@@ -145,8 +151,7 @@ public class Tile implements Serializable {
                         TileArray.getArrayWallVertical(number));
             }
         }
-        // Et on rajoute les raccourcis et escalators
-        complete();
+
         exitCases = new Case[]{caseList[0][1], caseList[1][3],caseList[3][2], caseList[2][0]};
         exits = new boolean[]{caseList[0][1].isExit, caseList[1][3].isExit,caseList[3][2].isExit, caseList[2][0].isExit};
 
@@ -175,10 +180,12 @@ public class Tile implements Serializable {
     public void load() { // Obligatoire pour la serialization
         sprite = new Sprite(new Texture(path)); // On se charge soit même
         sprite.setOrigin(tileSize/2, tileSize/2);
-        for (Case[] ligne : caseList) {
-            for (Case tempCase : ligne)
-                tempCase.load(); // et on charge toutes les cases
+        for (int i = 0; i <=3; i ++) {
+            for (int j = 0; j <=3; j++)
+                caseList[j][i].load(this, caseListofCases[j][i]); // et on charge toutes les cases
         }
+        // Et on rajoute les raccourcis et escalators
+        complete();
         updateAll();
     }
 

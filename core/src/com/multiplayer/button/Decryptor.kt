@@ -13,6 +13,7 @@ class Decryptor() {
         val sender = message.split(' ')[0]
         val action = message.split(' ')[1]
         val receiver = message.split(' ')[2]
+        println(message)
         when (action) {
             "pressed" -> {
                 println("$receiver pressed by $sender")
@@ -25,6 +26,7 @@ class Decryptor() {
             "sending" -> {
                 when (receiver) {
                     "BigButton" -> {
+                        println("Getting a BigButton")
                         val tempString = BufferedReader(InputStreamReader(clientList.getClient(sender).sendingSocket.inputStream)).readLine()
                         println(tempString)
                         buttonList.add(Json.decodeFromString<BigButton>(tempString))

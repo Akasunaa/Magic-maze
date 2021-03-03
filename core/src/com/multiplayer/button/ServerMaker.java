@@ -32,7 +32,7 @@ public class ServerMaker {
             @Override
             public void run() {
                 ServerSocketHints serverSocketHint = new ServerSocketHints();
-                // 0 means no timeout.  Probably not the greatest idea in production!
+                // No timeout
                 serverSocketHint.acceptTimeout = 0;
 
                 // On créé la socket serveur en utilisant le protocol TCP, et en écoutant le port donné
@@ -46,7 +46,7 @@ public class ServerMaker {
                     client = new Client(socket);
                     if (!clientList.isIn(client)) {
                         clientList.add(client); // On vérifie si le client n'est pas dans la liste, et on l'ajoute
-                        System.out.println("Client added: " + client.getIp());
+                        System.out.println("Client added: " + client.getIp() + " as " + client.getId());
                     }
                 }
 

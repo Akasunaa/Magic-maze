@@ -24,4 +24,11 @@ public class NeededConstants {
     public static ButtonList buttonList;
     public static ClientList clientList;
     public static Decryptor key;
+    public static boolean isServer;
+    public static void launchServer() {
+        isServer = true;
+    }
+    public static void stopServer() {
+        isServer = false;
+    }
 }
