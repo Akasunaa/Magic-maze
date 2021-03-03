@@ -24,11 +24,20 @@ public class ClientList {
 
     public boolean isIn(Client client) {
         for (Client comparator : clientList) {
-            if (comparator.getIp().equals(client.getIp())) {
+            if (comparator.getId().equals(client.getId())) {
                 return true;
             }
         }
         return false;
+    }
+
+    public Client getClient(String id) {
+        for (Client comparator : clientList) {
+            if (comparator.getId().equals(id)) {
+                return comparator;
+            }
+        }
+        return null;
     }
 
 

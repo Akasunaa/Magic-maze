@@ -1,5 +1,11 @@
 package com.multiplayer.button
 
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.json.Json
+import java.io.BufferedReader
+import java.io.InputStreamReader
+import java.io.ObjectInputStream
+
 class Decryptor(val buttonList: ButtonList, val clientList: ClientList) {
     fun decryptMessage(message: String) {
         val sender = message.split(' ')[0]
@@ -13,17 +19,16 @@ class Decryptor(val buttonList: ButtonList, val clientList: ClientList) {
                 } catch (e: NullPointerException) {
                     println("Reference not in database")
                 }
-
-//                Need to add a listener for everyone
-//                for (client in clientList.clientList) {
-//                    if (client.ip != sender) {
-//                        try {
-//                            client.socket.getOutputStream().write(("message").toByteArray())
-//                        } catch (e: IOException) {
-//                            e.printStackTrace()
-//                        }
-//                    }
-//                }
+            }
+            "sending" -> {
+                when (receiver) {
+                    "BigButton" -> {
+                        val tempString = BufferedReader(InputStreamReader(clientList.getClient(sender).sendingSocket.inputStream)).readLine()
+                        println(tempString)
+                        buttonList.add(Json.decodeFromString<BigButton>(tempString))
+                    }
+                    "else" -> {}
+                }
             }
             "nothing" -> {
             }

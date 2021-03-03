@@ -43,22 +43,24 @@ class PushTheButton : ApplicationAdapter() {
         // Cette caméra nous sert à avoir le bon système de coordonées
         batch = SpriteBatch()
         redButton = BigButton(
-                Texture("button/redButtonIdle.png"),
-                Texture("button/redButtonPushed.png"),
+                "button/redButtonIdle.png",
+                "button/redButtonPushed.png",
                 200f, 0f, 207f, 570f,
                 1000, "RedButton")
-        bluButton = BigButton(
-                Texture("button/bluButtonIdle.png"),
-                Texture("button/bluButtonPushed.png"),
-                450f, 0f, 207f, 570f,
-                500, "BluButton")
+//        bluButton = BigButton(
+//                ("button/bluButtonIdle.png"),
+//                ("button/bluButtonPushed.png"),
+//                450f, 0f, 207f, 570f,
+//                500, "BluButton")
         greenButton = BigButton(
-                Texture("button/greenButtonIdle.png"),
-                Texture("button/greenButtonPushed.png"),
+                "button/greenButtonIdle.png",
+                "button/greenButtonPushed.png",
                 700f, 0f, 207f, 570f,
                 500, "GreenButton")
         // C'est ce dernier bouton qu'on va envoyer au client
-        buttonList.add(bluButton, redButton)
+
+        buttonList.add(redButton)
+        buttonList.load()
         key = Decryptor(buttonList, clientList)
         coordMouse = BitmapFont()
         coordMouse.setColor(0f, 0f, 0f, 1f)
@@ -84,11 +86,14 @@ class PushTheButton : ApplicationAdapter() {
         // Drawing the coordinates
         coordMouse.draw(batch, stringMousePosition(), 50f, 150f)
 
-
+        if (redButton.checkAll(getMouseX(),getMouseY())) {
+            courrier.sendObject(greenButton)
+        }
         for (button in buttonList.buttonList) {
             button.check(courrier, getMouseX(), getMouseY())
             button.update(batch)
         }
+        buttonList.load()
 
         batch.end()
     }

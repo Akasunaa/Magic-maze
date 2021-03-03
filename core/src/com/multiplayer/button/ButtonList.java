@@ -6,18 +6,27 @@ import java.util.List;
 
 public class ButtonList {
     List<BigButton> buttonList;
+    List<BigButton> toLoad;
     int numberButton = 0;
 
     ButtonList(BigButton... args) {
         buttonList = new ArrayList<>();
+        toLoad = new ArrayList<>();
         for (BigButton button : args) {
             add(button);
         }
     }
 
     public void add(BigButton button) {
-        buttonList.add(button);
+        toLoad.add(button);
         numberButton++;
+    }
+    public void load() {
+        for (BigButton button : toLoad) {
+            button.load();
+            buttonList.add(button);
+        }
+        toLoad.clear();
     }
 
     public void add(BigButton... args) {

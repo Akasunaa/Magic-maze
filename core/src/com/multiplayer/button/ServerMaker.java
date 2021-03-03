@@ -49,12 +49,22 @@ public class ServerMaker {
                     }
                 }
 
+                for (Client tempClient : clientList.clientList) {
+                    try {
+                        tempClient.getSendingSocket().getOutputStream().write(("Server send ReceivingSocket \n").getBytes());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    socket = serverSocket.accept(null);
+                    tempClient.receiveSocket(socket);
+                }
+
                 BufferedReader buffer; // Le Buffer
                 InputStream inputStream; // Et l'InputStream
                 // Deuxième boucle pour regarder les actions des clients
                 while (true) {
                     for (Client tempClient : clientList.clientList) {
-                        socket = tempClient.getSocket(); // On prends la socket du client
+                        socket = tempClient.getSendingSocket(); // On prends la socket du client
                         inputStream = socket.getInputStream();
                         try {
                             if (inputStream.available() != 0) {
@@ -67,7 +77,6 @@ public class ServerMaker {
                             e.printStackTrace();
                         }
                     }
-
                 }
             }
         });

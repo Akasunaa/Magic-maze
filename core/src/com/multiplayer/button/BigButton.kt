@@ -5,24 +5,33 @@ import com.badlogic.gdx.Input
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.Sprite
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
+import kotlinx.serialization.*
+import kotlinx.serialization.json.*
 import java.lang.System.load
 
-
-class BigButton(idleTexture: Texture, pushedTexture: Texture,
+@Serializable
+class BigButton(val idlePath: String, val pushedPath: String,
                 var x: Float, var y: Float,
                 var width: Float, var height: Float,
                 val cooldown: Int, val id: String) {
 
+    @Transient
+    lateinit var idle: Sprite
+    @Transient
+    lateinit var pushed: Sprite
+    @Transient
+    lateinit var active: Sprite
 
-    val idle: Sprite = Sprite(idleTexture)
-    val pushed: Sprite = Sprite(pushedTexture)
-    var active: Sprite = idle
-
-    var startTime: Long = 0L // Utile pour le cooldown
-
-    init {
+    fun load() {
+        idle = Sprite(Texture(idlePath))
+        pushed = Sprite(Texture(pushedPath))
+        active = pushed
         updateSprite()
     }
+
+    fun serialize() = Json.encodeToString(this)
+    var startTime: Long = 0L // Utile pour le cooldown
+
 
     fun updateSprite() {
         idle.setPosition(x, y)
@@ -75,12 +84,9 @@ class BigButton(idleTexture: Texture, pushedTexture: Texture,
             false
         }
 
-
+    fun checkAll(inputX: Float, inputY: Float) = (isClickable() && Gdx.input.isButtonPressed(Input.Buttons.LEFT) && isClicked(inputX, inputY))
     fun check(courrier: Courrier, inputX: Float, inputY: Float) {
-        if (isClickable() && Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
-            if (isClicked(inputX, inputY))
-                onClickedLocally(courrier)
-        }
+        if (checkAll(inputX,inputY)) onClickedLocally(courrier)
     }
 
     fun dispose() {
