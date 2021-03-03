@@ -5,6 +5,7 @@ import com.badlogic.gdx.Input
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.Sprite
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
+import com.multiplayer.button.NeededConstants.*
 import kotlinx.serialization.*
 import kotlinx.serialization.json.*
 import java.lang.System.load
@@ -55,11 +56,11 @@ class BigButton(val idlePath: String, val pushedPath: String,
     }
     // Those three aren't needed anymore, but who knows, they might just be someday
 
-    fun update(batch: SpriteBatch) {
+    fun update() {
         active.draw(batch)
     }
 
-    fun isClicked(iX: Float, iY: Float): Boolean = (x <= iX && iX <= x + width) && (y <= iY && iY <= y + height)
+    fun isClicked(): Boolean = (x <= mouseInput().x && mouseInput().x <= x + width) && (y <= mouseInput().y && mouseInput().y <= y + height)
 
     fun onClickedLocally(courrier: Courrier) {
         // Envoie du message
@@ -84,10 +85,8 @@ class BigButton(val idlePath: String, val pushedPath: String,
             false
         }
 
-    fun checkAll(inputX: Float, inputY: Float) = (isClickable() && Gdx.input.isButtonPressed(Input.Buttons.LEFT) && isClicked(inputX, inputY))
-    fun check(courrier: Courrier, inputX: Float, inputY: Float) {
-        if (checkAll(inputX,inputY)) onClickedLocally(courrier)
-    }
+    fun checkAll() = (isClickable() && Gdx.input.isButtonPressed(Input.Buttons.LEFT) && isClicked())
+    fun check() { if (checkAll()) onClickedLocally(courrier) }
 
     fun dispose() {
         idle.texture.dispose()

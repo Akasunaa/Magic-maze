@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.BitmapFont
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.math.Vector3
+import com.multiplayer.button.NeededConstants.mouseInput
 import java.net.InetAddress
 
 
@@ -32,9 +33,8 @@ class PushTheButton : ApplicationAdapter() {
     val windowWidth = 1280f
     val windowHeight = 720f
     lateinit var camera: OrthographicCamera
-    fun getMouseX(): Float = camera.unproject(Vector3(Gdx.input.x.toFloat(), Gdx.input.y.toFloat(), 0f)).x
+    var count = 1
 
-    fun getMouseY(): Float = camera.unproject(Vector3(Gdx.input.x.toFloat(), Gdx.input.y.toFloat(), 0f)).y
 
 
     override fun create() {
@@ -47,11 +47,11 @@ class PushTheButton : ApplicationAdapter() {
                 "button/redButtonPushed.png",
                 200f, 0f, 207f, 570f,
                 1000, "RedButton")
-//        bluButton = BigButton(
-//                ("button/bluButtonIdle.png"),
-//                ("button/bluButtonPushed.png"),
-//                450f, 0f, 207f, 570f,
-//                500, "BluButton")
+        bluButton = BigButton(
+                "button/bluButtonIdle.png",
+                "button/bluButtonPushed.png",
+                450f, 0f, 207f, 570f,
+                500, "BluButton")
         greenButton = BigButton(
                 "button/greenButtonIdle.png",
                 "button/greenButtonPushed.png",
@@ -61,11 +61,11 @@ class PushTheButton : ApplicationAdapter() {
 
         buttonList.add(redButton)
         buttonList.load()
-        key = Decryptor(buttonList, clientList)
+        key = Decryptor()
         coordMouse = BitmapFont()
         coordMouse.setColor(0f, 0f, 0f, 1f)
 
-        if (isServer) ServerMaker(port, clientList, key).thread.start()
+        if (isServer) ServerMaker(port, clientList).thread.start()
         // Il faut abandonner les mutilples thread et juste le faire dans render
 
         //else ClientListener(key,courrier.socket).thread.start()
@@ -74,6 +74,13 @@ class PushTheButton : ApplicationAdapter() {
         // On commence l'écoute
 
         courrier = Courrier(id, port, serverIP)
+
+        NeededConstants.camera = camera
+        NeededConstants.courrier = courrier
+        NeededConstants.buttonList = buttonList
+        NeededConstants.clientList = clientList
+        NeededConstants.batch = batch
+        NeededConstants.key = key
 
     }
 
@@ -86,12 +93,14 @@ class PushTheButton : ApplicationAdapter() {
         // Drawing the coordinates
         coordMouse.draw(batch, stringMousePosition(), 50f, 150f)
 
-        if (redButton.checkAll(getMouseX(),getMouseY())) {
-            courrier.sendObject(greenButton)
+        if (redButton.checkAll()) {
+            if (count == 1) courrier.sendObject(greenButton)
+            if (count == 2) courrier.sendObject(bluButton)
+            count ++
         }
         for (button in buttonList.buttonList) {
-            button.check(courrier, getMouseX(), getMouseY())
-            button.update(batch)
+            button.check()
+            button.update()
         }
         buttonList.load()
 
@@ -106,8 +115,8 @@ class PushTheButton : ApplicationAdapter() {
     }
 
     fun stringMousePosition(): String {
-        val x = getMouseX().toInt()
-        val y = getMouseY().toInt()
+        val x = mouseInput().x.toInt()
+        val y = mouseInput().y.toInt()
         return "x = $x; y = $y"
     }
 }

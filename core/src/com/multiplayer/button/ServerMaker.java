@@ -11,6 +11,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
+import static com.multiplayer.button.NeededConstants.key;
+
+
 // Cette classe existe uniquement parce que j'ai aucune idée de comment faire ça en Kotlin
 // Si jamais on arrive à le faire, cette classe pourra être supprimée simplement
 // Mais en attendant, petit message informatif
@@ -22,9 +25,7 @@ import java.io.InputStreamReader;
 public class ServerMaker {
     Thread thread;
 
-    //Decryptor key;
-    //ClientList clientList;
-    ServerMaker(final int port, final ClientList clientList, final Decryptor key) {
+    ServerMaker(final int port, final ClientList clientList) {
         //clientList = cL;
         //this.key = key;
         thread = new Thread(new Runnable() {

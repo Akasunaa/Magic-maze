@@ -1,12 +1,14 @@
 package com.multiplayer.button
 
+import com.multiplayer.button.NeededConstants.buttonList
+import com.multiplayer.button.NeededConstants.clientList
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import java.io.BufferedReader
 import java.io.InputStreamReader
 import java.io.ObjectInputStream
 
-class Decryptor(val buttonList: ButtonList, val clientList: ClientList) {
+class Decryptor() {
     fun decryptMessage(message: String) {
         val sender = message.split(' ')[0]
         val action = message.split(' ')[1]
