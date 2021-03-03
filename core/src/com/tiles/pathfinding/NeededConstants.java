@@ -9,7 +9,7 @@ import com.badlogic.gdx.math.Vector3;
 import java.util.ArrayList;
 
 public class NeededConstants {
-    static float tileSize = 200f;
+    static float tileSize = 300f;
     static float offset = 40 * tileSize / 600;
     static float caseSize = (tileSize - 2 * offset) / 4;
     static Vector2 origin = new Vector2();
@@ -20,6 +20,7 @@ public class NeededConstants {
     }
     static ArrayList<Tile> tileList;
     static SpriteBatch batch;
+    static Case lastExploredCase;
 
 //    private Vector2 firstVect = new Vector2(tileSize,-caseSize);
 //    private Vector2 secondVect = new Vector2(caseSize, tileSize);

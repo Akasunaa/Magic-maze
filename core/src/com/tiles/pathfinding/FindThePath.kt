@@ -33,6 +33,8 @@ class FindThePath : ApplicationAdapter() {
     // Le joueur
     lateinit var player: Player
 
+    var tempTile: Tile? = null
+
     // La caméra, toi même tu sais
     lateinit var camera: OrthographicCamera
     fun getMouseX(): Float = camera.unproject(Vector3(Gdx.input.x.toFloat(), Gdx.input.y.toFloat(), 0f)).x
@@ -63,7 +65,7 @@ class FindThePath : ApplicationAdapter() {
         // On sélectionne le bon numéro de case et on la charge
         // Le chargement est nécessaire pour le rendre sérializable
 
-        player = Player(true, true, true, true, true, true)
+        player = Player(true, false, true, false, false, false)
 
         queue = Queue(9) // J'ai fait les cases uniquement jusqu'à la 9
         queue.load()
@@ -95,6 +97,9 @@ class FindThePath : ApplicationAdapter() {
         for (tile in tileList) {
             tile.draw() // On dessine la tuile
         }
+
+        tempTile = getTile()
+        tempTile?.handleInput(player,numberCase)
 //        greenPawn.draw()
 //        greenPawn.handleInput(player)
 

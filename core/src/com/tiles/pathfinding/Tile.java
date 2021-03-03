@@ -25,9 +25,11 @@ public class Tile implements Serializable {
     public Case[][] caseList; // Un tableau de 4x4 avec les cases
     public int rotation = 0; // Indicateur de rotation (dans le sens trigonométrique)
     public boolean[] exits;
+    public Case[] exitCases;
     // Exit représente où sont les sorties de cette tuile
     // Comme d'habitude, 0 est le Sud, et on tourne dans le sens trigo
     public int entrance;
+    public Case entranceCase;
     // L'entrée représente la direction cardinale de la tuile
 
     private long cooldown;
@@ -73,20 +75,27 @@ public class Tile implements Serializable {
     }
 
     // fonctions classiques j'ai envie de dire
-
-    public void handleInput(Player player, Vector2 mouseInput, BitmapFont numberCase) {
+    private boolean exploring = false;
+    public void handleInput(Player player, BitmapFont numberCase) {
         Case tempCase;
+        Vector2 mouseInput = mouseInput();
         // Puis si on clique gauche, boum, le pathfinding
-        if ((Gdx.input.isButtonPressed(Input.Buttons.LEFT)) && (System.currentTimeMillis() - cooldown > 500)) {
+        if (!exploring && (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) && (System.currentTimeMillis() - cooldown > 500)) {
             try {
-                mouseInput.add(-x,-y);
                 tempCase = getCase(mouseInput);
                 tempCase.show();
                 tempCase.explore(player);
                 numberCase.draw(NeededConstants.batch, "x = " + tempCase.x + "; y = " + tempCase.y + "; couleur = " + tempCase.color + ", portal = " + tempCase.hasPortal, 700f, 200f);
+                exploring = true;
+                lastExploredCase = tempCase;
             } catch (ArrayIndexOutOfBoundsException e) {
             }
             // Bah oui parce que si on est pas dans les bornes de la tuile forcément getCase fonctionne moins bien lol
+        }
+        else if (exploring && (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT))) {
+            lastExploredCase.revert(player);
+            lastExploredCase.hide();
+            exploring = false;
         }
         // On gère la rotation
     }
@@ -138,15 +147,27 @@ public class Tile implements Serializable {
         }
         // Et on rajoute les raccourcis et escalators
         complete();
-
+        exitCases = new Case[]{caseList[0][1], caseList[1][3],caseList[3][2], caseList[2][0]};
         exits = new boolean[]{caseList[0][1].isExit, caseList[1][3].isExit,caseList[3][2].isExit, caseList[2][0].isExit};
 
         System.out.println("Tile number " + number + " has exits " + exits[0] + " "+ exits[1] + " "+ exits[2] + " "+ exits[3]);
 
-        if (caseList[0][1].isEntrance) entrance = 0;
-        if (caseList[1][3].isEntrance) entrance = 1;
-        if (caseList[3][2].isEntrance) entrance = 2;
-        if (caseList[2][0].isEntrance) entrance = 3;
+        if (caseList[0][1].isEntrance) {
+            entrance = 0;
+            entranceCase = caseList[0][1];
+        }
+        if (caseList[1][3].isEntrance) {
+            entrance = 1;
+            entranceCase = caseList[1][3];
+        }
+        if (caseList[2][0].isEntrance) {
+            entrance = 3;
+            entranceCase = caseList[2][0];
+        }
+        if (caseList[3][2].isEntrance) {
+            entrance = 2;
+            entranceCase = caseList[3][2];
+        }
         System.out.println("Tile number " + number + " has entrance number " + entrance);
         // On récupère la coordonée d'entrée
     }
@@ -191,10 +212,8 @@ public class Tile implements Serializable {
     }
 
     public Case getCase(Vector2 mouseInput) {
-        float offset = 40 * size / 600;
-        float caseSize = (size - 2 * offset) / 4;
-        int tempX = (int) ((mouseInput.x - x - offset) / caseSize);
-        int tempY = (int) ((mouseInput.y - y - offset) / caseSize);
+        int tempX = (int) Math.floor((mouseInput.x - x - offset) / caseSize);
+        int tempY = (int) Math.floor((mouseInput.y - y - offset ) / caseSize);
         int buffer;
         if (rotation == 1) {
             buffer = tempX;
@@ -292,6 +311,24 @@ public class Tile implements Serializable {
         return true;
     }
     public boolean canPlaceThere() {
-        return isValidPlacement(this, getNeighbouringTiles()[((entrance+rotation)%4 + 4)%4]) && noOverlap();
+        Tile[] neighbors = getNeighbouringTiles();
+        int index = ((entrance+rotation)%4 + 4)%4;
+        boolean temp = isValidPlacement(this, neighbors[index]) && noOverlap();
+        if (temp) {
+            entranceCase.caseList[index] = neighbors[index].exitCases[(index+2) % 4];
+            neighbors[index].exitCases[(index+2)%4].caseList[(index+2)%4] = entranceCase;
+            Tile tempTile;
+            int indexPrime;
+//            for (int i = 0; i <= 3; i ++) {
+//                tempTile = neighbors[i];
+//                index = ((i+rotation)%4 + 4)%4;
+//                if (exits[index] &&  tempTile != null && tempTile.exits[((2+i - tempTile.rotation)%4 +4)%4]) {
+//                    indexPrime = ((2+i - tempTile.rotation)%4 +4)%4;
+//                    exitCases[index].caseList[i] = tempTile.exitCases[indexPrime];
+//                    tempTile.exitCases[indexPrime].caseList[indexPrime] = exitCases[index];
+//                }
+//            }
+        }
+        return temp;
     }
 }

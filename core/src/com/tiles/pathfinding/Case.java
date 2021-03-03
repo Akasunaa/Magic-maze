@@ -9,7 +9,7 @@ import java.io.Serializable;
 import static com.tiles.pathfinding.NeededConstants.*;
 
 public class Case implements Serializable {
-    private Case[] caseList = new Case[4];
+    public Case[] caseList = new Case[4];
 
     public int x;
     public int y;
@@ -143,16 +143,17 @@ public class Case implements Serializable {
 
     public void draw() {
         if (isShowed) redDot.draw(batch);
-        else if (isValid && isAccessible) greenDot.draw(batch);
+        else if (isValid) greenDot.draw(batch);
     }
 
     private boolean seen = false;
 
     public void explore(Player player) {
         int index; // On utilise index pour éviter de devoir réécrire les modulos trop de fois
+        Player tempPlayer = player.rotate(tile.rotation);
         if (!seen) {
             seen = true; // Parcours de graphe classique pour éviter les StackOverflow
-            if (player.getNorth()) {
+            if (tempPlayer.getNorth()) {
                 index = (2 + tile.rotation) % 4;
                 if (caseList[index] != null) {
                     caseList[index].explored();
@@ -160,7 +161,7 @@ public class Case implements Serializable {
                 }
             }
 
-            if (player.getWest()) {
+            if (tempPlayer.getWest()) {
                 index = ((3 - tile.rotation) % 4 + 4) % 4;
                 // Les modulos en Java fonctionnent bizarrement, c'est pour s'assurer d'avoir un truc positif
                 if (caseList[index] != null) {
@@ -169,7 +170,7 @@ public class Case implements Serializable {
                 }
             }
 
-            if (player.getSouth()) {
+            if (tempPlayer.getSouth()) {
                 index = (tile.rotation % 4);
                 if (caseList[index] != null) {
                     caseList[index].explored();
@@ -177,7 +178,7 @@ public class Case implements Serializable {
                 }
             }
 
-            if (player.getEast()) {
+            if (tempPlayer.getEast()) {
                 index = ((1 - tile.rotation) % 4 + 4) % 4;
                 if (caseList[index] != null) {
                     caseList[index].explored();
@@ -202,9 +203,10 @@ public class Case implements Serializable {
 
     public void revert(Player player) {
         int index; // On utilise index pour éviter de devoir réécrire les modulos trop de fois
+        Player tempPlayer = player.rotate(tile.rotation);
         if (seen) {
             seen = false;
-            if (player.getNorth()) {
+            if (tempPlayer.getNorth()) {
                 index = (2 + tile.rotation) % 4;
                 if (caseList[index] != null) {
                     caseList[index].unexplored();
@@ -212,7 +214,7 @@ public class Case implements Serializable {
                 }
             }
 
-            if (player.getWest()) {
+            if (tempPlayer.getWest()) {
                 index = ((3 - tile.rotation) % 4 + 4) % 4;
                 // Les modulos en Java fonctionnent bizarrement, c'est pour s'assurer d'avoir un truc positif
                 if (caseList[index] != null) {
@@ -221,7 +223,7 @@ public class Case implements Serializable {
                 }
             }
 
-            if (player.getSouth()) {
+            if (tempPlayer.getSouth()) {
                 index = (tile.rotation % 4);
                 if (caseList[index] != null) {
                     caseList[index].unexplored();
@@ -229,21 +231,21 @@ public class Case implements Serializable {
                 }
             }
 
-            if (player.getEast()) {
+            if (tempPlayer.getEast()) {
                 index = ((1 - tile.rotation) % 4 + 4) % 4;
                 if (caseList[index] != null) {
                     caseList[index].unexplored();
                     caseList[index].revert(player);
                 }
             }
-            if (player.getEscalatorTaker()) {
+            if (tempPlayer.getEscalatorTaker()) {
                 if (elevator != null) {
                     elevator.unexplored();
                     elevator.revert(player);
                 }
             }
 
-            if (player.getShortcutTaker()) {
+            if (tempPlayer.getShortcutTaker()) {
                 if (shortcut != null) {
                     shortcut.unexplored();
                     shortcut.revert(player);
