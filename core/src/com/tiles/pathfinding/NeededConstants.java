@@ -9,6 +9,11 @@ import com.badlogic.gdx.math.Vector3;
 import java.util.ArrayList;
 
 public class NeededConstants {
+    /*
+    C'est sans doute de l'hérétisme mais au moins ici je peux gérer toutes les variables facilement
+    Boum, pour une fois que de l'hérétisme paye
+    En vrai je sais pas si c'est de l'hérétisme, mais on nous avait dit que les classes statiques c'était caca donc bon...
+     */
     static float tileSize = 300f;
     static float offset = 40 * tileSize / 600;
     static float caseSize = (tileSize - 2 * offset) / 4;

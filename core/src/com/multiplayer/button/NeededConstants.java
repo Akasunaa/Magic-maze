@@ -7,6 +7,13 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
 public class NeededConstants {
+    /*
+    Je sais pas si c'est hérétique de créer une classe comme ça
+    Mais désolé j'en ai marre de me trainer des courrier dans trente six fonctions
+    juste pour pouvoir envoyer un message au bout d'un clique
+    Et puis c'est plus pratique pour récupérer les coordonées comme ça, boum, checkmate atheists.
+     */
+
     public static Courrier courrier;
     public static SpriteBatch batch;
     public static OrthographicCamera camera;
