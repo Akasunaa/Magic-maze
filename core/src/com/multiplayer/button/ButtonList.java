@@ -21,6 +21,7 @@ public class ButtonList {
         toLoad.add(button);
         numberButton++;
     }
+
     public void load() {
         for (BigButton button : toLoad) {
             button.load();

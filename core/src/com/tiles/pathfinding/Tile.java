@@ -7,12 +7,16 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.utils.Json;
+import com.utils.Functions;
+import com.utils.TileAndCases;
 
 import java.io.Serializable;
 
-import static com.tiles.pathfinding.NeededConstants.*;
-import static jdk.internal.dynalink.support.Guards.isNull;
+import static com.tiles.pathfinding.Case.link;
+import static com.utils.Directions.numberDirections;
+import static com.utils.Functions.modulo;
+import static com.utils.MainConstants.batch;
+import static com.utils.TileAndCases.*;
 
 public class Tile implements Serializable {
     public int number; // numéro de tuile
@@ -46,7 +50,7 @@ public class Tile implements Serializable {
 
     public float x = 0;
     public float y = 0;
-    private float size = NeededConstants.tileSize;
+    private float size = TileAndCases.tileSize;
 
     public float getX() {
         return x;
@@ -79,25 +83,25 @@ public class Tile implements Serializable {
 
     // fonctions classiques j'ai envie de dire
     private boolean exploring = false;
+
     public void handleInput(Player player, BitmapFont numberCase) {
         Case tempCase;
-        Vector2 mouseInput = mouseInput();
+        Vector2 mouseInput = Functions.mouseInput();
         // Puis si on clique gauche, boum, le pathfinding
         if (!exploring && (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) && (System.currentTimeMillis() - cooldown > 500)) {
             try {
                 tempCase = getCase(mouseInput);
                 tempCase.show();
                 tempCase.explore(player);
-                numberCase.draw(NeededConstants.batch, "x = " + tempCase.x + "; y = " + tempCase.y + "; couleur = " + tempCase.color + ", portal = " + tempCase.hasPortal, 700f, 200f);
+                numberCase.draw(batch, "x = " + tempCase.x + "; y = " + tempCase.y + "; couleur = " + tempCase.color + ", portal = " + tempCase.hasPortal, 700f, 200f);
                 exploring = true;
-                lastExploredCase = tempCase;
+                TileAndCases.lastExploredCase = tempCase;
             } catch (ArrayIndexOutOfBoundsException e) {
             }
             // Bah oui parce que si on est pas dans les bornes de la tuile forcément getCase fonctionne moins bien lol
-        }
-        else if (exploring && (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT))) {
-            lastExploredCase.revert(player);
-            lastExploredCase.hide();
+        } else if (exploring && (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT))) {
+            TileAndCases.lastExploredCase.revert(player);
+            TileAndCases.lastExploredCase.hide();
             exploring = false;
         }
         // On gère la rotation
@@ -152,10 +156,10 @@ public class Tile implements Serializable {
             }
         }
 
-        exitCases = new Case[]{caseList[0][1], caseList[1][3],caseList[3][2], caseList[2][0]};
-        exits = new boolean[]{caseList[0][1].isExit, caseList[1][3].isExit,caseList[3][2].isExit, caseList[2][0].isExit};
+        exitCases = new Case[]{caseList[0][1], caseList[1][3], caseList[3][2], caseList[2][0]};
+        exits = new boolean[]{caseList[0][1].isExit, caseList[1][3].isExit, caseList[3][2].isExit, caseList[2][0].isExit};
 
-        System.out.println("Tile number " + number + " has exits " + exits[0] + " "+ exits[1] + " "+ exits[2] + " "+ exits[3]);
+        System.out.println("Tile number " + number + " has exits " + exits[0] + " " + exits[1] + " " + exits[2] + " " + exits[3]);
 
         if (caseList[0][1].isEntrance) {
             entrance = 0;
@@ -179,9 +183,9 @@ public class Tile implements Serializable {
 
     public void load() { // Obligatoire pour la serialization
         sprite = new Sprite(new Texture(path)); // On se charge soit même
-        sprite.setOrigin(tileSize/2, tileSize/2);
-        for (int i = 0; i <=3; i ++) {
-            for (int j = 0; j <=3; j++)
+        sprite.setOrigin(tileSize / 2, tileSize / 2);
+        for (int i = 0; i <= 3; i++) {
+            for (int j = 0; j <= 3; j++)
                 caseList[j][i].load(this, caseListofCases[j][i]); // et on charge toutes les cases
         }
         // Et on rajoute les raccourcis et escalators
@@ -190,7 +194,7 @@ public class Tile implements Serializable {
     }
 
     public void draw() {
-        sprite.draw(NeededConstants.batch);
+        sprite.draw(batch);
         for (Case[] ligne : caseList) {
             for (Case tempCase : ligne)
                 tempCase.draw();
@@ -220,7 +224,7 @@ public class Tile implements Serializable {
 
     public Case getCase(Vector2 mouseInput) {
         int tempX = (int) Math.floor((mouseInput.x - x - offset) / caseSize);
-        int tempY = (int) Math.floor((mouseInput.y - y - offset ) / caseSize);
+        int tempY = (int) Math.floor((mouseInput.y - y - offset) / caseSize);
         int buffer;
         if (rotation == 1) {
             buffer = tempX;
@@ -291,39 +295,45 @@ public class Tile implements Serializable {
 
     private static boolean isValidPlacement(Tile tileToPlace, Tile tileToJoin) {
         if (tileToJoin == null) return false;
-        return tileToJoin.exits[((2+tileToPlace.entrance - tileToPlace.rotation + tileToJoin.rotation)%4 +4)%4];
+        return tileToJoin.exits[((2 + tileToPlace.entrance - tileToPlace.rotation + tileToJoin.rotation) % 4 + 4) % 4];
     }
 
     private Tile[] getNeighbouringTiles() {
-        Vector2 mousePosition = mouseInput();
-        mousePosition.sub(NeededConstants.origin);
-        mousePosition.sub(tileSize/2, tileSize/2);
-        mousePosition.mul(NeededConstants.newBaseInvert);
+        Vector2 mousePosition = Functions.mouseInput();
+        mousePosition.sub(TileAndCases.origin);
+        mousePosition.sub(tileSize / 2, tileSize / 2);
+        mousePosition.mul(TileAndCases.newBaseInvert);
         int x = Math.round(mousePosition.x);
         int y = Math.round(mousePosition.y);
         return new Tile[]{
-                getTile(new Vector2(x,y-1).mul(NeededConstants.newBase).add(NeededConstants.origin).add(tileSize/2, tileSize/2)),
-                getTile(new Vector2(x+1,y).mul(NeededConstants.newBase).add(NeededConstants.origin).add(tileSize/2, tileSize/2)),
-                getTile(new Vector2(x,y+1).mul(NeededConstants.newBase).add(NeededConstants.origin).add(tileSize/2, tileSize/2)),
-                getTile(new Vector2(x-1,y).mul(NeededConstants.newBase).add(NeededConstants.origin).add(tileSize/2, tileSize/2)),
+                //South
+                Functions.getTile(new Vector2(x, y - 1).mul(TileAndCases.newBase).add(TileAndCases.origin).add(tileSize / 2, tileSize / 2)),
+                // East
+                Functions.getTile(new Vector2(x + 1, y).mul(TileAndCases.newBase).add(TileAndCases.origin).add(tileSize / 2, tileSize / 2)),
+                // North
+                Functions.getTile(new Vector2(x, y + 1).mul(TileAndCases.newBase).add(TileAndCases.origin).add(tileSize / 2, tileSize / 2)),
+                // West
+                Functions.getTile(new Vector2(x - 1, y).mul(TileAndCases.newBase).add(TileAndCases.origin).add(tileSize / 2, tileSize / 2)),
         };
     }
 
     private boolean noOverlap() {
         for (Tile tile : tileList) {
-            if (!tile.equals(this) && ((tile.x < mouseInput().x) && (mouseInput().x < tile.x + tileSize) && (tile.y < mouseInput().y) && (mouseInput().y < tile.y + tileSize))) {
+            if (!tile.equals(this) && ((tile.x < Functions.mouseInput().x) && (Functions.mouseInput().x < tile.x + tileSize) && (tile.y < Functions.mouseInput().y) && (Functions.mouseInput().y < tile.y + tileSize))) {
                 return false;
             }
         }
         return true;
     }
+
     public boolean canPlaceThere() {
         Tile[] neighbors = getNeighbouringTiles();
-        int index = ((entrance+rotation)%4 + 4)%4;
+        int index = modulo(entrance + rotation, numberDirections);
         boolean temp = isValidPlacement(this, neighbors[index]) && noOverlap();
         if (temp) {
-            entranceCase.caseList[index] = neighbors[index].exitCases[(index+2) % 4];
-            neighbors[index].exitCases[(index+2)%4].caseList[(index+2)%4] = entranceCase;
+            link(entranceCase, neighbors[index].exitCases[modulo(entrance - rotation + neighbors[index].rotation, numberDirections)], index);
+//            entranceCase.caseList[index] = neighbors[index].exitCases[(index+2) % 4];
+//            neighbors[index].exitCases[(index+2)%4].caseList[(index+2)%4] = entranceCase;
             Tile tempTile;
             int indexPrime;
 //            for (int i = 0; i <= 3; i ++) {

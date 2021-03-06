@@ -7,13 +7,14 @@ import com.badlogic.gdx.graphics.GL20
 import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.graphics.g2d.BitmapFont
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
-import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.math.Vector3
-import com.tiles.pathfinding.NeededConstants.*
-import kotlinx.serialization.encodeToString
-import kotlinx.serialization.json.Json
-import java.io.File
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.utils.Functions.*
+import com.utils.MainConstants
+import com.utils.TileAndCases
+import com.utils.TileAndCases.origin
+import com.utils.TileAndCases.tileSize
+import java.io.File
 
 class FindThePath : ApplicationAdapter() {
     lateinit var batch: SpriteBatch
@@ -54,7 +55,7 @@ class FindThePath : ApplicationAdapter() {
     override fun create() {
         camera = OrthographicCamera(Gdx.graphics.width.toFloat(), Gdx.graphics.height.toFloat())
         camera.setToOrtho(false, Gdx.graphics.width.toFloat(), Gdx.graphics.height.toFloat())
-        NeededConstants.camera = camera
+        MainConstants.camera = camera
         // Cette caméra nous sert à avoir le bon système de coordonées
         mouseWheelChecker = MouseWheelChecker(camera)
         Gdx.input.setInputProcessor(mouseWheelChecker)
@@ -64,7 +65,7 @@ class FindThePath : ApplicationAdapter() {
         for (tile in tileList) {
             tile.load()
         }
-        NeededConstants.tileList = tileList
+        TileAndCases.tileList = tileList
 
 //        greenPawn = Pawn("green")
 //        greenPawn.setCase = tileList.get(0).caseList[0][2]
@@ -72,16 +73,16 @@ class FindThePath : ApplicationAdapter() {
         // On sélectionne le bon numéro de case et on la charge
         // Le chargement est nécessaire pour le rendre sérializable
 
-        player = Player(true, false, true, false, false, false)
+        player = Player(true, true, false, false, false, false)
 
-        queue = Queue(9) // J'ai fait les cases uniquement jusqu'à la 9
+        queue = Queue(2) // J'ai fait les cases uniquement jusqu'à la 9
         queue.load()
-        queue.setCoordinates(1800f-tileSize-50f, 50f)
+        queue.setCoordinates(1800f - tileSize - 50f, 50f)
 
 
         // Bon là c'ets le batch et des trucs pour écrire, rien d'important
         batch = SpriteBatch()
-        NeededConstants.batch = batch
+        MainConstants.batch = batch
         coordMouse = BitmapFont()
         coordMouse.setColor(0f, 0f, 0f, 1f)
         numberCase = BitmapFont()
@@ -90,7 +91,7 @@ class FindThePath : ApplicationAdapter() {
     }
 
     override fun render() {
-        Gdx.gl.glClearColor(125f/255, 125f/255, 125f/255, 1f)
+        Gdx.gl.glClearColor(125f / 255, 125f / 255, 125f / 255, 1f)
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT)
         // Couleur d'arrière plan, et on clear tout
         batch.setProjectionMatrix(camera.combined) // On change le système de coordonées
@@ -108,10 +109,9 @@ class FindThePath : ApplicationAdapter() {
         if (pawntimeBaby) {
             greenPawn.draw()
             greenPawn.handleInput(player)
-        }
-        else {
+        } else {
             tempTile = getTile()
-            tempTile?.handleInput(player,numberCase)
+            tempTile?.handleInput(player, numberCase)
             if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
                 pawntimeBaby = true
                 greenPawn = Pawn("green")
@@ -126,19 +126,7 @@ class FindThePath : ApplicationAdapter() {
         }
 
         // Gestion du déplacement de la caméra
-        val step = 1f
-        var displacement = Vector2()
-        if (Gdx.input.isKeyPressed(Input.Keys.Z)) displacement.add( 0f, step)
-        if (Gdx.input.isKeyPressed(Input.Keys.Q)) displacement.add(-step, 0f)
-        if (Gdx.input.isKeyPressed(Input.Keys.S)) displacement.add(0f, -step)
-        if (Gdx.input.isKeyPressed(Input.Keys.D)) displacement.add(step, 0f)
-        displacement.scl(camera.zoom)
-        if (!displacement.isZero()) {
-            for (i in 1..10) {
-                camera.translate(displacement)
-                camera.update()
-            }
-        }
+        updateCamera()
         batch.end()
     }
 
@@ -149,6 +137,4 @@ class FindThePath : ApplicationAdapter() {
         }
         greenPawn.dispose()
     }
-
-
 }

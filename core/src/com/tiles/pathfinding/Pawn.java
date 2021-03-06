@@ -3,14 +3,15 @@ package com.tiles.pathfinding;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.math.Vector2;
+import com.utils.Functions;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 
-import static com.tiles.pathfinding.NeededConstants.*;
+import static com.utils.MainConstants.batch;
+import static com.utils.TileAndCases.caseSize;
+import static com.utils.TileAndCases.tileList;
+
 
 public class Pawn implements Serializable {
     private String color; // La couleur du pion
@@ -49,7 +50,7 @@ public class Pawn implements Serializable {
     }
 
     public void draw() {
-        sprite.draw(NeededConstants.batch);
+        sprite.draw(batch);
     }
 
     public void updateCoordinates() {
@@ -65,8 +66,8 @@ public class Pawn implements Serializable {
 
     public void handleInput(Player player) {
         if (isMovable) {
-            sprite.setX(mouseInput().x - sprite.getWidth() / 2);
-            sprite.setY(mouseInput().y - sprite.getHeight() / 2);
+            sprite.setX(Functions.mouseInput().x - sprite.getWidth() / 2);
+            sprite.setY(Functions.mouseInput().y - sprite.getHeight() / 2);
             if (!hasExplored) { // On fait le pathfinding une seule fois
                 setCase.show(); // On montre la case de départ
                 setCase.explore(player); // On lance le pathfinding (structure récursive)
@@ -88,16 +89,16 @@ public class Pawn implements Serializable {
                 }
             }
         } else isMovable = (Gdx.input.isButtonJustPressed(Input.Buttons.RIGHT) &&
-                (sprite.getX() < mouseInput().x) && (mouseInput().x < sprite.getX() + sprite.getWidth() &&
-                (sprite.getY() < mouseInput().y) && (mouseInput().y < sprite.getY() + sprite.getHeight())));
+                (sprite.getX() < Functions.mouseInput().x) && (Functions.mouseInput().x < sprite.getX() + sprite.getWidth() &&
+                (sprite.getY() < Functions.mouseInput().y) && (Functions.mouseInput().y < sprite.getY() + sprite.getHeight())));
     }
 
     public Case findCase() {
         for (Tile tile : tileList) {
-            if (tile.getX() <= mouseInput().x && mouseInput().x <= tile.getX() + tile.getSize() &&
-                    tile.getY() <= mouseInput().y && mouseInput().y <= tile.getY() + tile.getSize()) {
+            if (tile.getX() <= Functions.mouseInput().x && Functions.mouseInput().x <= tile.getX() + tile.getSize() &&
+                    tile.getY() <= Functions.mouseInput().y && Functions.mouseInput().y <= tile.getY() + tile.getSize()) {
                 try {
-                    return tile.getCase(mouseInput());
+                    return tile.getCase(Functions.mouseInput());
                 } catch (ArrayIndexOutOfBoundsException e) {
                     System.out.println("Clicked border of Tile n°" + tile.number + " in Pawn.findCase");
                 }

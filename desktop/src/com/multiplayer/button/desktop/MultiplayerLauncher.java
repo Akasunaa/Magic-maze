@@ -2,13 +2,9 @@ package com.multiplayer.button.desktop;
 
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
-
-import com.multiplayer.button.PushTheButton;
 import com.multiplayer.button.PushTheButton;
 
-
-import static com.multiplayer.button.NeededConstants.launchServer;
-import static com.multiplayer.button.NeededConstants.stopServer;
+import static com.utils.Multiplayer.launchServer;
 
 public class MultiplayerLauncher {
     public static void main(String[] arg) {

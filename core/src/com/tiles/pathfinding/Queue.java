@@ -5,13 +5,14 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
+import com.utils.Functions;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 
-import static com.tiles.pathfinding.NeededConstants.*;
-
+import static com.utils.MainConstants.batch;
+import static com.utils.TileAndCases.*;
 
 public class Queue implements Serializable {
     // Structure classique pour une pile
@@ -113,8 +114,8 @@ public class Queue implements Serializable {
     }
 
     public void draw() {
-        if (isHidden) hidden.draw(NeededConstants.batch);
-        else sprite.draw(NeededConstants.batch);
+        if (isHidden) hidden.draw(batch);
+        else sprite.draw(batch);
     }
 
     private void place(Vector2 mousePosition) {
@@ -122,17 +123,17 @@ public class Queue implements Serializable {
         head.x = mousePosition.x; //Bon c'est classique ça
         head.y = mousePosition.y;
         head.updateAll(); // Mise à jour
-        head.startCooldown(); // On peut pas le blinking
+        head.startCooldown(); // On veut pas le blinking
         remove(); // Et on enlève la tête
     }
 
     public void handleInput() {
         // Uh, this is going to be fun
-        Vector2 mousePosition = mouseInput();
+        Vector2 mousePosition = Functions.mouseInput();
         // Je le sauvegarde parce qu'on va le modifier
         if (!isEmpty) { // On fait rien si elle est vide
             if (isMovable) { // Truc classique pour avoir deux comportements sur un seul objet
-                mousePosition.sub(tileSize/2,tileSize/2); // Pour que le sprite soit centré sur la souris
+                mousePosition.sub(tileSize / 2, tileSize / 2); // Pour que le sprite soit centré sur la souris
                 sprite.setX(mousePosition.x); // On suit la souris
                 sprite.setY(mousePosition.y);
                 if (Gdx.input.isKeyJustPressed(Input.Keys.E)) head.rotate(+1);
@@ -144,12 +145,11 @@ public class Queue implements Serializable {
                         isFirst = false;
                         origin.add(mousePosition);// Si c'est la première, on stock ses coordonées
                         place(mousePosition); // On pose la tuile
-                    }
-                    else if (head.canPlaceThere()) {
+                    } else if (head.canPlaceThere()) {
                         System.out.println("Yes you can");
                         isMovable = false; // Voilà voilà
                         isHidden = true;
-                        snap(mousePosition); // Tu alignes les coordonées sur la "grille"
+                        Functions.snap(mousePosition); // Tu alignes les coordonées sur la "grille"
                         place(mousePosition);
                     }
                 }

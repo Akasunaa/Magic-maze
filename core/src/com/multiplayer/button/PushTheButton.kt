@@ -6,8 +6,10 @@ import com.badlogic.gdx.graphics.GL20
 import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.graphics.g2d.BitmapFont
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
-import com.multiplayer.button.NeededConstants.isServer
-import com.multiplayer.button.NeededConstants.mouseInput
+import com.utils.Functions.mouseInput
+import com.utils.MainConstants
+import com.utils.Multiplayer
+import com.utils.Multiplayer.isServer
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import java.net.InetAddress
@@ -22,6 +24,7 @@ class PushTheButton : ApplicationAdapter() {
 
     val serverIP = "157.159.41.36" // L'ip de mon PC fixe
     val ip = InetAddress.getLocalHost().hostAddress // L'ip de ce pc
+
     //val id = InetAddress.getLocalHost().hostName // L'id de ce pc
     val port = 6969 // Le port du serveur
     val id = "PC-Fixe-Server=$isServer"
@@ -36,7 +39,6 @@ class PushTheButton : ApplicationAdapter() {
     val windowHeight = 720f
     lateinit var camera: OrthographicCamera
     var count = 1
-
 
 
     override fun create() {
@@ -78,12 +80,12 @@ class PushTheButton : ApplicationAdapter() {
 
         courrier = Courrier(id, port, serverIP)
 
-        NeededConstants.camera = camera
-        NeededConstants.courrier = courrier
-        NeededConstants.buttonList = buttonList
-        NeededConstants.clientList = clientList
-        NeededConstants.batch = batch
-        NeededConstants.key = key
+        MainConstants.camera = camera
+        Multiplayer.courrier = courrier
+        Multiplayer.buttonList = buttonList
+        Multiplayer.clientList = clientList
+        MainConstants.batch = batch
+        Multiplayer.key = key
     }
 
 
@@ -100,7 +102,7 @@ class PushTheButton : ApplicationAdapter() {
         if (redButton.isClickedAndValid()) {
             if (count == 1) GlobalScope.launch { courrier.sendObject(greenButton) }
             if (count == 2) GlobalScope.launch { courrier.sendObject(bluButton) }
-            count ++
+            count++
 
         }
         for (button in buttonList.buttonList) {

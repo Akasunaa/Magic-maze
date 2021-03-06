@@ -7,7 +7,6 @@ import com.badlogic.gdx.net.SocketHints
 import java.io.BufferedReader
 import java.io.IOException
 import java.io.InputStreamReader
-import java.io.ObjectOutputStream
 
 // Le but de cette classe est d'éviter de recréer une socket à chaque fois
 // Et de faciliter l'envois de messages.

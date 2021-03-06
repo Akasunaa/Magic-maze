@@ -1,12 +1,15 @@
 package com.tiles.pathfinding;
 
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 
 import java.io.Serializable;
 
-import static com.tiles.pathfinding.NeededConstants.*;
+import static com.utils.Directions.*;
+import static com.utils.Functions.modulo;
+import static com.utils.MainConstants.batch;
+import static com.utils.TileAndCases.caseSize;
+import static com.utils.TileAndCases.offset;
 
 public class Case implements Serializable {
     public transient Case[] caseList = new Case[4];
@@ -156,7 +159,7 @@ public class Case implements Serializable {
         if (!seen) {
             seen = true; // Parcours de graphe classique pour éviter les StackOverflow
             if (tempPlayer.getNorth()) {
-                index = (2 + tile.rotation) % 4;
+                index = modulo(north + tile.rotation, numberDirections);
                 if (caseList[index] != null) {
                     caseList[index].explored();
                     caseList[index].explore(player);
@@ -164,8 +167,7 @@ public class Case implements Serializable {
             }
 
             if (tempPlayer.getWest()) {
-                index = ((3 - tile.rotation) % 4 + 4) % 4;
-                // Les modulos en Java fonctionnent bizarrement, c'est pour s'assurer d'avoir un truc positif
+                index = modulo(west + tile.rotation, numberDirections);
                 if (caseList[index] != null) {
                     caseList[index].explored();
                     caseList[index].explore(player);
@@ -173,7 +175,7 @@ public class Case implements Serializable {
             }
 
             if (tempPlayer.getSouth()) {
-                index = (tile.rotation % 4);
+                index = modulo(south + tile.rotation, numberDirections);
                 if (caseList[index] != null) {
                     caseList[index].explored();
                     caseList[index].explore(player);
@@ -181,7 +183,7 @@ public class Case implements Serializable {
             }
 
             if (tempPlayer.getEast()) {
-                index = ((1 - tile.rotation) % 4 + 4) % 4;
+                index = modulo(east + tile.rotation, numberDirections);
                 if (caseList[index] != null) {
                     caseList[index].explored();
                     caseList[index].explore(player);
@@ -209,7 +211,7 @@ public class Case implements Serializable {
         if (seen) {
             seen = false;
             if (tempPlayer.getNorth()) {
-                index = (2 + tile.rotation) % 4;
+                index = modulo(north + tile.rotation, numberDirections);
                 if (caseList[index] != null) {
                     caseList[index].unexplored();
                     caseList[index].revert(player);
@@ -217,7 +219,7 @@ public class Case implements Serializable {
             }
 
             if (tempPlayer.getWest()) {
-                index = ((3 - tile.rotation) % 4 + 4) % 4;
+                index = modulo(west + tile.rotation, numberDirections);
                 // Les modulos en Java fonctionnent bizarrement, c'est pour s'assurer d'avoir un truc positif
                 if (caseList[index] != null) {
                     caseList[index].unexplored();
@@ -226,7 +228,7 @@ public class Case implements Serializable {
             }
 
             if (tempPlayer.getSouth()) {
-                index = (tile.rotation % 4);
+                index = modulo(south + tile.rotation, numberDirections);
                 if (caseList[index] != null) {
                     caseList[index].unexplored();
                     caseList[index].revert(player);
@@ -234,7 +236,7 @@ public class Case implements Serializable {
             }
 
             if (tempPlayer.getEast()) {
-                index = ((1 - tile.rotation) % 4 + 4) % 4;
+                index = modulo(east + tile.rotation, numberDirections);
                 if (caseList[index] != null) {
                     caseList[index].unexplored();
                     caseList[index].revert(player);
@@ -265,6 +267,14 @@ public class Case implements Serializable {
     public static void makeShortcut(Case case1, Case case2) {
         case1.shortcut = case2;
         case2.shortcut = case1;
+    }
+
+    public static void link(Case case1, Case case2, int direction) {
+        // Direction indique la direction de la case 2 par rapport à la case 1
+        // Exemple: la case 2 est au nord de la case 1
+        // alors direction = 2
+        case1.caseList[modulo(direction, numberDirections)] = case2;
+        case2.caseList[modulo(direction + 2 - case2.tile.rotation, numberDirections)] = case1;
     }
 
     public void dispose() {

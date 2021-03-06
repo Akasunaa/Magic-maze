@@ -4,9 +4,13 @@ import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.Sprite
-import com.multiplayer.button.NeededConstants.*
-import kotlinx.serialization.*
-import kotlinx.serialization.json.*
+import com.utils.Functions.mouseInput
+import com.utils.MainConstants.batch
+import com.utils.Multiplayer.courrier
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.Transient
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 
 @Serializable
 class BigButton(val idlePath: String, val pushedPath: String,
@@ -16,8 +20,10 @@ class BigButton(val idlePath: String, val pushedPath: String,
 
     @Transient
     lateinit var idle: Sprite
+
     @Transient
     lateinit var pushed: Sprite
+
     @Transient
     lateinit var active: Sprite
 
@@ -81,7 +87,9 @@ class BigButton(val idlePath: String, val pushedPath: String,
             (x <= mouseInput().x && mouseInput().x <= x + width) &&
             (y <= mouseInput().y && mouseInput().y <= y + height))
 
-    fun check() { if (isClickedAndValid()) onClickedLocally() }
+    fun check() {
+        if (isClickedAndValid()) onClickedLocally()
+    }
 
 
     fun dispose() {

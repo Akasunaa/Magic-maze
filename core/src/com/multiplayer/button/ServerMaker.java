@@ -11,7 +11,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
-import static com.multiplayer.button.NeededConstants.key;
+import static com.utils.Multiplayer.key;
 
 
 // Cette classe existe uniquement parce que j'ai aucune idée de comment faire ça en Kotlin

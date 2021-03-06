@@ -1,12 +1,11 @@
 package com.multiplayer.button
 
-import com.multiplayer.button.NeededConstants.buttonList
-import com.multiplayer.button.NeededConstants.clientList
+import com.utils.Multiplayer.buttonList
+import com.utils.Multiplayer.clientList
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import java.io.BufferedReader
 import java.io.InputStreamReader
-import java.io.ObjectInputStream
 
 class Decryptor() {
     fun decryptMessage(message: String) {
@@ -31,7 +30,8 @@ class Decryptor() {
                         println(tempString)
                         buttonList.add(Json.decodeFromString<BigButton>(tempString))
                     }
-                    "else" -> {}
+                    "else" -> {
+                    }
                 }
             }
             "nothing" -> {

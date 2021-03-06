@@ -10,6 +10,7 @@ class Client(var ip: String, val sendingSocket: Socket, var id: String) {
         id = waitForIt[0]
         ip = waitForIt[2]
     }
+
     lateinit var receivingSocket: Socket
     fun receiveSocket(socket: Socket) {
         receivingSocket = socket
