@@ -1,4 +1,6 @@
 package com.tiles.pathfinding;
+import static com.utils.CaseCorrespondance.*;
+import static com.utils.Colors.*;
 
 public class TileArray {
     /*
@@ -39,105 +41,87 @@ public class TileArray {
         Un tableau de 3x4 pour ceux verticaux
         Un tableau de 4x3 pour ceux horizontaux
         Pour le mur: 1 = un mur, 0 = pas de mur
-        Pour les cases:
-         - 0 = innacessible
-         - 1 = accessible, case normale
-         - 2 = une entrée
-         // les racourcis et les escalators sont rajoutés à la main
-         - 7 = un sablier
-         - 8 = boule de crystal
-         - 9 = caméra
-         - 1x = une sortie normale
-         - 2x = un téléporteur (voir comment les coder plus tard)
-         - 3x = une arme
-         - 4x = une sortie de joueur
-
-         pour les grands nombres, on a
-         - 0 -> vert
-         - 1 -> violet
-         - 2 -> jaune
-         - 3 -> orange
         */
 
     private static int[][] getArrayTemp(int number) {
         if (number == 0) {
             return new int[][]{
-                    {7, 1, 13, 21},
-                    {11, 1, 1, 22},
-                    {23, 1, 1, 10},
-                    {20, 12, 1, 0}
+                    {hourglass, vanilla, exit + orange, portal + purple},
+                    {exit + purple, vanilla, vanilla, portal + yellow},
+                    {portal + orange, vanilla, vanilla, exit + green},
+                    {portal + green, exit + yellow, vanilla, unnacessible}
             };
         }
         if (number == 1) {
             return new int[][]{
-                    {7, 1, 10, 1},
-                    {11, 1, 1, 1},
-                    {1, 1, 1, 12},
-                    {1, 13, 1, 0}
+                    {hourglass, vanilla, exit+green, vanilla},
+                    {exit + purple, vanilla, vanilla, vanilla},
+                    {vanilla, vanilla, vanilla, exit + yellow},
+                    {vanilla, exit + orange, vanilla, unnacessible}
             };
         }
         if (number == 2) {
             return new int[][]{
-                    {41, 0, 0, 0},
-                    {1, 0, 0, 21},
-                    {0, 0, 1, 2},
-                    {0, 13, 1, 20}
+                    {finalExit + purple, unnacessible, unnacessible, unnacessible},
+                    {vanilla, unnacessible, unnacessible, portal + purple},
+                    {unnacessible, unnacessible, vanilla, entrance},
+                    {unnacessible, exit + orange, vanilla, portal + green}
             };
         }
         if (number == 3) {
             return new int[][]{
-                    {0, 1, 2, 0},
-                    {12, 1, 1, 7},
-                    {20, 1, 1, 11},
-                    {0, 23, 1, 1}
+                    {unnacessible, vanilla, entrance, unnacessible},
+                    {exit + yellow, vanilla, vanilla, hourglass},
+                    {green + portal, vanilla, vanilla, purple + portal},
+                    {unnacessible, orange + portal, vanilla, vanilla}
             };
         }
         if (number == 4) {
             return new int[][]{
-                    {0, 23, 0, 0},
-                    {2, 1, 7, 0},
-                    {0, 1, 1, 11},
-                    {0, 10, 0, 22}
+                    {unnacessible, orange + portal, unnacessible, unnacessible},
+                    {entrance, vanilla, hourglass, unnacessible},
+                    {unnacessible, vanilla, vanilla, purple + exit},
+                    {unnacessible, green + exit, unnacessible, yellow + portal}
             };
         }
         if (number == 5) {
             return new int[][]{
-                    {0, 21, 12, 1},
-                    {2, 1, 1, 1},
-                    {1, 1, 7, 13},
-                    {0, 10, 1, 1}
+                    {unnacessible, purple + portal, yellow + exit, vanilla},
+                    {entrance, vanilla, vanilla, vanilla},
+                    {vanilla, vanilla, hourglass, orange + exit},
+                    {unnacessible, green + exit, vanilla, vanilla}
             };
         }
         if (number == 6) {
             return new int[][]{
-                    {0, 0, 32, 0},
-                    {10, 1, 1, 0},
-                    {0, 1, 1, 2},
-                    {0, 13, 0, 21}
+                    {unnacessible, unnacessible, yellow + weapon, unnacessible},
+                    {green+ entrance, vanilla, vanilla, unnacessible},
+                    {unnacessible, vanilla, vanilla, entrance},
+                    {unnacessible, orange+ exit, unnacessible, purple + portal}
             };
         }
         if (number == 7) {
             return new int[][]{
-                    {0, 0, 20, 0},
-                    {1, 1, 1, 1},
-                    {33, 0, 0, 11},
-                    {0, 2, 0, 22}
+                    {unnacessible, unnacessible, green + portal, unnacessible},
+                    {vanilla, vanilla, vanilla, vanilla},
+                    {orange + weapon, unnacessible, unnacessible, purple + exit},
+                    {unnacessible, entrance, unnacessible, yellow + portal}
             };
         }
         if (number == 8) {
             return new int[][]{
-                    {1, 1, 1, 1},
-                    {13, 0, 22, 1},
-                    {0, 0, 0, 11},
-                    {30, 2, 1, 1}
+                    {vanilla, vanilla, vanilla, vanilla},
+                    {orange + exit, unnacessible, yellow + portal, vanilla},
+                    {unnacessible, unnacessible, unnacessible, purple + exit},
+                    {green + weapon, entrance, vanilla, vanilla}
             };
         }
         if (number == 9) {
             return new int[][]{
-                    {0, 1, 1, 1},
-                    {2, 1, 0, 1},
-                    {0, 0, 23, 1},
-                    {31, 12, 1, 1}
+                    {unnacessible, vanilla, vanilla, vanilla},
+                    {entrance, vanilla, unnacessible, vanilla},
+                    {unnacessible, unnacessible, orange + portal, vanilla},
+                    {purple + weapon, yellow + portal, vanilla, vanilla}
             };
         } else return null;
     }

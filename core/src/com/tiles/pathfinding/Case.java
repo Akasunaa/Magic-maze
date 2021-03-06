@@ -5,11 +5,13 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 
 import java.io.Serializable;
 
+import static com.utils.CaseCorrespondance.*;
 import static com.utils.Directions.*;
 import static com.utils.Functions.modulo;
 import static com.utils.MainConstants.batch;
 import static com.utils.TileAndCases.caseSize;
 import static com.utils.TileAndCases.offset;
+import static com.utils.Colors.*;
 
 public class Case implements Serializable {
     public transient Case[] caseList = new Case[4];
@@ -21,12 +23,14 @@ public class Case implements Serializable {
     public boolean hasPortal;
     public boolean isExit;
     public boolean isEntrance;
+    public boolean hasWeapon;
+    public boolean isFinalExit;
 
     public boolean isValid = false; // Utiler pour le déplacement du pion
     private boolean isShowed = false;
     public transient Case shortcut;
     public transient Case elevator;
-    public String color;
+    public int color;
     private transient Tile tile; // Il faut éviter de faire un StackOverFlowError lors de la conversion en Json ou de la serialization
 
     private transient Sprite greenDot;
@@ -35,18 +39,13 @@ public class Case implements Serializable {
 
     Case(int number, Tile tile) {
         this.tile = tile;
-        isAccessible = (number != 0);
-        if (number < 10) {
-            color = "none";
-        } else {
-            if (number % 10 == 0) color = "green";
-            if (number % 10 == 1) color = "purple";
-            if (number % 10 == 2) color = "yellow";
-            if (number % 10 == 3) color = "orange";
-        }
-        isEntrance = number == 2;
-        isExit = number / 10 == 1;
-        hasPortal = number / 10 == 2;
+        isAccessible = (number != unnacessible);
+        color = number % 10;
+        isEntrance = number == entrance;
+        isExit = number / 10 == exit / 10;
+        hasPortal = number / 10 == portal / 10;
+        hasWeapon = number / 10 == weapon / 10;
+        isFinalExit = number / 10 == finalExit / 10;
     }
 
     public void getNeighbours(int[][] horizontalWalls, int[][] verticalWalls) {

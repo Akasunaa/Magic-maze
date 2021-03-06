@@ -13,6 +13,7 @@ import com.utils.TileAndCases;
 import java.io.Serializable;
 
 import static com.tiles.pathfinding.Case.link;
+import static com.utils.Colors.getColor;
 import static com.utils.Directions.numberDirections;
 import static com.utils.Functions.modulo;
 import static com.utils.MainConstants.batch;
@@ -93,7 +94,7 @@ public class Tile implements Serializable {
                 tempCase = getCase(mouseInput);
                 tempCase.show();
                 tempCase.explore(player);
-                numberCase.draw(batch, "x = " + tempCase.x + "; y = " + tempCase.y + "; couleur = " + tempCase.color + ", portal = " + tempCase.hasPortal, 700f, 200f);
+                numberCase.draw(batch, "x = " + tempCase.x + "; y = " + tempCase.y + "; couleur = " + getColor(tempCase.color) + ", portal = " + tempCase.hasPortal, 700f, 200f);
                 exploring = true;
                 TileAndCases.lastExploredCase = tempCase;
             } catch (ArrayIndexOutOfBoundsException e) {
