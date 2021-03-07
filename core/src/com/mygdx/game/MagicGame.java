@@ -22,6 +22,8 @@ public class MagicGame extends BaseGame
     public void create()
     {
         // initialize resources common to multiple screens and store to skin database
+
+        // Police d'écriture
         BitmapFont uiFont = new BitmapFont(Gdx.files.internal("GameUIAssets/fontTest.fnt"));
         uiFont.getRegion().getTexture().setFilter(TextureFilter.Linear,
                 TextureFilter.Linear);
@@ -29,6 +31,7 @@ public class MagicGame extends BaseGame
         LabelStyle uiLabelStyle = new LabelStyle(uiFont, Color.BLUE);
         skin.add("uiLabelStyle", uiLabelStyle);
 
+        //Texture boutton de base
         TextButtonStyle uiTextButtonStyle = new TextButtonStyle();
         uiTextButtonStyle.font = uiFont;
         uiTextButtonStyle.fontColor = Color.NAVY;
@@ -36,17 +39,20 @@ public class MagicGame extends BaseGame
         skin.add("buttonUp", new NinePatch(upTex, 26,26,16,20));
         uiTextButtonStyle.up = skin.getDrawable("buttonUp");
 
+        //Texture boutton quand survolé
         Texture overTex = new Texture(Gdx.files.internal("GameUIAssets/ninepatch-2.png"));
         skin.add("buttonOver", new NinePatch(overTex, 26,26,16,20) );
         uiTextButtonStyle.over = skin.getDrawable("buttonOver");
         uiTextButtonStyle.overFontColor = Color.BLUE;
 
+        //Texture boutton quand appuyé
         Texture downTex = new Texture(Gdx.files.internal("GameUIAssets/ninepatch-3.png"));
         skin.add("buttonDown", new NinePatch(downTex, 26,26,16,20) );
         uiTextButtonStyle.down = skin.getDrawable("buttonDown");
         uiTextButtonStyle.downFontColor = Color.BLUE;
         skin.add("uiTextButtonStyle", uiTextButtonStyle);
 
+        // Texture du slider audio
         SliderStyle uiSliderStyle = new SliderStyle();
         skin.add("sliderBack", new Texture(Gdx.files.internal("GameUIAssets/grey_sliderHorizontal.png")) );
         skin.add("sliderKnob", new Texture(Gdx.files.internal("GameUIAssets/red_sliderDown.png")) );

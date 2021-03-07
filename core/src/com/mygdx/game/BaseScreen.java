@@ -3,11 +3,15 @@ package com.mygdx.game;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Slider;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.InputMultiplexer;
 
@@ -30,6 +34,11 @@ public abstract class BaseScreen implements Screen, InputProcessor {
 
     public Image[] avatarImages;
     public Image currentAvatar;
+
+    public float audioVolume;
+    public Music instrumental;
+
+    public Slider audioSlider;
 
     public BaseScreen(BaseGame g) {
         game = g;
@@ -78,6 +87,17 @@ public abstract class BaseScreen implements Screen, InputProcessor {
 
         avatarImages = new Image[]{avatarImage1, avatarImage2, avatarImage3, avatarImage4, avatarImage5, avatarImage6, avatarImage7, avatarImage8, avatarImage9, avatarImage10 };
         currentAvatar = avatarImages[0];
+
+        audioSlider = new Slider(0, 1, 0.005f, false, game.skin, "uiSliderStyle" );
+        audioSlider.addListener(
+                new ChangeListener()
+                {
+                    public void changed(ChangeEvent event, Actor actor)
+                    {
+                        audioVolume = audioSlider.getValue();
+                        instrumental.setVolume(audioVolume);
+                    }
+                });
 
         //Toujours à la fin du constructeur sinon plein d'erreurs de merde
         create();

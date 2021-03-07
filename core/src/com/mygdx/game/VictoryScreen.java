@@ -11,8 +11,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 
 public class VictoryScreen extends BaseScreen {
 
-    private Music instrumental;
-
     public VictoryScreen(BaseGame g) {
         super(g);
     }

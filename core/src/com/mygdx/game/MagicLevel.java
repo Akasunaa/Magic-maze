@@ -28,9 +28,9 @@ import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 public class MagicLevel extends BaseScreen
 {
     private AnimatedActor mousey;
+    private AnimatedActor hourglass;
     private BaseActor cheese;
     private BaseActor floor;
-    private BaseActor winText;
     private boolean win;
     private float timeElapsed;
     private Label timeLabel;
@@ -39,24 +39,27 @@ public class MagicLevel extends BaseScreen
     final int mapWidth = 1920;
     final int mapHeight = 1080;
 
-    private float audioVolume;
-    private Music instrumental;
-
     public Label pseudoLabel;
 
     private Table pauseOverlay;
 
+    // Timer
     private float remainingTime;
 
-    public MagicLevel(BaseGame g, int currentAvatarNumber, String playerName)
+    public MagicLevel(BaseGame g, int currentAvatarNumber, String playerName, float audioVolume)
     {
         super(g);
 
+        instrumental.setVolume(audioVolume);
+        audioSlider.setValue( audioVolume );
+
+        // Afficher l'avatar correspondant à celui choisi sur l'écran précédent
         Cell<Image> cell = uiTable.getCell(currentAvatar);
         cell.clearActor();
         currentAvatar = avatarImages[currentAvatarNumber];
         cell.setActor(currentAvatar);
 
+        // Le pseudo affiché est celui rentré sur l'écran précédent
         Label currentPseudoLabel = new Label(playerName, game.skin, "uiLabelStyle");
         //C'est nawak???? wtf pour je suis obligé de faire ça???
         Cell<Label> cell1 = uiTable.getCell(pseudoLabel);
@@ -68,21 +71,29 @@ public class MagicLevel extends BaseScreen
     public void create() {
 
         //C'est nawak???? wtf pourquoi je suis obligé de faire ça???
+        // Le pseudo initial est vide et est remplacer par le constructeur
         pseudoLabel = new Label("", game.skin, "uiLabelStyle");
 
+        //Temps écoulé et temps restant
         timeElapsed = 0;
         remainingTime = 20;
 
+        win = false;
+
+        //Background
         floor = new BaseActor();
         floor.setTexture(new Texture(Gdx.files.internal("GameAssets/tiles.jpg")));
         floor.setPosition(0, 0);
         mainStage.addActor(floor);
 
+        // Objectif
         cheese = new BaseActor();
         cheese.setTexture(new Texture(Gdx.files.internal("GameAssets/star.png")));
         cheese.setPosition(400, 300);
         cheese.setOrigin(cheese.getWidth() / 2, cheese.getHeight() / 2);
         mainStage.addActor(cheese);
+
+        // Joueur
         mousey = new AnimatedActor();
         TextureRegion[] frames = new TextureRegion[4];
         for (int n = 0; n < 4; n++) {
@@ -98,33 +109,46 @@ public class MagicLevel extends BaseScreen
         mousey.setPosition(20, 20);
         mainStage.addActor(mousey);
 
+        hourglass = new AnimatedActor();
+        TextureRegion[] hourglassFrames = new TextureRegion[118];
+        for (int m = 1; m < 119; m++) {
+            String hourglassFileName = "GameUIAssets/hourglassAssets/frame(" + m +").gif";
+            Texture hourglassTex = new Texture(Gdx.files.internal(hourglassFileName));
+            hourglassTex.setFilter(TextureFilter.Linear, TextureFilter.Linear);
+            hourglassFrames[m-1] = new TextureRegion(hourglassTex);
+        }
+        Array<TextureRegion> hourglassFramesArray = new Array<TextureRegion>(hourglassFrames);
+        anim = new Animation(0.1f, hourglassFramesArray, Animation.PlayMode.LOOP);
+        hourglass.setAnimation(anim);
+        hourglass.setOrigin(hourglass.getWidth() / 2, hourglass.getHeight() / 2);
+        hourglass.setPosition(200, 600);
+        mainStage.addActor(hourglass);
+
+        //TextButton.TextButtonStyle hgTextButtonStyle = new TextButton.TextButtonStyle();
+        //hgTextButtonStyle.font = uiFont;
+        //hgTextButtonStyle.fontColor = Color.NAVY;
+        //Texture upTex = new Texture(Gdx.files.internal("GameUIAssets/ninepatch-1.png"));
+        //game.skin.add("buttonUp", new NinePatch(hourglassFramesArray, 26,26,16,20));
+        //hgTextButtonStyle.up = game.skin.getDrawable("hgButtonUp");
+        
+        //Texture overTex = new Texture(Gdx.files.internal("GameUIAssets/ninepatch-2.png"));
+        //game.skin.add("buttonOver", new NinePatch(overTex, 26,26,16,20) );
+        //hgTextButtonStyle.over = game.skin.getDrawable("hgButtonOver");
+        //hgTextButtonStyle.overFontColor = Color.BLUE;
+
+
+        // Temps restant
         BitmapFont font = new BitmapFont();
         String text = "Time: ";
         LabelStyle style = new LabelStyle(font, Color.NAVY);
         timeLabel = new Label(text, style);
         timeLabel.setFontScale(2);
-        timeLabel.setPosition(960, 1000); // sets bottom left (baseline) corner?
+        timeLabel.setPosition(960, 1000);
         uiStage.addActor(timeLabel);
 
-        win = false;
-
         instrumental = Gdx.audio.newMusic(Gdx.files.internal("Music&Sound/Gaur_Plain.ogg"));
-        audioVolume = 0.80f;
         instrumental.setLooping(true);
-        instrumental.setVolume(audioVolume);
         instrumental.play();
-
-        final Slider audioSlider = new Slider(0, 1, 0.005f, false, game.skin, "uiSliderStyle" );
-        audioSlider.setValue( audioVolume );
-        audioSlider.addListener(
-                new ChangeListener()
-                {
-                    public void changed(ChangeEvent event, Actor actor)
-                    {
-                        audioVolume = audioSlider.getValue();
-                        instrumental.setVolume(audioVolume);
-                    }
-                });
 
         Texture pauseTexture = new Texture(Gdx.files.internal("GameUIAssets/barsHorizontal.png"));
         game.skin.add("pauseImage", pauseTexture );
@@ -183,6 +207,7 @@ public class MagicLevel extends BaseScreen
                 });
         Label volumeLabel = new Label("Volume", game.skin, "uiLabelStyle");
 
+        // Pause overlay
         float w = resumeButton.getWidth();
         pauseOverlay.setBackground(pauseBackground);
         pauseOverlay.add(pauseLabel).pad(20);
@@ -197,6 +222,7 @@ public class MagicLevel extends BaseScreen
 
         pauseOverlay.setVisible(false);
 
+        // Overlay
         uiTable.pad(10);
         uiTable.add(pseudoLabel);
         uiTable.add(currentAvatar).padLeft(50);
@@ -236,7 +262,7 @@ public class MagicLevel extends BaseScreen
         // check win condition: mousey must be overlapping cheese
         Rectangle cheeseRectangle = cheese.getBoundingRectangle();
         Rectangle mouseyRectangle = mousey.getBoundingRectangle();
-        if ( !win && cheeseRectangle.contains( mouseyRectangle ) )
+        if ( !win && cheeseRectangle.contains( mouseyRectangle ))
         {
             win = true;
             dispose();
@@ -249,11 +275,13 @@ public class MagicLevel extends BaseScreen
             timeLabel.setText( "Time: " + (int)remainingTime );
             remainingTime -= dt;
 
+            // Check if timer reached 0
             if (remainingTime < 0) {
                 dispose();
                 game.setScreen(new DefeatScreen(game));
             }
         }
+
         // camera adjustment
         Camera cam = mainStage.getCamera();
         if (Gdx.input.isKeyPressed(Keys.NUMPAD_SUBTRACT)) {
@@ -263,9 +291,16 @@ public class MagicLevel extends BaseScreen
             ((OrthographicCamera)cam).zoom -= 0.02;
         }
 
+        // limiter zoom et dézoom
+        if (((OrthographicCamera)cam).zoom >= 2 )
+            ((OrthographicCamera)cam).zoom = 2;
+        if (((OrthographicCamera)cam).zoom <= 0.5)
+            ((OrthographicCamera)cam).zoom = (float) 0.5;
+
         // center camera on player
         cam.position.set( mousey.getX() + mousey.getOriginX(),
                 mousey.getY() + mousey.getOriginY(), 0 );
+
         // bound camera to layout
         cam.position.x = MathUtils.clamp(cam.position.x, viewWidth/2, mapWidth-viewWidth/2);
         cam.position.y = MathUtils.clamp(cam.position.y, viewHeight/2, mapHeight-viewHeight/2);

@@ -23,9 +23,6 @@ public class MainMenu extends BaseScreen
 {
     Button leftButton;
 
-    private float audioVolume;
-    private Music instrumental;
-
     private Table optionOverlay;
 
     public int currentAvatarNumber;
@@ -80,7 +77,7 @@ public class MainMenu extends BaseScreen
             {
                 dispose();
                 playerName = usernameTextField.getText();
-                game.setScreen( new MagicLevel(game, currentAvatarNumber, playerName) );
+                game.setScreen( new MagicLevel(game, currentAvatarNumber, playerName, audioVolume) );
             }
         });
 
@@ -117,7 +114,7 @@ public class MainMenu extends BaseScreen
                     {
                         dispose();
                         playerName = usernameTextField.getText();
-                        game.setScreen( new MagicLevel(game, currentAvatarNumber, playerName) );
+                        game.setScreen( new MagicLevel(game, currentAvatarNumber, playerName, audioVolume) );
                     }
                 });
 
@@ -272,7 +269,7 @@ public class MainMenu extends BaseScreen
                         Cell<Image> cell = uiTable.getCell(currentAvatar);
                         cell.clearActor();
 
-                        if (currentAvatarNumber != 5)
+                        if (currentAvatarNumber != 9)
                         {
                             currentAvatarNumber +=1;
                         }
