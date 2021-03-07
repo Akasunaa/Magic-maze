@@ -49,6 +49,18 @@ public class MMinterface extends IBaseScreen {
     boolean bphaseA;
     boolean voiceOn;
 
+    //Les pseudos, du coup faura faire en sorte que ce soit les bons
+    private Label pseudo1Label;
+    private Label pseudo2Label;
+    private Label pseudo3Label;
+    private Label pseudo4Label;
+    private String pseudo1;
+    private String pseudo2;
+    private String pseudo3;
+    private String pseudo4;
+
+
+
     //constructeur
     public MMinterface(Game g) {
         super(g);
@@ -116,72 +128,100 @@ public class MMinterface extends IBaseScreen {
         //la c'est les avatars des joueurs, faudra changer les sprites, c'est par joueur avec en dessous l'indication de son pouvoir
         avatar1 = new IBaseActor();
         avatar1.setTexture(new Texture(Gdx.files.internal("interface/kuro1.png")));
-        avatar1.setPosition(viewWidth - avatar1.getWidth() - 10, viewHeight - avatar1.getHeight() - 164);
+        avatar1.setPosition(viewWidth - avatar1.getWidth() - 30, viewHeight - avatar1.getHeight() - 150);
         uiStage.addActor(avatar1);
 
         haut = new IBaseActor();
         haut.setTexture(new Texture(Gdx.files.internal("interface/flechehaut.png")));
-        haut.setPosition(viewWidth - avatar1.getWidth() - 13, viewHeight - avatar1.getHeight() - 160);
+        haut.setPosition(viewWidth - avatar1.getWidth() - 33, viewHeight - avatar1.getHeight() - 146);
         uiStage.addActor(haut);
 
         avatar2 = new IBaseActor();
         avatar2.setTexture(new Texture(Gdx.files.internal("interface/kuro2.png")));
-        avatar2.setPosition(viewWidth - avatar1.getWidth() - avatar2.getWidth() - 20, viewHeight - avatar2.getHeight() - 164);
+        avatar2.setPosition(avatar1.getX(), avatar1.getY() - 100);
         uiStage.addActor(avatar2);
 
         gauche = new IBaseActor();
         gauche.setTexture(new Texture(Gdx.files.internal("interface/gauche.png")));
-        gauche.setPosition(viewWidth - avatar1.getWidth() - avatar2.getWidth() - 25, viewHeight - avatar2.getHeight() - 150);
+        gauche.setPosition(avatar2.getX() - 6, avatar2.getY() + 20);
         uiStage.addActor(gauche);
 
         teleportation = new IBaseActor();
         teleportation.setTexture(new Texture(Gdx.files.internal("interface/teleport.png")));
-        teleportation.setPosition(viewWidth - avatar1.getWidth() - avatar2.getWidth() - 25, viewHeight - avatar2.getHeight() - 170);
+        teleportation.setPosition(avatar2.getX() - 8, avatar2.getY());
         uiStage.addActor(teleportation);
 
         avatar3 = new IBaseActor();
         avatar3.setTexture(new Texture(Gdx.files.internal("interface/kuro3.png")));
-        avatar3.setPosition(viewWidth - avatar1.getWidth() - 10, viewHeight - avatar1.getHeight() - avatar3.getHeight() - 194);
+        avatar3.setPosition(avatar1.getX(), avatar2.getY() - 100);
         uiStage.addActor(avatar3);
 
         bas = new IBaseActor();
         bas.setTexture(new Texture(Gdx.files.internal("interface/bas.png")));
-        bas.setPosition(viewWidth - avatar1.getWidth() - 15, viewHeight - avatar1.getHeight() - avatar3.getHeight() - 180);
+        bas.setPosition(avatar3.getX() - 6, avatar3.getY() + 20);
         uiStage.addActor(bas);
 
         loupe = new IBaseActor();
         loupe.setTexture(new Texture(Gdx.files.internal("interface/loupa.png")));
-        loupe.setPosition(viewWidth - avatar1.getWidth() - 15, viewHeight - avatar1.getHeight() - avatar3.getHeight() - 200);
+        loupe.setPosition(avatar3.getX() - 8, avatar3.getY());
         uiStage.addActor(loupe);
 
         avatar4 = new IBaseActor();
         avatar4.setTexture(new Texture(Gdx.files.internal("interface/kuro4.png")));
-        avatar4.setPosition(viewWidth - avatar1.getWidth() - avatar2.getWidth() - 20, viewHeight - avatar1.getHeight() - avatar3.getHeight() - 194);
+        avatar4.setPosition(avatar1.getX(), avatar3.getY() - 100);
         uiStage.addActor(avatar4);
 
         droite = new IBaseActor();
         droite.setTexture(new Texture(Gdx.files.internal("interface/droite.png")));
-        droite.setPosition(viewWidth - avatar1.getWidth() - avatar2.getWidth() - 25, viewHeight - avatar1.getHeight() - avatar3.getHeight() - 180);
+        droite.setPosition(avatar4.getX() - 6, avatar4.getY() + 20);
         uiStage.addActor(droite);
 
         escalator = new IBaseActor();
         escalator.setTexture(new Texture(Gdx.files.internal("interface/escalator.png")));
-        escalator.setPosition(viewWidth - avatar1.getWidth() - avatar2.getWidth() - 25, viewHeight - avatar1.getHeight() - avatar3.getHeight() - 195);
+        escalator.setPosition(avatar4.getX() - 8, avatar4.getY());
         uiStage.addActor(escalator);
+
+        //affichage des pseudos des joueurs
+        BitmapFont fontpseudo = new BitmapFont();
+        LabelStyle stylepseudo = new LabelStyle(fontpseudo, Color.WHITE);
+        pseudo1 = "Joueur 1";
+        pseudo2 = "Joueur 2";
+        pseudo3 = "Joueur 3";
+        pseudo4 = "Joueur 4";
+
+        pseudo1Label = new Label(pseudo1, stylepseudo);
+        pseudo1Label.setFontScale(1);
+        pseudo1Label.setPosition(avatar1.getX(), avatar1.getY() - 18);
+        uiStage.addActor(pseudo1Label);
+
+        pseudo3Label = new Label(pseudo3, stylepseudo);
+        pseudo3Label.setFontScale(1);
+        pseudo3Label.setPosition(avatar3.getX(), avatar3.getY() - 18);
+        uiStage.addActor(pseudo3Label);
+
+        pseudo4Label = new Label(pseudo4, stylepseudo);
+        pseudo4Label.setFontScale(1);
+        pseudo4Label.setPosition(avatar4.getX(), avatar4.getY() - 18);
+        uiStage.addActor(pseudo4Label);
+
+        pseudo2Label = new Label(pseudo2, stylepseudo);
+        pseudo2Label.setFontScale(1);
+        pseudo2Label.setPosition(avatar2.getX(), avatar2.getY() - 18);
+        uiStage.addActor(pseudo2Label);
 
         //la c'est le compteur de plaques restantes en bas a droite
         BitmapFont font = new BitmapFont();
         LabelStyle style = new LabelStyle(font, Color.VIOLET);
 
         plaquesrestantes = 10;
-        plaquesRestantesLabel = new Label("Plaques restantes: 10", style);
+        plaquesRestantesLabel = new Label("Plaques restantes: " + plaquesrestantes, style);
         plaquesRestantesLabel.setFontScale(1);
-        plaquesRestantesLabel.setPosition(viewWidth - plaquesRestantesLabel.getWidth() - 5, 0);
+        plaquesRestantesLabel.setPosition(viewWidth - plaquesRestantesLabel.getWidth() - 5, 20);
         uiStage.addActor(plaquesRestantesLabel);
 
         prochainePlaque = new IBaseActor();
         prochainePlaque.setTexture(new Texture(Gdx.files.internal("interface/plaque3.jpg")));
-        prochainePlaque.setPosition(viewWidth - prochainePlaque.getWidth() - 25, plaquesRestantesLabel.getHeight() + 10);
+        prochainePlaque.setPosition(viewWidth - prochainePlaque.getWidth() - 25, plaquesRestantesLabel.getHeight() + 30);
         uiStage.addActor(prochainePlaque);
     }
 
@@ -265,6 +305,20 @@ public class MMinterface extends IBaseScreen {
                     public boolean touchDown(InputEvent ev, float x, float y, int pointer, int button) {
                         avatar4.clear();
                         avatar4.addAction(ping);
+                        return true;
+                    }
+                }
+        );
+
+        //appuyer sur le bouton restart fait apparaitre sur les interfaces de chaque joueur que ce joueur veux recommencer
+        restart.addListener(
+                new InputListener()
+                {
+                    public boolean touchDown(InputEvent ev, float x, float y, int pointer, int button) {
+                        IBaseActor wantToRestart = new IBaseActor();
+                        wantToRestart.setTexture(new Texture(Gdx.files.internal("interface/restart-button.png")));
+                        wantToRestart.setPosition(avatar1.getX() - 10, avatar1.getY() + avatar1.getHeight() / 2);
+                        uiStage.addActor(wantToRestart);
                         return true;
                     }
                 }
