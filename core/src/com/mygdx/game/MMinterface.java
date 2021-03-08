@@ -59,6 +59,12 @@ public class MMinterface extends IBaseScreen {
     private String pseudo3;
     private String pseudo4;
 
+    //Listeners
+    private InputListener pingavatar1;
+    private InputListener pingavatar2;
+    private InputListener pingavatar3;
+    private InputListener pingavatar4;
+
 
 
     //constructeur
@@ -223,7 +229,47 @@ public class MMinterface extends IBaseScreen {
         prochainePlaque.setTexture(new Texture(Gdx.files.internal("interface/plaque3.jpg")));
         prochainePlaque.setPosition(viewWidth - prochainePlaque.getWidth() - 25, plaquesRestantesLabel.getHeight() + 30);
         uiStage.addActor(prochainePlaque);
+
+        //je vais tenter de mettre les listeners ici héééééé ça maaaaaarche !!! (et j'ai trouvé toute seule ^^) par contre ça bloque en rouge si on spam trop hmmmmm
+        final Action ping = Actions.sequence(
+                Actions.color(new Color(1,0,0,1),(float)0.20),
+                Actions.color(new Color(1,1,1,1),(float)0.20)
+        );
+
+        pingavatar1 = new InputListener(){
+            public boolean touchDown(InputEvent ev, float x, float y, int pointer, int button) {
+                avatar1.clear();
+                avatar1.addAction(ping);
+                return false;
+            }
+        };
+
+        pingavatar2 = new InputListener(){
+            public boolean touchDown(InputEvent ev, float x, float y, int pointer, int button) {
+                avatar2.clear();
+                avatar2.addAction(ping);
+                return false;
+            }
+        };
+
+        pingavatar3 = new InputListener(){
+            public boolean touchDown(InputEvent ev, float x, float y, int pointer, int button) {
+                avatar3.clear();
+                avatar3.addAction(ping);
+                return false;
+            }
+        };
+        pingavatar4 = new InputListener(){
+            public boolean touchDown(InputEvent ev, float x, float y, int pointer, int button) {
+                avatar4.clear();
+                avatar4.addAction(ping);
+                return false;
+            }
+        };
+
     }
+
+
 
     public void update(float dt) {
     }
@@ -266,49 +312,11 @@ public class MMinterface extends IBaseScreen {
                 Actions.color(new Color(1,0,0,1),(float)0.20),
                 Actions.color(new Color(1,1,1,1),(float)0.20)
         );
-        avatar1.addListener(
-                new InputListener()
-                {
-                    public boolean touchDown(InputEvent ev, float x, float y, int pointer, int button) {
-                        avatar1.clear();
-                        avatar1.addAction(ping);
-                        return true;
-                    }
-                }
-        );
 
-        avatar2.addListener(
-                new InputListener()
-                {
-                    public boolean touchDown(InputEvent ev, float x, float y, int pointer, int button) {
-                        avatar2.clear();
-                        avatar2.addAction(ping);
-                        return true;
-                    }
-                }
-        );
-
-        avatar3.addListener(
-                new InputListener()
-                {
-                    public boolean touchDown(InputEvent ev, float x, float y, int pointer, int button) {
-                        avatar3.clear();
-                        avatar3.addAction(ping);
-                        return true;
-                    }
-                }
-        );
-
-        avatar4.addListener(
-                new InputListener()
-                {
-                    public boolean touchDown(InputEvent ev, float x, float y, int pointer, int button) {
-                        avatar4.clear();
-                        avatar4.addAction(ping);
-                        return true;
-                    }
-                }
-        );
+        avatar1.addListener(pingavatar1);
+        avatar2.addListener(pingavatar2);
+        avatar3.addListener(pingavatar3);
+        avatar4.addListener(pingavatar4);
 
         //appuyer sur le bouton restart fait apparaitre sur les interfaces de chaque joueur que ce joueur veux recommencer
         restart.addListener(
