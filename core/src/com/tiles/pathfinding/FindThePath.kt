@@ -77,7 +77,7 @@ class FindThePath : ApplicationAdapter() {
         //player = Player(false, false, true, true, false, false)
 
 
-        queue = Queue(2) // J'ai fait les cases uniquement jusqu'à la 9
+        queue = Queue(9) // J'ai fait les cases uniquement jusqu'à la 9
         queue.load()
         queue.setCoordinates(1280f - tileSize - 50f, 50f)
 

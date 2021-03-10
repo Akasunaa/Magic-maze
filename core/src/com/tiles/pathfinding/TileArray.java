@@ -72,7 +72,7 @@ public class TileArray {
             return new int[][]{
                     {unnacessible, vanilla, entrance, unnacessible},
                     {exit + yellow, vanilla, vanilla, hourglass},
-                    {green + portal, vanilla, vanilla, purple + portal},
+                    {green + portal, vanilla, vanilla, purple + exit},
                     {unnacessible, orange + portal, vanilla, vanilla}
             };
         }
@@ -95,7 +95,7 @@ public class TileArray {
         if (number == 6) {
             return new int[][]{
                     {unnacessible, unnacessible, yellow + weapon, unnacessible},
-                    {green+ entrance, vanilla, vanilla, unnacessible},
+                    {green+ exit, vanilla, vanilla, unnacessible},
                     {unnacessible, vanilla, vanilla, entrance},
                     {unnacessible, orange+ exit, unnacessible, purple + portal}
             };

@@ -294,9 +294,12 @@ public class Tile implements Serializable {
         }
     }
 
-    private static boolean isValidPlacement(Tile tileToPlace, Tile tileToJoin) {
+    private static boolean isValidPlacement(Tile tileToJoin, int direction) {
+        // direction corresponds à la direction de tileToJoin
+        // Relativement à la tile que l'on cherche à poser
         if (tileToJoin == null) return false;
-        return tileToJoin.exits[((2 + tileToPlace.entrance - tileToPlace.rotation + tileToJoin.rotation) % 4 + 4) % 4];
+        // On vérifie simplement si il s'agit bien d'une sortie
+        return tileToJoin.exits[modulo(direction + 2- tileToJoin.rotation, numberDirections)];
     }
 
     private Tile[] getNeighbouringTiles() {
@@ -330,7 +333,7 @@ public class Tile implements Serializable {
     public boolean canPlaceThere() {
         Tile[] neighbors = getNeighbouringTiles();
         int direction = modulo(entrance + rotation, numberDirections);
-        boolean temp = isValidPlacement(this, neighbors[direction]) && noOverlap();
+        boolean temp = isValidPlacement(neighbors[direction], direction) && noOverlap();
         if (temp) {
             link(entranceCase, neighbors[direction].exitCases[modulo(direction + 2 - neighbors[direction].rotation, numberDirections)], direction);
 //            entranceCase.caseList[index] = neighbors[index].exitCases[(index+2) % 4];
