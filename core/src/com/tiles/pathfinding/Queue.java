@@ -146,7 +146,9 @@ public class Queue implements Serializable {
                         origin.add(mousePosition);// Si c'est la première, on stock ses coordonées
                         place(mousePosition); // On pose la tuile
                     } else if (head.canPlaceThere()) {
-                        System.out.println("Yes you can");
+                        // Attention !!!
+                        // canPlaceThere est une fonction qui place la tuile !!!!
+                        // Elle ne fait pas que renvoyer un booléen !!!
                         isMovable = false; // Voilà voilà
                         isHidden = true;
                         Functions.snap(mousePosition); // Tu alignes les coordonées sur la "grille"

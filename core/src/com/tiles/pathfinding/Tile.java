@@ -331,10 +331,11 @@ public class Tile implements Serializable {
     }
 
     public boolean canPlaceThere() {
+        // Attention !!! Cette fonction place la tuile !!!
+        // Ce n'est pas qu'une fonction de check !!!
         Tile[] neighbors = getNeighbouringTiles();
         int direction = modulo(entrance + rotation, numberDirections);
-        boolean temp = isValidPlacement(neighbors[direction], direction) && noOverlap();
-        if (temp) {
+        if (isValidPlacement(neighbors[direction], direction) && noOverlap()) {
             link(entranceCase, neighbors[direction].exitCases[modulo(direction + 2 - neighbors[direction].rotation, numberDirections)], direction);
             // Puis prise en charge des exits et du link des exits
             for (int i = 0; i < numberDirections; i++) {
@@ -347,7 +348,8 @@ public class Tile implements Serializable {
                     }
                 }
             }
+            return true; // Parce qu'il faut renvoyer un booléen quand même
         }
-        return temp;
+        return false;
     }
 }
