@@ -272,7 +272,7 @@ public class Case implements Serializable {
         // Direction indique la direction de la case 2 par rapport à la case 1
         // Exemple: la case 2 est au nord de la case 1
         // alors direction = 2
-        case1.caseList[modulo(direction, numberDirections)] = case2;
+        case1.caseList[modulo(direction-case1.tile.rotation, numberDirections)] = case2;
         case2.caseList[modulo(direction + 2 - case2.tile.rotation, numberDirections)] = case1;
     }
 

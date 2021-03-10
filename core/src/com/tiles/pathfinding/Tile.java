@@ -329,10 +329,10 @@ public class Tile implements Serializable {
 
     public boolean canPlaceThere() {
         Tile[] neighbors = getNeighbouringTiles();
-        int index = modulo(entrance + rotation, numberDirections);
-        boolean temp = isValidPlacement(this, neighbors[index]) && noOverlap();
+        int direction = modulo(entrance + rotation, numberDirections);
+        boolean temp = isValidPlacement(this, neighbors[direction]) && noOverlap();
         if (temp) {
-            link(entranceCase, neighbors[index].exitCases[modulo(entrance - rotation + neighbors[index].rotation, numberDirections)], index);
+            link(entranceCase, neighbors[direction].exitCases[modulo(direction + 2 - neighbors[direction].rotation, numberDirections)], direction);
 //            entranceCase.caseList[index] = neighbors[index].exitCases[(index+2) % 4];
 //            neighbors[index].exitCases[(index+2)%4].caseList[(index+2)%4] = entranceCase;
             Tile tempTile;

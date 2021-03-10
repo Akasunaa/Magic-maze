@@ -8,8 +8,8 @@ import com.tiles.pathfinding.FindThePath;
 public class TilesLauncher {
     public static void main(String[] arg) {
         LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
-        config.height = 900;
-        config.width = 1800;
+        config.height = 720;
+        config.width = 1280;
         config.forceExit = false;
         new LwjglApplication(new FindThePath(), config);
     }

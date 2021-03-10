@@ -74,10 +74,12 @@ class FindThePath : ApplicationAdapter() {
         // Le chargement est nécessaire pour le rendre sérializable
 
         player = Player(true, true, false, false, false, false)
+        //player = Player(false, false, true, true, false, false)
+
 
         queue = Queue(2) // J'ai fait les cases uniquement jusqu'à la 9
         queue.load()
-        queue.setCoordinates(1800f - tileSize - 50f, 50f)
+        queue.setCoordinates(1280f - tileSize - 50f, 50f)
 
 
         // Bon là c'ets le batch et des trucs pour écrire, rien d'important
