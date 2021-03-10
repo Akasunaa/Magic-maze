@@ -16,7 +16,7 @@ import com.utils.TileAndCases.origin
 import com.utils.TileAndCases.tileSize
 import java.io.File
 
-class FindThePath : ApplicationAdapter() {
+class FindThePathKotlin : ApplicationAdapter() {
     lateinit var batch: SpriteBatch
 
     // Trucs de déboguage: pour afficher les coordonées de la souris et de la case cliquée
@@ -45,8 +45,6 @@ class FindThePath : ApplicationAdapter() {
 
     // La caméra, toi même tu sais
     lateinit var camera: OrthographicCamera
-    fun getMouseX(): Float = camera.unproject(Vector3(Gdx.input.x.toFloat(), Gdx.input.y.toFloat(), 0f)).x
-    fun getMouseY(): Float = camera.unproject(Vector3(Gdx.input.x.toFloat(), Gdx.input.y.toFloat(), 0f)).y
     fun stringMousePosition(): String = "x = ${mouseInput().x.toInt()}; y = ${mouseInput().y.toInt()}"
 
     // Le truc pour faire le zoom
@@ -57,7 +55,7 @@ class FindThePath : ApplicationAdapter() {
         camera.setToOrtho(false, Gdx.graphics.width.toFloat(), Gdx.graphics.height.toFloat())
         MainConstants.camera = camera
         // Cette caméra nous sert à avoir le bon système de coordonées
-        mouseWheelChecker = MouseWheelChecker(camera)
+        mouseWheelChecker = MouseWheelChecker()
         Gdx.input.setInputProcessor(mouseWheelChecker)
 
         tileList = ArrayList()
@@ -100,7 +98,6 @@ class FindThePath : ApplicationAdapter() {
 
         batch.begin()
         coordMouse.draw(batch, stringMousePosition() + "\n$origin", 700f, 150f) // On écrit les coordonées
-
 
         queue.draw()
         queue.handleInput()
