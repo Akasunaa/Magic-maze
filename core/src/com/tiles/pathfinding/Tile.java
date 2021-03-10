@@ -336,19 +336,17 @@ public class Tile implements Serializable {
         boolean temp = isValidPlacement(neighbors[direction], direction) && noOverlap();
         if (temp) {
             link(entranceCase, neighbors[direction].exitCases[modulo(direction + 2 - neighbors[direction].rotation, numberDirections)], direction);
-//            entranceCase.caseList[index] = neighbors[index].exitCases[(index+2) % 4];
-//            neighbors[index].exitCases[(index+2)%4].caseList[(index+2)%4] = entranceCase;
-            Tile tempTile;
-            int indexPrime;
-//            for (int i = 0; i <= 3; i ++) {
-//                tempTile = neighbors[i];
-//                index = ((i+rotation)%4 + 4)%4;
-//                if (exits[index] &&  tempTile != null && tempTile.exits[((2+i - tempTile.rotation)%4 +4)%4]) {
-//                    indexPrime = ((2+i - tempTile.rotation)%4 +4)%4;
-//                    exitCases[index].caseList[i] = tempTile.exitCases[indexPrime];
-//                    tempTile.exitCases[indexPrime].caseList[indexPrime] = exitCases[index];
-//                }
-//            }
+            // Puis prise en charge des exits et du link des exits
+            for (int i = 0; i < numberDirections; i++) {
+                if (exits[i]) { // On commence par vérifier que i est bien une sortie
+                    direction = modulo(i + rotation, numberDirections);
+                    if (isValidPlacement(neighbors[direction], direction)) {
+                        // On fait la même chose qu'avant, mais on considère simplement
+                        // notre exit comme une entrance
+                        link(exitCases[i], neighbors[direction].exitCases[modulo(direction + 2 - neighbors[direction].rotation, numberDirections)], direction);
+                    }
+                }
+            }
         }
         return temp;
     }
