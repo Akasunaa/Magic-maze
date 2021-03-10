@@ -54,38 +54,15 @@ public abstract class BaseScreen implements Screen, InputProcessor {
         uiTable.setFillParent(true);
         uiStage.addActor(uiTable);
 
-        Texture avatar1 = new Texture(Gdx.files.internal("Avatars/elephant.png"));
-        avatar1.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
-        Image avatarImage1 = new Image(avatar1);
-        Texture avatar2 = new Texture(Gdx.files.internal("Avatars/giraffe.png"));
-        avatar2.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
-        final Image avatarImage2 = new Image(avatar2);
-        Texture avatar3 = new Texture(Gdx.files.internal("Avatars/hippo.png"));
-        avatar1.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
-        Image avatarImage3 = new Image(avatar3);
-        Texture avatar4 = new Texture(Gdx.files.internal("Avatars/monkey.png"));
-        avatar1.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
-        Image avatarImage4 = new Image(avatar4);
-        Texture avatar5 = new Texture(Gdx.files.internal("Avatars/panda.png"));
-        avatar1.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
-        Image avatarImage5 = new Image(avatar5);
-        Texture avatar6 = new Texture(Gdx.files.internal("Avatars/parrot.png"));
-        avatar1.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
-        Image avatarImage6 = new Image(avatar6);
-        Texture avatar7 = new Texture(Gdx.files.internal("Avatars/penguin.png"));
-        avatar1.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
-        Image avatarImage7 = new Image(avatar7);
-        Texture avatar8 = new Texture(Gdx.files.internal("Avatars/pig.png"));
-        avatar1.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
-        Image avatarImage8 = new Image(avatar8);
-        Texture avatar9 = new Texture(Gdx.files.internal("Avatars/rabbit.png"));
-        avatar1.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
-        Image avatarImage9 = new Image(avatar9);
-        Texture avatar10 = new Texture(Gdx.files.internal("Avatars/snake.png"));
-        avatar1.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
-        Image avatarImage10 = new Image(avatar10);
-
-        avatarImages = new Image[]{avatarImage1, avatarImage2, avatarImage3, avatarImage4, avatarImage5, avatarImage6, avatarImage7, avatarImage8, avatarImage9, avatarImage10 };
+        // Création de la liste des avatars pour gérer les différents avatars
+        Texture tempAvatar;
+        final String[] animalNames = new String[] {"elephant","giraffe","hippo","monkey","panda","parrot","penguin","pig","rabbit","snake"};
+        avatarImages = new Image[animalNames.length];
+        for (int i = 0; i < animalNames.length; i++) {
+            tempAvatar = new Texture(Gdx.files.internal("Avatars/" + animalNames[i] + ".png"));
+            tempAvatar.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
+            avatarImages[i] = new Image(tempAvatar);
+        }
         currentAvatar = avatarImages[0];
 
         audioSlider = new Slider(0, 1, 0.005f, false, game.skin, "uiSliderStyle" );
