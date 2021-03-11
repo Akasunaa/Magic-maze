@@ -1,4 +1,4 @@
-package com.mygdx.game;
+package com.menu;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;

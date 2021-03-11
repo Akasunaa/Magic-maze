@@ -1,17 +1,15 @@
-package com.mygdx.game;
+package com.menu;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 
-public class VictoryScreen extends BaseScreen {
+public class DefeatScreen extends BaseScreen {
 
-    public VictoryScreen(BaseGame g) {
+    public DefeatScreen(BaseGame g) {
         super(g);
     }
 
@@ -22,15 +20,15 @@ public class VictoryScreen extends BaseScreen {
         instrumental.setLooping(true);
         instrumental.play();
 
-        Label victoryLabel = new Label( "Victoire !!!!", game.skin, "uiLabelStyle" );
+        Label defeatLabel = new Label( "Défaite...", game.skin, "uiLabelStyle" );
 
         BaseActor background = new BaseActor();
-        background.setTexture( new Texture(Gdx.files.internal("GameAssets/VictoryImage.jpg")) );
+        background.setTexture( new Texture(Gdx.files.internal("GameAssets/DefeatImage.jpg")) );
         uiStage.addActor( background );
 
         background.toBack();
 
-        uiTable.add(victoryLabel);
+        uiTable.add(defeatLabel);
 
         Action fadeInColorCycleForever = Actions.sequence(
                 Actions.alpha(0), // set transparency value
@@ -39,12 +37,12 @@ public class VictoryScreen extends BaseScreen {
                 Actions.forever(
                         Actions.sequence(
                                 // color shade to approach, duration
-                                Actions.color(new Color(1, 0, 0, 1), 1),
-                                Actions.color(new Color(0, 0, 1, 1), 1)
+                                Actions.color( new Color(1,0,0,1), 1 ),
+                                Actions.color( new Color(0,0,1,1), 1 )
                         )
                 )
         );
-        background.addAction(fadeInColorCycleForever);
+        background.addAction( fadeInColorCycleForever );
 
     }
 

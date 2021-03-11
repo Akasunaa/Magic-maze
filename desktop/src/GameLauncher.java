@@ -1,6 +1,5 @@
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
-import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
-import com.mygdx.game.MagicGame;
+import com.menu.MagicGame;
 
 public class GameLauncher
 {

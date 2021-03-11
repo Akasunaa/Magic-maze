@@ -1,4 +1,4 @@
-package com.mygdx.game;
+package com.gameInterface;
 
 // ça c'est la classe abstraite qui est exdent par chaque écran, natahn doit avoir un truc similaire
 

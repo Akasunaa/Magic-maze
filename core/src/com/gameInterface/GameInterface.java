@@ -1,4 +1,4 @@
-package com.mygdx.game;
+package com.gameInterface;
 
 //ça c'est réellement l'interface que j'ai fait
 
@@ -15,7 +15,7 @@ import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 
-public class MMinterface extends IBaseScreen {
+public class GameInterface extends IBaseScreen {
     // pour indiquer la phase
     private char phase;
 
@@ -68,7 +68,7 @@ public class MMinterface extends IBaseScreen {
 
 
     //constructeur
-    public MMinterface(Game g) {
+    public GameInterface(Game g) {
         super(g);
         phase = 'a';
     }

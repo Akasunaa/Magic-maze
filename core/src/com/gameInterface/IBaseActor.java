@@ -1,4 +1,4 @@
-package com.mygdx.game;
+package com.gameInterface;
 
 //on crée la classe qu'on va utiliser pour décrire tous les objets de l'interface, y a des trucs qui servent a rien vu que c'est du copier coller du code du bouquin
 
