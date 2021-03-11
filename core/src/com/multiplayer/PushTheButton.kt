@@ -1,4 +1,4 @@
-package com.multiplayer.button
+package com.multiplayer
 
 import com.badlogic.gdx.ApplicationAdapter
 import com.badlogic.gdx.Gdx

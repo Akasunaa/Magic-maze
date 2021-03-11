@@ -1,7 +1,6 @@
-package com.tiles.pathfinding;
+package com.tiles;
 
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.menu.BaseActor;
 
 import java.io.Serializable;
@@ -13,7 +12,6 @@ import static com.utils.GameScreens.mainScreen;
 import static com.utils.MainConstants.batch;
 import static com.utils.TileAndCases.caseSize;
 import static com.utils.TileAndCases.offset;
-import static com.utils.Colors.*;
 
 public class Case implements Serializable {
     public transient Case[] caseList = new Case[4];

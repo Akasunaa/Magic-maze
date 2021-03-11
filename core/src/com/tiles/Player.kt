@@ -1,4 +1,4 @@
-package com.tiles.pathfinding
+package com.tiles
 
 import com.utils.Functions.modulo
 import kotlinx.serialization.Serializable

@@ -1,14 +1,11 @@
-package com.tiles.pathfinding;
+package com.tiles;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
-import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.ibm.gpu.Maths;
 import com.menu.BaseActor;
 import com.menu.GameInterface;
 import com.menu.BaseScreen;

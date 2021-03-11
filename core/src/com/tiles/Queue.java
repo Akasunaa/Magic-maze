@@ -1,12 +1,10 @@
-package com.tiles.pathfinding;
+package com.tiles;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.menu.BaseActor;
 import com.utils.Functions;
 
@@ -16,7 +14,6 @@ import java.util.Collections;
 
 import static com.utils.GameScreens.mainScreen;
 import static com.utils.MainConstants.batch;
-import static com.utils.MainConstants.camera;
 import static com.utils.TileAndCases.*;
 
 public class Queue implements Serializable {

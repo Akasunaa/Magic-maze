@@ -1,20 +1,18 @@
-package com.tiles.pathfinding;
+package com.tiles;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.menu.BaseActor;
 import com.utils.Functions;
 import com.utils.TileAndCases;
 
 import java.io.Serializable;
 
-import static com.tiles.pathfinding.Case.link;
+import static com.tiles.Case.link;
 import static com.utils.Colors.getColor;
 import static com.utils.Directions.numberDirections;
 import static com.utils.Functions.modulo;

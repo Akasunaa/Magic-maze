@@ -1,4 +1,4 @@
-package com.tiles.pathfinding;
+package com.tiles;
 import static com.utils.CaseCorrespondance.*;
 import static com.utils.Colors.*;
 

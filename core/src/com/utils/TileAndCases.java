@@ -2,9 +2,9 @@ package com.utils;
 
 import com.badlogic.gdx.math.Matrix3;
 import com.badlogic.gdx.math.Vector2;
-import com.tiles.pathfinding.Case;
-import com.tiles.pathfinding.Queue;
-import com.tiles.pathfinding.Tile;
+import com.tiles.Case;
+import com.tiles.Queue;
+import com.tiles.Tile;
 
 import java.util.ArrayList;
 

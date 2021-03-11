@@ -1,7 +1,7 @@
 package com.utils;
 
 import com.menu.MainMenu;
-import com.tiles.pathfinding.MainScreen;
+import com.tiles.MainScreen;
 
 public class GameScreens {
     public static MainMenu mainMenu;
