@@ -2,12 +2,12 @@ package com.menu;
 
 //ça c'est réellement l'interface que j'ai fait
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -15,12 +15,11 @@ import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
-import com.menu.BaseActor;
-import com.menu.BaseScreen;
-import com.menu.MagicGame;
 import com.utils.GameScreens;
 
 import static com.utils.MainConstants.camera;
+import static com.utils.MainConstants.getFontSize;
+import static com.utils.TileAndCases.queue;
 
 public class GameInterface extends BaseScreen {
     // pour indiquer la phase
@@ -135,7 +134,7 @@ public class GameInterface extends BaseScreen {
 
         croix = new BaseActor();
         croix.setTexture(new Texture(Gdx.files.internal("interface/croix.png")));
-        croix.setPosition(viewWidth - sablier.getWidth() - zoomMoins.getWidth() - zoomPlus.getWidth() - hautParleur.getWidth(), viewHeight - phaseA.getHeight() - hautParleur.getHeight());
+        croix.setPosition(viewWidth + 1.5f*(- sablier.getWidth() - zoomMoins.getWidth() - zoomPlus.getWidth() - hautParleur.getWidth()), viewHeight +1.5f*(- phaseA.getHeight() - hautParleur.getHeight()));
         croix.setVisible(false);
         uiStage.addActor(croix);
 
@@ -224,19 +223,15 @@ public class GameInterface extends BaseScreen {
         uiStage.addActor(pseudo2Label);
 
         //la c'est le compteur de plaques restantes en bas a droite
-        BitmapFont font = new BitmapFont();
-        LabelStyle style = new LabelStyle(font, Color.VIOLET);
 
-        plaquesrestantes = 10;
-        plaquesRestantesLabel = new Label("Plaques restantes: " + plaquesrestantes, style);
-        plaquesRestantesLabel.setFontScale(1);
-        plaquesRestantesLabel.setPosition(viewWidth - plaquesRestantesLabel.getWidth() - 8, 30);
+        BitmapFont font = getFontSize(48);
+        LabelStyle style = new LabelStyle(font, Color.BLACK);
+
+        plaquesRestantesLabel = new Label(queue.textTileLeft, style);
+        //plaquesRestantesLabel.setFontScale(3f);
+        plaquesRestantesLabel.setPosition(viewWidth - plaquesRestantesLabel.getWidth() - 16, 20);
         uiStage.addActor(plaquesRestantesLabel);
 
-        prochainePlaque = new BaseActor();
-        prochainePlaque.setTexture(new Texture(Gdx.files.internal("interface/plaque3.jpg")));
-        prochainePlaque.setPosition(viewWidth - prochainePlaque.getWidth() - 38, plaquesRestantesLabel.getHeight() + 45);
-        uiStage.addActor(prochainePlaque);
 
         //je vais tenter de mettre les listeners ici héééééé ça maaaaaarche !!! (et j'ai trouvé toute seule ^^) par contre ça bloque en rouge si on spam trop hmmmmm
         final Action ping = Actions.sequence(
@@ -285,32 +280,33 @@ public class GameInterface extends BaseScreen {
 
 
     public void update(float dt) {
+        plaquesRestantesLabel.setText(queue.textTileLeft);
     }
 
     //la c'est les changements/animations de l'interface, faudra juste changer les conditions
     @Override
     public boolean keyDown(int keycode){
-        if (keycode == Input.Keys.A) {
+        if (keycode == Input.Keys.P) {
             if (bphaseA) {
                 phaseA.setVisible(false);
                 phaseB.setVisible(true);
                 bphaseA = false;
                 return true;
             }
-            if (bphaseA == false) {
+            else {
                 phaseB.setVisible(false);
                 phaseA.setVisible(true);
                 bphaseA = true;
                 return true;
             }
         }
-        if (keycode == Input.Keys.Z) {
+        if (keycode == Input.Keys.M) {
             if (voiceOn) {
                 croix.setVisible(true);
                 voiceOn = false;
                 return true;
             }
-            if (voiceOn == false) {
+            else {
                 croix.setVisible(false);
                 voiceOn = true;
                 return true;
@@ -322,16 +318,6 @@ public class GameInterface extends BaseScreen {
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
 
-        final Action ping = Actions.sequence(
-                Actions.color(new Color(1,0,0,1),(float)0.20),
-                Actions.color(new Color(1,1,1,1),(float)0.20)
-        );
-
-        avatar1.addListener(pingavatar1);
-        avatar2.addListener(pingavatar2);
-        avatar3.addListener(pingavatar3);
-        avatar4.addListener(pingavatar4);
-
         //appuyer sur le bouton restart fait apparaitre sur les interfaces de chaque joueur que ce joueur veux recommencer
         restart.addListener(
                 new InputListener()
@@ -339,7 +325,7 @@ public class GameInterface extends BaseScreen {
                     public boolean touchDown(InputEvent ev, float x, float y, int pointer, int button) {
                         BaseActor wantToRestart = new BaseActor();
                         wantToRestart.setTexture(new Texture(Gdx.files.internal("interface/restart-button.png")));
-                        wantToRestart.setPosition(avatar1.getX() - 10, avatar1.getY() + avatar1.getHeight() / 2);
+                        wantToRestart.setPosition(avatar1.getX() - 15, avatar1.getY() + avatar1.getHeight()*1.5f / 2);
                         uiStage.addActor(wantToRestart);
                         return true;
                     }

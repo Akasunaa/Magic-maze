@@ -2,6 +2,7 @@ package com.utils;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
@@ -16,6 +17,11 @@ public class Functions {
     }
 
     public static Vector2 mouseInput() {
+        Vector3 temp = camera.unproject(new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0f));
+        return new Vector2(temp.x, temp.y);
+    }
+
+    public static Vector2 mouseInput(OrthographicCamera camera) {
         Vector3 temp = camera.unproject(new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0f));
         return new Vector2(temp.x, temp.y);
     }

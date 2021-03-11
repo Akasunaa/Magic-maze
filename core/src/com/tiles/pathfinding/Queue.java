@@ -2,6 +2,7 @@ package com.tiles.pathfinding;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
@@ -15,15 +16,22 @@ import java.util.Collections;
 
 import static com.utils.GameScreens.mainScreen;
 import static com.utils.MainConstants.batch;
+import static com.utils.MainConstants.camera;
 import static com.utils.TileAndCases.*;
 
 public class Queue implements Serializable {
     // Structure classique pour une pile
     private Queue tail;
     public Tile head;
+    public int length = 0;
+    public String textTileLeft;
+    private void updateText() {
+        textTileLeft = "Tuiles restantes: " + length;
+    }
 
     // Le sprite sera celui de la tuile en haut de la pile
     private transient BaseActor sprite;
+    private transient BaseActor shown;
 
     // Coordonées et taille
     private float x;
@@ -44,6 +52,7 @@ public class Queue implements Serializable {
     private void updateSpriteSize() {
         sprite.setSize(size, size);
         hidden.setSize(size, size);
+        shown.setSize(size, size);
     }
 
 
@@ -54,10 +63,9 @@ public class Queue implements Serializable {
     }
 
     private void updateCoordinates() {
-        sprite.setX(x);
-        sprite.setY(y);
-        hidden.setX(x);
-        hidden.setY(y);
+        sprite.setPosition(x, y);
+        hidden.setPosition(x, y);
+        shown.setPosition(x, y);
     }
 
 
@@ -72,6 +80,8 @@ public class Queue implements Serializable {
         try {
             this.head = tail.head;
             this.tail = tail.tail;
+            length -=1;
+            updateText();
             // Et on recharge le sprite
             loadSprite();
         } catch (NullPointerException e) { // S'il n'y a pas de queue, c'est qu'elle est vide
@@ -94,6 +104,11 @@ public class Queue implements Serializable {
         // Création d'une file à partir de sa tête et de sa queue
         this.head = head;
         this.tail = tail;
+        if (tail == null) {
+            length = 1;
+        }
+        else length = 1 + tail.length;
+        updateText();
     }
 
     Queue(int number) {
@@ -104,12 +119,16 @@ public class Queue implements Serializable {
         tail = null; // Utile ?
         for (Tile tile : tempList) add(tile);
         add(new Tile(1)); // On commence toujours par la case numéro 1 I guess
+        length = number;
+        updateText();
     }
 
     public void load() { // Serialization
         hidden = new BaseActor();
         hidden.setTexture(new Texture("tuiles/hiddenOrange.png"));
-        mainScreen.getMainStage().addActor(hidden);
+        mainScreen.getUiStage().addActor(hidden);
+        shown = new BaseActor();
+        mainScreen.getUiStage().addActor(shown);
         loadSprite();
         updateSpriteSize();
     }
@@ -118,6 +137,8 @@ public class Queue implements Serializable {
         head.load();
         sprite = head.getSprite();
         sprite.setVisible(false);
+        shown.setTexture(sprite.region.getTexture());
+        shown.setVisible(false);
     }
 
     public void draw() {
@@ -126,6 +147,7 @@ public class Queue implements Serializable {
     }
 
     private void place(Vector2 mousePosition) {
+        hidden.setVisible(true);
         tileList.add(head); // On pose la tuile
         head.x = mousePosition.x; //Bon c'est classique ça
         head.y = mousePosition.y;
@@ -136,17 +158,20 @@ public class Queue implements Serializable {
 
     public void handleInput() {
         // Uh, this is going to be fun
+        Vector2 mousePositionStatic = Functions.mouseInput((OrthographicCamera) shown.getStage().getCamera());
         Vector2 mousePosition = Functions.mouseInput();
         // Je le sauvegarde parce qu'on va le modifier
         if (!isEmpty) { // On fait rien si elle est vide
             if (isMovable) { // Truc classique pour avoir deux comportements sur un seul objet
+
+                shown.setVisible(false);
+                sprite.setVisible(true);
                 mousePosition.sub(tileSize / 2, tileSize / 2); // Pour que le sprite soit centré sur la souris
                 sprite.setX(mousePosition.x); // On suit la souris
                 sprite.setY(mousePosition.y);
                 if (Gdx.input.isKeyJustPressed(Input.Keys.E)) head.rotate(+1);
                 if (Gdx.input.isKeyJustPressed(Input.Keys.A)) head.rotate(-1);
                 if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {// si on sélectionne un endroit
-                    hidden.setVisible(true);
                     if (isFirst) {
                         isMovable = false; // Voilà voilà
                         isHidden = true;
@@ -166,16 +191,16 @@ public class Queue implements Serializable {
             }
             isMovable = isMovable || !isHidden &&
                     (Gdx.input.isButtonJustPressed(Input.Buttons.RIGHT) &&
-                            (x < mousePosition.x) && (mousePosition.x < x + size &&
-                            (y < mousePosition.y) && (mousePosition.y < y + size)));
+                            (x < mousePositionStatic.x) && (mousePositionStatic.x < x + size*1.5 &&
+                            (y < mousePositionStatic.y) && (mousePositionStatic.y < y + size*1.5)));
             // Java est paresseux, donc tout ce qu'il y a après le || n'est pas vérifié
             // si isMovable est true
             if (isHidden && (Gdx.input.isButtonJustPressed(Input.Buttons.RIGHT) &&
-                    (x < mousePosition.x) && (mousePosition.x < x + size &&
-                    (y < mousePosition.x) && (mousePosition.y < y + size)))) {
+                    (x < mousePositionStatic.x) && (mousePositionStatic.x < x + size*1.5 &&
+                    (y < mousePositionStatic.x) && (mousePositionStatic.y < y + size*1.5)))) {
                 isHidden = false;
                 hidden.setVisible(false);
-                sprite.setVisible(true);
+                shown.setVisible(true);
             }
         }
     }

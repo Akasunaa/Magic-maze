@@ -22,19 +22,16 @@ import static com.utils.Functions.*;
 import static com.utils.MainConstants.camera;
 
 // La liste des tuiles affichées sur l'écran
-import static com.utils.TileAndCases.tileList;
-import static com.utils.TileAndCases.tileSize;
 
 // le batch pour dessiner
 import static com.utils.MainConstants.batch;
+import static com.utils.TileAndCases.*;
 
 public class MainScreen extends BaseScreen {
     // Trucs de déboguages pour afficher les coordonées de la souris
     BitmapFont coordMouse;
     BitmapFont numberCase;
 
-    // La liste des tuiles qu'on va afficher, et la pile de cartes
-    Queue queue;
 
     // Le pion
     Pawn greenPawn;
@@ -49,8 +46,8 @@ public class MainScreen extends BaseScreen {
     GameInterface gameInterface;
 
 
-    public String stringMousePosition() {
-        return "x = " + (int) mouseInput().x + "; y = " + (int) mouseInput().y;
+    public String stringMousePosition(OrthographicCamera camera) {
+        return "x = " + (int) mouseInput(camera).x + "; y = " + (int) mouseInput(camera).y;
     }
 
     public MainScreen(MagicGame g) {
@@ -96,9 +93,9 @@ public class MainScreen extends BaseScreen {
         for (Tile tile : tileList) {
             tile.load();
         }
+        gameInterface = new GameInterface(game);
         queue.load();
         queue.setCoordinates(1280f - tileSize - 50f, 50f);
-        gameInterface = new GameInterface(game);
         // A gere pour pouvoir le faire sans avoir load
     }
 
@@ -136,7 +133,9 @@ public class MainScreen extends BaseScreen {
         gameInterface.render(delta);
 
         batch.begin();
-        coordMouse.draw(batch, stringMousePosition() + "\n$origin", 700f, 150f); // On écrit les coordonées
+        coordMouse.draw(batch,
+                stringMousePosition(camera) + "\n" + stringMousePosition((OrthographicCamera) uiStage.getCamera()),
+                700f, 150f); // On écrit les coordonées
         queue.handleInput();
 
 //        if (pawnTime) {

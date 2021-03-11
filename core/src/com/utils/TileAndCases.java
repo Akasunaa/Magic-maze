@@ -3,6 +3,7 @@ package com.utils;
 import com.badlogic.gdx.math.Matrix3;
 import com.badlogic.gdx.math.Vector2;
 import com.tiles.pathfinding.Case;
+import com.tiles.pathfinding.Queue;
 import com.tiles.pathfinding.Tile;
 
 import java.util.ArrayList;
@@ -22,6 +23,8 @@ public class TileAndCases {
 
     public static Matrix3 newBase = new Matrix3(new float[]{tileSize, -caseSize, 0f, caseSize, tileSize, 0f, 0f, 0f, 1f});
     public static Matrix3 newBaseInvert = new Matrix3(newBase).inv();
+
+    public static Queue queue;
 
 
 }

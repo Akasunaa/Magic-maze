@@ -87,6 +87,7 @@ public abstract class BaseScreen implements Screen, InputProcessor {
     // gameloop code; update, then render.
     public void render(float dt)
     {
+        update(dt);
         uiStage.act(dt);
         // only pause gameplay events, not UI events
         if ( !isPaused() )
