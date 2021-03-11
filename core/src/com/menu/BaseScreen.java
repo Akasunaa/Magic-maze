@@ -41,6 +41,8 @@ public abstract class BaseScreen implements Screen, InputProcessor {
 
     public Slider audioSlider;
 
+    public boolean hasBackground = true;
+
     public BaseScreen(MagicGame g) {
         game = g;
         mainStage = new Stage(new FitViewport(viewWidth, viewHeight));
@@ -96,6 +98,11 @@ public abstract class BaseScreen implements Screen, InputProcessor {
             update(dt);
         }
         // render
+        if (hasBackground) {
+            Gdx.gl.glClearColor(125f / 255, 125f / 255, 125f / 255, 1f);
+            Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        }
+
         mainStage.draw();
         uiStage.draw();
     }

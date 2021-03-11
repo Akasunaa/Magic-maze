@@ -1,6 +1,7 @@
 package com.tiles;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -91,6 +92,7 @@ public class MainScreen extends BaseScreen {
             tile.load();
         }
         gameInterface = new GameInterface(game);
+        gameInterface.hasBackground = false;
         queue.load();
         queue.setCoordinates(1280f - tileSize - 50f, 50f);
         // A gere pour pouvoir le faire sans avoir load
@@ -117,7 +119,7 @@ public class MainScreen extends BaseScreen {
     @Override
     public void render(float delta) {
         //Gdx.gl.glClearColor(125f / 255, 125f / 255, 125f / 255, 1f);
-        //Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         // Couleur d'arrière plan, et on clear tout
         batch.setProjectionMatrix(uiStage.getCamera().combined);
         batch.begin();
