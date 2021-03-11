@@ -1,34 +1,36 @@
 package com.tiles;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.menu.BaseActor;
 import com.menu.GameInterface;
 import com.menu.BaseScreen;
 import com.menu.MagicGame;
+import com.utils.Functions;
 
 
 import java.util.ArrayList;
 
 // La caméra
 import static com.utils.Functions.*;
-import static com.utils.MainConstants.camera;
 
 // La liste des tuiles affichées sur l'écran
 
 // le batch pour dessiner
-import static com.utils.MainConstants.batch;
+import static com.utils.MainConstants.*;
 import static com.utils.TileAndCases.*;
 
 public class MainScreen extends BaseScreen {
     // Trucs de déboguages pour afficher les coordonées de la souris
-    BitmapFont coordMouse;
-    BitmapFont numberCase;
+    Label coordMouse;
+    Label numberCase;
 
 
     // Le pion
@@ -66,6 +68,7 @@ public class MainScreen extends BaseScreen {
         //camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         camera = (OrthographicCamera) mainStage.getCamera();
         camera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        camera.zoom = 2;
         // Cette caméra nous sert à avoir le bon système de coordonées
         Gdx.input.setInputProcessor(this);
         // Pour le système de zoom, il écoute les actions de la souris
@@ -81,10 +84,14 @@ public class MainScreen extends BaseScreen {
 
         // Bon là c'est le batch et les trucs pour écrire, rien d'important
         batch = new SpriteBatch();
-        coordMouse = new BitmapFont();
-        numberCase = new BitmapFont();
-        coordMouse.setColor(0, 0, 0, 1);
-        numberCase.setColor(0, 0, 0, 1);
+        BitmapFont font = getFontSize(40);
+        Label.LabelStyle style = new Label.LabelStyle(font, Color.BLACK);
+        coordMouse = new Label(" ", style);
+        coordMouse.setPosition(200, 50);
+        numberCase = new Label(" ", style);
+        numberCase.setPosition(200,100);
+        uiStage.addActor(coordMouse);
+        uiStage.addActor(numberCase);
     }
 
     public void load() {
@@ -94,7 +101,7 @@ public class MainScreen extends BaseScreen {
         gameInterface = new GameInterface(game);
         gameInterface.hasBackground = false;
         queue.load();
-        queue.setCoordinates(1280f - tileSize - 50f, 50f);
+        queue.setCoordinates(1920-tileSize/2-20, 20);
         // A gere pour pouvoir le faire sans avoir load
     }
 
@@ -105,9 +112,6 @@ public class MainScreen extends BaseScreen {
 
     @Override
     public boolean scrolled(float amountX, float amountY) {
-        System.out.println("Scrolled by " + amountX + " and " + amountY);
-        if (camera.zoom >= 0.2 || amountY >= 0) camera.zoom += amountY * 0.1;
-        camera.update();
         return false;
     }
 
@@ -132,9 +136,7 @@ public class MainScreen extends BaseScreen {
         gameInterface.render(delta);
 
         batch.begin();
-        coordMouse.draw(batch,
-                stringMousePosition(camera) + "\n" + stringMousePosition((OrthographicCamera) uiStage.getCamera()),
-                700f, 150f); // On écrit les coordonées
+        coordMouse.setText(stringMousePosition(camera) + "\n" + stringMousePosition((OrthographicCamera) uiStage.getCamera())); // On écrit les coordonées
         queue.handleInput();
 
 //        if (pawnTime) {

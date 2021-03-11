@@ -63,12 +63,22 @@ public class Functions {
 
     static float step = 150f;
     static Vector3 target;
+    static Vector3 middleLastClick;
+    static boolean released;
+    public static void release() {
+        System.out.println("Released");
+        released = true;
+    }
 
     public static void updateCamera() {
-        if (Gdx.input.isButtonPressed(Input.Buttons.MIDDLE)) {
-            target = camera.unproject(new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0f));
+        target = new Vector3(camera.position);
+        if (Gdx.input.isButtonJustPressed(Input.Buttons.MIDDLE)) {
+            middleLastClick = new Vector3(1920-Gdx.input.getX(), Gdx.input.getY(), 0f);
+            System.out.println(middleLastClick);
+            released = false;}
+        else if (!released && Gdx.input.isButtonPressed(Input.Buttons.MIDDLE)) {
+            target.add(new Vector3(1920-Gdx.input.getX(), Gdx.input.getY(), 0f).sub(middleLastClick).scl(-0.5f));
         } else {
-            target = new Vector3(camera.position);
             if (Gdx.input.isKeyPressed(Input.Keys.Z)) target.add(0f, step * camera.zoom, 0f);
             if (Gdx.input.isKeyPressed(Input.Keys.Q)) target.add(-step * camera.zoom, 0f, 0f);
             if (Gdx.input.isKeyPressed(Input.Keys.S)) target.add(0f, -step * camera.zoom, 0f);

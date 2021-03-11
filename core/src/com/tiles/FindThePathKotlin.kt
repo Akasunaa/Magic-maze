@@ -109,7 +109,7 @@ class FindThePathKotlin : ApplicationAdapter() {
             greenPawn.handleInput(player)
         } else {
             tempTile = getTile()
-            tempTile?.handleInput(player, numberCase)
+            //tempTile?.handleInput(player, numberCase)
             if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
                 pawntimeBaby = true
                 greenPawn = Pawn("green")

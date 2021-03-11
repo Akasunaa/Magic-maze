@@ -14,7 +14,7 @@ public class TileAndCases {
     Boum, pour une fois que de l'hérétisme paye
     En vrai je sais pas si c'est de l'hérétisme, mais on nous avait dit que les classes statiques c'était caca donc bon...
      */
-    public static float tileSize = 300f;
+    public static float tileSize = 600;
     public static float offset = 40 * tileSize / 600;
     public static float caseSize = (tileSize - 2 * offset) / 4;
     public static Vector2 origin = new Vector2();

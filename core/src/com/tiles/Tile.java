@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.menu.BaseActor;
 import com.utils.Functions;
 import com.utils.TileAndCases;
@@ -86,7 +87,7 @@ public class Tile implements Serializable {
     // fonctions classiques j'ai envie de dire
     private boolean exploring = false;
 
-    public void handleInput(Player player, BitmapFont numberCase) {
+    public void handleInput(Player player, Label numberCase) {
         Case tempCase;
         Vector2 mouseInput = Functions.mouseInput();
         // Puis si on clique gauche, boum, le pathfinding
@@ -95,7 +96,7 @@ public class Tile implements Serializable {
                 tempCase = getCase(mouseInput);
                 tempCase.show();
                 tempCase.explore(player);
-                numberCase.draw(batch, "x = " + tempCase.x + "; y = " + tempCase.y + "; couleur = " + getColor(tempCase.color) + ", portal = " + tempCase.hasPortal, 700f, 200f);
+                numberCase.setText("x = " + tempCase.x + "; y = " + tempCase.y + "; couleur = " + getColor(tempCase.color) + ", portal = " + tempCase.hasPortal);
                 exploring = true;
                 TileAndCases.lastExploredCase = tempCase;
             } catch (ArrayIndexOutOfBoundsException e) {
@@ -113,32 +114,7 @@ public class Tile implements Serializable {
     Tile(int number) {
         this.number = number;
         // Bon on stock le path quelque part quand même
-        path = "tuiles/tile" + number + ".jpg";
-        /* Et maintenant, on construit allégrement la tuile
-        Je vais maintenant expliquer comment on utilise le système de tableau
-        On a un tableau 4x4 pour les cases, et pour les murs...
-        Un tableau de 3x4 pour ceux verticaux
-        Un tableau de 4x3 pour ceux horizontaux
-        Pour le mur: 1 = un mur, 0 = pas de mur
-        Pour les cases:
-         - 0 = innacessible
-         - 1 = accessible, case normale
-         - 2 = une entrée
-         // les racourcis et les escalators sont rajoutés à la main
-         - 7 = un sablier
-         - 8 = boule de crystal
-         - 9 = caméra
-         - 1x = une sortie normale
-         - 2x = un téléporteur (voir comment les coder plus tard)
-         - 3x = une arme
-         - 4x = une sortie de joueur
-
-         pour les grands nombres, on a
-         - 0 -> vert
-         - 1 -> violet
-         - 2 -> jaune
-         - 3 -> orange
-         */
+        path = "tuiles/tile" + number + ".png";
         caseList = new Case[4][4];
         caseListofCases = new Case[4][4][4];
 

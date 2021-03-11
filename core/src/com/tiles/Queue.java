@@ -33,7 +33,7 @@ public class Queue implements Serializable {
     // Coordonées et taille
     private float x;
     private float y;
-    private float size = tileSize;
+    private float size = tileSize/2;
     private boolean isFirst = true;
     // Pour placer le premier
 
@@ -47,7 +47,7 @@ public class Queue implements Serializable {
 
 
     private void updateSpriteSize() {
-        sprite.setSize(size, size);
+        //sprite.setSize(size, size);
         hidden.setSize(size, size);
         shown.setSize(size, size);
     }
@@ -160,7 +160,6 @@ public class Queue implements Serializable {
         // Je le sauvegarde parce qu'on va le modifier
         if (!isEmpty) { // On fait rien si elle est vide
             if (isMovable) { // Truc classique pour avoir deux comportements sur un seul objet
-
                 shown.setVisible(false);
                 sprite.setVisible(true);
                 mousePosition.sub(tileSize / 2, tileSize / 2); // Pour que le sprite soit centré sur la souris
@@ -184,17 +183,23 @@ public class Queue implements Serializable {
                         Functions.snap(mousePosition); // Tu alignes les coordonées sur la "grille"
                         place(mousePosition);
                     }
+                    else {
+                        isMovable = false; // Voilà voilà
+                        isHidden = true;
+                        hidden.setVisible(true);
+                        sprite.setVisible(false);
+                    }
                 }
             }
             isMovable = isMovable || !isHidden &&
                     (Gdx.input.isButtonJustPressed(Input.Buttons.RIGHT) &&
-                            (x < mousePositionStatic.x) && (mousePositionStatic.x < x + size*1.5 &&
-                            (y < mousePositionStatic.y) && (mousePositionStatic.y < y + size*1.5)));
+                            (x < mousePositionStatic.x) && (mousePositionStatic.x < x + size &&
+                            (y < mousePositionStatic.y) && (mousePositionStatic.y < y + size)));
             // Java est paresseux, donc tout ce qu'il y a après le || n'est pas vérifié
             // si isMovable est true
             if (isHidden && (Gdx.input.isButtonJustPressed(Input.Buttons.RIGHT) &&
-                    (x < mousePositionStatic.x) && (mousePositionStatic.x < x + size*1.5 &&
-                    (y < mousePositionStatic.x) && (mousePositionStatic.y < y + size*1.5)))) {
+                    (x < mousePositionStatic.x) && (mousePositionStatic.x < x + size &&
+                    (y < mousePositionStatic.x) && (mousePositionStatic.y < y + size)))) {
                 isHidden = false;
                 hidden.setVisible(false);
                 shown.setVisible(true);
