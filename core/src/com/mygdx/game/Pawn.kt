@@ -9,12 +9,20 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.math.Vector3
 import java.lang.System.load
 
-class Pion (Texture: Texture,
+class Pawn (Texture: Texture,
            var x: Float, var y: Float,
-           var width: Float, var height: Float,
-           val cooldown: Int, val pioncolor: String) {
+           var width: Float, var height: Float, val pioncolor: String) {
+
+    val colonne0: IntArray = intArrayOf(0,1,1,0,1)
+    val colonne1: IntArray = intArrayOf(0,1,1,0,1)
+    val colonne2: IntArray = intArrayOf(0,1,1,0,1)
+    val colonne3: IntArray = intArrayOf(0,0,0,0,1)
+    val colonne4: IntArray = intArrayOf(1,1,1,1,1)
+    public val tab: Array<IntArray> = arrayOf(colonne0,colonne1,colonne2,colonne3,colonne4)
 
     var isMovable = false
+
+    var highlight: Sprite = Sprite(Texture("highlight.png"))
 
     val texture: Sprite = Sprite(Texture)
 
@@ -24,6 +32,7 @@ class Pion (Texture: Texture,
 
     fun updateSprite() {
         texture.setPosition(x, y)
+        highlight.setPosition(x-25,y-25)
         texture.setSize(width, height)
 
     }
@@ -40,19 +49,26 @@ class Pion (Texture: Texture,
 
     fun update(batch: SpriteBatch) {
         texture.draw(batch)
+        highlight.draw(batch)
     }
 
     //dit si le pion est cliqué
     //fun isClicked(iX: Float, iY: Float): Boolean = (x <= iX && iX <= x + width) && (y <= iY && iY <= y + height)
 
     fun movePawn(inputX: Float, inputY: Float) {
+        val highlight = Gdx.files.internal("highlight.png")
+        var nbX = (inputX/100).toInt()
+        var nbY = (inputY/100).toInt()
+        var X=(nbX*100+25).toFloat()
+        var Y=(nbY*100+25).toFloat()
         if (isMovable) {
-            setPosition(inputX - width / 2, inputY - height / 2)
-            updateSprite()
-            isMovable = false
-            if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
+            if (tab[nbX][nbY] == 0) {
+                setPosition(X, Y)
+                updateSprite()
                 isMovable = false
-
+                if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
+                    isMovable = false
+                }
             }
         } else {
             isMovable = isMovable || (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT) && (x < inputX) && (inputX < x + width && (y < inputY) && (inputY < y + height)))
@@ -62,6 +78,7 @@ class Pion (Texture: Texture,
 
     fun dispose() {
         texture.texture.dispose()
+        //highlight.texture.dispose()
     }
 
     fun getColor(): String = pioncolor

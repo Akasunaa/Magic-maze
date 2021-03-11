@@ -19,7 +19,7 @@ import ktx.graphics.use
 class MyGdxGame : ApplicationAdapter() {
     private lateinit var renderer: ShapeRenderer
     //pion
-    private lateinit var pion: Pion
+    private lateinit var pawn: Pawn
     //fond
     private lateinit var texture: Texture
     private lateinit var batch: SpriteBatch
@@ -31,7 +31,8 @@ class MyGdxGame : ApplicationAdapter() {
     val colonne2: IntArray = intArrayOf(1,0,1,1,0)
     val colonne3: IntArray = intArrayOf(1,0,0,0,0)
     val colonne4: IntArray = intArrayOf(1,1,1,1,1)
-    val tab: Array<IntArray> = arrayOf(colonne0,colonne1,colonne2,colonne3,colonne4)
+    public val tab: Array<IntArray> = arrayOf(colonne0,colonne1,colonne2,colonne3,colonne4)
+
 
     var startTime: Long = 0L // Utile pour le cooldown
 
@@ -46,7 +47,7 @@ class MyGdxGame : ApplicationAdapter() {
         texture = Texture(grille)
         //pion
         //val pion = Gdx.files.internal("pion.png")
-        pion= Pion(Texture("pion.png"),0f,0f,50f,50f,500,"rouge")
+        pawn= Pawn(Texture("pion.png"),25f,25f,50f,50f,"rouge")
     }
 
     override fun dispose() {
@@ -61,10 +62,10 @@ class MyGdxGame : ApplicationAdapter() {
         batch.begin()
 
         if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)){
-            pion.movePawn(getMouseX(),getMouseY())
+            pawn.movePawn(getMouseX(),getMouseY())
         }
         batch.draw(texture, 0.toFloat(), 0.toFloat())
-        pion.update(batch)
+        pawn.update(batch)
 
         batch.end()
 
