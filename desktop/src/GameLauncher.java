@@ -2,11 +2,10 @@ import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import com.mygdx.game.MagicGame;
 
-public class CheeseLauncher
+public class GameLauncher
 {
     public static void main (String[] args)
     {
-        MagicGame myProgram = new MagicGame();
-        LwjglApplication launcher = new LwjglApplication( myProgram );
+        LwjglApplication launcher = new LwjglApplication( new MagicGame() );
     }
 }

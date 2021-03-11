@@ -1,5 +1,6 @@
 buildscript {
     ext.kotlinVersion = '1.4.30'
+
     repositories {
         mavenLocal()
         mavenCentral()
@@ -44,6 +45,7 @@ allprojects {
 
 project(":desktop") {
     apply plugin: "java-library"
+    apply plugin: "kotlin"
 
 
     dependencies {
@@ -56,38 +58,19 @@ project(":desktop") {
         api "com.badlogicgames.gdx:gdx-tools:$gdxVersion"
         api "com.badlogicgames.gdx:gdx-controllers-desktop:$gdxVersion"
         api "com.badlogicgames.gdx:gdx-controllers-platform:$gdxVersion:natives-desktop"
+        api "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
         
     }
 }
 
 project(":core") {
     apply plugin: "java-library"
+    apply plugin: "kotlin"
 
 
     dependencies {
-        implementation "io.github.libktx:ktx-app:$ktxVersion"
-        implementation "io.github.libktx:ktx-actors:$ktxVersion"
-        implementation "io.github.libktx:ktx-ashley:$ktxVersion"
-        implementation "io.github.libktx:ktx-assets:$ktxVersion"
-        implementation "io.github.libktx:ktx-assets-async:$ktxVersion"
-        implementation "io.github.libktx:ktx-async:$ktxVersion"
-        implementation "io.github.libktx:ktx-box2d:$ktxVersion"
-        implementation "io.github.libktx:ktx-collections:$ktxVersion"
-        implementation "io.github.libktx:ktx-freetype:$ktxVersion"
-        implementation "io.github.libktx:ktx-freetype-async:$ktxVersion"
-        implementation "io.github.libktx:ktx-graphics:$ktxVersion"
-        implementation "io.github.libktx:ktx-i18n:$ktxVersion"
-        implementation "io.github.libktx:ktx-inject:$ktxVersion"
-        implementation "io.github.libktx:ktx-json:$ktxVersion"
-        implementation "io.github.libktx:ktx-log:$ktxVersion"
-        implementation "io.github.libktx:ktx-math:$ktxVersion"
-        implementation "io.github.libktx:ktx-preferences:$ktxVersion"
-        implementation "io.github.libktx:ktx-scene2d:$ktxVersion"
-        implementation "io.github.libktx:ktx-style:$ktxVersion"
-        implementation "io.github.libktx:ktx-tiled:$ktxVersion"
-        implementation "io.github.libktx:ktx-vis:$ktxVersion"
-        implementation "io.github.libktx:ktx-vis-style:$ktxVersion"
         implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.2'
+
         api "com.badlogicgames.gdx:gdx:$gdxVersion"
         api "com.badlogicgames.gdx:gdx-box2d:$gdxVersion"
         api "com.badlogicgames.gdx:gdx-bullet:$gdxVersion"

@@ -46,7 +46,7 @@ public class MainScreen implements Screen, InputProcessor {
         return "x = " + (int) mouseInput().x + "; y = " + (int) mouseInput().y;
     }
 
-    MainScreen() {
+    public MainScreen() {
         create();
     }
 

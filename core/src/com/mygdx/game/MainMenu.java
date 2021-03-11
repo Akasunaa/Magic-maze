@@ -18,6 +18,8 @@ import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
+import com.tiles.pathfinding.FindThePath;
+import com.tiles.pathfinding.MainScreen;
 
 public class MainMenu extends BaseScreen
 {
@@ -77,7 +79,7 @@ public class MainMenu extends BaseScreen
             {
                 dispose();
                 playerName = usernameTextField.getText();
-                game.setScreen( new MagicLevel(game, currentAvatarNumber, playerName, audioVolume) );
+                game.setScreen( new MainScreen() );
             }
         });
 
@@ -114,7 +116,7 @@ public class MainMenu extends BaseScreen
                     {
                         dispose();
                         playerName = usernameTextField.getText();
-                        game.setScreen( new MagicLevel(game, currentAvatarNumber, playerName, audioVolume) );
+                        game.setScreen( new MainScreen() );
                     }
                 });
 
