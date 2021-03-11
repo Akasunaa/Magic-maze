@@ -9,7 +9,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 
 public class DefeatScreen extends BaseScreen {
 
-    public DefeatScreen(BaseGame g) {
+    public DefeatScreen(MagicGame g) {
         super(g);
     }
 

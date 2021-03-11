@@ -1,5 +1,6 @@
 package com.menu;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
@@ -13,6 +14,9 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.tiles.pathfinding.MainScreen;
 
+import static com.utils.Functions.modulo;
+import static com.utils.GameScreens.mainScreen;
+
 public class MainMenu extends BaseScreen
 {
     Button leftButton;
@@ -23,7 +27,8 @@ public class MainMenu extends BaseScreen
     public TextField usernameTextField;
     public String playerName;
 
-    public MainMenu(BaseGame g)
+
+    public MainMenu(MagicGame g)
 
     {
         super(g);
@@ -71,7 +76,9 @@ public class MainMenu extends BaseScreen
             {
                 dispose();
                 playerName = usernameTextField.getText();
-                game.setScreen( new MainScreen() );
+                mainScreen = new MainScreen(game);
+                mainScreen.load();
+                game.setScreen( mainScreen );
             }
         });
 
@@ -98,6 +105,7 @@ public class MainMenu extends BaseScreen
         startButton.getLabel().setTouchable(Touchable.disabled);
 
         TextButton joinButton = new TextButton("Rejoindre une partie", game.skin, "uiTextButtonStyle");
+        joinButton.getLabel().setTouchable(Touchable.disabled);
         joinButton.addListener(
                 new InputListener()
                 {
@@ -108,7 +116,9 @@ public class MainMenu extends BaseScreen
                     {
                         dispose();
                         playerName = usernameTextField.getText();
-                        game.setScreen( new MainScreen() );
+                        mainScreen = new MainScreen(game);
+                        mainScreen.load();
+                        game.setScreen( mainScreen );
                     }
                 });
 
@@ -142,10 +152,11 @@ public class MainMenu extends BaseScreen
                     { return true; }
                     public void touchUp (InputEvent event, float x, float y, int pointer, int button)
                     {
+                        System.out.println("yo");
                         Gdx.app.exit();
                     }
                 });
-        joinButton.getLabel().setTouchable(Touchable.disabled);
+
 
         Label avatarLabel = new Label("Choix de l'avatar :", game.skin, "uiLabelStyle");
 
@@ -233,13 +244,7 @@ public class MainMenu extends BaseScreen
                         Cell<Image> cell = uiTable.getCell(currentAvatar);
                         cell.clearActor();
 
-                        if (currentAvatarNumber != 0)
-                        {
-                            currentAvatarNumber -=1;
-                        }
-                        else {
-                            currentAvatarNumber = 9;
-                        }
+                        currentAvatarNumber = modulo(currentAvatarNumber - 1, 10);
                         currentAvatar = avatarImages[currentAvatarNumber];
                         cell.setActor(currentAvatar);
 
@@ -263,13 +268,7 @@ public class MainMenu extends BaseScreen
                         Cell<Image> cell = uiTable.getCell(currentAvatar);
                         cell.clearActor();
 
-                        if (currentAvatarNumber != 9)
-                        {
-                            currentAvatarNumber +=1;
-                        }
-                        else {
-                            currentAvatarNumber = 0;
-                        }
+                        currentAvatarNumber = modulo(currentAvatarNumber + 1, 10);
                         currentAvatar = avatarImages[currentAvatarNumber];
                         cell.setActor(currentAvatar);
 

@@ -1,10 +1,9 @@
 package com.menu;
 
-import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.InputProcessor;
-import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.*;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -12,14 +11,18 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Slider;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.viewport.FitViewport;
-import com.badlogic.gdx.InputMultiplexer;
 
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 
+import static com.utils.MainConstants.camera;
+
+
 public abstract class BaseScreen implements Screen, InputProcessor {
-    protected BaseGame game;
+    protected MagicGame game;
     protected Stage mainStage;
+    public Stage getMainStage() {return mainStage;}
     protected Stage uiStage;
+    public Stage getUiStage() {return uiStage;}
 
     public final int viewWidth = 1920;
     public final int viewHeight = 1080;
@@ -38,7 +41,7 @@ public abstract class BaseScreen implements Screen, InputProcessor {
 
     public Slider audioSlider;
 
-    public BaseScreen(BaseGame g) {
+    public BaseScreen(MagicGame g) {
         game = g;
         mainStage = new Stage(new FitViewport(viewWidth, viewHeight));
         uiStage = new Stage(new FitViewport(viewWidth, viewHeight));
@@ -92,8 +95,6 @@ public abstract class BaseScreen implements Screen, InputProcessor {
             update(dt);
         }
         // render
-        Gdx.gl.glClearColor(0,0,0,1);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         mainStage.draw();
         uiStage.draw();
     }

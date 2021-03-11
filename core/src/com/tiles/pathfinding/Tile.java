@@ -7,6 +7,8 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.menu.BaseActor;
 import com.utils.Functions;
 import com.utils.TileAndCases;
 
@@ -16,15 +18,16 @@ import static com.tiles.pathfinding.Case.link;
 import static com.utils.Colors.getColor;
 import static com.utils.Directions.numberDirections;
 import static com.utils.Functions.modulo;
+import static com.utils.GameScreens.mainScreen;
 import static com.utils.MainConstants.batch;
 import static com.utils.TileAndCases.*;
 
 public class Tile implements Serializable {
     public int number; // numéro de tuile
     private String path; // path de la tuile
-    private transient Sprite sprite; // transient ça veut dire qu'on le stock pas dans la serialization
+    private transient BaseActor sprite; // transient ça veut dire qu'on le stock pas dans la serialization
 
-    public Sprite getSprite() {
+    public BaseActor getSprite() {
         return sprite;
     } // On en a besoin pour la pile
 
@@ -183,8 +186,10 @@ public class Tile implements Serializable {
     }
 
     public void load() { // Obligatoire pour la serialization
-        sprite = new Sprite(new Texture(path)); // On se charge soit même
+        sprite = new BaseActor(); // On se charge soit même
+        sprite.setTexture(new Texture(path));
         sprite.setOrigin(tileSize / 2, tileSize / 2);
+        mainScreen.getMainStage().addActor(sprite);
         for (int i = 0; i <= 3; i++) {
             for (int j = 0; j <= 3; j++)
                 caseList[j][i].load(this, caseListofCases[j][i]); // et on charge toutes les cases
@@ -195,7 +200,7 @@ public class Tile implements Serializable {
     }
 
     public void draw() {
-        sprite.draw(batch);
+        sprite.draw(batch, 1);
         for (Case[] ligne : caseList) {
             for (Case tempCase : ligne)
                 tempCase.draw();
@@ -249,7 +254,7 @@ public class Tile implements Serializable {
     public void rotate(int angle) {
         rotation += angle;
         rotation = (rotation % 4 + 4) % 4; // Java et les modulos...
-        sprite.rotate(angle * 90); // Dans le sens trigo
+        sprite.rotateBy(angle * 90); // Dans le sens trigo
         updateAllCases();
     }
 
@@ -287,7 +292,7 @@ public class Tile implements Serializable {
     }
 
     public void dispose() { // fonction dispose classique
-        sprite.getTexture().dispose();
+        sprite.remove();
         for (Case[] ligne : caseList) {
             for (Case tempCase : ligne)
                 tempCase.dispose();

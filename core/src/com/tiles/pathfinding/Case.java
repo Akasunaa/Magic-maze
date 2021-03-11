@@ -2,12 +2,14 @@ package com.tiles.pathfinding;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.menu.BaseActor;
 
 import java.io.Serializable;
 
 import static com.utils.CaseCorrespondance.*;
 import static com.utils.Directions.*;
 import static com.utils.Functions.modulo;
+import static com.utils.GameScreens.mainScreen;
 import static com.utils.MainConstants.batch;
 import static com.utils.TileAndCases.caseSize;
 import static com.utils.TileAndCases.offset;
@@ -33,9 +35,8 @@ public class Case implements Serializable {
     public int color;
     private transient Tile tile; // Il faut éviter de faire un StackOverFlowError lors de la conversion en Json ou de la serialization
 
-    private transient Sprite greenDot;
-    private transient Sprite redDot;
-    private transient Sprite blueDot;
+    private transient BaseActor greenDot;
+    private transient BaseActor redDot;
 
     Case(int number, Tile tile) {
         this.tile = tile;
@@ -68,11 +69,16 @@ public class Case implements Serializable {
     public void load(Tile tile, Case[] caseList) {// Comme d'habitude, obligatoire pour la sérialization
         this.tile = tile;
         this.caseList = caseList;
-        greenDot = new Sprite(new Texture("tuiles/greenDot.png"));
-        redDot = new Sprite(new Texture("tuiles/redDot.png"));
-        blueDot = new Sprite(new Texture("tuiles/blueDot.png"));
+        greenDot = new BaseActor();
+        greenDot.setTexture(new Texture("tuiles/greenDot.png"));
+        greenDot.setVisible(false);
+        redDot = new BaseActor();
+        redDot.setTexture(new Texture("tuiles/redDot.png"));
+        redDot.setVisible(false);
         setSpriteCoordinates(x, y);
-        // Le blueDot est inutile pour le moment mais sait-on jamais
+        mainScreen.getMainStage().addActor(greenDot);
+        mainScreen.getMainStage().addActor(redDot);
+
     }
 
     public float getX(int x) {
@@ -90,13 +96,10 @@ public class Case implements Serializable {
         greenDot.setY(tempY);
         redDot.setX(tempX);
         redDot.setY(tempY);
-        blueDot.setX(tempX);
-        blueDot.setY(tempY);
     }
 
     public void setSize(float size) {
         greenDot.setSize(size, size);
-        blueDot.setSize(size, size);
         redDot.setSize(size, size);
     }
 
@@ -130,24 +133,31 @@ public class Case implements Serializable {
     public void show() {
         isShowed = true;
         isValid = true;
+        redDot.setVisible(isShowed);
+        greenDot.setVisible(isValid);
     }
 
     public void hide() {
         isShowed = false;
         isValid = false;
+        redDot.setVisible(isShowed);
+        greenDot.setVisible(isValid);
+
     }
 
     public void explored() {
         isValid = true && isAccessible;
+        greenDot.setVisible(isValid);
     }
 
     public void unexplored() {
         isValid = false;
+        greenDot.setVisible(isValid);
     }
 
     public void draw() {
-        if (isShowed) redDot.draw(batch);
-        else if (isValid) greenDot.draw(batch);
+        if (isShowed) redDot.draw(batch,1);
+        else if (isValid) greenDot.draw(batch,1);
     }
 
     private boolean seen = false;
@@ -277,9 +287,8 @@ public class Case implements Serializable {
     }
 
     public void dispose() {
-        redDot.getTexture().dispose();
-        greenDot.getTexture().dispose();
-        blueDot.getTexture().dispose();
+        redDot.remove();
+        greenDot.remove();
     }
 
 

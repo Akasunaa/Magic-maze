@@ -2,13 +2,18 @@ package com.tiles.pathfinding;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.InputProcessor;
-import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ibm.gpu.Maths;
+import com.menu.BaseActor;
+import com.menu.GameInterface;
+import com.menu.BaseScreen;
+import com.menu.MagicGame;
+
 
 import java.util.ArrayList;
 
@@ -23,7 +28,7 @@ import static com.utils.TileAndCases.tileSize;
 // le batch pour dessiner
 import static com.utils.MainConstants.batch;
 
-public class MainScreen implements Screen, InputProcessor {
+public class MainScreen extends BaseScreen {
     // Trucs de déboguages pour afficher les coordonées de la souris
     BitmapFont coordMouse;
     BitmapFont numberCase;
@@ -41,20 +46,30 @@ public class MainScreen implements Screen, InputProcessor {
     // Pour la sérialisation
     ObjectMapper mapper = new ObjectMapper();
 
+    GameInterface gameInterface;
+
 
     public String stringMousePosition() {
         return "x = " + (int) mouseInput().x + "; y = " + (int) mouseInput().y;
     }
 
-    public MainScreen() {
+    public MainScreen(MagicGame g) {
+        super(g);
         create();
     }
 
     Tile tempTile;
     // une tempTile on en aura besoin plus tard
 
+    BaseActor background;
+
     public void create() {
-        camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        background = new BaseActor();
+        background.setTexture(new Texture("GameUIAssets/floorboard.png"));
+        background.setScale(1.5f);
+
+        //camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        camera = (OrthographicCamera) mainStage.getCamera();
         camera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         // Cette caméra nous sert à avoir le bon système de coordonées
         Gdx.input.setInputProcessor(this);
@@ -63,15 +78,11 @@ public class MainScreen implements Screen, InputProcessor {
         // Je ne vais pas critiquer les actions de Nathan, il doit y avoir une raison à cela
 
         tileList = new ArrayList();
-        for (Tile tile : tileList) {
-            tile.load();
-        }
 
         player = new Player(true, true, false, false, false, false);
 
         queue = new Queue(9); // J'ai fait les cases uniquement jusqu'à la 9
-        queue.load();
-        queue.setCoordinates(1280f - tileSize - 50f, 50f);
+
 
         // Bon là c'est le batch et les trucs pour écrire, rien d'important
         batch = new SpriteBatch();
@@ -79,6 +90,20 @@ public class MainScreen implements Screen, InputProcessor {
         numberCase = new BitmapFont();
         coordMouse.setColor(0, 0, 0, 1);
         numberCase.setColor(0, 0, 0, 1);
+    }
+
+    public void load() {
+        for (Tile tile : tileList) {
+            tile.load();
+        }
+        queue.load();
+        queue.setCoordinates(1280f - tileSize - 50f, 50f);
+        gameInterface = new GameInterface(game);
+        // A gere pour pouvoir le faire sans avoir load
+    }
+
+    @Override
+    public void update(float dt) {
     }
 
 
@@ -97,37 +122,40 @@ public class MainScreen implements Screen, InputProcessor {
 
     @Override
     public void render(float delta) {
-        Gdx.gl.glClearColor(125f / 255, 125f / 255, 125f / 255, 1f);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        //Gdx.gl.glClearColor(125f / 255, 125f / 255, 125f / 255, 1f);
+        //Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         // Couleur d'arrière plan, et on clear tout
+        batch.setProjectionMatrix(uiStage.getCamera().combined);
+        batch.begin();
+        background.draw(batch, 1);
+        batch.end();
+
         batch.setProjectionMatrix(camera.combined);
         // On change le système de coordonées
+        mainStage.draw();
+        gameInterface.render(delta);
 
         batch.begin();
         coordMouse.draw(batch, stringMousePosition() + "\n$origin", 700f, 150f); // On écrit les coordonées
-        queue.draw();
         queue.handleInput();
-        for (Tile tile : tileList) {
-            tile.draw(); // On dessine la tuile
-        }
 
-        if (pawnTime) {
-            greenPawn.draw();
-            greenPawn.handleInput(player);
-        } else {
-            tempTile = getTile();
-            if (tempTile != null) tempTile.handleInput(player, numberCase);
-            if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
-                pawnTime = true;
-                greenPawn = new Pawn("green");
-                greenPawn.setCase = tileList.get(0).caseList[0][0];
-                greenPawn.load();
-            }
-        }
-
+//        if (pawnTime) {
+//            greenPawn.draw();
+//            greenPawn.handleInput(player);
+//        } else {
+//            tempTile = getTile();
+//            if (tempTile != null) tempTile.handleInput(player, numberCase);
+//            if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
+//                pawnTime = true;
+//                greenPawn = new Pawn("green");
+//                greenPawn.setCase = tileList.get(0).caseList[0][0];
+//                greenPawn.load();
+//            }
+//        }
         // Gestion du déplacement de la caméra
         updateCamera();
         batch.end();
+
     }
 
     @Override
@@ -137,60 +165,5 @@ public class MainScreen implements Screen, InputProcessor {
             tile.dispose();
         }
         greenPawn.dispose();
-    }
-
-    @Override
-    public void resize(int width, int height) {
-
-    }
-
-    @Override
-    public void pause() {
-
-    }
-
-    @Override
-    public void resume() {
-
-    }
-
-    @Override
-    public void hide() {
-
-    }
-
-    @Override
-    public boolean keyDown(int keycode) {
-        return false;
-    }
-
-    @Override
-    public boolean keyUp(int keycode) {
-        return false;
-    }
-
-    @Override
-    public boolean keyTyped(char character) {
-        return false;
-    }
-
-    @Override
-    public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        return false;
-    }
-
-    @Override
-    public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-        return false;
-    }
-
-    @Override
-    public boolean touchDragged(int screenX, int screenY, int pointer) {
-        return false;
-    }
-
-    @Override
-    public boolean mouseMoved(int screenX, int screenY) {
-        return false;
     }
 }

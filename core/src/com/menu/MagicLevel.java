@@ -41,7 +41,7 @@ public class MagicLevel extends BaseScreen
     // Timer
     private float remainingTime;
 
-    public MagicLevel(BaseGame g, int currentAvatarNumber, String playerName, float audioVolume)
+    public MagicLevel(MagicGame g, int currentAvatarNumber, String playerName, float audioVolume)
     {
         super(g);
 

@@ -1,5 +1,6 @@
 package com.menu;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
@@ -7,17 +8,17 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.graphics.g2d.NinePatch;
 
 import com.badlogic.gdx.scenes.scene2d.ui.Slider.SliderStyle;
 
-public class MagicGame extends BaseGame
-{
-    public void create()
-    {
+public class MagicGame extends Game {
+    public Skin skin;
+    public void create() {
         // initialize resources common to multiple screens and store to skin database
-
+        skin = new Skin();
         // Police d'écriture
         BitmapFont uiFont = new BitmapFont(Gdx.files.internal("GameUIAssets/fontTest.fnt"));
         uiFont.getRegion().getTexture().setFilter(TextureFilter.Linear,
@@ -62,5 +63,8 @@ public class MagicGame extends BaseGame
         //Toujours à la fin
         MainMenu cm = new MainMenu(this);
         setScreen( cm );
+    }
+    public void dispose() {
+        skin.dispose();
     }
 }

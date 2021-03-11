@@ -9,7 +9,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 
 public class VictoryScreen extends BaseScreen {
 
-    public VictoryScreen(BaseGame g) {
+    public VictoryScreen(MagicGame g) {
         super(g);
     }
 

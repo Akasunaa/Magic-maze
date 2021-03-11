@@ -5,12 +5,15 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.menu.BaseActor;
 import com.utils.Functions;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import static com.utils.GameScreens.mainScreen;
 import static com.utils.MainConstants.batch;
 import static com.utils.TileAndCases.*;
 
@@ -20,7 +23,7 @@ public class Queue implements Serializable {
     public Tile head;
 
     // Le sprite sera celui de la tuile en haut de la pile
-    private transient Sprite sprite;
+    private transient BaseActor sprite;
 
     // Coordonées et taille
     private float x;
@@ -35,7 +38,7 @@ public class Queue implements Serializable {
 
     // Booléen pour savoir si la prochaine carte est visible ou non
     private boolean isHidden = true;
-    private transient Sprite hidden;
+    private transient BaseActor hidden;
 
 
     private void updateSpriteSize() {
@@ -73,7 +76,8 @@ public class Queue implements Serializable {
             loadSprite();
         } catch (NullPointerException e) { // S'il n'y a pas de queue, c'est qu'elle est vide
             System.out.println("File vide !");
-            sprite = new Sprite(new Texture("tuiles/blueDot.png"));
+            sprite = new BaseActor();
+            sprite.setTexture(new Texture("tuiles/blueDot.png"));
             isEmpty = true; // On fait plus rien pour le futur
             isHidden = false;
         }
@@ -103,7 +107,9 @@ public class Queue implements Serializable {
     }
 
     public void load() { // Serialization
-        hidden = new Sprite(new Texture("tuiles/hiddenOrange.png"));
+        hidden = new BaseActor();
+        hidden.setTexture(new Texture("tuiles/hiddenOrange.png"));
+        mainScreen.getMainStage().addActor(hidden);
         loadSprite();
         updateSpriteSize();
     }
@@ -111,11 +117,12 @@ public class Queue implements Serializable {
     private void loadSprite() { // Obligatoire pour la sérialization
         head.load();
         sprite = head.getSprite();
+        sprite.setVisible(false);
     }
 
     public void draw() {
-        if (isHidden) hidden.draw(batch);
-        else sprite.draw(batch);
+        if (isHidden) hidden.draw(batch, 1);
+        else sprite.draw(batch, 1);
     }
 
     private void place(Vector2 mousePosition) {
@@ -138,7 +145,8 @@ public class Queue implements Serializable {
                 sprite.setY(mousePosition.y);
                 if (Gdx.input.isKeyJustPressed(Input.Keys.E)) head.rotate(+1);
                 if (Gdx.input.isKeyJustPressed(Input.Keys.A)) head.rotate(-1);
-                if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) { // si on sélectionne un endroit
+                if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {// si on sélectionne un endroit
+                    hidden.setVisible(true);
                     if (isFirst) {
                         isMovable = false; // Voilà voilà
                         isHidden = true;
@@ -166,6 +174,8 @@ public class Queue implements Serializable {
                     (x < mousePosition.x) && (mousePosition.x < x + size &&
                     (y < mousePosition.x) && (mousePosition.y < y + size)))) {
                 isHidden = false;
+                hidden.setVisible(false);
+                sprite.setVisible(true);
             }
         }
     }
