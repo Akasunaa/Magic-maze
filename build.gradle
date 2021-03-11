@@ -1,6 +1,5 @@
 buildscript {
-    
-
+    ext.kotlinVersion = '1.4.30'
     repositories {
         mavenLocal()
         mavenCentral()
@@ -10,13 +9,15 @@ buildscript {
         google()
     }
     dependencies {
-        
-
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
+        classpath "org.jetbrains.kotlin:kotlin-serialization:$kotlinVersion"
     }
 }
 
 allprojects {
     apply plugin: "eclipse"
+    apply plugin: 'kotlin' // or 'kotlin-multiplatform' for multiplatform projects
+    apply plugin: 'kotlinx-serialization'
 
     version = '1.0'
     ext {
@@ -35,6 +36,9 @@ allprojects {
         google()
         maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
         maven { url "https://oss.sonatype.org/content/repositories/releases/" }
+    }
+    dependencies {
+        implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:1.1.0"
     }
 }
 
@@ -61,6 +65,29 @@ project(":core") {
 
 
     dependencies {
+        implementation "io.github.libktx:ktx-app:$ktxVersion"
+        implementation "io.github.libktx:ktx-actors:$ktxVersion"
+        implementation "io.github.libktx:ktx-ashley:$ktxVersion"
+        implementation "io.github.libktx:ktx-assets:$ktxVersion"
+        implementation "io.github.libktx:ktx-assets-async:$ktxVersion"
+        implementation "io.github.libktx:ktx-async:$ktxVersion"
+        implementation "io.github.libktx:ktx-box2d:$ktxVersion"
+        implementation "io.github.libktx:ktx-collections:$ktxVersion"
+        implementation "io.github.libktx:ktx-freetype:$ktxVersion"
+        implementation "io.github.libktx:ktx-freetype-async:$ktxVersion"
+        implementation "io.github.libktx:ktx-graphics:$ktxVersion"
+        implementation "io.github.libktx:ktx-i18n:$ktxVersion"
+        implementation "io.github.libktx:ktx-inject:$ktxVersion"
+        implementation "io.github.libktx:ktx-json:$ktxVersion"
+        implementation "io.github.libktx:ktx-log:$ktxVersion"
+        implementation "io.github.libktx:ktx-math:$ktxVersion"
+        implementation "io.github.libktx:ktx-preferences:$ktxVersion"
+        implementation "io.github.libktx:ktx-scene2d:$ktxVersion"
+        implementation "io.github.libktx:ktx-style:$ktxVersion"
+        implementation "io.github.libktx:ktx-tiled:$ktxVersion"
+        implementation "io.github.libktx:ktx-vis:$ktxVersion"
+        implementation "io.github.libktx:ktx-vis-style:$ktxVersion"
+        implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.2'
         api "com.badlogicgames.gdx:gdx:$gdxVersion"
         api "com.badlogicgames.gdx:gdx-box2d:$gdxVersion"
         api "com.badlogicgames.gdx:gdx-bullet:$gdxVersion"
@@ -69,6 +96,13 @@ project(":core") {
         api "com.badlogicgames.box2dlights:box2dlights:$box2DLightsVersion"
         api "com.badlogicgames.gdx:gdx-ai:$aiVersion"
         api "com.badlogicgames.ashley:ashley:$ashleyVersion"
-        
+        api "com.badlogicgames.box2dlights:box2dlights:$box2DLightsVersion"
+        api "com.badlogicgames.gdx:gdx-bullet:$gdxVersion"
+        api "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
+        api "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
+
+        compile group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.8.8'
+        compile group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.8.8'
+        compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.8.8'
     }
 }
