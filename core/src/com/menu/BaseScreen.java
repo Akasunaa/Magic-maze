@@ -3,7 +3,6 @@ package com.menu;
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -121,20 +120,6 @@ public abstract class BaseScreen implements Screen {
     public void dispose() { }
     public void show() { }
     public void hide() { }
-    // methods required by InputProcessor interface
-    public boolean keyDown(int keycode)
-    { return false; }
-    public boolean keyUp(int keycode)
-    { return false; }
-    public boolean keyTyped(char c)
-    { return false; }
-    public boolean mouseMoved(int screenX, int screenY)
-    { return false; }
-    public boolean touchDown(int screenX, int screenY, int pointer, int button)
-    { return false; }
-    public boolean touchDragged(int screenX, int screenY, int pointer)
-    { return false; }
-
 }
 
 

@@ -121,7 +121,7 @@ public class TileArray {
                     {unnacessible, vanilla, vanilla, vanilla},
                     {entrance, vanilla, unnacessible, vanilla},
                     {unnacessible, unnacessible, orange + portal, vanilla},
-                    {purple + weapon, yellow + portal, vanilla, vanilla}
+                    {purple + weapon, yellow + exit, vanilla, vanilla}
             };
         } else return null;
     }
