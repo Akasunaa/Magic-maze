@@ -158,10 +158,6 @@ public class GameInterface extends BaseScreen {
 
         //la c'est les avatars des joueurs, faudra changer les sprites, c'est par joueur avec en dessous l'indication de son pouvoir
         avatars = new BaseActor[4];
-        final Action ping = Actions.sequence(
-                Actions.color(new Color(1,0,0,1),(float)0.20),
-                Actions.color(new Color(1,1,1,1),(float)0.20)
-        );
         for (int i = 0; i <= 3; i++) {
             avatars[i] = new BaseActor();
             avatars[i].setTexture(new Texture(Gdx.files.internal("interface/kuro" + i + ".png")));
@@ -171,10 +167,12 @@ public class GameInterface extends BaseScreen {
             final int temp = i;
             avatars[i].addListener(new InputListener() {
                 public boolean touchDown(InputEvent ev, float x, float y, int pointer, int button) {
+                    avatars[temp].addAction(Actions.sequence(
+                            Actions.color(new Color(1,0,0,1),(float)0.20),
+                            Actions.color(new Color(1,1,1,1),(float)0.20)));
                     return true;
                 }
                 public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
-                    avatars[temp].addAction(ping);
                 }
             });
         }
@@ -247,7 +245,6 @@ public class GameInterface extends BaseScreen {
         loadPawnButton.addListener(new InputListener()
         {
             public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
-                System.out.println("yo");
                 return true;
             }
             public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
