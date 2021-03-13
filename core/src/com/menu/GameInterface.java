@@ -170,9 +170,14 @@ public class GameInterface extends BaseScreen {
                     avatars[temp].addAction(Actions.sequence(
                             Actions.color(new Color(1,0,0,1),(float)0.20),
                             Actions.color(new Color(1,1,1,1),(float)0.20)));
+                    // What
+                    // the
+                    // fuck
+                    // LibGDX c'est cool jusqu'à ce que tu soit obligé de faire des trucs comme ça
+                    // Pour l'expliquer simplement: plutôt que de créer l'action en final en dehors de toute ça,
+                    // Il faut la créer nous même à chaque fois que l'inputListener est appellé
+                    // Désolé d'avoir craché sur les InputListener de LibGDX, ils sont très bien.
                     return true;
-                }
-                public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
                 }
             });
         }
