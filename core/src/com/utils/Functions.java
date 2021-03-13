@@ -75,7 +75,7 @@ public class Functions {
             System.out.println(middleLastClick);
             }
         else if (Gdx.input.isButtonPressed(Input.Buttons.MIDDLE)) {
-            target.add(new Vector3(1920-Gdx.input.getX(), Gdx.input.getY(), 0f).sub(middleLastClick).scl(-0.5f));
+            target.add(new Vector3(1920-Gdx.input.getX(), Gdx.input.getY(), 0f).sub(middleLastClick).scl(0.5f));
         } else {
             if (Gdx.input.isKeyPressed(Input.Keys.Z)) target.add(0f, step * camera.zoom, 0f);
             if (Gdx.input.isKeyPressed(Input.Keys.Q)) target.add(-step * camera.zoom, 0f, 0f);

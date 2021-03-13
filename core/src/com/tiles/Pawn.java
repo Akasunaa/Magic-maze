@@ -5,6 +5,8 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.menu.BaseActor;
 import com.utils.Functions;
 
@@ -31,12 +33,21 @@ public class Pawn implements Serializable {
         this.color = color;
     }
 
+    public void setCase(Case tempCase) {
+        try {
+            setCase.pawn = null;
+        } catch (Exception e) {
+        }
+        setCase = tempCase;
+        setCase.pawn = this;
+    }
+
     public void setFirstCase() {
         for (Tile tile : tileList) {
             for (Case[] caseLine : tile.caseList) {
                 for (Case tempCase : caseLine) {
-                    if (tempCase.isAccessible && !tempCase.hasPawn) {
-                        setCase = tempCase;
+                    if (tempCase.isAccessible && (this==tempCase.pawn || tempCase.pawn==null)) {
+                        setCase(tempCase);
                         return;
                     }
                 }
@@ -54,7 +65,7 @@ public class Pawn implements Serializable {
     }
 
     public void setSize() {
-        setSize(caseSize / 2);
+        setSize(caseSize / 1.5f);
     }
     // Fonctions classiques pour gérer la taille
 
@@ -81,6 +92,7 @@ public class Pawn implements Serializable {
 
     public void handleInput(Player player) {
         if (isMovable) {
+            player.takesPawn(this);
             sprite.setX(Functions.mouseInput().x - sprite.getWidth() / 2);
             sprite.setY(Functions.mouseInput().y - sprite.getHeight() / 2);
             if (!hasExplored) { // On fait le pathfinding une seule fois
@@ -94,10 +106,11 @@ public class Pawn implements Serializable {
                     if (nextCase.isValid) { // Si elle existe et est non nulle
                         setCase.revert(player); // On annule le pathfinding... avec un autre pathfinding
                         setCase.hide(); // On cache la case de départ
-                        setCase = nextCase; // On change la case
+                        setCase(nextCase); // On change la case
                         hasExplored = false; // On réinitialise les variables booléennes
                         isMovable = false;
                         updateCoordinates(); // Et on met à jour les coordonées, qui sont entièrement calculées à partir de la case
+                        player.dropsPawn(this);
                     }
                 } catch (NullPointerException e) {
                     System.out.println("No Tile found in Pawn.handleInput");
@@ -105,7 +118,8 @@ public class Pawn implements Serializable {
             }
         } else isMovable = (Gdx.input.isButtonJustPressed(Input.Buttons.RIGHT) &&
                 (sprite.getX() < Functions.mouseInput().x) && (Functions.mouseInput().x < sprite.getX() + sprite.getWidth() &&
-                (sprite.getY() < Functions.mouseInput().y) && (Functions.mouseInput().y < sprite.getY() + sprite.getHeight())));
+                (sprite.getY() < Functions.mouseInput().y) && (Functions.mouseInput().y < sprite.getY() + sprite.getHeight())) &&
+                player.pawn == null);
     }
 
 

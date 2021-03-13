@@ -77,7 +77,7 @@ public class MainScreen extends BaseScreen {
 
         tileList = new ArrayList();
 
-        player = new Player(true, true, false, false, false, false);
+        player = new Player(true, true, true, true, false, false);
 
         queue = new Queue(9); // J'ai fait les cases uniquement jusqu'à la 9
         queue.setCoordinates(1920-tileSize/2-20, 20);
@@ -127,19 +127,9 @@ public class MainScreen extends BaseScreen {
         coordMouse.setText(stringMousePosition(camera) + "\n" + stringMousePosition((OrthographicCamera) uiStage.getCamera())); // On écrit les coordonées
         queue.handleInput();
 
-//        if (pawnTime) {
-//            greenPawn.draw();
-//            greenPawn.handleInput(player);
-//        } else {
-//            tempTile = getTile();
-//            if (tempTile != null) tempTile.handleInput(player, numberCase);
-//            if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
-//                pawnTime = true;
-//                greenPawn = new Pawn("green");
-//                greenPawn.setCase = tileList.get(0).caseList[0][0];
-//                greenPawn.load();
-//            }
-//        }
+        for (Pawn pawn : pawnList) {
+            pawn.handleInput(player);
+        }
         // Gestion du déplacement de la caméra
         updateCamera();
         batch.end();

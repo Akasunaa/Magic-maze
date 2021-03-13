@@ -25,6 +25,7 @@ public class Case implements Serializable {
     public boolean isEntrance;
     public boolean hasWeapon;
     public boolean isFinalExit;
+    public Pawn pawn = null;
 
     public boolean isValid = false; // Utiler pour le déplacement du pion
     private boolean isShowed = false;
@@ -35,8 +36,6 @@ public class Case implements Serializable {
 
     private transient BaseActor greenDot;
     private transient BaseActor redDot;
-
-    public boolean hasPawn = false;
 
     Case(int number, Tile tile) {
         this.tile = tile;
@@ -146,7 +145,7 @@ public class Case implements Serializable {
     }
 
     public void explored() {
-        isValid = true && isAccessible;
+        isValid = true;
         greenDot.setVisible(isValid);
     }
 
@@ -165,49 +164,44 @@ public class Case implements Serializable {
     public void explore(Player player) {
         int index; // On utilise index pour éviter de devoir réécrire les modulos trop de fois
         Player tempPlayer = player.rotate(tile.rotation);
-        if (!seen) {
+        if (!seen && isAccessible && (player.pawn==pawn || pawn==null)) {
             seen = true; // Parcours de graphe classique pour éviter les StackOverflow
-            if (tempPlayer.getNorth()) {
+            explored();
+            if (tempPlayer.north) {
                 index = modulo(north + tile.rotation, numberDirections);
                 if (caseList[index] != null) {
-                    caseList[index].explored();
                     caseList[index].explore(player);
                 }
             }
 
-            if (tempPlayer.getWest()) {
+            if (tempPlayer.west) {
                 index = modulo(west + tile.rotation, numberDirections);
                 if (caseList[index] != null) {
-                    caseList[index].explored();
                     caseList[index].explore(player);
                 }
             }
 
-            if (tempPlayer.getSouth()) {
+            if (tempPlayer.south) {
                 index = modulo(south + tile.rotation, numberDirections);
                 if (caseList[index] != null) {
-                    caseList[index].explored();
                     caseList[index].explore(player);
                 }
             }
 
-            if (tempPlayer.getEast()) {
+            if (tempPlayer.east) {
                 index = modulo(east + tile.rotation, numberDirections);
                 if (caseList[index] != null) {
-                    caseList[index].explored();
                     caseList[index].explore(player);
                 }
             }
-            if (player.getEscalatorTaker()) {
+            if (player.escalatorTaker) {
                 if (elevator != null) {
-                    elevator.explored();
                     elevator.explore(player);
                 }
             }
 
-            if (player.getShortcutTaker()) {
+            if (player.shortcutTaker) {
                 if (shortcut != null) {
-                    shortcut.explored();
                     shortcut.explore(player);
                 }
             }
@@ -219,7 +213,7 @@ public class Case implements Serializable {
         Player tempPlayer = player.rotate(tile.rotation);
         if (seen) {
             seen = false;
-            if (tempPlayer.getNorth()) {
+            if (tempPlayer.north) {
                 index = modulo(north + tile.rotation, numberDirections);
                 if (caseList[index] != null) {
                     caseList[index].unexplored();
@@ -227,7 +221,7 @@ public class Case implements Serializable {
                 }
             }
 
-            if (tempPlayer.getWest()) {
+            if (tempPlayer.west) {
                 index = modulo(west + tile.rotation, numberDirections);
                 // Les modulos en Java fonctionnent bizarrement, c'est pour s'assurer d'avoir un truc positif
                 if (caseList[index] != null) {
@@ -236,7 +230,7 @@ public class Case implements Serializable {
                 }
             }
 
-            if (tempPlayer.getSouth()) {
+            if (tempPlayer.south) {
                 index = modulo(south + tile.rotation, numberDirections);
                 if (caseList[index] != null) {
                     caseList[index].unexplored();
@@ -244,21 +238,21 @@ public class Case implements Serializable {
                 }
             }
 
-            if (tempPlayer.getEast()) {
+            if (tempPlayer.east) {
                 index = modulo(east + tile.rotation, numberDirections);
                 if (caseList[index] != null) {
                     caseList[index].unexplored();
                     caseList[index].revert(player);
                 }
             }
-            if (tempPlayer.getEscalatorTaker()) {
+            if (tempPlayer.escalatorTaker) {
                 if (elevator != null) {
                     elevator.unexplored();
                     elevator.revert(player);
                 }
             }
 
-            if (tempPlayer.getShortcutTaker()) {
+            if (tempPlayer.shortcutTaker) {
                 if (shortcut != null) {
                     shortcut.unexplored();
                     shortcut.revert(player);

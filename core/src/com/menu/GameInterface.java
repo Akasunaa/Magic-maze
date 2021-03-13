@@ -253,11 +253,17 @@ public class GameInterface extends BaseScreen {
                 return true;
             }
             public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
-                pawnList[currentColor]= new Pawn(getColor(currentColor));
-                pawnList[currentColor].setFirstCase();
-                pawnList[currentColor].load();
-                currentColor ++;
-                loadPawnButton.setText("Afficher le pion "+ getColor(currentColor));
+                if (!tileList.isEmpty()) {
+                    pawnList.add(new Pawn(getColor(currentColor)));
+                    pawnList.get(currentColor).setFirstCase();
+                    pawnList.get(currentColor).load();
+                    currentColor ++;
+                    loadPawnButton.setText("Afficher le pion "+ getColor(currentColor));
+                    if (currentColor >= 4) {
+                        loadPawnButton.remove();
+                    }
+                }
+
             }
         });
         uiStage.addActor(loadPawnButton);

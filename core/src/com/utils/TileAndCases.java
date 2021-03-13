@@ -27,7 +27,7 @@ public class TileAndCases {
 
     public static Queue queue;
 
-    public static Pawn[] pawnList = new Pawn[4];
+    public static ArrayList<Pawn> pawnList = new ArrayList();
 
 
 }
