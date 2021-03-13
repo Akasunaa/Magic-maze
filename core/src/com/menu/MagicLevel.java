@@ -302,11 +302,6 @@ public class MagicLevel extends BaseScreen
         cam.update();
     }
 
-    @Override
-    public boolean scrolled(float amountX, float amountY) {
-        return false;
-    }
-
     public void dispose()
     {
         instrumental.dispose();

@@ -1,6 +1,7 @@
 package com.menu;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
@@ -35,6 +36,8 @@ public class MainMenu extends BaseScreen
 
     public void create()
     {
+        InputMultiplexer inputMultiplexer = new InputMultiplexer(uiStage, mainStage);
+        Gdx.input.setInputProcessor(inputMultiplexer);
         currentAvatarNumber = 0;
 
         // passer audio volume en variable globale de MagicGame.java
@@ -312,11 +315,6 @@ public class MainMenu extends BaseScreen
     public void dispose()
     {
         instrumental.dispose();
-    }
-
-    @Override
-    public boolean scrolled(float amountX, float amountY) {
-        return false;
     }
 
 }

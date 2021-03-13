@@ -56,7 +56,7 @@ public class Queue implements Serializable {
     public void setCoordinates(float x, float y) {
         this.x = x;
         this.y = y;
-        updateCoordinates();
+        //updateCoordinates();
     }
 
     private void updateCoordinates() {
@@ -128,6 +128,7 @@ public class Queue implements Serializable {
         mainScreen.getUiStage().addActor(shown);
         loadSprite();
         updateSpriteSize();
+        updateCoordinates();
     }
 
     private void loadSprite() { // Obligatoire pour la sérialization

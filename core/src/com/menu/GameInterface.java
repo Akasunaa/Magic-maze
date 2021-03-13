@@ -14,12 +14,18 @@ import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.tiles.MainScreen;
+import com.tiles.Pawn;
+import com.utils.Colors;
 import com.utils.GameScreens;
 
+import static com.utils.Colors.currentColor;
+import static com.utils.Colors.getColor;
+import static com.utils.GameScreens.mainScreen;
 import static com.utils.MainConstants.camera;
 import static com.utils.MainConstants.getFontSize;
-import static com.utils.TileAndCases.queue;
-import static com.utils.TileAndCases.tileSize;
+import static com.utils.TileAndCases.*;
 
 public class GameInterface extends BaseScreen {
     // pour indiquer la phase
@@ -61,6 +67,7 @@ public class GameInterface extends BaseScreen {
     private InputListener pingavatar3;
     private InputListener pingavatar0;
 
+    TextButton loadPawnButton;
 
 
     //constructeur
@@ -69,9 +76,9 @@ public class GameInterface extends BaseScreen {
         phase = 'a';
     }
 
-    @Override
     public void create() {
         uiStage = GameScreens.mainScreen.getUiStage();
+        mainStage = GameScreens.mainScreen.getMainStage();
 
         //il faut créer tous les éléments de l'interface
 
@@ -96,6 +103,18 @@ public class GameInterface extends BaseScreen {
         restart.setSize(150,50);
         restart.setPosition(0, 0);
         uiStage.addActor(restart);
+        restart.addListener(
+                new InputListener()
+                {
+                    public boolean touchDown(InputEvent ev, float x, float y, int pointer, int button) {
+                        BaseActor wantToRestart = new BaseActor();
+                        wantToRestart.setTexture(new Texture(Gdx.files.internal("interface/restart-button.png")));
+                        wantToRestart.setPosition(avatars[0].getX() - 15, avatars[0].getY() + avatars[0].getHeight()*1.5f / 2);
+                        uiStage.addActor(wantToRestart);
+                        return true;
+                    }
+                }
+        );
 
         //le log c'est juste un rectangle transparent ^^'
         log = new BaseActor();
@@ -139,12 +158,25 @@ public class GameInterface extends BaseScreen {
 
         //la c'est les avatars des joueurs, faudra changer les sprites, c'est par joueur avec en dessous l'indication de son pouvoir
         avatars = new BaseActor[4];
-        for (int i = 0; i <=3; i++) {
+        final Action ping = Actions.sequence(
+                Actions.color(new Color(1,0,0,1),(float)0.20),
+                Actions.color(new Color(1,1,1,1),(float)0.20)
+        );
+        for (int i = 0; i <= 3; i++) {
             avatars[i] = new BaseActor();
-            avatars[i].setTexture(new Texture(Gdx.files.internal("interface/kuro"+i+".png")));
-            avatars[i].setSize(90,90);
-            avatars[i].setPosition(viewWidth-avatars[i].getWidth() - 45, viewHeight-avatars[i].getHeight() - 225 - 150*i);
+            avatars[i].setTexture(new Texture(Gdx.files.internal("interface/kuro" + i + ".png")));
+            avatars[i].setSize(90, 90);
+            avatars[i].setPosition(viewWidth - avatars[i].getWidth() - 45, viewHeight - avatars[i].getHeight() - 225 - 150 * i);
             uiStage.addActor(avatars[i]);
+            final int temp = i;
+            avatars[i].addListener(new InputListener() {
+                public boolean touchDown(InputEvent ev, float x, float y, int pointer, int button) {
+                    return true;
+                }
+                public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
+                    avatars[temp].addAction(ping);
+                }
+            });
         }
 
         // Les pouvoirs (il doit y avoir un moyen de faire ça plus propre)
@@ -206,48 +238,28 @@ public class GameInterface extends BaseScreen {
         textTilesLeft.setPosition(viewWidth - tileSize/2 - textTilesLeft.getWidth()/2 - 40, 0);
         uiStage.addActor(textTilesLeft);
 
-
-        //je vais tenter de mettre les listeners ici héééééé ça maaaaaarche !!! (et j'ai trouvé toute seule ^^) par contre ça bloque en rouge si on spam trop hmmmmm
-        final Action ping = Actions.sequence(
-                Actions.color(new Color(1,0,0,1),(float)0.20),
-                Actions.color(new Color(1,1,1,1),(float)0.20)
-        );
-
-        pingavatar0 = new InputListener(){
-            public boolean touchDown(InputEvent ev, float x, float y, int pointer, int button) {
-                avatars[0].clear();
-                avatars[0].addAction(ping);
-                return false;
-            }
-        };
-
-        pingavatar1 = new InputListener(){
-            public boolean touchDown(InputEvent ev, float x, float y, int pointer, int button) {
-                avatars[1].clear();
-                avatars[1].addAction(ping);
-                return false;
-            }
-        };
-
-        pingavatar2 = new InputListener(){
-            public boolean touchDown(InputEvent ev, float x, float y, int pointer, int button) {
-                avatars[2].clear();
-                avatars[2].addAction(ping);
-                return false;
-            }
-        };
-        pingavatar3 = new InputListener(){
-            public boolean touchDown(InputEvent ev, float x, float y, int pointer, int button) {
-                avatars[3].clear();
-                avatars[3].addAction(ping);
-                return false;
-            }
-        };
-
         for (Actor actor: uiStage.getActors()) {
             //actor.scaleBy(.5f);
             // Parce qu'on est plus en 1280 mais en 1920 oupsy doopsy déso chloé
         }
+
+        loadPawnButton = new TextButton("Afficher le pion "+ getColor(currentColor), game.skin, "uiTextButtonStyle");
+        loadPawnButton.addListener(new InputListener()
+        {
+            public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
+                System.out.println("yo");
+                return true;
+            }
+            public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
+                pawnList[currentColor]= new Pawn(getColor(currentColor));
+                pawnList[currentColor].setFirstCase();
+                pawnList[currentColor].load();
+                currentColor ++;
+                loadPawnButton.setText("Afficher le pion "+ getColor(currentColor));
+            }
+        });
+        uiStage.addActor(loadPawnButton);
+        loadPawnButton.setPosition(10,1000);
 
     }
 
@@ -255,65 +267,8 @@ public class GameInterface extends BaseScreen {
 
     public void update(float dt) {
         textTilesLeft.setText(queue.textTileLeft);
+
     }
 
-    //la c'est les changements/animations de l'interface, faudra juste changer les conditions
-    @Override
-    public boolean keyDown(int keycode){
-        if (keycode == Input.Keys.P) {
-            if (isPhaseA) {
-                phaseA.setVisible(false);
-                phaseB.setVisible(true);
-                isPhaseA = false;
-                return true;
-            }
-            else {
-                phaseB.setVisible(false);
-                phaseA.setVisible(true);
-                isPhaseA = true;
-                return true;
-            }
-        }
-        if (keycode == Input.Keys.M) {
-            if (voiceOn) {
-                cross.setVisible(true);
-                voiceOn = false;
-                return true;
-            }
-            else {
-                cross.setVisible(false);
-                voiceOn = true;
-                return true;
-            }
-        }
-        return false;
-    }
-
-    @Override
-    public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-
-        //appuyer sur le bouton restart fait apparaitre sur les interfaces de chaque joueur que ce joueur veux recommencer
-        restart.addListener(
-                new InputListener()
-                {
-                    public boolean touchDown(InputEvent ev, float x, float y, int pointer, int button) {
-                        BaseActor wantToRestart = new BaseActor();
-                        wantToRestart.setTexture(new Texture(Gdx.files.internal("interface/restart-button.png")));
-                        wantToRestart.setPosition(avatars[0].getX() - 15, avatars[0].getY() + avatars[0].getHeight()*1.5f / 2);
-                        uiStage.addActor(wantToRestart);
-                        return true;
-                    }
-                }
-        );
-        return false;
-    }
-
-    @Override
-    public boolean scrolled(float amountX, float amountY) {
-        System.out.println("Scrolled by " + amountX + " and " + amountY);
-        camera.zoom = (float) Math.max(0.4,Math.min(5,camera.zoom +amountY * 0.2));
-        camera.update();
-        return false;
-    }
 }
 

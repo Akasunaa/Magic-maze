@@ -1,6 +1,7 @@
 package com.tiles;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -61,26 +62,25 @@ public class MainScreen extends BaseScreen {
     BaseActor background;
 
     public void create() {
+        InputMultiplexer inputMultiplexer = new InputMultiplexer(uiStage, mainStage, new MouseWheelChecker());
+        Gdx.input.setInputProcessor(inputMultiplexer);
         background = new BaseActor();
         background.setTexture(new Texture("GameUIAssets/floorboard.png"));
-        background.setScale(1.5f);
+        background.setScale(1f);
 
         //camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         camera = (OrthographicCamera) mainStage.getCamera();
         camera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         camera.zoom = 2;
         // Cette caméra nous sert à avoir le bon système de coordonées
-        Gdx.input.setInputProcessor(this);
-        // Pour le système de zoom, il écoute les actions de la souris
-        // Le niveau est un InputListener, weirdly enough
-        // Je ne vais pas critiquer les actions de Nathan, il doit y avoir une raison à cela
+
 
         tileList = new ArrayList();
 
         player = new Player(true, true, false, false, false, false);
 
         queue = new Queue(9); // J'ai fait les cases uniquement jusqu'à la 9
-
+        queue.setCoordinates(1920-tileSize/2-20, 20);
 
         // Bon là c'est le batch et les trucs pour écrire, rien d'important
         batch = new SpriteBatch();
@@ -101,24 +101,12 @@ public class MainScreen extends BaseScreen {
         gameInterface = new GameInterface(game);
         gameInterface.hasBackground = false;
         queue.load();
-        queue.setCoordinates(1920-tileSize/2-20, 20);
-        // A gere pour pouvoir le faire sans avoir load
     }
 
     @Override
     public void update(float dt) {
     }
 
-
-    @Override
-    public boolean scrolled(float amountX, float amountY) {
-        return false;
-    }
-
-    @Override
-    public void show() {
-
-    }
 
     @Override
     public void render(float delta) {

@@ -4,10 +4,14 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.menu.BaseActor;
 import com.utils.Functions;
 
 import java.io.Serializable;
 
+import static com.utils.Functions.findCase;
+import static com.utils.GameScreens.mainScreen;
 import static com.utils.MainConstants.batch;
 import static com.utils.TileAndCases.caseSize;
 import static com.utils.TileAndCases.tileList;
@@ -21,10 +25,23 @@ public class Pawn implements Serializable {
     }
 
     public Case setCase; // La case sur laquelle est le pion
-    private transient Sprite sprite;
+    private transient BaseActor sprite;
 
-    Pawn(String color) {
+    public Pawn(String color) {
         this.color = color;
+    }
+
+    public void setFirstCase() {
+        for (Tile tile : tileList) {
+            for (Case[] caseLine : tile.caseList) {
+                for (Case tempCase : caseLine) {
+                    if (tempCase.isAccessible && !tempCase.hasPawn) {
+                        setCase = tempCase;
+                        return;
+                    }
+                }
+            }
+        }
     }
 
     private float size;
@@ -44,13 +61,11 @@ public class Pawn implements Serializable {
     private boolean isMovable = false; // Même principe que pour la Queue
 
     public void load() { // Pour la sérialization
-        sprite = new Sprite(new Texture("pions/" + color + ".png"));
+        sprite = new BaseActor();
+        sprite.setTexture(new Texture("pions/" + color + ".png"));
+        mainScreen.getMainStage().addActor(sprite);
         setSize();
         updateCoordinates();
-    }
-
-    public void draw() {
-        sprite.draw(batch);
     }
 
     public void updateCoordinates() {
@@ -59,7 +74,7 @@ public class Pawn implements Serializable {
     }
 
     public void dispose() {
-        sprite.getTexture().dispose();
+        sprite.remove();
     }
 
     private boolean hasExplored = false; // Pour regarder si on a déjà fait le pathfinding et éviter de le faire trop de fois
@@ -93,17 +108,5 @@ public class Pawn implements Serializable {
                 (sprite.getY() < Functions.mouseInput().y) && (Functions.mouseInput().y < sprite.getY() + sprite.getHeight())));
     }
 
-    public Case findCase() {
-        for (Tile tile : tileList) {
-            if (tile.getX() <= Functions.mouseInput().x && Functions.mouseInput().x <= tile.getX() + tile.getSize() &&
-                    tile.getY() <= Functions.mouseInput().y && Functions.mouseInput().y <= tile.getY() + tile.getSize()) {
-                try {
-                    return tile.getCase(Functions.mouseInput());
-                } catch (ArrayIndexOutOfBoundsException e) {
-                    System.out.println("Clicked border of Tile n°" + tile.number + " in Pawn.findCase");
-                }
-            }
-        }
-        return null;
-    }
+
 }

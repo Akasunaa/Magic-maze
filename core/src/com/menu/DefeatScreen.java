@@ -50,9 +50,4 @@ public class DefeatScreen extends BaseScreen {
     public void update(float dt) {
 
     }
-
-    @Override
-    public boolean scrolled(float amountX, float amountY) {
-        return false;
-    }
 }

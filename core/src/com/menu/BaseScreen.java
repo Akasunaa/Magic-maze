@@ -14,11 +14,7 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 
-import static com.utils.Functions.release;
-import static com.utils.MainConstants.camera;
-
-
-public abstract class BaseScreen implements Screen, InputProcessor {
+public abstract class BaseScreen implements Screen {
     protected MagicGame game;
     protected Stage mainStage;
     public Stage getMainStage() {return mainStage;}
@@ -50,9 +46,6 @@ public abstract class BaseScreen implements Screen, InputProcessor {
         uiStage = new Stage(new FitViewport(viewWidth, viewHeight));
 
         paused = false;
-
-        InputMultiplexer im = new InputMultiplexer(this, uiStage, mainStage);
-        Gdx.input.setInputProcessor(im);
 
         uiTable = new Table();
         uiTable.setFillParent(true);
@@ -141,9 +134,6 @@ public abstract class BaseScreen implements Screen, InputProcessor {
     { return false; }
     public boolean touchDragged(int screenX, int screenY, int pointer)
     { return false; }
-    public boolean touchUp(int screenX, int screenY, int pointer, int button)
-    { if (button == Input.Buttons.MIDDLE) release();
-    return false; }
 
 }
 

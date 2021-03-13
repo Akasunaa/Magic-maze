@@ -3,6 +3,7 @@ package com.utils;
 import com.badlogic.gdx.math.Matrix3;
 import com.badlogic.gdx.math.Vector2;
 import com.tiles.Case;
+import com.tiles.Pawn;
 import com.tiles.Queue;
 import com.tiles.Tile;
 
@@ -25,6 +26,8 @@ public class TileAndCases {
     public static Matrix3 newBaseInvert = new Matrix3(newBase).inv();
 
     public static Queue queue;
+
+    public static Pawn[] pawnList = new Pawn[4];
 
 
 }

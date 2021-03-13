@@ -6,9 +6,11 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import com.tiles.Case;
 import com.tiles.Tile;
 
 import static com.utils.MainConstants.camera;
+import static com.utils.TileAndCases.tileList;
 
 public class Functions {
 
@@ -64,19 +66,15 @@ public class Functions {
     static float step = 150f;
     static Vector3 target;
     static Vector3 middleLastClick;
-    static boolean released;
-    public static void release() {
-        System.out.println("Released");
-        released = true;
-    }
+
 
     public static void updateCamera() {
         target = new Vector3(camera.position);
         if (Gdx.input.isButtonJustPressed(Input.Buttons.MIDDLE)) {
             middleLastClick = new Vector3(1920-Gdx.input.getX(), Gdx.input.getY(), 0f);
             System.out.println(middleLastClick);
-            released = false;}
-        else if (!released && Gdx.input.isButtonPressed(Input.Buttons.MIDDLE)) {
+            }
+        else if (Gdx.input.isButtonPressed(Input.Buttons.MIDDLE)) {
             target.add(new Vector3(1920-Gdx.input.getX(), Gdx.input.getY(), 0f).sub(middleLastClick).scl(-0.5f));
         } else {
             if (Gdx.input.isKeyPressed(Input.Keys.Z)) target.add(0f, step * camera.zoom, 0f);
@@ -86,5 +84,18 @@ public class Functions {
         }
         camera.position.interpolate(target, 0.3f, Interpolation.bounce);
         camera.update();
+    }
+    public static Case findCase() {
+        for (Tile tile : tileList) {
+            if (tile.getX() <= Functions.mouseInput().x && Functions.mouseInput().x <= tile.getX() + tile.getSize() &&
+                    tile.getY() <= Functions.mouseInput().y && Functions.mouseInput().y <= tile.getY() + tile.getSize()) {
+                try {
+                    return tile.getCase(Functions.mouseInput());
+                } catch (ArrayIndexOutOfBoundsException e) {
+                    System.out.println("Clicked border of Tile n°" + tile.number + " in Pawn.findCase");
+                }
+            }
+        }
+        return null;
     }
 }

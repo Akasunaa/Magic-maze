@@ -104,20 +104,6 @@ class FindThePathKotlin : ApplicationAdapter() {
             tile.draw() // On dessine la tuile
         }
 
-        if (pawntimeBaby) {
-            greenPawn.draw()
-            greenPawn.handleInput(player)
-        } else {
-            tempTile = getTile()
-            //tempTile?.handleInput(player, numberCase)
-            if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
-                pawntimeBaby = true
-                greenPawn = Pawn("green")
-                greenPawn.setCase = tileList.get(0).caseList[0][0]
-                greenPawn.load()
-            }
-        }
-
 
         if (Gdx.input.isKeyPressed(Input.Keys.ENTER)) {
             mapper.writerWithDefaultPrettyPrinter().writeValue(File("core/assets/tuiles/tile${queue.head.number}.json"), queue.head)

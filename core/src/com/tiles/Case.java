@@ -36,6 +36,8 @@ public class Case implements Serializable {
     private transient BaseActor greenDot;
     private transient BaseActor redDot;
 
+    public boolean hasPawn = false;
+
     Case(int number, Tile tile) {
         this.tile = tile;
         isAccessible = (number != unnacessible);

@@ -51,8 +51,4 @@ public class VictoryScreen extends BaseScreen {
 
     }
 
-    @Override
-    public boolean scrolled(float amountX, float amountY) {
-        return false;
-    }
 }
