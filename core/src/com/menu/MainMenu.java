@@ -75,7 +75,7 @@ public class MainMenu extends BaseScreen
             {
                 dispose();
                 playerName = usernameTextField.getText();
-                mainScreen = new MainScreen(game);
+                mainScreen = new MainScreen(game, currentAvatarNumber, playerName, audioVolume);
                 mainScreen.load();
                 game.setScreen( mainScreen );
             }
@@ -115,7 +115,7 @@ public class MainMenu extends BaseScreen
                     {
                         dispose();
                         playerName = usernameTextField.getText();
-                        mainScreen = new MainScreen(game);
+                        mainScreen = new MainScreen(game, currentAvatarNumber, playerName, audioVolume);
                         mainScreen.load();
                         game.setScreen( mainScreen );
                     }
