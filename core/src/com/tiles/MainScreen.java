@@ -53,7 +53,6 @@ public class MainScreen extends BaseScreen {
 
     public MainScreen(MagicGame g) {
         super(g);
-        create();
     }
 
     Tile tempTile;
