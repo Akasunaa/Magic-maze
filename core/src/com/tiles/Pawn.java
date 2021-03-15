@@ -37,6 +37,7 @@ public class Pawn implements Serializable {
         try {
             setCase.pawn = null;
         } catch (Exception e) {
+            System.out.println("Error in Pawn.setCase(): Pawn hasn't got a Case yet");
         }
         setCase = tempCase;
         setCase.pawn = this;
@@ -80,8 +81,8 @@ public class Pawn implements Serializable {
     }
 
     public void updateCoordinates() {
-        sprite.setX(setCase.getX(setCase.getRotatedCoordinates()[0]) + (caseSize - sprite.getWidth()) / 2);
-        sprite.setY(setCase.getY(setCase.getRotatedCoordinates()[1]) + caseSize / 3);
+        sprite.setX(setCase.getX(setCase.x) + (caseSize - sprite.getWidth()) / 2);
+        sprite.setY(setCase.getY(setCase.y) + caseSize / 3);
     }
 
     public void dispose() {
@@ -103,7 +104,7 @@ public class Pawn implements Serializable {
             if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) { // Puis si on clique quelque part
                 try {
                     Case nextCase = findCase(); // Est-on sur une case ?
-                    if (nextCase.isValid) { // Si elle existe et est non nulle
+                    if (!(nextCase == null) && nextCase.isValid) { // Si elle existe et est non nulle
                         setCase.revert(player); // On annule le pathfinding... avec un autre pathfinding
                         setCase.hide(); // On cache la case de départ
                         setCase(nextCase); // On change la case

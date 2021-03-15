@@ -74,7 +74,7 @@ public class Case implements Serializable {
         redDot = new BaseActor();
         redDot.setTexture(new Texture("tuiles/redDot.png"));
         redDot.setVisible(false);
-        setSpriteCoordinates(x, y);
+        setSpriteCoordinates();
         mainScreen.getMainStage().addActor(greenDot);
         mainScreen.getMainStage().addActor(redDot);
 
@@ -88,7 +88,7 @@ public class Case implements Serializable {
         return tile.getY() + offset + (y * caseSize);
     }
 
-    private void setSpriteCoordinates(int x, int y) { // self explanatory
+    private void setSpriteCoordinates() { // self explanatory
         float tempX = getX(x);
         float tempY = getY(y);
         greenDot.setX(tempX);
@@ -102,7 +102,7 @@ public class Case implements Serializable {
         redDot.setSize(size, size);
     }
 
-    public int[] getRotatedCoordinates() {
+    public void updateCoordinates() {
         int[] xy = tile.getCaseCoordinates(this);
         if (tile.rotation == 0) {
             x = xy[0];
@@ -120,20 +120,14 @@ public class Case implements Serializable {
             x = 3 - xy[1];
             y = xy[0];
         }
-        return new int[]{x, y};
-    }
-
-    public void updateCoordinates() {
-        // Cette fonction met à jour les coordonées des sprites lorsque la tuile est tournée
-        int[] xy = getRotatedCoordinates();
-        setSpriteCoordinates(x, y);
+        setSpriteCoordinates();
     }
 
     public void show() {
         isShowed = true;
         isValid = true;
         redDot.setVisible(isShowed);
-        greenDot.setVisible(isValid);
+        greenDot.setVisible(false);
     }
 
     public void hide() {
@@ -146,7 +140,7 @@ public class Case implements Serializable {
 
     public void explored() {
         isValid = true;
-        greenDot.setVisible(isValid);
+        greenDot.setVisible(!isShowed);
     }
 
     public void unexplored() {

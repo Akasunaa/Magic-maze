@@ -6,7 +6,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.*;
-import com.badlogic.gdx.math.Rectangle;;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.utils.Array;
@@ -97,7 +97,7 @@ public class MagicLevel extends BaseScreen
             tex.setFilter(TextureFilter.Linear, TextureFilter.Linear);
             frames[n] = new TextureRegion(tex);
         }
-        Array<TextureRegion> framesArray = new Array<TextureRegion>(frames);
+        Array<TextureRegion> framesArray = new Array<>(frames);
         Animation anim = new Animation(0.1f, framesArray, Animation.PlayMode.LOOP_PINGPONG);
         mousey.setAnimation(anim);
         mousey.setOrigin(mousey.getWidth() / 2, mousey.getHeight() / 2);
@@ -112,7 +112,7 @@ public class MagicLevel extends BaseScreen
             hourglassTex.setFilter(TextureFilter.Linear, TextureFilter.Linear);
             hourglassFrames[m-1] = new TextureRegion(hourglassTex);
         }
-        Array<TextureRegion> hourglassFramesArray = new Array<TextureRegion>(hourglassFrames);
+        Array<TextureRegion> hourglassFramesArray = new Array<>(hourglassFrames);
         anim = new Animation(0.1f, hourglassFramesArray, Animation.PlayMode.LOOP);
         hourglass.setAnimation(anim);
         hourglass.setOrigin(hourglass.getWidth() / 2, hourglass.getHeight() / 2);
