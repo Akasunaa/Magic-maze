@@ -8,6 +8,7 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.menu.BaseActor;
+import com.utils.Colors;
 import com.utils.Functions;
 
 import java.io.Serializable;
@@ -15,21 +16,20 @@ import java.io.Serializable;
 import static com.utils.Functions.findCase;
 import static com.utils.GameScreens.mainScreen;
 import static com.utils.MainConstants.batch;
-import static com.utils.TileAndCases.caseSize;
-import static com.utils.TileAndCases.tileList;
+import static com.utils.TileAndCases.*;
 
 
 public class Pawn implements Serializable {
-    private String color; // La couleur du pion
+    private int color; // La couleur du pion
 
-    public String getColor() {
+    public int getColor() {
         return color;
     }
 
     public Case setCase; // La case sur laquelle est le pion
     private transient BaseActor sprite;
 
-    public Pawn(String color) {
+    public Pawn(int color) {
         this.color = color;
     }
 
@@ -41,6 +41,9 @@ public class Pawn implements Serializable {
         }
         setCase = tempCase;
         setCase.pawn = this;
+        if (setCase.isExit && setCase.color == color) {
+            queue.reveal();
+        }
     }
 
     public void setFirstCase() {
@@ -74,7 +77,7 @@ public class Pawn implements Serializable {
 
     public void load() { // Pour la sérialization
         sprite = new BaseActor();
-        sprite.setTexture(new Texture("pions/" + color + ".png"));
+        sprite.setTexture(new Texture("pions/" + Colors.getColor(color) + ".png"));
         mainScreen.getMainStage().addActor(sprite);
         setSize();
         updateCoordinates();

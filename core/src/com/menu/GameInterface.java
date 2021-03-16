@@ -217,7 +217,7 @@ public class GameInterface extends BaseScreen {
             }
             public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
                 if (!tileList.isEmpty()) {
-                    pawnList.add(new Pawn(getColor(currentColor)));
+                    pawnList.add(new Pawn(currentColor));
                     pawnList.get(currentColor).setFirstCase();
                     pawnList.get(currentColor).load();
                     currentColor ++;

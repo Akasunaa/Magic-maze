@@ -272,6 +272,8 @@ public class Case implements Serializable {
         // alors direction = 2
         case1.caseList[modulo(direction-case1.tile.rotation, numberDirections)] = case2;
         case2.caseList[modulo(direction + 2 - case2.tile.rotation, numberDirections)] = case1;
+        case1.isExit = false;
+        case2.isExit = false;
     }
 
     public void dispose() {

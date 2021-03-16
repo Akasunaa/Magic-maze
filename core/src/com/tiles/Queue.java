@@ -45,6 +45,10 @@ public class Queue implements Serializable {
     private boolean isHidden = true;
     private transient BaseActor hidden;
 
+    private int numberRevealsDown = 0;
+    public void setNumberRevealsDown(int i) {
+        numberRevealsDown = i;
+    }
 
     private void updateSpriteSize() {
         //sprite.setSize(size, size);
@@ -88,7 +92,6 @@ public class Queue implements Serializable {
             isEmpty = true; // On fait plus rien pour le futur
             isHidden = false;
         }
-
         updateSpriteSize();
         updateCoordinates();
     }
@@ -157,8 +160,16 @@ public class Queue implements Serializable {
         isHidden = true;
         hidden.setVisible(true);
         shown.setVisible(false);
+        if (numberRevealsDown > 0) {
+            numberRevealsDown --;
+            reveal();
+        }
     }
     public void reveal() {
+        System.out.println("Yer");
+        if (!isHidden) {
+            numberRevealsDown ++;
+        }
         isHidden = false;
         hidden.setVisible(false);
         shown.setVisible(true);
@@ -173,6 +184,7 @@ public class Queue implements Serializable {
             if (isMovable) { // Truc classique pour avoir deux comportements sur un seul objet
                 shown.setVisible(false);
                 sprite.setVisible(true);
+                sprite.toFront();
                 mousePosition.sub(tileSize / 2, tileSize / 2); // Pour que le sprite soit centré sur la souris
                 sprite.setX(mousePosition.x); // On suit la souris
                 sprite.setY(mousePosition.y);
@@ -182,20 +194,23 @@ public class Queue implements Serializable {
                     if (isFirst) {
                         isFirst = false;
                         origin.add(mousePosition);// Si c'est la première, on stock ses coordonées
+                        sprite.toBack();
                         place(mousePosition); // On pose la tuile
+                        hide();
                     } else if (head.canPlaceThere()) {
                         // Attention !!!
                         // canPlaceThere est une fonction qui place la tuile !!!!
                         // Elle ne fait pas que renvoyer un booléen !!!
                         Functions.snap(mousePosition); // Tu alignes les coordonées sur la "grille"
+                        sprite.toBack();
                         place(mousePosition);
+                        hide();
                     }
                     else {
-                        hidden.setVisible(true);
+                        shown.setVisible(true);
                         sprite.setVisible(false);
                     }
                     isMovable = false;
-                    hide();
                 }
             }
             isMovable = isMovable || !isHidden &&
