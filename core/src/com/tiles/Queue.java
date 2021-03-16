@@ -132,6 +132,7 @@ public class Queue implements Serializable {
         loadSprite();
         updateSpriteSize();
         updateCoordinates();
+        reveal();
     }
 
     private void loadSprite() { // Obligatoire pour la sérialization
@@ -218,11 +219,11 @@ public class Queue implements Serializable {
                             (y < mousePositionStatic.y) && (mousePositionStatic.y < y + size)));
             // Java est paresseux, donc tout ce qu'il y a après le || n'est pas vérifié
             // si isMovable est true
-            if (isHidden && (Gdx.input.isButtonJustPressed(Input.Buttons.RIGHT) &&
-                    (x < mousePositionStatic.x) && (mousePositionStatic.x < x + size &&
-                    (y < mousePositionStatic.x) && (mousePositionStatic.y < y + size)))) {
-                reveal();
-            }
+//            if (isHidden && (Gdx.input.isButtonJustPressed(Input.Buttons.RIGHT) &&
+//                    (x < mousePositionStatic.x) && (mousePositionStatic.x < x + size &&
+//                    (y < mousePositionStatic.x) && (mousePositionStatic.y < y + size)))) {
+//                reveal();
+//            }
         }
     }
 }
