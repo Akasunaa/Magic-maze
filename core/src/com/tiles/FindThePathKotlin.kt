@@ -110,7 +110,6 @@ class FindThePathKotlin : ApplicationAdapter() {
         }
 
         // Gestion du déplacement de la caméra
-        updateCamera()
         batch.end()
     }
 

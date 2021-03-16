@@ -1,12 +1,16 @@
 package com.tiles;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
-import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.math.Interpolation;
+import com.badlogic.gdx.math.Vector3;
+
+import static com.utils.Functions.mouseInput;
 import static com.utils.MainConstants.camera;
 public class MouseWheelChecker implements InputProcessor {
 
-    MouseWheelChecker() {
-    }
+    MouseWheelChecker() {}
 
     @Override
     public boolean keyDown(int keycode) {
@@ -25,6 +29,11 @@ public class MouseWheelChecker implements InputProcessor {
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+        if (Gdx.input.isButtonPressed(Input.Buttons.MIDDLE)) {
+            middleLastClick = new Vector3(mouseInput(),0);
+            cameraLastPosition = camera.position.cpy();
+            System.out.println(middleLastClick);
+        }
         return false;
     }
 
@@ -33,8 +42,17 @@ public class MouseWheelChecker implements InputProcessor {
         return false;
     }
 
+    Vector3 middleLastClick;
+    Vector3 cameraLastPosition;
+
     @Override
     public boolean touchDragged(int screenX, int screenY, int pointer) {
+        if (Gdx.input.isButtonPressed(Input.Buttons.MIDDLE)) {
+            Vector3 delta = new Vector3(mouseInput(),0).sub(middleLastClick);
+            camera.position.sub(delta);
+            System.out.println(camera.position);
+
+        }
         return false;
     }
 
@@ -47,7 +65,6 @@ public class MouseWheelChecker implements InputProcessor {
     public boolean scrolled(float amountX, float amountY) {
         System.out.println("Scrolled by " + amountX + " and " + amountY);
         camera.zoom = (float) Math.max(0.4,Math.min(5,camera.zoom +amountY * 0.2));
-        camera.update();
         return false;
     }
 }

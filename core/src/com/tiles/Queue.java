@@ -145,13 +145,23 @@ public class Queue implements Serializable {
     }
 
     private void place(Vector2 mousePosition) {
-        hidden.setVisible(true);
         tileList.add(head); // On pose la tuile
         head.x = mousePosition.x; //Bon c'est classique ça
         head.y = mousePosition.y;
         head.updateAll(); // Mise à jour
         head.startCooldown(); // On veut pas le blinking
         remove(); // Et on enlève la tête
+    }
+
+    public void hide() {
+        isHidden = true;
+        hidden.setVisible(true);
+        shown.setVisible(false);
+    }
+    public void reveal() {
+        isHidden = false;
+        hidden.setVisible(false);
+        shown.setVisible(true);
     }
 
     public void handleInput() {
@@ -170,8 +180,6 @@ public class Queue implements Serializable {
                 if (Gdx.input.isKeyJustPressed(Input.Keys.A)) head.rotate(-1);
                 if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {// si on sélectionne un endroit
                     if (isFirst) {
-                        isMovable = false; // Voilà voilà
-                        isHidden = true;
                         isFirst = false;
                         origin.add(mousePosition);// Si c'est la première, on stock ses coordonées
                         place(mousePosition); // On pose la tuile
@@ -179,17 +187,15 @@ public class Queue implements Serializable {
                         // Attention !!!
                         // canPlaceThere est une fonction qui place la tuile !!!!
                         // Elle ne fait pas que renvoyer un booléen !!!
-                        isMovable = false; // Voilà voilà
-                        isHidden = true;
                         Functions.snap(mousePosition); // Tu alignes les coordonées sur la "grille"
                         place(mousePosition);
                     }
                     else {
-                        isMovable = false; // Voilà voilà
-                        isHidden = true;
                         hidden.setVisible(true);
                         sprite.setVisible(false);
                     }
+                    isMovable = false;
+                    hide();
                 }
             }
             isMovable = isMovable || !isHidden &&
@@ -201,9 +207,7 @@ public class Queue implements Serializable {
             if (isHidden && (Gdx.input.isButtonJustPressed(Input.Buttons.RIGHT) &&
                     (x < mousePositionStatic.x) && (mousePositionStatic.x < x + size &&
                     (y < mousePositionStatic.x) && (mousePositionStatic.y < y + size)))) {
-                isHidden = false;
-                hidden.setVisible(false);
-                shown.setVisible(true);
+                reveal();
             }
         }
     }
