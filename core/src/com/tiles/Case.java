@@ -274,6 +274,10 @@ public class Case implements Serializable {
         case2.caseList[modulo(direction + 2 - case2.tile.rotation, numberDirections)] = case1;
         case1.isExit = false;
         case2.isExit = false;
+        if (case1.pawn != null)
+            case1.pawn.unlock();
+        if (case2.pawn != null)
+            case2.pawn.unlock();
     }
 
     public void dispose() {

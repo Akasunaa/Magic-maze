@@ -20,7 +20,7 @@ public class Queue implements Serializable {
     // Structure classique pour une pile
     private Queue tail;
     public Tile head;
-    public int length = 0;
+    public int length;
     public String textTileLeft;
     private void updateText() {
         textTileLeft = "Tuiles restantes: " + length;
@@ -166,7 +166,6 @@ public class Queue implements Serializable {
         }
     }
     public void reveal() {
-        System.out.println("Yer");
         if (!isHidden) {
             numberRevealsDown ++;
         }

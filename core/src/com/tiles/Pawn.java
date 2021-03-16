@@ -26,6 +26,10 @@ public class Pawn implements Serializable {
         return color;
     }
 
+    private boolean isLocked = false;
+    // Un petit booléen qui permet d'éviter qu'on bouge les pions tant qu'on a pas mis une tuile à la sortie
+    public void unlock() {isLocked = false;}
+
     public Case setCase; // La case sur laquelle est le pion
     private transient BaseActor sprite;
 
@@ -43,6 +47,7 @@ public class Pawn implements Serializable {
         setCase.pawn = this;
         if (setCase.isExit && setCase.color == color) {
             queue.reveal();
+            isLocked = true;
         }
     }
 
@@ -123,7 +128,7 @@ public class Pawn implements Serializable {
         } else isMovable = (Gdx.input.isButtonJustPressed(Input.Buttons.RIGHT) &&
                 (sprite.getX() < Functions.mouseInput().x) && (Functions.mouseInput().x < sprite.getX() + sprite.getWidth() &&
                 (sprite.getY() < Functions.mouseInput().y) && (Functions.mouseInput().y < sprite.getY() + sprite.getHeight())) &&
-                player.pawn == null);
+                player.pawn == null && !isLocked);
     }
 
 
