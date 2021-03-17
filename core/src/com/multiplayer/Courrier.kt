@@ -4,6 +4,9 @@ import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Net
 import com.badlogic.gdx.net.Socket
 import com.badlogic.gdx.net.SocketHints
+import com.tiles.Player
+import com.utils.Multiplayer
+import kotlinx.serialization.json.Json
 import java.io.BufferedReader
 import java.io.IOException
 import java.io.InputStreamReader
@@ -26,12 +29,13 @@ class Courrier(val id: String, port: Int, ip: String) {
         sendMessage("connected $ip")
         val waitForIt = BufferedReader(InputStreamReader(sendingSocket.inputStream)).readLine()
         receivingSocket = Gdx.net.newClientSocket(Net.Protocol.TCP, ip, port, socketHints)
+        sendObject(Multiplayer.me)
     }
 
 
     fun sendMessage(message: String) {
         try {
-            //println("Sending message to server")
+            //println("Client: Sending $message")
             sendingSocket.getOutputStream().write(("$id $message \n").toByteArray())
         } catch (e: IOException) {
             e.printStackTrace()
@@ -42,6 +46,11 @@ class Courrier(val id: String, port: Int, ip: String) {
         sendMessage("sending BigButton")
         //ObjectOutputStream(sendingSocket.outputStream).write(toSend.serialize().toByteArray())
         sendingSocket.getOutputStream().write(((toSend.serialize() + "\n").toByteArray()))
+    }
+    fun sendObject(toSend: Player) {
+        sendMessage("sending Player")
+        //ObjectOutputStream(sendingSocket.outputStream).write(toSend.serialize().toByteArray())
+        sendingSocket.getOutputStream().write(((Multiplayer.mapper.writeValueAsString(toSend) + "\n").toByteArray()))
     }
 
 }

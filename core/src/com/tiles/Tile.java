@@ -137,7 +137,7 @@ public class Tile implements Serializable {
         exitCases = new Case[]{caseList[0][1], caseList[1][3], caseList[3][2], caseList[2][0]};
         exits = new boolean[]{caseList[0][1].isExit, caseList[1][3].isExit, caseList[3][2].isExit, caseList[2][0].isExit};
 
-        System.out.println("Tile number " + number + " has exits " + exits[0] + " " + exits[1] + " " + exits[2] + " " + exits[3]);
+        //System.out.println("Tile number " + number + " has exits " + exits[0] + " " + exits[1] + " " + exits[2] + " " + exits[3]);
 
         if (caseList[0][1].isEntrance) {
             entrance = 0;
@@ -155,7 +155,7 @@ public class Tile implements Serializable {
             entrance = 2;
             entranceCase = caseList[3][2];
         }
-        System.out.println("Tile number " + number + " has entrance number " + entrance);
+        //System.out.println("Tile number " + number + " has entrance number " + entrance);
         // On récupère la coordonée d'entrée
     }
 

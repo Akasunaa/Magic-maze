@@ -41,18 +41,12 @@ public class MagicLevel extends BaseScreen
     // Timer
     private float remainingTime;
 
-    public MagicLevel(MagicGame g, int currentAvatarNumber, String playerName, float audioVolume)
+    public MagicLevel(MagicGame g, String playerName, float audioVolume)
     {
         super(g);
 
         instrumental.setVolume(audioVolume);
         audioSlider.setValue( audioVolume );
-
-        // Afficher l'avatar correspondant à celui choisi sur l'écran précédent
-        Cell<Image> cell = uiTable.getCell(currentAvatar);
-        cell.clearActor();
-        currentAvatar = avatarImages[currentAvatarNumber];
-        cell.setActor(currentAvatar);
 
         // Le pseudo affiché est celui rentré sur l'écran précédent
         Label currentPseudoLabel = new Label(playerName, game.skin, "uiLabelStyle");
@@ -220,7 +214,6 @@ public class MagicLevel extends BaseScreen
         // Overlay
         uiTable.pad(10);
         uiTable.add(pseudoLabel);
-        uiTable.add(currentAvatar).padLeft(50);
         uiTable.add().expandX();
         uiTable.add(pauseButton);
         uiTable.row();

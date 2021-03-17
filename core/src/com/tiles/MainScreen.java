@@ -17,9 +17,13 @@ import com.menu.BaseActor;
 import com.menu.GameInterface;
 import com.menu.BaseScreen;
 import com.menu.MagicGame;
+import com.multiplayer.Courrier;
+import com.multiplayer.ServerMaker;
 import com.utils.Functions;
+import com.utils.Multiplayer;
 
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 // La caméra
@@ -40,11 +44,6 @@ public class MainScreen extends BaseScreen {
     Pawn greenPawn;
     boolean pawnTime = false;
 
-    // Le joueur
-    Player player;
-
-    // Pour la sérialisation
-    ObjectMapper mapper = new ObjectMapper();
 
     GameInterface gameInterface;
 
@@ -74,7 +73,7 @@ public class MainScreen extends BaseScreen {
 
         tileList = new ArrayList<Tile>();
 
-        player = new Player(true, true, true, true, false, false);
+        Multiplayer.me.setPlayer(new Player(true, true, true, true, false, false));
 
         queue = new Queue(9); // J'ai fait les cases uniquement jusqu'à la 9
         queue.setCoordinates(1920-tileSize/2-20, 20);
@@ -89,6 +88,14 @@ public class MainScreen extends BaseScreen {
         numberCase.setPosition(200,100);
         uiStage.addActor(coordMouse);
         uiStage.addActor(numberCase);
+
+        if (Multiplayer.isServer) new ServerMaker(Multiplayer.port, Multiplayer.clientList).startThread();
+        Multiplayer.courrier = new Courrier(Multiplayer.me.pseudo, Multiplayer.port, Multiplayer.serverIP);
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     public void load() {
@@ -126,7 +133,7 @@ public class MainScreen extends BaseScreen {
         queue.handleInput();
 
         for (Pawn pawn : pawnList) {
-            pawn.handleInput(player);
+            pawn.handleInput(Multiplayer.me);
         }
         batch.end();
     }

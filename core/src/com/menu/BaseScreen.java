@@ -3,10 +3,8 @@ package com.menu;
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Slider;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.viewport.FitViewport;
@@ -27,11 +25,6 @@ public abstract class BaseScreen implements Screen {
 
     protected Table uiTable;
 
-    public String pseudo;
-
-    public Image[] avatarImages;
-    public Image currentAvatar;
-
     public float audioVolume;
     public Music instrumental;
 
@@ -49,17 +42,6 @@ public abstract class BaseScreen implements Screen {
         uiTable = new Table();
         uiTable.setFillParent(true);
         uiStage.addActor(uiTable);
-
-        // Création de la liste des avatars pour gérer les différents avatars
-        Texture tempAvatar;
-        final String[] animalNames = new String[] {"elephant","giraffe","hippo","monkey","panda","parrot","penguin","pig","rabbit","snake"};
-        avatarImages = new Image[animalNames.length];
-        for (int i = 0; i < animalNames.length; i++) {
-            tempAvatar = new Texture(Gdx.files.internal("Avatars/" + animalNames[i] + ".png"));
-            tempAvatar.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
-            avatarImages[i] = new Image(tempAvatar);
-        }
-        currentAvatar = avatarImages[0];
 
         audioSlider = new Slider(0, 1, 0.005f, false, game.skin, "uiSliderStyle" );
         audioSlider.addListener(

@@ -1,6 +1,7 @@
 package com.multiplayer
 
 import com.badlogic.gdx.net.Socket
+import com.tiles.Player
 import java.io.BufferedReader
 import java.io.InputStreamReader
 
@@ -15,4 +16,6 @@ class Client(var ip: String, val sendingSocket: Socket, var id: String) {
     fun receiveSocket(socket: Socket) {
         receivingSocket = socket
     }
+
+    lateinit var player: Player
 }

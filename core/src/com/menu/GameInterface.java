@@ -14,6 +14,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.tiles.Pawn;
 import com.utils.GameScreens;
+import com.utils.Multiplayer;
 
 import static com.utils.Colors.currentColor;
 import static com.utils.Colors.getColor;
@@ -120,9 +121,31 @@ public class GameInterface extends BaseScreen {
 
         //la c'est les avatars des joueurs, faudra changer les sprites, c'est par joueur avec en dessous l'indication de son pouvoir
         avatars = new BaseActor[4];
-        for (int i = 0; i <= 3; i++) {
-            avatars[i] = new BaseActor();
-            avatars[i].setTexture(new Texture(Gdx.files.internal("interface/kuro" + i + ".png")));
+        for (int i = 0; i < Multiplayer.numberOfPlayers; i++) {
+            avatars[i] = Multiplayer.clientList.get(i).player.load().avatar;
+            avatars[i].setSize(90, 90);
+            avatars[i].setPosition(viewWidth - avatars[i].getWidth() - 45, viewHeight - avatars[i].getHeight() - 225 - 150 * i);
+            uiStage.addActor(avatars[i]);
+            final int temp = i;
+            avatars[i].addListener(new InputListener() {
+                public boolean touchDown(InputEvent ev, float x, float y, int pointer, int button) {
+                    avatars[temp].addAction(Actions.sequence(
+                            Actions.color(new Color(1,0,0,1),(float)0.20),
+                            Actions.color(new Color(1,1,1,1),(float)0.20)));
+                    // What
+                    // the
+                    // fuck
+                    // LibGDX c'est cool jusqu'à ce que tu soit obligé de faire des trucs comme ça
+                    // Pour l'expliquer simplement: plutôt que de créer l'action en final en dehors de toute ça,
+                    // Il faut la créer nous même à chaque fois que l'inputListener est appellé
+                    // Désolé d'avoir craché sur les InputListener de LibGDX, ils sont très bien.
+                    //TODO Envoyer un ping à la bonne personne
+                    return true;
+                }
+            });
+        }
+        for (int i = Multiplayer.numberOfPlayers; i < 4; i++) {
+            avatars[i] = new BaseActor(new Texture(Gdx.files.internal("interface/kuro" + i + ".png")));
             avatars[i].setSize(90, 90);
             avatars[i].setPosition(viewWidth - avatars[i].getWidth() - 45, viewHeight - avatars[i].getHeight() - 225 - 150 * i);
             uiStage.addActor(avatars[i]);
@@ -186,7 +209,7 @@ public class GameInterface extends BaseScreen {
         LabelStyle pseudoStyle = new LabelStyle(pseudoFont, Color.WHITE);
         //Les pseudos, du coup faura faire en sorte que ce soit les bons
         Label[] pseudoLabelList = new Label[4];
-        String[] pseudoList = new String[]{"Joueur 1", "Joueur 2", "Joueur 3", "Joueur 4"};
+        String[] pseudoList = new String[]{Multiplayer.me.pseudo, "Joueur 2", "Joueur 3", "Joueur 4"};
 
         for (int i = 0; i <=3; i ++) {
             pseudoLabelList[i] = new Label(pseudoList[i], pseudoStyle);

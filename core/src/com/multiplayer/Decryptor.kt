@@ -1,5 +1,8 @@
 package com.multiplayer
 
+
+import com.tiles.Player
+import com.utils.Multiplayer
 import com.utils.Multiplayer.buttonList
 import com.utils.Multiplayer.clientList
 import kotlinx.serialization.decodeFromString
@@ -9,9 +12,10 @@ import java.io.InputStreamReader
 
 class Decryptor {
     fun decryptMessage(message: String) {
-        val sender = message.split(' ')[0]
-        val action = message.split(' ')[1]
-        val receiver = message.split(' ')[2]
+        val phrase = message.split(' ')
+        val sender = phrase[0]
+        val action = phrase[1]
+        val receiver = phrase[2]
         println(message)
         when (action) {
             "pressed" -> {
@@ -27,8 +31,14 @@ class Decryptor {
                     "BigButton" -> {
                         println("Server : Getting a BigButton")
                         val tempString = BufferedReader(InputStreamReader(clientList.getClient(sender).sendingSocket.inputStream)).readLine()
-                        println(tempString)
+                        //println(tempString)
                         buttonList.add(Json.decodeFromString<BigButton>(tempString))
+                    }
+                    "Player" -> {
+                        println("Server : Getting a Player")
+                        val tempString = BufferedReader(InputStreamReader(clientList.getClient(sender).sendingSocket.inputStream)).readLine()
+                        //println(tempString)
+                        clientList.getClient(sender).player = Multiplayer.mapper.readValue(tempString, Player::class.java)
                     }
                     "else" -> {
                     }

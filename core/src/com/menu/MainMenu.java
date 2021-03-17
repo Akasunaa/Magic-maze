@@ -13,32 +13,47 @@ import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.tiles.MainScreen;
+import com.tiles.Player;
+import com.utils.Multiplayer;
 
 import static com.utils.Functions.modulo;
 import static com.utils.GameScreens.mainScreen;
 
-public class MainMenu extends BaseScreen
-{
+public class MainMenu extends BaseScreen {
     Button leftButton;
 
     private Table optionOverlay;
 
     public int currentAvatarNumber;
     public TextField usernameTextField;
-    public String playerName;
+
+    public BaseActor[] avatarImages;
+    public BaseActor currentAvatar;
 
 
-    public MainMenu(MagicGame g)
-
-    {
+    public MainMenu(MagicGame g) {
         super(g);
     }
 
-    public void create()
-    {
+    public void create() {
+        // On met le bon InputProcessor
         InputMultiplexer inputMultiplexer = new InputMultiplexer(uiStage, mainStage);
         Gdx.input.setInputProcessor(inputMultiplexer);
+
+        // Création de la liste des avatars pour gérer les différents avatars
+        Texture tempAvatar;
+        final String[] animalNames = new String[]{"elephant", "giraffe", "hippo", "monkey", "panda", "parrot", "penguin", "pig", "rabbit", "snake"};
+        avatarImages = new BaseActor[animalNames.length];
+        for (int i = 0; i < animalNames.length; i++) {
+            tempAvatar = new Texture(Gdx.files.internal("Avatars/" + animalNames[i] + ".png"));
+            tempAvatar.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
+            avatarImages[i] = new BaseActor(tempAvatar);
+        }
+        currentAvatar = avatarImages[0];
+        Multiplayer.me.avatar = currentAvatar;
         currentAvatarNumber = 0;
+        Multiplayer.me.avatarName = animalNames[currentAvatarNumber];
+
 
         // passer audio volume en variable globale de MagicGame.java
         instrumental = Gdx.audio.newMusic(Gdx.files.internal("Music&Sound/MusicMenu.wav"));
@@ -48,8 +63,8 @@ public class MainMenu extends BaseScreen
         instrumental.play();
 
         BaseActor background = new BaseActor();
-        background.setTexture( new Texture(Gdx.files.internal("MenuAssets/BlurryMallBackground.jpg")) );
-        uiStage.addActor( background );
+        background.setTexture(new Texture(Gdx.files.internal("MenuAssets/BlurryMallBackground.jpg")));
+        uiStage.addActor(background);
 
         Texture titleText = new Texture(Gdx.files.internal("MenuAssets/MagicLogo.png"));
         titleText.setFilter(TextureFilter.Linear, TextureFilter.Linear);
@@ -67,25 +82,22 @@ public class MainMenu extends BaseScreen
         final Sound buttonHover = Gdx.audio.newSound(Gdx.files.internal("Music&Sound/buttonHover.mp3"));
 
         TextButton startButton = new TextButton("Demarrer une partie", game.skin, "uiTextButtonStyle");
-        startButton.addListener(new InputListener()
-        {
-            public boolean touchDown (InputEvent event, float x, float y, int pointer,
-                                      int button)
-            {
+        startButton.addListener(new InputListener() {
+            public boolean touchDown(InputEvent event, float x, float y, int pointer,
+                                     int button) {
                 return true;
             }
-            public void touchUp (InputEvent event, float x, float y, int pointer, int button)
-            {
+
+            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
                 dispose();
-                playerName = usernameTextField.getText();
+                Multiplayer.me.pseudo = usernameTextField.getText();
                 mainScreen = new MainScreen(game);
                 mainScreen.load();
-                game.setScreen( mainScreen );
+                game.setScreen(mainScreen);
             }
         });
 
-        startButton.addListener(new InputListener()
-        {
+        startButton.addListener(new InputListener() {
             boolean playing = false;
 
             @Override
@@ -109,23 +121,22 @@ public class MainMenu extends BaseScreen
         TextButton joinButton = new TextButton("Rejoindre une partie", game.skin, "uiTextButtonStyle");
         joinButton.getLabel().setTouchable(Touchable.disabled);
         joinButton.addListener(
-                new InputListener()
-                {
-                    public boolean touchDown (InputEvent event, float x, float y, int pointer,
-                                              int button)
-                    { return true; }
-                    public void touchUp (InputEvent event, float x, float y, int pointer, int button)
-                    {
+                new InputListener() {
+                    public boolean touchDown(InputEvent event, float x, float y, int pointer,
+                                             int button) {
+                        return true;
+                    }
+
+                    public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
                         dispose();
-                        playerName = usernameTextField.getText();
+                        Multiplayer.me.pseudo = usernameTextField.getText();
                         mainScreen = new MainScreen(game);
                         mainScreen.load();
-                        game.setScreen( mainScreen );
+                        game.setScreen(mainScreen);
                     }
                 });
 
-        joinButton.addListener(new InputListener()
-        {
+        joinButton.addListener(new InputListener() {
             boolean playing = false;
 
             @Override
@@ -147,13 +158,13 @@ public class MainMenu extends BaseScreen
 
         TextButton quitButton = new TextButton("Quit", game.skin, "uiTextButtonStyle");
         quitButton.addListener(
-                new InputListener()
-                {
-                    public boolean touchDown (InputEvent event, float x, float y, int pointer,
-                                              int button)
-                    { return true; }
-                    public void touchUp (InputEvent event, float x, float y, int pointer, int button)
-                    {
+                new InputListener() {
+                    public boolean touchDown(InputEvent event, float x, float y, int pointer,
+                                             int button) {
+                        return true;
+                    }
+
+                    public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
                         System.out.println("yo");
                         Gdx.app.exit();
                     }
@@ -164,15 +175,14 @@ public class MainMenu extends BaseScreen
 
         TextButton optionButton = new TextButton("Options", game.skin, "uiTextButtonStyle");
         optionButton.addListener(
-                new InputListener()
-                {
-                    public boolean touchDown (InputEvent event, float x, float y, int pointer,
-                                              int button)
-                    { return true; }
-                    public void touchUp (InputEvent event, float x, float y, int pointer, int button)
-                    {
+                new InputListener() {
+                    public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                        return true;
+                    }
+
+                    public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
                         togglePaused();
-                        optionOverlay.setVisible( true );
+                        optionOverlay.setVisible(true);
                     }
                 });
 
@@ -181,25 +191,22 @@ public class MainMenu extends BaseScreen
 
         TextButton returnButton = new TextButton("Return", game.skin, "uiTextButtonStyle");
         returnButton.addListener(
-                new InputListener()
-                {
-                    public boolean touchDown (InputEvent event, float x, float y, int pointer,
-                                              int button)
-                    { return true; }
-                    public void touchUp (InputEvent event, float x, float y, int pointer, int button)
-                    {
+                new InputListener() {
+                    public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                        return true;
+                    }
+
+                    public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
                         togglePaused();
-                        optionOverlay.setVisible( false );
+                        optionOverlay.setVisible(false);
                     }
                 });
 
-        final Slider audioSlider = new Slider(0, 1, 0.005f, false, game.skin, "uiSliderStyle" );
-        audioSlider.setValue( audioVolume );
+        final Slider audioSlider = new Slider(0, 1, 0.005f, false, game.skin, "uiSliderStyle");
+        audioSlider.setValue(audioVolume);
         audioSlider.addListener(
-                new ChangeListener()
-                {
-                    public void changed(ChangeEvent event, Actor actor)
-                    {
+                new ChangeListener() {
+                    public void changed(ChangeEvent event, Actor actor) {
                         audioVolume = audioSlider.getValue();
                         instrumental.setVolume(audioVolume);
                     }
@@ -222,56 +229,55 @@ public class MainMenu extends BaseScreen
         stacker.add(uiTable);
         stacker.add(optionOverlay);
 
-        game.skin.add("white", new Texture( Gdx.files.internal("GameUIAssets/white4px.png")) );
-        Drawable optionBackground = game.skin.newDrawable("white", new Color(0,0,0,0.8f) );
+        game.skin.add("white", new Texture(Gdx.files.internal("GameUIAssets/white4px.png")));
+        Drawable optionBackground = game.skin.newDrawable("white", new Color(0, 0, 0, 0.8f));
 
         optionOverlay.setBackground(optionBackground);
 
         background.toBack();
 
         Texture leftArrowTexture = new Texture(Gdx.files.internal("MenuAssets/arrowSilver_left.png"));
-        game.skin.add("leftArrow", leftArrowTexture );
+        game.skin.add("leftArrow", leftArrowTexture);
         Button.ButtonStyle leftArrowStyle = new Button.ButtonStyle();
         leftArrowStyle.up = game.skin.getDrawable("leftArrow");
-        leftButton = new Button( leftArrowStyle );
+        leftButton = new Button(leftArrowStyle);
         leftButton.addListener(
-                new InputListener()
-                {
-                    public boolean touchDown (InputEvent event, float x, float y, int pointer, int button)
-                    {
+                new InputListener() {
+                    public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                         return true;
                     }
-                    public void touchUp (InputEvent event, float x, float y, int pointer, int button)
-                    {
-                        Cell<Image> cell = uiTable.getCell(currentAvatar);
+
+                    public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+                        Cell<BaseActor> cell = uiTable.getCell(currentAvatar);
                         cell.clearActor();
 
                         currentAvatarNumber = modulo(currentAvatarNumber - 1, 10);
                         currentAvatar = avatarImages[currentAvatarNumber];
+                        Multiplayer.me.avatar = currentAvatar;
+                        Multiplayer.me.avatarName = animalNames[currentAvatarNumber];
                         cell.setActor(currentAvatar);
-
                     }
                 });
 
         Texture rightArrowTexture = new Texture(Gdx.files.internal("MenuAssets/arrowSilver_right.png"));
-        game.skin.add("rightArrow", rightArrowTexture );
+        game.skin.add("rightArrow", rightArrowTexture);
         Button.ButtonStyle rightArrowStyle = new Button.ButtonStyle();
         rightArrowStyle.up = game.skin.getDrawable("rightArrow");
-        Button rightButton = new Button( rightArrowStyle );
+        Button rightButton = new Button(rightArrowStyle);
         rightButton.addListener(
-                new InputListener()
-                {
-                    public boolean touchDown (InputEvent event, float x, float y, int pointer, int button)
-                    {
+                new InputListener() {
+                    public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                         return true;
                     }
-                    public void touchUp (InputEvent event, float x, float y, int pointer, int button)
-                    {
-                        Cell<Image> cell = uiTable.getCell(currentAvatar);
+
+                    public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+                        Cell<BaseActor> cell = uiTable.getCell(currentAvatar);
                         cell.clearActor();
 
                         currentAvatarNumber = modulo(currentAvatarNumber + 1, 10);
                         currentAvatar = avatarImages[currentAvatarNumber];
+                        Multiplayer.me.avatar = currentAvatar;
+                        Multiplayer.me.avatarName = animalNames[currentAvatarNumber];
                         cell.setActor(currentAvatar);
 
                     }
@@ -307,13 +313,11 @@ public class MainMenu extends BaseScreen
 
     }
 
-    public void update(float dt)
-    {
+    public void update(float dt) {
 
     }
 
-    public void dispose()
-    {
+    public void dispose() {
         instrumental.dispose();
     }
 

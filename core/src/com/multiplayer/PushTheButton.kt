@@ -32,7 +32,6 @@ class PushTheButton : ApplicationAdapter() {
 
     lateinit var courrier: Courrier
     lateinit var key: Decryptor
-    val clientList = ClientList(1)
     val buttonList = ButtonList()
 
     val windowWidth = 1280f
@@ -65,11 +64,11 @@ class PushTheButton : ApplicationAdapter() {
 
         buttonList.add(redButton)
         buttonList.load()
-        key = Decryptor()
         coordMouse = BitmapFont()
         coordMouse.setColor(0f, 0f, 0f, 1f)
 
-        if (isServer) ServerMaker(port, clientList).thread.start()
+        if (isServer) ServerMaker(port, Multiplayer.clientList).thread.start()
+
 
         // Il faut abandonner les mutilples thread et juste le faire dans render
 
@@ -83,9 +82,7 @@ class PushTheButton : ApplicationAdapter() {
         MainConstants.camera = camera
         Multiplayer.courrier = courrier
         Multiplayer.buttonList = buttonList
-        Multiplayer.clientList = clientList
         MainConstants.batch = batch
-        Multiplayer.key = key
     }
 
 

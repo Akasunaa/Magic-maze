@@ -1,9 +1,17 @@
 package com.tiles;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
+import com.menu.BaseActor;
+import com.utils.Multiplayer;
+
+import java.io.IOException;
+import java.io.Serializable;
+
 import static com.utils.Directions.numberDirections;
 import static com.utils.Functions.modulo;
 
-public class Player {
+public class Player implements Serializable {
     boolean north;
     boolean south;
     boolean east;
@@ -11,7 +19,18 @@ public class Player {
     boolean shortcutTaker;
     boolean escalatorTaker;
 
+    public String pseudo;
+    public transient BaseActor avatar;
+    public String avatarName;
+
     Pawn pawn = null;
+
+    public Player() {
+    }
+    public Player load() {
+        avatar = new BaseActor(new Texture(Gdx.files.internal("Avatars/" + avatarName + ".png")));
+        return this;
+    }
 
     public Player(boolean north,
             boolean south,
@@ -40,6 +59,15 @@ public class Player {
         this.west = west;
         this.shortcutTaker = shortcutTaker;
         this.escalatorTaker = escalatorTaker;
+    }
+
+    public void setPlayer(Player player) {
+        north = player.north;
+        south = player.south;
+        west = player.west;
+        east = player.east;
+        escalatorTaker = player.escalatorTaker;
+        shortcutTaker = player.shortcutTaker;
     }
 
     public Player rotate(int i) {

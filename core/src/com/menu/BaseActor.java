@@ -1,5 +1,6 @@
 package com.menu;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
@@ -21,6 +22,15 @@ public class BaseActor extends Actor
         boundary = new Rectangle();
         velocityX = 0;
         velocityY = 0;
+    }
+
+    public BaseActor(Texture t) {
+        super();
+        region = new TextureRegion();
+        boundary = new Rectangle();
+        velocityX = 0;
+        velocityY = 0;
+        setTexture(t);
     }
 
     public void setTexture(Texture t)

@@ -8,7 +8,7 @@ public class ClientList {
     int numberClient = 0;
     int maxClient;
 
-    ClientList(int max) {
+    public ClientList(int max) {
         clientList = new ArrayList<>();
         maxClient = max;
     }
@@ -38,6 +38,10 @@ public class ClientList {
             }
         }
         return null;
+    }
+
+    public Client get (int i) {
+        return clientList.get(i);
     }
 
 

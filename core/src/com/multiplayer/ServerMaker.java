@@ -25,7 +25,7 @@ import static com.utils.Multiplayer.key;
 public class ServerMaker {
     Thread thread;
 
-    ServerMaker(final int port, final ClientList clientList) {
+    public ServerMaker(final int port, final ClientList clientList) {
         //clientList = cL;
         //this.key = key;
         thread = new Thread(new Runnable() {
@@ -41,15 +41,18 @@ public class ServerMaker {
                 Client client;
 
                 // Première boucle pour récupérer tous les clients
+                System.out.println("Server: Beginning first loop");
                 while (!clientList.isFull()) {
                     socket = serverSocket.accept(null); // On récupère une socket qui demande une connection
                     client = new Client(socket);
                     if (!clientList.isIn(client)) {
                         clientList.add(client); // On vérifie si le client n'est pas dans la liste, et on l'ajoute
-                        System.out.println("Client added: " + client.getIp() + " as " + client.getId());
+                        System.out.println("Server: Client added: " + client.getIp() + " as " + client.getId());
                     }
                 }
 
+                // Deuxième boucle pour bien mettre en place les sockets
+                System.out.println("Server: Beginning second loop");
                 for (Client tempClient : clientList.clientList) {
                     try {
                         tempClient.getSendingSocket().getOutputStream().write(("Server send ReceivingSocket \n").getBytes());
@@ -63,6 +66,7 @@ public class ServerMaker {
                 BufferedReader buffer; // Le Buffer
                 InputStream inputStream; // Et l'InputStream
                 // Deuxième boucle pour regarder les actions des clients
+                System.out.println("Server: Beginning last loop");
                 while (true) {
                     for (Client tempClient : clientList.clientList) {
                         socket = tempClient.getSendingSocket(); // On prends la socket du client
@@ -81,5 +85,9 @@ public class ServerMaker {
                 }
             }
         });
+    }
+
+    public void startThread() {
+        thread.start();
     }
 }
