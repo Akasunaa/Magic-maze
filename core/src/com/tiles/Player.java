@@ -48,8 +48,10 @@ public class Player {
     }
     public void takesPawn(Pawn pawn) {
         this.pawn = pawn;
+        //TODO Envoyer le message indiquant qu'on a pris le pion
     }
     public void dropsPawn(Pawn pawn) {
         this.pawn = null;
+        //TODO Envoyer le message indiquant qu'on a posé le pion, avec ses coordonées
     }
 }

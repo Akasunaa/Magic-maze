@@ -126,8 +126,10 @@ public class Queue implements Serializable {
     public void load() { // Serialization
         hidden = new BaseActor();
         hidden.setTexture(new Texture("tuiles/hiddenOrange.png"));
+        hidden.setOrigin(size/2,size/2);
         mainScreen.getUiStage().addActor(hidden);
         shown = new BaseActor();
+        shown.setOrigin(size/2,size/2);
         mainScreen.getUiStage().addActor(shown);
         loadSprite();
         updateSpriteSize();
@@ -141,6 +143,7 @@ public class Queue implements Serializable {
         sprite.setVisible(false);
         shown.setTexture(sprite.region.getTexture());
         shown.setVisible(false);
+        shown.setRotation(0);
     }
 
     public void draw() {
@@ -149,6 +152,7 @@ public class Queue implements Serializable {
     }
 
     private void place(Vector2 mousePosition) {
+        //TODO Envoyer le message qui dit de placer la tuile au bon endroit
         tileList.add(head); // On pose la tuile
         head.x = mousePosition.x; //Bon c'est classique ça
         head.y = mousePosition.y;
@@ -181,15 +185,28 @@ public class Queue implements Serializable {
         Vector2 mousePosition = Functions.mouseInput();
         // Je le sauvegarde parce qu'on va le modifier
         if (!isEmpty) { // On fait rien si elle est vide
-            if (isMovable) { // Truc classique pour avoir deux comportements sur un seul objet
+            if (!isMovable && !isHidden &&
+                    Gdx.input.isButtonJustPressed(Input.Buttons.RIGHT) &&
+                    (x < mousePositionStatic.x) && (mousePositionStatic.x < x + size) &&
+                    (y < mousePositionStatic.y) && (mousePositionStatic.y < y + size)) {
+                isMovable = true;
                 shown.setVisible(false);
                 sprite.setVisible(true);
                 sprite.toFront();
+                //TODO Envoyer le message indiquant qu'on a sélectionné la tuile
+            }
+            if (isMovable) { // Truc classique pour avoir deux comportements sur un seul objet
                 mousePosition.sub(tileSize / 2, tileSize / 2); // Pour que le sprite soit centré sur la souris
                 sprite.setX(mousePosition.x); // On suit la souris
                 sprite.setY(mousePosition.y);
-                if (Gdx.input.isKeyJustPressed(Input.Keys.E)) head.rotate(+1);
-                if (Gdx.input.isKeyJustPressed(Input.Keys.A)) head.rotate(-1);
+                if (Gdx.input.isKeyJustPressed(Input.Keys.E)) {
+                    head.rotate(+1);
+                    shown.rotateBy(90);
+                }
+                if (Gdx.input.isKeyJustPressed(Input.Keys.A)) {
+                    head.rotate(-1);
+                    shown.rotateBy(-90);
+                }
                 if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {// si on sélectionne un endroit
                     if (isFirst) {
                         isFirst = false;
@@ -213,17 +230,6 @@ public class Queue implements Serializable {
                     isMovable = false;
                 }
             }
-            isMovable = isMovable || !isHidden &&
-                    (Gdx.input.isButtonJustPressed(Input.Buttons.RIGHT) &&
-                            (x < mousePositionStatic.x) && (mousePositionStatic.x < x + size &&
-                            (y < mousePositionStatic.y) && (mousePositionStatic.y < y + size)));
-            // Java est paresseux, donc tout ce qu'il y a après le || n'est pas vérifié
-            // si isMovable est true
-//            if (isHidden && (Gdx.input.isButtonJustPressed(Input.Buttons.RIGHT) &&
-//                    (x < mousePositionStatic.x) && (mousePositionStatic.x < x + size &&
-//                    (y < mousePositionStatic.x) && (mousePositionStatic.y < y + size)))) {
-//                reveal();
-//            }
         }
     }
 }
