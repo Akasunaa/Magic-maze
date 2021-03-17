@@ -121,6 +121,10 @@ public class GameInterface extends BaseScreen {
 
         //la c'est les avatars des joueurs, faudra changer les sprites, c'est par joueur avec en dessous l'indication de son pouvoir
         avatars = new BaseActor[4];
+
+        // On créé cette liste ici pour mettre des placeholders qu'on remplace ensuite par des vrais noms.
+        String[] pseudoList = new String[]{"Joueur 1", "Joueur 2", "Joueur 3", "Joueur 4"};
+
         for (int i = 0; i < Multiplayer.numberOfPlayers; i++) {
             avatars[i] = Multiplayer.clientList.get(i).player.load().avatar;
             avatars[i].setSize(90, 90);
@@ -143,6 +147,7 @@ public class GameInterface extends BaseScreen {
                     return true;
                 }
             });
+            pseudoList[i] = Multiplayer.clientList.get(i).player.pseudo;
         }
         for (int i = Multiplayer.numberOfPlayers; i < 4; i++) {
             avatars[i] = new BaseActor(new Texture(Gdx.files.internal("interface/kuro" + i + ".png")));
@@ -166,6 +171,18 @@ public class GameInterface extends BaseScreen {
                     return true;
                 }
             });
+        }
+
+        //affichage des pseudos des joueurs
+        BitmapFont pseudoFont = getFontSize(18*2);
+        LabelStyle pseudoStyle = new LabelStyle(pseudoFont, Color.WHITE);
+        //Les pseudos en tant que label
+        Label[] pseudoLabelList = new Label[4];
+        for (int i = 0; i <=3; i ++) {
+            pseudoLabelList[i] = new Label(pseudoList[i], pseudoStyle);
+            pseudoLabelList[i].setFontScale(0.5f);
+            pseudoLabelList[i].setPosition(avatars[i].getX(), avatars[i].getY()-30);
+            uiStage.addActor(pseudoLabelList[i]);
         }
 
         // Les pouvoirs (il doit y avoir un moyen de faire ça plus propre)
@@ -203,20 +220,6 @@ public class GameInterface extends BaseScreen {
         elevator.setTexture(new Texture(Gdx.files.internal("interface/escalator.png")));
         elevator.setPosition(avatars[3].getX() - 12, avatars[3].getY());
         uiStage.addActor(elevator);
-
-        //affichage des pseudos des joueurs
-        BitmapFont pseudoFont = getFontSize(18*2);
-        LabelStyle pseudoStyle = new LabelStyle(pseudoFont, Color.WHITE);
-        //Les pseudos, du coup faura faire en sorte que ce soit les bons
-        Label[] pseudoLabelList = new Label[4];
-        String[] pseudoList = new String[]{Multiplayer.me.pseudo, "Joueur 2", "Joueur 3", "Joueur 4"};
-
-        for (int i = 0; i <=3; i ++) {
-            pseudoLabelList[i] = new Label(pseudoList[i], pseudoStyle);
-            pseudoLabelList[i].setFontScale(0.5f);
-            pseudoLabelList[i].setPosition(avatars[i].getX(), avatars[i].getY()-30);
-            uiStage.addActor(pseudoLabelList[i]);
-        }
 
         //la c'est le compteur de plaques restantes en bas a droite
 

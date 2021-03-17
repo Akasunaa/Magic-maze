@@ -10,7 +10,7 @@ import java.net.UnknownHostException;
 public class Multiplayer {
     public static Courrier courrier;
     public static ButtonList buttonList;
-    public static int numberOfPlayers = 1;
+    public static int numberOfPlayers = 2;
     public static ClientList clientList = new ClientList(Multiplayer.numberOfPlayers);
     public static Decryptor key = new Decryptor();
     public static boolean isServer = true;
