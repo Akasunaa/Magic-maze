@@ -6,6 +6,7 @@ import com.utils.Multiplayer
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import java.io.BufferedReader
+import java.io.InputStream
 import java.io.InputStreamReader
 
 class Decryptor() {
@@ -21,10 +22,13 @@ class Decryptor() {
                 when (receiver) {
                     "Player" -> {
                         println("$suffix: Getting a Player")
-                        val client = Multiplayer.clientList.getClient(sender)
-                        val inputStream = if (isServer) client.sendingSocket.inputStream else Multiplayer.courrier.receivingSocket.inputStream
+                        lateinit var inputStream: InputStream
+                        (if (isServer) {
+                            inputStream = Multiplayer.clientList.getClient(sender).sendingSocket.inputStream
+                            println("Yes i am a server")
+                        } else inputStream = Multiplayer.courrier.receivingSocket.inputStream)
                         val tempString = BufferedReader(InputStreamReader(inputStream)).readLine()
-                        //println(tempString)
+                        println(tempString)
                         val tempPlayer = Multiplayer.mapper.readValue(tempString, Player::class.java)
                         Multiplayer.playerList.add(tempPlayer)
                         if (isServer) {
@@ -32,6 +36,7 @@ class Decryptor() {
                             for (client in Multiplayer.clientList.clientList) {
                                 client.receivingSocket.getOutputStream().write("$sender sending Player \n".toByteArray())
                                 client.receivingSocket.getOutputStream().write((tempString + " \n").toByteArray())
+                                println("$suffix: Redistributing the Player to ${client.id}")
                             }
                         }
                     }

@@ -81,11 +81,7 @@ public class ServerMaker {
                     }
                 }
 
-                try {
-                    Thread.sleep(50);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+
                 // Je... ne suis pas sûr de pourquoi je suis obligé de faire ça
                 // C'est très bizarre, je pense que c'est dû à une double écriture sur le buffer
                 // En même temps ? Je suis vraiment pas sûr
