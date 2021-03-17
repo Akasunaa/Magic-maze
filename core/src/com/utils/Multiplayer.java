@@ -6,11 +6,13 @@ import com.tiles.Player;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Multiplayer {
     public static Courrier courrier;
     public static ButtonList buttonList;
-    public static int numberOfPlayers = 2;
+    public static int numberOfPlayers = 1;
     public static ClientList clientList = new ClientList(Multiplayer.numberOfPlayers);
     public static Decryptor key = new Decryptor();
     public static boolean isServer = true;
@@ -29,6 +31,7 @@ public class Multiplayer {
             e.printStackTrace();
         }
     }
+     public static List<Player> playerList = new ArrayList();
 
     public static Player me = new Player();
 

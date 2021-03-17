@@ -126,7 +126,7 @@ public class GameInterface extends BaseScreen {
         String[] pseudoList = new String[]{"Joueur 1", "Joueur 2", "Joueur 3", "Joueur 4"};
 
         for (int i = 0; i < Multiplayer.numberOfPlayers; i++) {
-            avatars[i] = Multiplayer.clientList.get(i).player.load().avatar;
+            avatars[i] = Multiplayer.playerList.get(i).load().avatar;
             avatars[i].setSize(90, 90);
             avatars[i].setPosition(viewWidth - avatars[i].getWidth() - 45, viewHeight - avatars[i].getHeight() - 225 - 150 * i);
             uiStage.addActor(avatars[i]);
@@ -147,7 +147,7 @@ public class GameInterface extends BaseScreen {
                     return true;
                 }
             });
-            pseudoList[i] = Multiplayer.clientList.get(i).player.pseudo;
+            pseudoList[i] = Multiplayer.playerList.get(i).pseudo;
         }
         for (int i = Multiplayer.numberOfPlayers; i < 4; i++) {
             avatars[i] = new BaseActor(new Texture(Gdx.files.internal("interface/kuro" + i + ".png")));

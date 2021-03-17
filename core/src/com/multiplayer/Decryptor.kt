@@ -3,8 +3,7 @@ package com.multiplayer
 
 import com.tiles.Player
 import com.utils.Multiplayer
-import com.utils.Multiplayer.buttonList
-import com.utils.Multiplayer.clientList
+import com.utils.Multiplayer.*
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import java.io.BufferedReader
@@ -38,7 +37,13 @@ class Decryptor {
                         println("Server : Getting a Player")
                         val tempString = BufferedReader(InputStreamReader(clientList.getClient(sender).sendingSocket.inputStream)).readLine()
                         //println(tempString)
-                        clientList.getClient(sender).player = Multiplayer.mapper.readValue(tempString, Player::class.java)
+                        if (isServer) {
+                            clientList.getClient(sender).player = mapper.readValue(tempString, Player::class.java)
+                            for (client in clientList.clientList) {
+                                client.receivingSocket.getOutputStream().write("Server sending Player".toByteArray())
+                                client.receivingSocket.getOutputStream().write(tempString.toByteArray())                            }
+                        }
+                        playerList.add(mapper.readValue(tempString, Player::class.java))
                     }
                     "else" -> {
                     }
