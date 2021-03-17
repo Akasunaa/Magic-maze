@@ -5,6 +5,7 @@ import com.badlogic.gdx.Net;
 import com.badlogic.gdx.net.ServerSocket;
 import com.badlogic.gdx.net.ServerSocketHints;
 import com.badlogic.gdx.net.Socket;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.utils.Multiplayer;
 
 import java.io.BufferedReader;
@@ -69,6 +70,11 @@ public class ServerMaker {
                 InputStream inputStream; // Et l'InputStream
                 // Une boucle pour récupérer les avatars, rien à changer par rapport à une boucle normale
                 for (Client tempClient : clientList.clientList) {
+                    try {
+                        tempClient.receivingSocket.getOutputStream().write("Server send Player \n".getBytes());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                     socket = tempClient.getSendingSocket(); // On prends la socket du client
                     inputStream = socket.getInputStream();
                     try {
@@ -80,13 +86,50 @@ public class ServerMaker {
                         e.printStackTrace();
                     }
                 }
+                int sleepTime = 30;
 
+                // Une boucle pour redistribuer les players
+                for (Client tempClient : Multiplayer.clientList.clientList) {
+                    String tempString = null;
+                    try {
+                        tempString = Multiplayer.mapper.writeValueAsString(tempClient.player);
+                    } catch (JsonProcessingException e) {
+                        e.printStackTrace();
+                    }
+                    for (Client tempTempClient : Multiplayer.clientList.clientList) {
+                        try {
+                            Thread.sleep(sleepTime);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        try {
+                            tempTempClient.receivingSocket.getOutputStream().write((tempClient.getId() + " sending Player \n").getBytes());
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        try {
+                            Thread.sleep(sleepTime);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        try {
+                            tempTempClient.receivingSocket.getOutputStream().write((tempString + " \n").getBytes());
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        System.out.println("Server: Redistributing the Player of " + tempClient.getId() + " to " + tempTempClient.getId());
+                    }
+                }
 
+                try {
+                    Thread.sleep(sleepTime);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
                 // Je... ne suis pas sûr de pourquoi je suis obligé de faire ça
-                // C'est très bizarre, je pense que c'est dû à une double écriture sur le buffer
-                // En même temps ? Je suis vraiment pas sûr
-                // Peut être la taille du buffer ?
-                // idk
+                // C'est très bizarre, je pense qu'il doit y avoir des histoires de voyage temporel
+                // Ou un truc du genre
+                // Parce que certains messages se retrouvent envoyés après ceux qui devraient l'être avant...
 
                 for (Client tempClient : clientList.clientList) {
                     try {

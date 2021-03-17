@@ -26,9 +26,9 @@ class Courrier(val id: String, port: Int, ip: String) {
         socketHints.connectTimeout = 0
         sendingSocket = Gdx.net.newClientSocket(Net.Protocol.TCP, ip, port, socketHints)
         sendMessage("connected $ip")
-        val waitForIt = BufferedReader(InputStreamReader(sendingSocket.inputStream)).readLine()
+        var waitForIt = BufferedReader(InputStreamReader(sendingSocket.inputStream)).readLine()
         receivingSocket = Gdx.net.newClientSocket(Net.Protocol.TCP, ip, port, socketHints)
-        Thread.sleep(100)
+        waitForIt = BufferedReader(InputStreamReader(receivingSocket.inputStream)).readLine()
         sendObject(Multiplayer.me)
         ClientListener(Multiplayer.key, receivingSocket).startThread()
     }

@@ -22,7 +22,6 @@ public class ClientListener {
                 InputStreamReader inputStreamReader = new InputStreamReader(socket.getInputStream());
                 while (true) {
                     try {
-                        System.out.println("Hello");
                         buffer = new BufferedReader(inputStreamReader);
                         String message = buffer.readLine();
                         key.decryptMessage(message, false);

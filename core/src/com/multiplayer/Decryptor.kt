@@ -22,23 +22,15 @@ class Decryptor() {
                 when (receiver) {
                     "Player" -> {
                         println("$suffix: Getting a Player")
-                        lateinit var inputStream: InputStream
-                        (if (isServer) {
-                            inputStream = Multiplayer.clientList.getClient(sender).sendingSocket.inputStream
-                            println("Yes i am a server")
-                        } else inputStream = Multiplayer.courrier.receivingSocket.inputStream)
+                        val inputStream =
+                                if (isServer) Multiplayer.clientList.getClient(sender).sendingSocket.inputStream
+                                else Multiplayer.courrier.receivingSocket.inputStream
                         val tempString = BufferedReader(InputStreamReader(inputStream)).readLine()
-                        println(tempString)
                         val tempPlayer = Multiplayer.mapper.readValue(tempString, Player::class.java)
-                        Multiplayer.playerList.add(tempPlayer)
                         if (isServer) {
                             Multiplayer.clientList.getClient(sender).player = tempPlayer
-                            for (client in Multiplayer.clientList.clientList) {
-                                client.receivingSocket.getOutputStream().write("$sender sending Player \n".toByteArray())
-                                client.receivingSocket.getOutputStream().write((tempString + " \n").toByteArray())
-                                println("$suffix: Redistributing the Player to ${client.id}")
-                            }
                         }
+                        else Multiplayer.playerList.add(tempPlayer)
                     }
                     "else" -> {
                     }
