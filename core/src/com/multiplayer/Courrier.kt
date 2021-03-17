@@ -29,7 +29,7 @@ class Courrier(val id: String, port: Int, ip: String) {
         val waitForIt = BufferedReader(InputStreamReader(sendingSocket.inputStream)).readLine()
         receivingSocket = Gdx.net.newClientSocket(Net.Protocol.TCP, ip, port, socketHints)
         sendObject(Multiplayer.me)
-        SimpleThread(receivingSocket).start()
+        ClientListener(Multiplayer.key, receivingSocket).startThread()
     }
 
     fun sendMessage(message: String) {
@@ -54,23 +54,3 @@ class Courrier(val id: String, port: Int, ip: String) {
     }
 
 }
-
-
-class SimpleThread(val socket: Socket) : Thread() {
-    override fun run() {
-        val inputStream = socket.getInputStream()
-        while (true) {
-            try {
-                if (inputStream.available() != 0) {
-                    // On lit la data depuis la socket dans un buffer
-                    val buffer = BufferedReader(InputStreamReader(inputStream))
-                    //Et on la décrypte
-                    Multiplayer.key.decryptMessage(buffer.readLine(), false)
-                }
-            } catch (e: IOException) { //Standard Procedure for dealing with Sockets
-                e.printStackTrace()
-            }
-        }
-    }
-}
-

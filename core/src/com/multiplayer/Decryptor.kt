@@ -3,7 +3,6 @@ package com.multiplayer
 
 import com.tiles.Player
 import com.utils.Multiplayer
-import com.utils.Multiplayer.*
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import java.io.BufferedReader
@@ -11,51 +10,36 @@ import java.io.InputStreamReader
 
 class Decryptor() {
     fun decryptMessage(message: String,isServer: Boolean) {
-        val suffix = if (Multiplayer.isServer) "Server" else "Client"
+        val suffix = if (isServer) "Server" else "Client"
         val phrase = message.split(' ')
         val sender = phrase[0]
         val action = phrase[1]
         val receiver = phrase[2]
-        println("$suffix: message")
+        println("$suffix: Message Received = $message")
         when (action) {
-            "pressed" -> {
-                println("$suffix: $receiver pressed by $sender")
-                try {
-                    buttonList.getButton(receiver).onClickedRemotely()
-                } catch (e: NullPointerException) {
-                    println("$suffix: Reference not in database")
-                }
-            }
             "sending" -> {
                 when (receiver) {
-                    "BigButton" -> {
-                        println("$suffix: Getting a BigButton")
-                        val tempString = BufferedReader(InputStreamReader(clientList.getClient(sender).sendingSocket.inputStream)).readLine()
-                        //println(tempString)
-                        buttonList.add(Json.decodeFromString<BigButton>(tempString))
-                    }
                     "Player" -> {
                         println("$suffix: Getting a Player")
-                        val tempString = BufferedReader(InputStreamReader(clientList.getClient(sender).sendingSocket.inputStream)).readLine()
+                        val client = Multiplayer.clientList.getClient(sender)
+                        val inputStream = if (isServer) client.sendingSocket.inputStream else Multiplayer.courrier.receivingSocket.inputStream
+                        val tempString = BufferedReader(InputStreamReader(inputStream)).readLine()
                         //println(tempString)
-                        val tempPlayer = mapper.readValue(tempString, Player::class.java)
-                        println("$suffix: We got there 1")
+                        val tempPlayer = Multiplayer.mapper.readValue(tempString, Player::class.java)
+                        Multiplayer.playerList.add(tempPlayer)
                         if (isServer) {
-                            clientList.getClient(sender).player = tempPlayer
-                            for (client in clientList.clientList) {
-                                client.receivingSocket.getOutputStream().write("Server sending Player".toByteArray())
-                                client.receivingSocket.getOutputStream().write(tempString.toByteArray())                            }
+                            Multiplayer.clientList.getClient(sender).player = tempPlayer
+                            for (client in Multiplayer.clientList.clientList) {
+                                client.receivingSocket.getOutputStream().write("$sender sending Player \n".toByteArray())
+                                client.receivingSocket.getOutputStream().write((tempString + " \n").toByteArray())
+                            }
                         }
-                        println("$suffix: We got there 2")
-                        playerList.add(tempPlayer)
-                        println("$suffix: We got there 3")
-
                     }
                     "else" -> {
                     }
                 }
             }
-            "setAndGo" -> isServerSetAndGo = true;
+            "setAndGo" -> Multiplayer.isServerSetAndGo = true;
             "ping" -> {
                 TODO("Récupérer le pseudal du joueur pingé et le pinger")
             }

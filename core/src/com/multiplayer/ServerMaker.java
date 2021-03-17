@@ -64,6 +64,7 @@ public class ServerMaker {
                     tempClient.receiveSocket(socket);
                 }
 
+                System.out.println("Server: Beginning third loop");
                 BufferedReader buffer; // Le Buffer
                 InputStream inputStream; // Et l'InputStream
                 // Une boucle pour récupérer les avatars, rien à changer par rapport à une boucle normale
@@ -71,19 +72,30 @@ public class ServerMaker {
                     socket = tempClient.getSendingSocket(); // On prends la socket du client
                     inputStream = socket.getInputStream();
                     try {
-                        if (inputStream.available() != 0) {
-                            // On lit la data depuis la socket dans un buffer
-                            buffer = new BufferedReader(new InputStreamReader(inputStream));
-                            //Et on la décrypte
-                            key.decryptMessage(buffer.readLine(), true);
-                        }
+                        // On lit la data depuis la socket dans un buffer
+                        buffer = new BufferedReader(new InputStreamReader(inputStream));
+                        //Et on la décrypte
+                        key.decryptMessage(buffer.readLine(), true);
                     } catch (IOException e) { //Standard Procedure for dealing with Sockets
                         e.printStackTrace();
                     }
                 }
+
+                try {
+                    Thread.sleep(50);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                // Je... ne suis pas sûr de pourquoi je suis obligé de faire ça
+                // C'est très bizarre, je pense que c'est dû à une double écriture sur le buffer
+                // En même temps ? Je suis vraiment pas sûr
+                // Peut être la taille du buffer ?
+                // idk
+
                 for (Client tempClient : clientList.clientList) {
                     try {
-                        tempClient.getReceivingSocket().getOutputStream().write("Server setAndGo nothing".getBytes());
+                        tempClient.receivingSocket.getOutputStream().write(("Server setAndGo nothing \n").getBytes());
+                        System.out.println("Server: sent setAndGo to "+ tempClient.getId());
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
