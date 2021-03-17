@@ -49,6 +49,7 @@ class Decryptor {
                     }
                 }
             }
+            "setAndGo" -> isServerSetAndGo = true;
             "ping" -> {
                 TODO("Récupérer le pseudal du joueur pingé et le pinger")
             }

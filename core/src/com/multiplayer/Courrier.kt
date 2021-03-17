@@ -57,8 +57,9 @@ class Courrier(val id: String, port: Int, ip: String) {
 
 
 class SimpleThread(val socket: Socket) : Thread() {
-    public override fun run() {
+    override fun run() {
         val inputStream = socket.getInputStream()
+        println("yes")
         while (true) {
             try {
                 if (inputStream.available() != 0) {

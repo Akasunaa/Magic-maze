@@ -12,7 +12,7 @@ import java.util.List;
 public class Multiplayer {
     public static Courrier courrier;
     public static ButtonList buttonList;
-    public static int numberOfPlayers = 1;
+    public static int numberOfPlayers = 2;
     public static ClientList clientList = new ClientList(Multiplayer.numberOfPlayers);
     public static Decryptor key = new Decryptor();
     public static boolean isServer = true;
@@ -20,6 +20,8 @@ public class Multiplayer {
     public static String serverIP = "157.159.41.36";
     // L'ip de mon PC fixe
     public static String ip;
+
+    public static boolean isServerSetAndGo = false;
 
     // Pour la sérialisation
     public static ObjectMapper mapper = new ObjectMapper();
@@ -31,7 +33,7 @@ public class Multiplayer {
             e.printStackTrace();
         }
     }
-     public static List<Player> playerList = new ArrayList();
+    public static List<Player> playerList = new ArrayList<Player>();
 
     public static Player me = new Player();
 

@@ -91,10 +91,12 @@ public class MainScreen extends BaseScreen {
 
         if (Multiplayer.isServer) new ServerMaker(Multiplayer.port, Multiplayer.clientList).startThread();
         Multiplayer.courrier = new Courrier(Multiplayer.me.pseudo, Multiplayer.port, Multiplayer.serverIP);
-        try {
-            Thread.sleep(2000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+        while (!Multiplayer.isServerSetAndGo) {
+            try {
+                Thread.sleep(10);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
     }
 

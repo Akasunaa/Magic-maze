@@ -5,6 +5,7 @@ import com.badlogic.gdx.Net;
 import com.badlogic.gdx.net.ServerSocket;
 import com.badlogic.gdx.net.ServerSocketHints;
 import com.badlogic.gdx.net.Socket;
+import com.utils.Multiplayer;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -65,7 +66,30 @@ public class ServerMaker {
 
                 BufferedReader buffer; // Le Buffer
                 InputStream inputStream; // Et l'InputStream
-                // Deuxième boucle pour regarder les actions des clients
+                // Une boucle pour récupérer les avatars, rien à changer par rapport à une boucle normale
+                for (Client tempClient : clientList.clientList) {
+                    socket = tempClient.getSendingSocket(); // On prends la socket du client
+                    inputStream = socket.getInputStream();
+                    try {
+                        if (inputStream.available() != 0) {
+                            // On lit la data depuis la socket dans un buffer
+                            buffer = new BufferedReader(new InputStreamReader(inputStream));
+                            //Et on la décrypte
+                            key.decryptMessage(buffer.readLine());
+                        }
+                    } catch (IOException e) { //Standard Procedure for dealing with Sockets
+                        e.printStackTrace();
+                    }
+                }
+                for (Client tempClient : clientList.clientList) {
+                    try {
+                        tempClient.getReceivingSocket().getOutputStream().write("Server setAndGo nothing".getBytes());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+                // On signal que le serveur est prêt et que normalement les clients ont tout reçu
+
                 System.out.println("Server: Beginning last loop");
                 while (true) {
                     for (Client tempClient : clientList.clientList) {
