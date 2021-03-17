@@ -98,6 +98,7 @@ public class MainScreen extends BaseScreen {
                 e.printStackTrace();
             }
         }
+        System.out.println("Getting over it");
     }
 
     public void load() {

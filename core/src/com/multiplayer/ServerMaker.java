@@ -75,7 +75,7 @@ public class ServerMaker {
                             // On lit la data depuis la socket dans un buffer
                             buffer = new BufferedReader(new InputStreamReader(inputStream));
                             //Et on la décrypte
-                            key.decryptMessage(buffer.readLine());
+                            key.decryptMessage(buffer.readLine(), true);
                         }
                     } catch (IOException e) { //Standard Procedure for dealing with Sockets
                         e.printStackTrace();
@@ -100,7 +100,7 @@ public class ServerMaker {
                                 // On lit la data depuis la socket dans un buffer
                                 buffer = new BufferedReader(new InputStreamReader(inputStream));
                                 //Et on la décrypte
-                                key.decryptMessage(buffer.readLine());
+                                key.decryptMessage(buffer.readLine(), true);
                             }
                         } catch (IOException e) { //Standard Procedure for dealing with Sockets
                             e.printStackTrace();

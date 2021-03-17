@@ -59,14 +59,13 @@ class Courrier(val id: String, port: Int, ip: String) {
 class SimpleThread(val socket: Socket) : Thread() {
     override fun run() {
         val inputStream = socket.getInputStream()
-        println("yes")
         while (true) {
             try {
                 if (inputStream.available() != 0) {
                     // On lit la data depuis la socket dans un buffer
                     val buffer = BufferedReader(InputStreamReader(inputStream))
                     //Et on la décrypte
-                    Multiplayer.key.decryptMessage(buffer.readLine())
+                    Multiplayer.key.decryptMessage(buffer.readLine(), false)
                 }
             } catch (e: IOException) { //Standard Procedure for dealing with Sockets
                 e.printStackTrace()

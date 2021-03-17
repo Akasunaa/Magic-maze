@@ -9,41 +9,47 @@ import kotlinx.serialization.json.Json
 import java.io.BufferedReader
 import java.io.InputStreamReader
 
-class Decryptor {
-    fun decryptMessage(message: String) {
+class Decryptor() {
+    fun decryptMessage(message: String,isServer: Boolean) {
+        val suffix = if (Multiplayer.isServer) "Server" else "Client"
         val phrase = message.split(' ')
         val sender = phrase[0]
         val action = phrase[1]
         val receiver = phrase[2]
-        println(message)
+        println("$suffix: message")
         when (action) {
             "pressed" -> {
-                println("$receiver pressed by $sender")
+                println("$suffix: $receiver pressed by $sender")
                 try {
                     buttonList.getButton(receiver).onClickedRemotely()
                 } catch (e: NullPointerException) {
-                    println("Reference not in database")
+                    println("$suffix: Reference not in database")
                 }
             }
             "sending" -> {
                 when (receiver) {
                     "BigButton" -> {
-                        println("Server : Getting a BigButton")
+                        println("$suffix: Getting a BigButton")
                         val tempString = BufferedReader(InputStreamReader(clientList.getClient(sender).sendingSocket.inputStream)).readLine()
                         //println(tempString)
                         buttonList.add(Json.decodeFromString<BigButton>(tempString))
                     }
                     "Player" -> {
-                        println("Server : Getting a Player")
+                        println("$suffix: Getting a Player")
                         val tempString = BufferedReader(InputStreamReader(clientList.getClient(sender).sendingSocket.inputStream)).readLine()
                         //println(tempString)
+                        val tempPlayer = mapper.readValue(tempString, Player::class.java)
+                        println("$suffix: We got there 1")
                         if (isServer) {
-                            clientList.getClient(sender).player = mapper.readValue(tempString, Player::class.java)
+                            clientList.getClient(sender).player = tempPlayer
                             for (client in clientList.clientList) {
                                 client.receivingSocket.getOutputStream().write("Server sending Player".toByteArray())
                                 client.receivingSocket.getOutputStream().write(tempString.toByteArray())                            }
                         }
-                        playerList.add(mapper.readValue(tempString, Player::class.java))
+                        println("$suffix: We got there 2")
+                        playerList.add(tempPlayer)
+                        println("$suffix: We got there 3")
+
                     }
                     "else" -> {
                     }
@@ -67,7 +73,7 @@ class Decryptor {
             }
 
 
-            else -> println("Server : Action not recognized")
+            else -> println("$suffix: Action not recognized")
         }
     }
 
