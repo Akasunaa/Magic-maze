@@ -124,7 +124,7 @@ public class GameInterface extends BaseScreen {
             avatars[i] = new BaseActor();
             avatars[i].setTexture(new Texture(Gdx.files.internal("interface/kuro" + i + ".png")));
             avatars[i].setSize(90, 90);
-            avatars[i].setPosition(viewWidth - avatars[i].getWidth() - 45, viewHeight - avatars[i].getHeight() - 225 - 150 * i);
+            avatars[i].setPosition(viewWidth - avatars[i].getWidth() - 45, viewHeight - avatars[i].getHeight() - 225 - 135 * i);
             uiStage.addActor(avatars[i]);
             final int temp = i;
             avatars[i].addListener(new InputListener() {
