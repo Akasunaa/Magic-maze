@@ -20,6 +20,8 @@ import com.badlogic.gdx.scenes.scene2d.InputListener;
 
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 
+// Faut que je prenne ce qui serve ici et après on delete ça
+
 public class MagicLevel extends BaseScreen
 {
     private AnimatedActor mousey;
