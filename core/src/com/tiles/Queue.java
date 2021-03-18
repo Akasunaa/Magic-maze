@@ -46,9 +46,6 @@ public class Queue implements Serializable {
     private transient BaseActor hidden;
 
     private int numberRevealsDown = 0;
-    public void setNumberRevealsDown(int i) {
-        numberRevealsDown = i;
-    }
 
     private void updateSpriteSize() {
         //sprite.setSize(size, size);
@@ -185,16 +182,6 @@ public class Queue implements Serializable {
         Vector2 mousePosition = Functions.mouseInput();
         // Je le sauvegarde parce qu'on va le modifier
         if (!isEmpty) { // On fait rien si elle est vide
-            if (!isMovable && !isHidden &&
-                    Gdx.input.isButtonJustPressed(Input.Buttons.LEFT) &&
-                    (x < mousePositionStatic.x) && (mousePositionStatic.x < x + size) &&
-                    (y < mousePositionStatic.y) && (mousePositionStatic.y < y + size)) {
-                isMovable = true;
-                shown.setVisible(false);
-                sprite.setVisible(true);
-                sprite.toFront();
-                //TODO Envoyer le message indiquant qu'on a sélectionné la tuile
-            }
             if (isMovable) { // Truc classique pour avoir deux comportements sur un seul objet
                 mousePosition.sub(tileSize / 2, tileSize / 2); // Pour que le sprite soit centré sur la souris
                 sprite.setX(mousePosition.x); // On suit la souris
@@ -229,6 +216,19 @@ public class Queue implements Serializable {
                     }
                     isMovable = false;
                 }
+            }
+            else if (!isHidden &&
+                    Gdx.input.isButtonJustPressed(Input.Buttons.LEFT) &&
+                    (x < mousePositionStatic.x) && (mousePositionStatic.x < x + size) &&
+                    (y < mousePositionStatic.y) && (mousePositionStatic.y < y + size)) {
+                isMovable = true;
+                shown.setVisible(false);
+                sprite.setVisible(true);
+                mousePosition.sub(tileSize / 2, tileSize / 2); // Pour que le sprite soit centré sur la souris
+                sprite.setX(mousePosition.x); // On suit la souris
+                sprite.setY(mousePosition.y);
+                sprite.toFront();
+                //TODO Envoyer le message indiquant qu'on a sélectionné la tuile
             }
         }
     }

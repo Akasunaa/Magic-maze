@@ -73,7 +73,6 @@ public class MainScreen extends BaseScreen {
 
     public MainScreen(MagicGame g, float audioVolume) {
         super(g);
-        instrumental.setVolume(audioVolume);
         audioSlider.setValue( audioVolume );
     }
 
@@ -140,6 +139,7 @@ public class MainScreen extends BaseScreen {
         uiStage.addActor(timeLabel);
 
         instrumental = Gdx.audio.newMusic(Gdx.files.internal("Music&Sound/The Path of the Goblin King.mp3"));
+        instrumental.setVolume(audioVolume);
         instrumental.setLooping(true);
         instrumental.play();
 
