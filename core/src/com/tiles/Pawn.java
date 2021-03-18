@@ -88,6 +88,11 @@ public class Pawn implements Serializable {
         updateCoordinates();
     }
 
+    public void setSpritePosition(float x, float y) {
+        sprite.setX(x);
+        sprite.setY(y);
+    }
+
     public void updateCoordinates() {
         sprite.setX(setCase.getX(setCase.x) + (caseSize - sprite.getWidth()) / 2);
         sprite.setY(setCase.getY(setCase.y) + caseSize / 3);

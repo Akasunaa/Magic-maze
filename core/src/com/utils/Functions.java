@@ -7,9 +7,12 @@ import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.tiles.Case;
+import com.tiles.Pawn;
 import com.tiles.Tile;
 
+import static com.utils.Colors.getColor;
 import static com.utils.MainConstants.camera;
+import static com.utils.TileAndCases.pawnList;
 import static com.utils.TileAndCases.tileList;
 
 public class Functions {
@@ -88,6 +91,15 @@ public class Functions {
                 } catch (ArrayIndexOutOfBoundsException e) {
                     System.out.println("Clicked border of Tile n°" + tile.number + " in Pawn.findCase");
                 }
+            }
+        }
+        return null;
+    }
+
+    public static Pawn getPawn(String color) {
+        for (Pawn pawn : pawnList) {
+            if (getColor(pawn.getColor()).equals(color)) {
+                return pawn;
             }
         }
         return null;
