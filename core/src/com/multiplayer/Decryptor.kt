@@ -1,8 +1,12 @@
 package com.multiplayer
 
 
+import com.badlogic.gdx.graphics.Color
+import com.badlogic.gdx.scenes.scene2d.actions.Actions
 import com.tiles.Player
 import com.utils.Multiplayer
+import com.utils.Multiplayer.clientList
+import com.utils.Multiplayer.me
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import java.io.BufferedReader
@@ -23,7 +27,7 @@ class Decryptor() {
                     "Player" -> {
                         println("$suffix: Getting a Player")
                         val inputStream =
-                                if (isServer) Multiplayer.clientList.getClient(sender).sendingSocket.inputStream
+                                if (isServer) clientList.getClient(sender).sendingSocket.inputStream
                                 else Multiplayer.courrier.receivingSocket.inputStream
                         val tempString = BufferedReader(InputStreamReader(inputStream)).readLine()
                         val tempPlayer = Multiplayer.mapper.readValue(tempString, Player::class.java)
@@ -38,7 +42,17 @@ class Decryptor() {
             }
             "setAndGo" -> Multiplayer.isServerSetAndGo = true;
             "ping" -> {
-                TODO("Récupérer le pseudal du joueur pingé et le pinger")
+                if (isServer) {
+                    for (client in clientList.clientList) {
+                        client.receivingSocket.outputStream.write((message + " \n").toByteArray())
+                    }
+                }
+                else if (receiver.equals(me.pseudo)) {
+                    println("$suffix: I've been Pinged")
+                    me.avatar.addAction(Actions.sequence(
+                            Actions.color(Color(1f, 0f, 0f, 1f), 0.20f),
+                            Actions.color(Color(1f, 1f, 1f, 1f), 0.20f)))
+                }
             }
             "selectPawn" -> {
                 TODO("Récupérer la couleur du pion sélectionné, et montrer le déplacement aux autres joueurs")

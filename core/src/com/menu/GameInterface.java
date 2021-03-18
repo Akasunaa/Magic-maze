@@ -19,6 +19,7 @@ import com.utils.Multiplayer;
 import static com.utils.Colors.currentColor;
 import static com.utils.Colors.getColor;
 import static com.utils.MainConstants.getFontSize;
+import static com.utils.Multiplayer.courrier;
 import static com.utils.TileAndCases.*;
 
 public class GameInterface extends BaseScreen {
@@ -136,6 +137,7 @@ public class GameInterface extends BaseScreen {
                     avatars[temp].addAction(Actions.sequence(
                             Actions.color(new Color(1,0,0,1),(float)0.20),
                             Actions.color(new Color(1,1,1,1),(float)0.20)));
+                    courrier.sendMessage("ping " + Multiplayer.playerList.get(temp).pseudo);
                     // What
                     // the
                     // fuck
