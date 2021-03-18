@@ -2,6 +2,7 @@ package com.menu;
 
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -32,14 +33,19 @@ public abstract class BaseScreen implements Screen, InputProcessor {
 
     protected Table uiTable;
 
-    public String pseudo;
+    //public String pseudo;
 
-    public Image[] avatarImages;
-    public Image currentAvatar;
+    public BaseActor[] avatarImages;
+    public BaseActor[] player0Avatars;
+    public BaseActor[] player1Avatars;
+    public BaseActor[] player2Avatars;
+    public BaseActor[] player3Avatars;
+    public BaseActor[][] playerList;
 
     public float audioVolume;
     public Music instrumental;
 
+    public Sound buttonHover;
     public Slider audioSlider;
 
     public boolean hasBackground = true;
@@ -61,13 +67,22 @@ public abstract class BaseScreen implements Screen, InputProcessor {
         // Création de la liste des avatars pour gérer les différents avatars
         Texture tempAvatar;
         final String[] animalNames = new String[] {"elephant","giraffe","hippo","monkey","panda","parrot","penguin","pig","rabbit","snake"};
-        avatarImages = new Image[animalNames.length];
+        avatarImages = new BaseActor[animalNames.length];
         for (int i = 0; i < animalNames.length; i++) {
             tempAvatar = new Texture(Gdx.files.internal("Avatars/" + animalNames[i] + ".png"));
             tempAvatar.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
-            avatarImages[i] = new Image(tempAvatar);
-        }
-        currentAvatar = avatarImages[0];
+            player0Avatars[i] = new BaseActor();
+            player0Avatars[i].setTexture(tempAvatar);
+            player1Avatars[i] = new BaseActor();
+            player1Avatars[i].setTexture(tempAvatar);
+            player2Avatars[i] = new BaseActor();
+            player2Avatars[i].setTexture(tempAvatar);
+            player3Avatars[i] = new BaseActor();
+            player3Avatars[i].setTexture(tempAvatar);   }
+
+        playerList = new BaseActor[][]{player0Avatars, player1Avatars, player2Avatars, player3Avatars};
+
+        buttonHover = Gdx.audio.newSound(Gdx.files.internal("Music&Sound/buttonHover.mp3"));
 
         audioSlider = new Slider(0, 1, 0.005f, false, game.skin, "uiSliderStyle" );
         audioSlider.addListener(

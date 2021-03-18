@@ -28,18 +28,16 @@ public class MainMenu extends BaseScreen
 
 
     public MainMenu(MagicGame g)
-
     {
         super(g);
     }
 
     public void create()
     {
-        currentAvatarNumber = 0;
 
         // passer audio volume en variable globale de MagicGame.java
         instrumental = Gdx.audio.newMusic(Gdx.files.internal("Music&Sound/MusicMenu.wav"));
-        audioVolume = 0.80f;
+        audioVolume = 0.70f;
         instrumental.setLooping(true);
         instrumental.setVolume(audioVolume);
         instrumental.play();
@@ -61,9 +59,7 @@ public class MainMenu extends BaseScreen
         Image groupImage1 = new Image(group);
         Image groupImage2 = new Image(group);
 
-        final Sound buttonHover = Gdx.audio.newSound(Gdx.files.internal("Music&Sound/buttonHover.mp3"));
-
-        TextButton startButton = new TextButton("Demarrer une partie", game.skin, "uiTextButtonStyle");
+        TextButton startButton = new TextButton("Créer une partie", game.skin, "uiTextButtonStyle");
         startButton.addListener(new InputListener()
         {
             public boolean touchDown (InputEvent event, float x, float y, int pointer,
@@ -74,10 +70,8 @@ public class MainMenu extends BaseScreen
             public void touchUp (InputEvent event, float x, float y, int pointer, int button)
             {
                 dispose();
-                playerName = usernameTextField.getText();
-                mainScreen = new MainScreen(game, currentAvatarNumber, playerName, audioVolume);
-                mainScreen.load();
-                game.setScreen( mainScreen );
+                LobbyScreen lobbyScreen = new LobbyScreen(game, audioVolume);
+                game.setScreen( lobbyScreen );
             }
         });
 
@@ -114,10 +108,8 @@ public class MainMenu extends BaseScreen
                     public void touchUp (InputEvent event, float x, float y, int pointer, int button)
                     {
                         dispose();
-                        playerName = usernameTextField.getText();
-                        mainScreen = new MainScreen(game, currentAvatarNumber, playerName, audioVolume);
-                        mainScreen.load();
-                        game.setScreen( mainScreen );
+                        LobbyScreen lobbyScreen = new LobbyScreen(game, audioVolume);
+                        game.setScreen( lobbyScreen );
                     }
                 });
 
@@ -151,13 +143,10 @@ public class MainMenu extends BaseScreen
                     { return true; }
                     public void touchUp (InputEvent event, float x, float y, int pointer, int button)
                     {
-                        System.out.println("yo");
                         Gdx.app.exit();
                     }
                 });
 
-
-        Label avatarLabel = new Label("Choix de l'avatar :", game.skin, "uiLabelStyle");
 
         TextButton optionButton = new TextButton("Options", game.skin, "uiTextButtonStyle");
         optionButton.addListener(
@@ -226,80 +215,24 @@ public class MainMenu extends BaseScreen
 
         background.toBack();
 
-        Texture leftArrowTexture = new Texture(Gdx.files.internal("MenuAssets/arrowSilver_left.png"));
-        game.skin.add("leftArrow", leftArrowTexture );
-        Button.ButtonStyle leftArrowStyle = new Button.ButtonStyle();
-        leftArrowStyle.up = game.skin.getDrawable("leftArrow");
-        leftButton = new Button( leftArrowStyle );
-        leftButton.addListener(
-                new InputListener()
-                {
-                    public boolean touchDown (InputEvent event, float x, float y, int pointer, int button)
-                    {
-                        return true;
-                    }
-                    public void touchUp (InputEvent event, float x, float y, int pointer, int button)
-                    {
-                        Cell<Image> cell = uiTable.getCell(currentAvatar);
-                        cell.clearActor();
-
-                        currentAvatarNumber = modulo(currentAvatarNumber - 1, 10);
-                        currentAvatar = avatarImages[currentAvatarNumber];
-                        cell.setActor(currentAvatar);
-
-                    }
-                });
-
-        Texture rightArrowTexture = new Texture(Gdx.files.internal("MenuAssets/arrowSilver_right.png"));
-        game.skin.add("rightArrow", rightArrowTexture );
-        Button.ButtonStyle rightArrowStyle = new Button.ButtonStyle();
-        rightArrowStyle.up = game.skin.getDrawable("rightArrow");
-        Button rightButton = new Button( rightArrowStyle );
-        rightButton.addListener(
-                new InputListener()
-                {
-                    public boolean touchDown (InputEvent event, float x, float y, int pointer, int button)
-                    {
-                        return true;
-                    }
-                    public void touchUp (InputEvent event, float x, float y, int pointer, int button)
-                    {
-                        Cell<Image> cell = uiTable.getCell(currentAvatar);
-                        cell.clearActor();
-
-                        currentAvatarNumber = modulo(currentAvatarNumber + 1, 10);
-                        currentAvatar = avatarImages[currentAvatarNumber];
-                        cell.setActor(currentAvatar);
-
-                    }
-                });
-
-        Skin uiSkin = new Skin(Gdx.files.internal("GameUIAssets/uiskin.json"));
-        usernameTextField = new TextField("Pseudo...", uiSkin);
-        Gdx.input.setInputProcessor(uiStage);
-
         uiTable.pad(20);
-        uiTable.add(quitButton).colspan(5).right().expandX();
+        uiTable.add(quitButton).colspan(4).right().expandX().padBottom(100);
         uiTable.row();
-        uiTable.add(titleImage).colspan(5).center();
-        uiTable.row();
-        uiTable.add(usernameTextField).center().colspan(5).padTop(20);
+        uiTable.add(titleImage).center().colspan(4);
         uiTable.row();
         uiTable.add(groupImage1).left().expandX();
-        uiTable.add(leftButton).left();
-        uiTable.add(currentAvatar).center().pad(20, 20, 20, 20);
-        uiTable.add(rightButton).right();
+        uiTable.add();
+        uiTable.add();
         uiTable.add(groupImage2).right().expandX();
         uiTable.row();
-        uiTable.add(avatarLabel).colspan(5).center().padTop(20);
+        uiTable.add(optionButton).center().padTop(70).colspan(4);
         uiTable.row();
-        uiTable.add(optionButton).center().colspan(5).padTop(20);
+        uiTable.add();
+        uiTable.add(startButton).padTop(70).padRight(40).center();
+        uiTable.add(joinButton).padTop(70).padLeft(40).center();
+        uiTable.add();
         uiTable.row();
-        uiTable.add(startButton).right().colspan(2).padTop(20);
-        uiTable.add().center().padTop(20);
-        uiTable.add(joinButton).left().colspan(2).padTop(20);
-        uiTable.row();
-        uiTable.add(genintImage).colspan(5).left().expandX();
+        uiTable.add(genintImage).colspan(4).left().expandX().padTop(100);
 
 
     }
