@@ -111,16 +111,10 @@ public class MainScreen extends BaseScreen {
         uiStage.addActor(numberCase);
 
         //Ici c'est le bordel rajouté par Nathan
-
         win = false;
-
-        //C'est nawak???? wtf pourquoi je suis obligé de faire ça???
-        // Le pseudo initial est vide et est remplacer par le constructeur
-        pseudoLabel = new Label("", game.skin, "uiLabelStyle");
-
         //Temps écoulé et temps restant
         timeElapsed = 0;
-        remainingTime = 20;
+        remainingTime = 60;
 
         // Pour l'instant on touche pas à ça!!!!
 //        Animatedhourglass = new AnimatedActor();
@@ -138,19 +132,19 @@ public class MainScreen extends BaseScreen {
 //        Animatedhourglass.setPosition(200, 600);
 //        mainStage.addActor(Animatedhourglass);
 
-        // Temps restant
-        //BitmapFont font = new BitmapFont();
         String text = "Time: ";
-        //LabelStyle style = new LabelStyle(font, Color.NAVY);
+        style = new Label.LabelStyle(font, Color.NAVY);
         timeLabel = new Label(text, style);
         timeLabel.setFontScale(1.5f);
         timeLabel.setPosition(960, 1000);
         uiStage.addActor(timeLabel);
 
-        instrumental = Gdx.audio.newMusic(Gdx.files.internal("Music&Sound/Gaur_Plain.ogg"));
+        instrumental = Gdx.audio.newMusic(Gdx.files.internal("Music&Sound/The Path of the Goblin King.mp3"));
         instrumental.setLooping(true);
         instrumental.play();
 
+
+        // Bouton de pause
         Texture pauseTexture = new Texture(Gdx.files.internal("GameUIAssets/barsHorizontal.png"));
         game.skin.add("pauseImage", pauseTexture );
         Button.ButtonStyle pauseStyle = new Button.ButtonStyle();
@@ -166,6 +160,9 @@ public class MainScreen extends BaseScreen {
                         return true;
                     }
                 });
+        pauseButton.setSize(pauseButton.getWidth()*2, pauseButton.getHeight()*2);
+        pauseButton.setPosition(1920*4.6f/6, 1080-pauseButton.getHeight() - 10);
+        uiStage.addActor(pauseButton);
 
         pauseOverlay = new Table();
         pauseOverlay.setFillParent(true);
@@ -176,6 +173,7 @@ public class MainScreen extends BaseScreen {
         stacker.add(uiTable);
         stacker.add(pauseOverlay);
 
+        // Le fondu noir quand on ouvre le menu de pause
         game.skin.add("white", new Texture( Gdx.files.internal("GameUIAssets/white4px.png")) );
         Drawable pauseBackground = game.skin.newDrawable("white", new Color(0,0,0,0.8f) );
 
@@ -215,21 +213,13 @@ public class MainScreen extends BaseScreen {
         pauseOverlay.row();
         pauseOverlay.add(resumeButton);
         pauseOverlay.row();
-        pauseOverlay.add(quitButton).width(w);
+        pauseOverlay.add(quitButton).width(w).padTop(50);
         pauseOverlay.row();
         pauseOverlay.add(volumeLabel).padTop(100);
         pauseOverlay.row();
         pauseOverlay.add(audioSlider).width(400);
 
         pauseOverlay.setVisible(false);
-
-        // Overlay
-        uiTable.pad(10);
-        uiTable.add(pseudoLabel);
-        uiTable.add(currentAvatar).padLeft(50);
-        uiTable.add(pauseButton).expandX();
-        uiTable.row();
-        uiTable.add().colspan(3).expandY();
 
     }
 
