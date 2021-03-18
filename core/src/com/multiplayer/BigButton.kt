@@ -13,10 +13,10 @@ import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
 @Serializable
-class BigButton(val idlePath: String, val pushedPath: String,
+class BigButton(private val idlePath: String, private val pushedPath: String,
                 var x: Float, var y: Float,
                 var width: Float, var height: Float,
-                val cooldown: Int, val id: String) {
+                private val cooldown: Int, val id: String) {
 
     @Transient
     lateinit var idle: Sprite
@@ -38,7 +38,7 @@ class BigButton(val idlePath: String, val pushedPath: String,
     var startTime: Long = 0L // Utile pour le cooldown
 
 
-    fun updateSprite() {
+    private fun updateSprite() {
         idle.setPosition(x, y)
         pushed.setPosition(x, y)
         idle.setSize(width, height)
@@ -65,7 +65,7 @@ class BigButton(val idlePath: String, val pushedPath: String,
         active.draw(batch)
     }
 
-    fun onClickedLocally() {
+    private fun onClickedLocally() {
         // Envoie du message
         println("$id Clicked Locally")
         courrier.sendMessage("pressed $id")
@@ -80,7 +80,7 @@ class BigButton(val idlePath: String, val pushedPath: String,
         startTime = System.currentTimeMillis()
     }
 
-    fun isClickable() = System.currentTimeMillis() - startTime > cooldown
+    private fun isClickable() = System.currentTimeMillis() - startTime > cooldown
 
     fun isClickedAndValid() = (isClickable() &&
             Gdx.input.isButtonPressed(Input.Buttons.LEFT) &&

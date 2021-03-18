@@ -62,28 +62,22 @@ public class Functions {
         }
         return null;
     }
-
-    static float step = 150f;
+    static float step = 20;
     static Vector3 target;
-    static Vector3 middleLastClick;
-
-
     public static void updateCamera() {
-        target = new Vector3(camera.position);
-        if (Gdx.input.isButtonJustPressed(Input.Buttons.MIDDLE)) {
-            middleLastClick = new Vector3(1920-Gdx.input.getX(), Gdx.input.getY(), 0f);
-            System.out.println(middleLastClick);
+        target = new Vector3();
+        if (Gdx.input.isKeyPressed(Input.Keys.Z)) target.add(0f, 1, 0f);
+        if (Gdx.input.isKeyPressed(Input.Keys.Q)) target.add(-1, 0f, 0f);
+        if (Gdx.input.isKeyPressed(Input.Keys.S)) target.add(0f, -1, 0f);
+        if (Gdx.input.isKeyPressed(Input.Keys.D)) target.add(1, 0f, 0f);
+        if (!target.isZero()) {
+            target.scl(step*camera.zoom);
+            target.add(camera.position);
+            for (int loop = 1; loop <= 50; loop++) {
+                camera.position.interpolate(target, 0.1f, Interpolation.smooth);
+                camera.update();
             }
-        else if (Gdx.input.isButtonPressed(Input.Buttons.MIDDLE)) {
-            target.add(new Vector3(1920-Gdx.input.getX(), Gdx.input.getY(), 0f).sub(middleLastClick).scl(0.5f));
-        } else {
-            if (Gdx.input.isKeyPressed(Input.Keys.Z)) target.add(0f, step * camera.zoom, 0f);
-            if (Gdx.input.isKeyPressed(Input.Keys.Q)) target.add(-step * camera.zoom, 0f, 0f);
-            if (Gdx.input.isKeyPressed(Input.Keys.S)) target.add(0f, -step * camera.zoom, 0f);
-            if (Gdx.input.isKeyPressed(Input.Keys.D)) target.add(step * camera.zoom, 0f, 0f);
         }
-        camera.position.interpolate(target, 0.3f, Interpolation.bounce);
-        camera.update();
     }
     public static Case findCase() {
         for (Tile tile : tileList) {

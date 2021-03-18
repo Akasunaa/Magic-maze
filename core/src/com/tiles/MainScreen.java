@@ -1,6 +1,7 @@
 package com.tiles;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
@@ -8,6 +9,8 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Interpolation;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.menu.BaseActor;
@@ -33,7 +36,6 @@ public class MainScreen extends BaseScreen {
     Label coordMouse;
     Label numberCase;
 
-
     // Le pion
     Pawn greenPawn;
     boolean pawnTime = false;
@@ -55,9 +57,6 @@ public class MainScreen extends BaseScreen {
         super(g);
     }
 
-    Tile tempTile;
-    // une tempTile on en aura besoin plus tard
-
     BaseActor background;
 
     public void create() {
@@ -65,16 +64,15 @@ public class MainScreen extends BaseScreen {
         Gdx.input.setInputProcessor(inputMultiplexer);
         background = new BaseActor();
         background.setTexture(new Texture("GameUIAssets/floorboard.png"));
-        background.setScale(1f);
 
         //camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         camera = (OrthographicCamera) mainStage.getCamera();
         camera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         camera.zoom = 2;
+        camera.position.set(1920f/2,1080f/2,0f);
         // Cette caméra nous sert à avoir le bon système de coordonées
 
-
-        tileList = new ArrayList();
+        tileList = new ArrayList<Tile>();
 
         player = new Player(true, true, true, true, false, false);
 
@@ -112,6 +110,7 @@ public class MainScreen extends BaseScreen {
         //Gdx.gl.glClearColor(125f / 255, 125f / 255, 125f / 255, 1f);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         // Couleur d'arrière plan, et on clear tout
+        Functions.updateCamera();
         batch.setProjectionMatrix(uiStage.getCamera().combined);
         batch.begin();
         background.draw(batch, 1);
@@ -129,11 +128,9 @@ public class MainScreen extends BaseScreen {
         for (Pawn pawn : pawnList) {
             pawn.handleInput(player);
         }
-        // Gestion du déplacement de la caméra
-        updateCamera();
         batch.end();
-
     }
+
 
     @Override
     public void dispose() {

@@ -276,9 +276,13 @@ public class Tile implements Serializable {
     private static boolean isValidPlacement(Tile tileToJoin, int direction) {
         // direction corresponds à la direction de tileToJoin
         // Relativement à la tile que l'on cherche à poser
-        if (tileToJoin == null) return false;
-        // On vérifie simplement si il s'agit bien d'une sortie
-        return tileToJoin.exits[modulo(direction + 2- tileToJoin.rotation, numberDirections)];
+        // On vérifie simplement qu'il y a bien une case, qu'il s'agit bien d'une sortie
+        // Et, le cas échéant, qu'il y a bien un pion de la bonne couleur
+        if (tileToJoin != null && tileToJoin.exits[modulo(direction + 2- tileToJoin.rotation, numberDirections)]) {
+            final Case exitCase = tileToJoin.exitCases[modulo(direction + 2- tileToJoin.rotation, numberDirections)];
+            return exitCase.pawn !=null && exitCase.color == exitCase.pawn.getColor();
+        }
+        return false;
     }
 
     private Tile[] getNeighbouringTiles() {

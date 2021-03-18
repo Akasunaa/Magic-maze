@@ -20,7 +20,7 @@ public class Queue implements Serializable {
     // Structure classique pour une pile
     private Queue tail;
     public Tile head;
-    public int length = 0;
+    public int length;
     public String textTileLeft;
     private void updateText() {
         textTileLeft = "Tuiles restantes: " + length;
@@ -45,6 +45,10 @@ public class Queue implements Serializable {
     private boolean isHidden = true;
     private transient BaseActor hidden;
 
+    private int numberRevealsDown = 0;
+    public void setNumberRevealsDown(int i) {
+        numberRevealsDown = i;
+    }
 
     private void updateSpriteSize() {
         //sprite.setSize(size, size);
@@ -88,7 +92,6 @@ public class Queue implements Serializable {
             isEmpty = true; // On fait plus rien pour le futur
             isHidden = false;
         }
-
         updateSpriteSize();
         updateCoordinates();
     }
@@ -123,12 +126,15 @@ public class Queue implements Serializable {
     public void load() { // Serialization
         hidden = new BaseActor();
         hidden.setTexture(new Texture("tuiles/hiddenOrange.png"));
+        hidden.setOrigin(size/2,size/2);
         mainScreen.getUiStage().addActor(hidden);
         shown = new BaseActor();
+        shown.setOrigin(size/2,size/2);
         mainScreen.getUiStage().addActor(shown);
         loadSprite();
         updateSpriteSize();
         updateCoordinates();
+        reveal();
     }
 
     private void loadSprite() { // Obligatoire pour la sérialization
@@ -137,6 +143,7 @@ public class Queue implements Serializable {
         sprite.setVisible(false);
         shown.setTexture(sprite.region.getTexture());
         shown.setVisible(false);
+        shown.setRotation(0);
     }
 
     public void draw() {
@@ -145,7 +152,7 @@ public class Queue implements Serializable {
     }
 
     private void place(Vector2 mousePosition) {
-        hidden.setVisible(true);
+        //TODO Envoyer le message qui dit de placer la tuile au bon endroit
         tileList.add(head); // On pose la tuile
         head.x = mousePosition.x; //Bon c'est classique ça
         head.y = mousePosition.y;
@@ -154,56 +161,74 @@ public class Queue implements Serializable {
         remove(); // Et on enlève la tête
     }
 
+    public void hide() {
+        isHidden = true;
+        hidden.setVisible(true);
+        shown.setVisible(false);
+        if (numberRevealsDown > 0) {
+            numberRevealsDown --;
+            reveal();
+        }
+    }
+    public void reveal() {
+        if (!isHidden) {
+            numberRevealsDown ++;
+        }
+        isHidden = false;
+        hidden.setVisible(false);
+        shown.setVisible(true);
+    }
+
     public void handleInput() {
         // Uh, this is going to be fun
         Vector2 mousePositionStatic = Functions.mouseInput((OrthographicCamera) shown.getStage().getCamera());
         Vector2 mousePosition = Functions.mouseInput();
         // Je le sauvegarde parce qu'on va le modifier
         if (!isEmpty) { // On fait rien si elle est vide
-            if (isMovable) { // Truc classique pour avoir deux comportements sur un seul objet
+            if (!isMovable && !isHidden &&
+                    Gdx.input.isButtonJustPressed(Input.Buttons.RIGHT) &&
+                    (x < mousePositionStatic.x) && (mousePositionStatic.x < x + size) &&
+                    (y < mousePositionStatic.y) && (mousePositionStatic.y < y + size)) {
+                isMovable = true;
                 shown.setVisible(false);
                 sprite.setVisible(true);
+                sprite.toFront();
+                //TODO Envoyer le message indiquant qu'on a sélectionné la tuile
+            }
+            if (isMovable) { // Truc classique pour avoir deux comportements sur un seul objet
                 mousePosition.sub(tileSize / 2, tileSize / 2); // Pour que le sprite soit centré sur la souris
                 sprite.setX(mousePosition.x); // On suit la souris
                 sprite.setY(mousePosition.y);
-                if (Gdx.input.isKeyJustPressed(Input.Keys.E)) head.rotate(+1);
-                if (Gdx.input.isKeyJustPressed(Input.Keys.A)) head.rotate(-1);
+                if (Gdx.input.isKeyJustPressed(Input.Keys.E)) {
+                    head.rotate(+1);
+                    shown.rotateBy(90);
+                }
+                if (Gdx.input.isKeyJustPressed(Input.Keys.A)) {
+                    head.rotate(-1);
+                    shown.rotateBy(-90);
+                }
                 if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {// si on sélectionne un endroit
                     if (isFirst) {
-                        isMovable = false; // Voilà voilà
-                        isHidden = true;
                         isFirst = false;
                         origin.add(mousePosition);// Si c'est la première, on stock ses coordonées
+                        sprite.toBack();
                         place(mousePosition); // On pose la tuile
+                        hide();
                     } else if (head.canPlaceThere()) {
                         // Attention !!!
                         // canPlaceThere est une fonction qui place la tuile !!!!
                         // Elle ne fait pas que renvoyer un booléen !!!
-                        isMovable = false; // Voilà voilà
-                        isHidden = true;
                         Functions.snap(mousePosition); // Tu alignes les coordonées sur la "grille"
+                        sprite.toBack();
                         place(mousePosition);
+                        hide();
                     }
                     else {
-                        isMovable = false; // Voilà voilà
-                        isHidden = true;
-                        hidden.setVisible(true);
+                        shown.setVisible(true);
                         sprite.setVisible(false);
                     }
+                    isMovable = false;
                 }
-            }
-            isMovable = isMovable || !isHidden &&
-                    (Gdx.input.isButtonJustPressed(Input.Buttons.RIGHT) &&
-                            (x < mousePositionStatic.x) && (mousePositionStatic.x < x + size &&
-                            (y < mousePositionStatic.y) && (mousePositionStatic.y < y + size)));
-            // Java est paresseux, donc tout ce qu'il y a après le || n'est pas vérifié
-            // si isMovable est true
-            if (isHidden && (Gdx.input.isButtonJustPressed(Input.Buttons.RIGHT) &&
-                    (x < mousePositionStatic.x) && (mousePositionStatic.x < x + size &&
-                    (y < mousePositionStatic.x) && (mousePositionStatic.y < y + size)))) {
-                isHidden = false;
-                hidden.setVisible(false);
-                shown.setVisible(true);
             }
         }
     }
