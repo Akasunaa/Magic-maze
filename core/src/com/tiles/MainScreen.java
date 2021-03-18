@@ -59,8 +59,8 @@ public class MainScreen extends BaseScreen {
     public MainScreen(MagicGame g, int[] AvatarNumbers, String[] playerNames, float audioVolume) {
         super(g);
 
-        instrumental.setVolume(audioVolume);
-        audioSlider.setValue( audioVolume );
+//        instrumental.setVolume(audioVolume);
+//        audioSlider.setValue( audioVolume );
 
         players = playerNames;
         numbers = AvatarNumbers;

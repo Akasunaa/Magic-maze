@@ -88,18 +88,18 @@ public class GameInterface extends BaseScreen {
         phase = 'a';
 
         for (int i =0; i<3; i++){
-            // Afficher l'avatar correspondant à celui choisi sur l'écran précédent
-            Cell<BaseActor> cell = uiTable.getCell(playerList[i][avatarNumbers[i]]);
-            cell.clearActor();
-            //playerList[i] = avatarImages[avatarNumbers[i]];
-            cell.setActor(playerList[i][avatarNumbers[i]]);
-
-            // Le pseudo affiché est celui rentré sur l'écran précédent
-            Label currentPseudoLabel = new Label(playerNames[i], game.skin, "uiLabelStyle");
-            //C'est nawak???? wtf pour je suis obligé de faire ça???
-            Cell<Label> cell1 = uiTable.getCell(pseudoLabels[i]);
-            cell1.clearActor();
-            cell1.setActor(currentPseudoLabel);
+//            // Afficher l'avatar correspondant à celui choisi sur l'écran précédent
+//            Cell<BaseActor> cell = uiTable.getCell(playerList[i][avatarNumbers[i]]);
+//            cell.clearActor();
+//            //playerList[i] = avatarImages[avatarNumbers[i]];
+//            cell.setActor(playerList[i][avatarNumbers[i]]);
+//
+//            // Le pseudo affiché est celui rentré sur l'écran précédent
+//            Label currentPseudoLabel = new Label(playerNames[i], game.skin, "uiLabelStyle");
+//            //C'est nawak???? wtf pour je suis obligé de faire ça???
+//            Cell<Label> cell1 = uiTable.getCell(pseudoLabels[i]);
+//            cell1.clearActor();
+//            cell1.setActor(currentPseudoLabel);
         }
     }
 

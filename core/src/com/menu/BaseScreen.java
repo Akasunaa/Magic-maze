@@ -67,20 +67,22 @@ public abstract class BaseScreen implements Screen, InputProcessor {
         // Création de la liste des avatars pour gérer les différents avatars
         Texture tempAvatar;
         final String[] animalNames = new String[] {"elephant","giraffe","hippo","monkey","panda","parrot","penguin","pig","rabbit","snake"};
-        avatarImages = new BaseActor[animalNames.length];
-        for (int i = 0; i < animalNames.length; i++) {
-            tempAvatar = new Texture(Gdx.files.internal("Avatars/" + animalNames[i] + ".png"));
-            tempAvatar.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
-            player0Avatars[i] = new BaseActor();
-            player0Avatars[i].setTexture(tempAvatar);
-            player1Avatars[i] = new BaseActor();
-            player1Avatars[i].setTexture(tempAvatar);
-            player2Avatars[i] = new BaseActor();
-            player2Avatars[i].setTexture(tempAvatar);
-            player3Avatars[i] = new BaseActor();
-            player3Avatars[i].setTexture(tempAvatar);   }
-
-        playerList = new BaseActor[][]{player0Avatars, player1Avatars, player2Avatars, player3Avatars};
+//        avatarImages = new BaseActor[animalNames.length];
+//        for (int i = 0; i < animalNames.length; i++) {
+//            tempAvatar = new Texture(Gdx.files.internal("Avatars/" + animalNames[i] + ".png"));
+//            tempAvatar.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
+//            avatarImages[i].setTexture(tempAvatar);
+//            player0Avatars[i] = new BaseActor();
+//            player0Avatars[i].setTexture(tempAvatar);
+//            player1Avatars[i] = new BaseActor();
+//            player1Avatars[i].setTexture(tempAvatar);
+//            player2Avatars[i] = new BaseActor();
+//            player2Avatars[i].setTexture(tempAvatar);
+//            player3Avatars[i] = new BaseActor();
+//            player3Avatars[i].setTexture(tempAvatar);
+//            }
+//
+//        playerList = new BaseActor[][]{player0Avatars, player1Avatars, player2Avatars, player3Avatars};
 
         buttonHover = Gdx.audio.newSound(Gdx.files.internal("Music&Sound/buttonHover.mp3"));
 
