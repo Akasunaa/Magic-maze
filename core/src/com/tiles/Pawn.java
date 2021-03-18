@@ -125,7 +125,7 @@ public class Pawn implements Serializable {
                     System.out.println("No Tile found in Pawn.handleInput");
                 }
             }
-        } else isMovable = (Gdx.input.isButtonJustPressed(Input.Buttons.RIGHT) &&
+        } else isMovable = (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT) &&
                 (sprite.getX() < Functions.mouseInput().x) && (Functions.mouseInput().x < sprite.getX() + sprite.getWidth() &&
                 (sprite.getY() < Functions.mouseInput().y) && (Functions.mouseInput().y < sprite.getY() + sprite.getHeight())) &&
                 player.pawn == null && !isLocked);

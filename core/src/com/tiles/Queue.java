@@ -186,7 +186,7 @@ public class Queue implements Serializable {
         // Je le sauvegarde parce qu'on va le modifier
         if (!isEmpty) { // On fait rien si elle est vide
             if (!isMovable && !isHidden &&
-                    Gdx.input.isButtonJustPressed(Input.Buttons.RIGHT) &&
+                    Gdx.input.isButtonJustPressed(Input.Buttons.LEFT) &&
                     (x < mousePositionStatic.x) && (mousePositionStatic.x < x + size) &&
                     (y < mousePositionStatic.y) && (mousePositionStatic.y < y + size)) {
                 isMovable = true;
