@@ -36,7 +36,7 @@ class Decryptor() {
                         val tempString = BufferedReader(InputStreamReader(inputStream)).readLine()
                         val tempPlayer = Multiplayer.mapper.readValue(tempString, Player::class.java)
                         if (isServer) {
-                            Multiplayer.clientList.getClient(sender).player = tempPlayer
+                            clientList.getClient(sender).player = tempPlayer
                         }
                         else Multiplayer.playerList.add(tempPlayer)
                     }
