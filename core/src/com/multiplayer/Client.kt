@@ -18,4 +18,12 @@ class Client(var ip: String, val sendingSocket: Socket, var id: String) {
     }
 
     lateinit var player: Player
+
+    fun sendMessage(message: String) {
+        receivingSocket.outputStream.write("server $message \n".toByteArray())
+    }
+
+    fun sendClearMessage(message: String) {
+        receivingSocket.outputStream.write("$message \n".toByteArray())
+    }
 }

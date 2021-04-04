@@ -149,8 +149,8 @@ public class Case implements Serializable {
     }
 
     public void draw() {
-        if (isShowed) redDot.draw(batch,1);
-        else if (isValid) greenDot.draw(batch,1);
+        if (isShowed) redDot.draw(batch, 1);
+        else if (isValid) greenDot.draw(batch, 1);
     }
 
     private boolean seen = false;
@@ -158,7 +158,7 @@ public class Case implements Serializable {
     public void explore(Player player) {
         int index; // On utilise index pour éviter de devoir réécrire les modulos trop de fois
         Player tempPlayer = player.rotate(tile.rotation);
-        if (!seen && isAccessible && (player.pawn==pawn || pawn==null)) {
+        if (!seen && isAccessible && (player.pawn == pawn || pawn == null)) {
             seen = true; // Parcours de graphe classique pour éviter les StackOverflow
             explored();
             if (tempPlayer.north) {
@@ -270,7 +270,7 @@ public class Case implements Serializable {
         // Direction indique la direction de la case 2 par rapport à la case 1
         // Exemple: la case 2 est au nord de la case 1
         // alors direction = 2
-        case1.caseList[modulo(direction-case1.tile.rotation, numberDirections)] = case2;
+        case1.caseList[modulo(direction - case1.tile.rotation, numberDirections)] = case2;
         case2.caseList[modulo(direction + 2 - case2.tile.rotation, numberDirections)] = case1;
         case1.isExit = false;
         case2.isExit = false;

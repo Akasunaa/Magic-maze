@@ -76,10 +76,12 @@ public class Player implements Serializable {
     }
     public void takesPawn(Pawn pawn) {
         this.pawn = pawn;
+        pawn.player = this;
         //TODO Envoyer le message indiquant qu'on a pris le pion
     }
     public void dropsPawn(Pawn pawn) {
         this.pawn = null;
+        pawn.player = null;
         //TODO Envoyer le message indiquant qu'on a posé le pion, avec ses coordonées
     }
 }

@@ -15,11 +15,13 @@ public class Multiplayer {
     public static int numberOfPlayers = 1;
     public static ClientList clientList = new ClientList(Multiplayer.numberOfPlayers);
     public static Decryptor key = new Decryptor();
-    public static boolean isServer = true;
+    public static boolean isServer = false;
     public static int port = 6969;
     public static String serverIP = "157.159.41.36";
     // L'ip de mon PC fixe
     public static String ip;
+
+    public static boolean isHoldingPawn = false;
 
     public static boolean isServerSetAndGo = false;
 
@@ -33,6 +35,7 @@ public class Multiplayer {
             e.printStackTrace();
         }
     }
+
     public static List<Player> playerList = new ArrayList<Player>();
 
     public static Player me = new Player();

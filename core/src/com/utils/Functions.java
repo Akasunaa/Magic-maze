@@ -96,6 +96,20 @@ public class Functions {
         return null;
     }
 
+    public static Case findCase(Vector2 coordinates) {
+        for (Tile tile : tileList) {
+            if (tile.getX() <= coordinates.x && coordinates.x <= tile.getX() + tile.getSize() &&
+                    tile.getY() <= coordinates.y && coordinates.y <= tile.getY() + tile.getSize()) {
+                try {
+                    return tile.getCase(coordinates);
+                } catch (ArrayIndexOutOfBoundsException e) {
+                    System.out.println("Clicked border of Tile n°" + tile.number + " in Pawn.findCase");
+                }
+            }
+        }
+        return null;
+    }
+
     public static Pawn getPawn(String color) {
         for (Pawn pawn : pawnList) {
             if (getColor(pawn.getColor()).equals(color)) {

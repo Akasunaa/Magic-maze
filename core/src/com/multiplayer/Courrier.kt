@@ -2,6 +2,7 @@ package com.multiplayer
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Net
+import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.net.Socket
 import com.badlogic.gdx.net.SocketHints
 import com.tiles.Player
@@ -17,6 +18,7 @@ class Courrier(val id: String, port: Int, ip: String) {
     val sendingSocket: Socket
     val receivingSocket: Socket
     val socketHints: SocketHints
+    var answer = false // This will be used to get answers from the server
 
     // sendingSocket: La socket pour envoyer des messages au serveur
     // receivingSocket: La socket pour recevoir des messages du serveur
@@ -24,6 +26,8 @@ class Courrier(val id: String, port: Int, ip: String) {
     init {
         socketHints = SocketHints()
         socketHints.connectTimeout = 0
+        socketHints.sendBufferSize = 1024
+        socketHints.receiveBufferSize = 1024
         sendingSocket = Gdx.net.newClientSocket(Net.Protocol.TCP, ip, port, socketHints)
         sendMessage("connected $ip")
         var waitForIt = BufferedReader(InputStreamReader(sendingSocket.inputStream)).readLine()
@@ -51,7 +55,7 @@ class Courrier(val id: String, port: Int, ip: String) {
     fun sendObject(toSend: Player) {
         sendMessage("sending Player")
         //ObjectOutputStream(sendingSocket.outputStream).write(toSend.serialize().toByteArray())
-        sendingSocket.getOutputStream().write(((Multiplayer.mapper.writeValueAsString(toSend) + "\n").toByteArray()))
+        sendingSocket.getOutputStream().write(((Multiplayer.mapper.writeValueAsString(toSend) + " \n").toByteArray()))
     }
 
 }
