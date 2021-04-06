@@ -236,7 +236,6 @@ public class Queue implements Serializable {
             e.printStackTrace();
         }
         Multiplayer.courrier.sendMessage("wantToPlaceTile none");
-        System.out.println("Sent the fucking message");
         try {
             Thread.sleep(10);
         } catch (InterruptedException e) {

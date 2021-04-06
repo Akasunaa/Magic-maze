@@ -6,6 +6,7 @@ import com.badlogic.gdx.math.Interpolation
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.scenes.scene2d.actions.Actions
 import com.tiles.Player
+import com.tiles.Queue
 import com.utils.Functions
 import com.utils.Multiplayer
 import com.utils.Multiplayer.*
@@ -44,6 +45,12 @@ class Decryptor() {
                         if (isServer) {
                             clientList.getClient(sender).player = tempPlayer
                         } else playerList.add(tempPlayer)
+                    }
+                    "Queue" -> {
+                        println("$suffix: Getting a Queue")
+                        val inputStream = courrier.receivingSocket.inputStream
+                        val tempString = BufferedReader(InputStreamReader(inputStream)).readLine()
+                        TileAndCases.queue = mapper.readValue(tempString, Queue::class.java)
                     }
                     "else" -> {
                     }

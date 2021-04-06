@@ -12,11 +12,13 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.menu.BaseActor;
 import com.menu.GameInterface;
 import com.menu.BaseScreen;
 import com.menu.MagicGame;
+import com.multiplayer.Client;
 import com.multiplayer.Courrier;
 import com.multiplayer.ServerMaker;
 import com.utils.Functions;
@@ -75,9 +77,6 @@ public class MainScreen extends BaseScreen {
 
         Multiplayer.me.setPlayer(new Player(true, true, true, true, false, false));
 
-        queue = new Queue(9); // J'ai fait les cases uniquement jusqu'à la 9
-        queue.setCoordinates(1920-tileSize/2-20, 20);
-
         // Bon là c'est le batch et les trucs pour écrire, rien d'important
         batch = new SpriteBatch();
         BitmapFont font = getFontSize(40);
@@ -89,9 +88,23 @@ public class MainScreen extends BaseScreen {
         uiStage.addActor(coordMouse);
         uiStage.addActor(numberCase);
 
-        if (Multiplayer.isServer) new ServerMaker(Multiplayer.port, Multiplayer.clientList).startThread();
+        if (Multiplayer.isServer) {
+            new ServerMaker(Multiplayer.port, Multiplayer.clientList).startThread();
+        }
         Multiplayer.courrier = new Courrier(Multiplayer.me.pseudo, Multiplayer.port, Multiplayer.serverIP);
 
+        if (Multiplayer.isServer) {
+            queue = new Queue(9); // J'ai fait les cases uniquement jusqu'à la 9
+            queue.setCoordinates(1920 - tileSize / 2 - 20, 20);
+            for (Client client : Multiplayer.clientList.clientList) {
+                client.sendMessage("sending Queue");
+                try {
+                    client.sendClearMessage(Multiplayer.mapper.writeValueAsString(queue));
+                } catch (JsonProcessingException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
         while (!Multiplayer.isServerSetAndGo) {
             try {
                 Thread.sleep(10);

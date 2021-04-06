@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ClientList {
-    List<Client> clientList;
+    public List<Client> clientList;
     int numberClient = 0;
     int maxClient;
 
