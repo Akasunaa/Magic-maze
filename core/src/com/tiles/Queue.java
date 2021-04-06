@@ -145,7 +145,7 @@ public class Queue implements Serializable {
     }
 
     public String serialize() {
-        if (tail == null) {
+        if (tail.head == null) {
             return String.valueOf(head.number);
         }
         else return head.number + " " + tail.serialize();

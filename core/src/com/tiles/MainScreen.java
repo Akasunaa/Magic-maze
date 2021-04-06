@@ -103,7 +103,6 @@ public class MainScreen extends BaseScreen {
         }
         if (Multiplayer.isServer) {
             queue = new Queue(9); // J'ai fait les cases uniquement jusqu'à la 9
-            queue.setCoordinates(1920 - tileSize / 2 - 20, 20);
             for (Client client : Multiplayer.clientList.clientList) {
                 client.sendMessage("sending Queue");
                 client.sendClearMessage(queue.serialize());
@@ -123,6 +122,7 @@ public class MainScreen extends BaseScreen {
         }
         gameInterface = new GameInterface(game);
         gameInterface.hasBackground = false;
+        queue.setCoordinates(1920 - tileSize / 2 - 20, 20);
         queue.load();
     }
 
