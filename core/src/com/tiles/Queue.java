@@ -6,7 +6,9 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 import com.menu.BaseActor;
+import com.utils.Colors;
 import com.utils.Functions;
+import com.utils.Multiplayer;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -34,7 +36,7 @@ public class Queue implements Serializable {
     private float x;
     private float y;
     private float size = tileSize/2;
-    private boolean isFirst = true;
+    public boolean isFirst = true;
     // Pour placer le premier
 
     // Booléens pour savoir si on est en train de placer la tuile, et si la liste est vide
@@ -67,6 +69,14 @@ public class Queue implements Serializable {
         sprite.setPosition(x, y);
         hidden.setPosition(x, y);
         shown.setPosition(x, y);
+    }
+
+    public void setSpritePosition(float x, float y) {
+        sprite.setPosition(x,y);
+    }
+
+    public Vector2 getSpritePosition() {
+        return new Vector2(sprite.getX(), sprite.getY());
     }
 
 
@@ -151,8 +161,8 @@ public class Queue implements Serializable {
         else sprite.draw(batch, 1);
     }
 
-    private void place(Vector2 mousePosition) {
-        //TODO Envoyer le message qui dit de placer la tuile au bon endroit
+    public void place(Vector2 mousePosition) {
+        sprite.toBack();
         tileList.add(head); // On pose la tuile
         head.x = mousePosition.x; //Bon c'est classique ça
         head.y = mousePosition.y;
@@ -179,6 +189,44 @@ public class Queue implements Serializable {
         shown.setVisible(true);
     }
 
+    private boolean checkServerForClickable() {
+        Multiplayer.courrier.sendMessage("wantToTakeTile none");
+        try {
+            Thread.sleep(10);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return Multiplayer.courrier.getAnswer();
+    }
+
+    public void makingMovable() {
+        shown.setVisible(false);
+        sprite.setVisible(true);
+        sprite.toFront();
+    }
+
+    public void rotate(int i) {
+        head.rotate(i);
+        shown.rotateBy(90 * i);
+    }
+
+    public void placeHandleAll(Vector2 mousePosition) {
+        if (isFirst) {
+            isFirst = false;
+            origin.add(mousePosition);// Si c'est la première, on stock ses coordonées
+            place(mousePosition); // On pose la tuile
+            hide();
+        } else if (head.canPlaceThere()) {
+            Multiplayer.courrier.sendMessage("wantToPlaceTile");
+            Functions.snap(mousePosition); // Tu alignes les coordonées sur la "grille"
+            place(mousePosition);
+            hide();
+        }
+        else {
+            shown.setVisible(true);
+            sprite.setVisible(false);
+        }
+    }
     public void handleInput() {
         // Uh, this is going to be fun
         Vector2 mousePositionStatic = Functions.mouseInput((OrthographicCamera) shown.getStage().getCamera());
@@ -188,45 +236,25 @@ public class Queue implements Serializable {
             if (!isMovable && !isHidden &&
                     Gdx.input.isButtonJustPressed(Input.Buttons.RIGHT) &&
                     (x < mousePositionStatic.x) && (mousePositionStatic.x < x + size) &&
-                    (y < mousePositionStatic.y) && (mousePositionStatic.y < y + size)) {
+                    (y < mousePositionStatic.y) && (mousePositionStatic.y < y + size) &&
+                    checkServerForClickable()) {
+                makingMovable();
                 isMovable = true;
-                shown.setVisible(false);
-                sprite.setVisible(true);
-                sprite.toFront();
-                //TODO Envoyer le message indiquant qu'on a sélectionné la tuile
             }
             if (isMovable) { // Truc classique pour avoir deux comportements sur un seul objet
                 mousePosition.sub(tileSize / 2, tileSize / 2); // Pour que le sprite soit centré sur la souris
-                sprite.setX(mousePosition.x); // On suit la souris
-                sprite.setY(mousePosition.y);
+                setSpritePosition(mousePosition.x,mousePosition.y); // On suit la souris
+                Multiplayer.courrier.sendMessage("movingTile " + mousePosition.x + " "+ mousePosition.y);
                 if (Gdx.input.isKeyJustPressed(Input.Keys.E)) {
-                    head.rotate(+1);
-                    shown.rotateBy(90);
+                    rotate(1);
+                    Multiplayer.courrier.sendMessage("rotateTile 1");
                 }
                 if (Gdx.input.isKeyJustPressed(Input.Keys.A)) {
-                    head.rotate(-1);
-                    shown.rotateBy(-90);
+                    rotate(-1);
+                    Multiplayer.courrier.sendMessage("rotateTile -1");
                 }
                 if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {// si on sélectionne un endroit
-                    if (isFirst) {
-                        isFirst = false;
-                        origin.add(mousePosition);// Si c'est la première, on stock ses coordonées
-                        sprite.toBack();
-                        place(mousePosition); // On pose la tuile
-                        hide();
-                    } else if (head.canPlaceThere()) {
-                        // Attention !!!
-                        // canPlaceThere est une fonction qui place la tuile !!!!
-                        // Elle ne fait pas que renvoyer un booléen !!!
-                        Functions.snap(mousePosition); // Tu alignes les coordonées sur la "grille"
-                        sprite.toBack();
-                        place(mousePosition);
-                        hide();
-                    }
-                    else {
-                        shown.setVisible(true);
-                        sprite.setVisible(false);
-                    }
+                    placeHandleAll(mousePosition);
                     isMovable = false;
                 }
             }

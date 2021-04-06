@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -94,11 +95,32 @@ public class Pawn implements Serializable {
         updateCoordinates();
     }
 
-    public void setSpritePosition(float x, float y) {
-        sprite.setX(x);
-        sprite.setY(y);
+    public void setSpritePosition(Vector2 target) {
+        sprite.setX(target.x);
+        sprite.setY(target.y);
+        position.x = target.x;
+        position.y = target.y;
     }
 
+    private static Vector2 target = new Vector2(0,0);
+    private static Vector2 position = new Vector2(0,0);
+    public boolean hasTarget= false;
+    public float speed = 0;
+    public void setTarget(float x, float y) {
+        target.x = x;
+        target.y = y;
+        hasTarget = true;
+    }
+    public void interpolate(float alpha, Interpolation interpolation) {
+        Vector2 temp = position.interpolate(target, alpha, interpolation);
+        setSpritePosition(temp);
+    }
+    private boolean firstTime = true;
+    public void sendToTarget() {
+        if (firstTime) {firstTime = false; return;}
+        setSpritePosition(target);
+        hasTarget = false;
+    }
     public void updateCoordinates() {
         sprite.setX(setCase.getX(setCase.x) + (caseSize - sprite.getWidth()) / 2);
         sprite.setY(setCase.getY(setCase.y) + caseSize / 3);
@@ -111,14 +133,14 @@ public class Pawn implements Serializable {
     private boolean hasExplored = false; // Pour regarder si on a déjà fait le pathfinding et éviter de le faire trop de fois
 
     public Vector2 getPosition() {
-        return new Vector2(sprite.getX(), sprite.getY());
+        return position;
     }
 
     private int count = 5;
 
     public boolean canPlaceHere(Vector2 coordinates, Player player) {
         try {
-            Multiplayer.courrier.sendMessage("wantToPlace " + Colors.getColor(color));
+            Multiplayer.courrier.sendMessage("wantToPlacePawn " + Colors.getColor(color));
             Case nextCase = findCase(coordinates); // Est-on sur une case ?
             try {
                 Thread.sleep(10);
@@ -161,7 +183,7 @@ public class Pawn implements Serializable {
             sprite.setX(x);
             sprite.setY(y);
             if (count == 5) { // On veut pas avoir à le faire trop souvent
-                Multiplayer.courrier.sendMessage("moving " + Colors.getColor(color) + " " + x + " " + y);
+                Multiplayer.courrier.sendMessage("movingPawn " + Colors.getColor(color) + " " + x + " " + y);
                 count = 0;
             }
             count++;
@@ -178,7 +200,7 @@ public class Pawn implements Serializable {
     }
 
     private boolean checkServerForClickable() {
-        Multiplayer.courrier.sendMessage("wantToTake " + Colors.getColor(color));
+        Multiplayer.courrier.sendMessage("wantToTakePawn " + Colors.getColor(color));
         try {
             Thread.sleep(10);
         } catch (InterruptedException e) {

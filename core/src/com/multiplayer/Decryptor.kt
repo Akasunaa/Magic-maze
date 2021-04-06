@@ -2,6 +2,7 @@ package com.multiplayer
 
 
 import com.badlogic.gdx.graphics.Color
+import com.badlogic.gdx.math.Interpolation
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.scenes.scene2d.actions.Actions
 import com.tiles.Player
@@ -64,7 +65,7 @@ class Decryptor() {
                     )
                 }
             }
-            "wantToTake" -> {
+            "wantToTakePawn" -> {
                 val tempPawn = Functions.getPawn(receiver)
                 if (isNull(tempPawn.player)) {
                     clientList.getClient(sender).player.takesPawn(tempPawn)
@@ -73,8 +74,59 @@ class Decryptor() {
                     clientList.getClient(sender).sendMessage("answer false")
                 }
             }
-            "moving" -> {
+            "movingPawn" -> {
                 val tempPawn = Functions.getPawn(receiver)
+                if (isServer) {
+                    for (tempClient in clientList.clientList) {
+                        if (!tempClient.id.equals(sender)) {
+                            tempClient.sendClearMessage(message)
+                        }
+                    }
+                }
+                try {
+                    val x = message.split(' ')[3].toFloat()
+                    val y = message.split(' ')[4].toFloat()
+                    // Try and do a bit of interpolation here
+                    // Edit: it's mostly done i think
+                    tempPawn.sendToTarget()
+                    tempPawn.setTarget(x,y)
+                } catch (e: Exception) {
+                    println("Wrong Numbers Sent")
+                }
+            }
+            "placePawn" -> {
+                val tempPawn = Functions.getPawn(receiver)
+                tempPawn.sendToTarget()
+                tempPawn.place(tempPawn.position)
+            }
+            "wantToPlacePawn" -> {
+                val tempPawn = Functions.getPawn(receiver)
+                if (Functions.findCase(tempPawn.position).pawn.equals(null)) {
+                    clientList.getClient(sender).sendMessage("answer true")
+                    for (tempClient in clientList.clientList) {
+                        if (!tempClient.id.equals(sender)) {
+                            tempClient.sendMessage("placePawn $receiver")
+                        }
+                    }
+                } else clientList.getClient(sender).sendMessage("answer false")
+            }
+            "wantToTakeTile" -> {
+                if (true) {
+                    clientList.getClient(sender).sendMessage("answer true")
+                    for (tempClient in clientList.clientList) {
+                        if (!tempClient.id.equals(sender)) {
+                            tempClient.sendClearMessage("$sender isGonnaMoveTile none")
+                        }
+                    }
+                } else {
+                    clientList.getClient(sender).sendMessage("answer false")
+                    TODO("Vérifier qu'il a le bon rôle quand même, rien d'important pour le moment")
+                }
+            }
+            "isGonnaMoveTile" -> {
+                TileAndCases.queue.makingMovable()
+            }
+            "movingTile" -> {
                 if (isServer) {
                     for (tempClient in clientList.clientList) {
                         if (!tempClient.id.equals(sender)) {
@@ -85,19 +137,26 @@ class Decryptor() {
                 try {
                     val x = message.split(' ')[2].toFloat()
                     val y = message.split(' ')[3].toFloat()
-                    // Try and to a bit of interpolation here
-                    tempPawn.setSpritePosition(x, y)
+                    // There's no need for a specification of what tile we're sending
+                    // Try and do a bit of interpolation here
+                    // Edit: it's mostly done i think
+                    TileAndCases.queue.setSpritePosition(x,y);
                 } catch (e: Exception) {
                     println("Wrong Numbers Sent")
                 }
             }
-            "wantToPlace" -> {
-                val tempPawn = Functions.getPawn(receiver)
-                if (Functions.findCase(tempPawn.position).pawn.equals(null)) {
+            "rotateTile" -> {
+                TileAndCases.queue.rotate(receiver.toInt())
+            }
+            "placeTile" -> {
+                TileAndCases.queue.placeHandleAll(TileAndCases.queue.getSpritePosition());
+            }
+            "wantToPlaceTile" -> {
+                if (true) { // Je vois pas trop ce qu'il faut demander mais bon
                     clientList.getClient(sender).sendMessage("answer true")
                     for (tempClient in clientList.clientList) {
                         if (!tempClient.id.equals(sender)) {
-                            tempClient.sendMessage("place $receiver")
+                            tempClient.sendMessage("placeTile $receiver")
                         }
                     }
                 } else clientList.getClient(sender).sendMessage("answer false")

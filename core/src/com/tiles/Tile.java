@@ -286,7 +286,7 @@ public class Tile implements Serializable {
     }
 
     private Tile[] getNeighbouringTiles() {
-        Vector2 mousePosition = Functions.mouseInput();
+        Vector2 mousePosition = new Vector2(sprite.getX(),sprite.getY());
         mousePosition.sub(TileAndCases.origin);
         mousePosition.sub(tileSize / 2, tileSize / 2);
         mousePosition.mul(TileAndCases.newBaseInvert);
@@ -316,6 +316,13 @@ public class Tile implements Serializable {
     public boolean canPlaceThere() {
         // Attention !!! Cette fonction place la tuile !!!
         // Ce n'est pas qu'une fonction de check !!!
+        // Pire idée du monde pourquoi j'ai fait ça je suis stupidus maximus moi oskour
+        Tile[] neighbors = getNeighbouringTiles();
+        int direction = modulo(entrance + rotation, numberDirections);
+        return (isValidPlacement(neighbors[direction], direction) && noOverlap());
+    }
+
+    public void place() {
         Tile[] neighbors = getNeighbouringTiles();
         int direction = modulo(entrance + rotation, numberDirections);
         if (isValidPlacement(neighbors[direction], direction) && noOverlap()) {
@@ -331,8 +338,6 @@ public class Tile implements Serializable {
                     }
                 }
             }
-            return true; // Parce qu'il faut renvoyer un booléen quand même
         }
-        return false;
     }
 }

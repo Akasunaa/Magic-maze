@@ -11,6 +11,7 @@ public class DesktopLauncher {
         config.height = 720;
         config.width = 1280;
         config.forceExit = false;
+        Multiplayer.stopServer();
         LwjglApplication launcher = new LwjglApplication( new MagicGame() , config);
     }
 }
