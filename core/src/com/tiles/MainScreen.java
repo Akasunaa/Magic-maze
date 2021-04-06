@@ -140,6 +140,7 @@ public class MainScreen extends BaseScreen {
             if (pawn.hasTarget) pawn.interpolate(0.3f, Interpolation.bounce);
             pawn.handleInput(Multiplayer.me);
         }
+        if (queue.toRemove) queue.remove();
         batch.end();
     }
 

@@ -86,7 +86,8 @@ public class Queue implements Serializable {
         head = toAdd;
     }
 
-    private void remove() {
+    public void remove() {
+        toRemove = false;
         // On enlève la tête, on devient la queue
         try {
             this.head = tail.head;
@@ -168,8 +169,9 @@ public class Queue implements Serializable {
         head.y = mousePosition.y;
         head.updateAll(); // Mise à jour
         head.startCooldown(); // On veut pas le blinking
-        remove(); // Et on enlève la tête
+        toRemove = true; // Et on enlève la tête
     }
+    public boolean toRemove = false;
 
     public void hide() {
         isHidden = true;
