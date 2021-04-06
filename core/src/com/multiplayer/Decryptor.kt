@@ -50,7 +50,7 @@ class Decryptor() {
                         println("$suffix: Getting a Queue")
                         val inputStream = courrier.receivingSocket.inputStream
                         val tempString = BufferedReader(InputStreamReader(inputStream)).readLine()
-                        TileAndCases.queue = mapper.readValue(tempString, Queue::class.java)
+                        TileAndCases.queue = Queue(tempString)
                     }
                     "else" -> {
                     }

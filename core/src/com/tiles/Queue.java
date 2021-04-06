@@ -134,6 +134,23 @@ public class Queue implements Serializable {
         updateText();
     }
 
+    public Queue(String arg) {
+        String[] args = arg.split(" ");
+        tail = null;
+        for (int i = args.length-1; i >=0; i--) {
+            add(new Tile(Integer.parseInt(args[i])));
+        }
+        length = args.length;
+        updateText();
+    }
+
+    public String serialize() {
+        if (tail == null) {
+            return String.valueOf(head.number);
+        }
+        else return head.number + " " + tail.serialize();
+    }
+
     public void load() { // Serialization
         hidden = new BaseActor();
         hidden.setTexture(new Texture("tuiles/hiddenOrange.png"));

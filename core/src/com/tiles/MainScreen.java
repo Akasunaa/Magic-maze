@@ -93,24 +93,26 @@ public class MainScreen extends BaseScreen {
         }
         Multiplayer.courrier = new Courrier(Multiplayer.me.pseudo, Multiplayer.port, Multiplayer.serverIP);
 
-        if (Multiplayer.isServer) {
-            queue = new Queue(9); // J'ai fait les cases uniquement jusqu'à la 9
-            queue.setCoordinates(1920 - tileSize / 2 - 20, 20);
-            for (Client client : Multiplayer.clientList.clientList) {
-                client.sendMessage("sending Queue");
-                try {
-                    client.sendClearMessage(Multiplayer.mapper.writeValueAsString(queue));
-                } catch (JsonProcessingException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
+
         while (!Multiplayer.isServerSetAndGo) {
             try {
                 Thread.sleep(10);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
+        }
+        if (Multiplayer.isServer) {
+            queue = new Queue(9); // J'ai fait les cases uniquement jusqu'à la 9
+            queue.setCoordinates(1920 - tileSize / 2 - 20, 20);
+            for (Client client : Multiplayer.clientList.clientList) {
+                client.sendMessage("sending Queue");
+                client.sendClearMessage(queue.serialize());
+            }
+        }
+        try {
+            Thread.sleep(10);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
         System.out.println("Getting over it");
     }
