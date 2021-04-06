@@ -136,7 +136,6 @@ public class Pawn implements Serializable {
         return position;
     }
 
-    private int count = 5;
 
     public boolean canPlaceHere(Vector2 coordinates, Player player) {
         try {
@@ -160,6 +159,7 @@ public class Pawn implements Serializable {
         }
         return false;
     }
+    private int count = 2;
 
     public void place(Vector2 coordinates) {
         try {
@@ -182,7 +182,7 @@ public class Pawn implements Serializable {
             float y = Functions.mouseInput().y - sprite.getHeight() / 2;
             sprite.setX(x);
             sprite.setY(y);
-            if (count == 5) { // On veut pas avoir à le faire trop souvent
+            if (count == 2) { // On veut pas avoir à le faire trop souvent
                 Multiplayer.courrier.sendMessage("movingPawn " + Colors.getColor(color) + " " + x + " " + y);
                 count = 0;
             }

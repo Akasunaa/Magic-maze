@@ -146,7 +146,14 @@ class Decryptor() {
                 }
             }
             "rotateTile" -> {
-                TileAndCases.queue.rotate(receiver.toInt())
+                if (isServer) {
+                    for (tempClient in clientList.clientList) {
+                        if (!tempClient.id.equals(sender)) {
+                            tempClient.sendClearMessage(message)
+                        }
+                    }
+                }
+                else TileAndCases.queue.rotate(receiver.toInt())
             }
             "placeTile" -> {
                 TileAndCases.queue.placeHandleAll(TileAndCases.queue.getSpritePosition());

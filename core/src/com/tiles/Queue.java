@@ -6,7 +6,6 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 import com.menu.BaseActor;
-import com.utils.Colors;
 import com.utils.Functions;
 import com.utils.Multiplayer;
 
@@ -14,6 +13,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import static com.utils.Functions.findCase;
 import static com.utils.GameScreens.mainScreen;
 import static com.utils.MainConstants.batch;
 import static com.utils.TileAndCases.*;
@@ -217,7 +217,6 @@ public class Queue implements Serializable {
             place(mousePosition); // On pose la tuile
             hide();
         } else if (head.canPlaceThere()) {
-            Multiplayer.courrier.sendMessage("wantToPlaceTile");
             Functions.snap(mousePosition); // Tu alignes les coordonées sur la "grille"
             place(mousePosition);
             hide();
@@ -227,6 +226,24 @@ public class Queue implements Serializable {
             sprite.setVisible(false);
         }
     }
+
+    private boolean checkServerForPlacable() {
+        try {
+            Thread.sleep(10);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        Multiplayer.courrier.sendMessage("wantToPlaceTile none");
+        System.out.println("Sent the fucking message");
+        try {
+            Thread.sleep(10);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return Multiplayer.courrier.getAnswer();
+    }
+
+    private int count = 2;
     public void handleInput() {
         // Uh, this is going to be fun
         Vector2 mousePositionStatic = Functions.mouseInput((OrthographicCamera) shown.getStage().getCamera());
@@ -244,7 +261,11 @@ public class Queue implements Serializable {
             if (isMovable) { // Truc classique pour avoir deux comportements sur un seul objet
                 mousePosition.sub(tileSize / 2, tileSize / 2); // Pour que le sprite soit centré sur la souris
                 setSpritePosition(mousePosition.x,mousePosition.y); // On suit la souris
-                Multiplayer.courrier.sendMessage("movingTile " + mousePosition.x + " "+ mousePosition.y);
+                if (count == 2) {
+                    Multiplayer.courrier.sendMessage("movingTile " + mousePosition.x + " " + mousePosition.y);
+                    count = 0;
+                }
+                count ++;
                 if (Gdx.input.isKeyJustPressed(Input.Keys.E)) {
                     rotate(1);
                     Multiplayer.courrier.sendMessage("rotateTile 1");
@@ -253,7 +274,7 @@ public class Queue implements Serializable {
                     rotate(-1);
                     Multiplayer.courrier.sendMessage("rotateTile -1");
                 }
-                if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {// si on sélectionne un endroit
+                if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT) && checkServerForPlacable()) {// si on sélectionne un endroit
                     placeHandleAll(mousePosition);
                     isMovable = false;
                 }
