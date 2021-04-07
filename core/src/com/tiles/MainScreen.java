@@ -27,6 +27,7 @@ import com.utils.Multiplayer;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.concurrent.BrokenBarrierException;
 
 // La caméra
 import static com.utils.Functions.*;
@@ -93,13 +94,10 @@ public class MainScreen extends BaseScreen {
         }
         Multiplayer.courrier = new Courrier(Multiplayer.me.pseudo, Multiplayer.port, Multiplayer.serverIP);
 
-
-        while (!Multiplayer.isServerSetAndGo) {
-            try {
-                Thread.sleep(10);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+        try {
+            Multiplayer.cyclicBarrier.await();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         if (Multiplayer.isServer) {
             queue = new Queue(9); // J'ai fait les cases uniquement jusqu'à la 9
@@ -109,8 +107,8 @@ public class MainScreen extends BaseScreen {
             }
         }
         try {
-            Thread.sleep(10);
-        } catch (InterruptedException e) {
+            Multiplayer.cyclicBarrier.await();
+        } catch (Exception e) {
             e.printStackTrace();
         }
         System.out.println("Getting over it");

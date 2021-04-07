@@ -2,22 +2,13 @@ package com.multiplayer
 
 
 import com.badlogic.gdx.graphics.Color
-import com.badlogic.gdx.math.Interpolation
-import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.scenes.scene2d.actions.Actions
 import com.tiles.Player
 import com.tiles.Queue
 import com.utils.Functions
-import com.utils.Multiplayer
 import com.utils.Multiplayer.*
 import com.utils.TileAndCases
-import kotlinx.coroutines.CoroutineStart
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import kotlinx.serialization.decodeFromString
-import kotlinx.serialization.json.Json
 import java.io.BufferedReader
-import java.io.InputStream
 import java.io.InputStreamReader
 import java.util.Objects.isNull
 
@@ -51,12 +42,17 @@ class Decryptor() {
                         val inputStream = courrier.receivingSocket.inputStream
                         val tempString = BufferedReader(InputStreamReader(inputStream)).readLine()
                         if (TileAndCases.queue==null) TileAndCases.queue = Queue(tempString)
+                        cyclicBarrier.await()
                     }
                     "else" -> {
                     }
                 }
             }
-            "setAndGo" -> Multiplayer.isServerSetAndGo = true;
+            "setAndGo" -> {
+                cyclicBarrier.await()
+                cyclicBarrier.reset()
+
+            }
             "ping" -> {
                 if (isServer) {
                     for (client in clientList.clientList) {

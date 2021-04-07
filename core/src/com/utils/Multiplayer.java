@@ -8,11 +8,12 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CyclicBarrier;
 
 public class Multiplayer {
     public static Courrier courrier;
     public static ButtonList buttonList;
-    public static int numberOfPlayers = 1;
+    public static int numberOfPlayers = 2;
     public static ClientList clientList = new ClientList(Multiplayer.numberOfPlayers);
     public static Decryptor key = new Decryptor();
     public static boolean isServer = false;
@@ -23,7 +24,8 @@ public class Multiplayer {
 
     public static boolean isHoldingPawn = false;
 
-    public static boolean isServerSetAndGo = false;
+    public volatile static boolean isServerSetAndGo = false;
+    public static CyclicBarrier cyclicBarrier = new CyclicBarrier(2);
 
     // Pour la sérialisation
     public static ObjectMapper mapper = new ObjectMapper();
