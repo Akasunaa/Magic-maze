@@ -24,7 +24,7 @@ class Decryptor() {
         when (action) {
             "answer" -> {
                 courrier.answer = receiver.toBoolean()
-                cyclicBarrier.await()
+                cyclicBarrier.await() // Pour synchroniser les threads
                 cyclicBarrier.reset()
             }
             "sending" -> {

@@ -31,6 +31,14 @@ public class ServerMaker {
         //clientList = cL;
         //this.key = key;
         thread = new Thread(new Runnable() {
+            private void sleep() {
+                int sleepTime = 30;
+                try {
+                    Thread.sleep(sleepTime);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
             @Override
             public void run() {
                 ServerSocketHints serverSocketHint = new ServerSocketHints();
@@ -70,11 +78,7 @@ public class ServerMaker {
                 InputStream inputStream; // Et l'InputStream
                 // Une boucle pour récupérer les avatars, rien à changer par rapport à une boucle normale
                 for (Client tempClient : clientList.clientList) {
-                    try {
-                        tempClient.receivingSocket.getOutputStream().write("Server send Player \n".getBytes());
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+                    tempClient.sendMessage("send Player");
                     socket = tempClient.getSendingSocket(); // On prends la socket du client
                     inputStream = socket.getInputStream();
                     try {
@@ -86,7 +90,6 @@ public class ServerMaker {
                         e.printStackTrace();
                     }
                 }
-                int sleepTime = 30;
 
                 // Une boucle pour redistribuer les players
                 for (Client tempClient : Multiplayer.clientList.clientList) {
@@ -97,35 +100,15 @@ public class ServerMaker {
                         e.printStackTrace();
                     }
                     for (Client tempTempClient : Multiplayer.clientList.clientList) {
-                        try {
-                            Thread.sleep(sleepTime);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-                        try {
-                            tempTempClient.receivingSocket.getOutputStream().write((tempClient.getId() + " sending Player \n").getBytes());
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                        try {
-                            Thread.sleep(sleepTime);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-                        try {
-                            tempTempClient.receivingSocket.getOutputStream().write((tempString + " \n").getBytes());
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
+                        sleep();
+                        tempTempClient.sendClearMessage(tempClient.getId() + " sending Player");
+                        sleep();
+                        tempTempClient.sendClearMessage(tempString + " \n");
                         System.out.println("Server: Redistributing the Player of " + tempClient.getId() + " to " + tempTempClient.getId());
                     }
                 }
 
-                try {
-                    Thread.sleep(sleepTime);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+                sleep();
                 // Je... ne suis pas sûr de pourquoi je suis obligé de faire ça
                 // C'est très bizarre, je pense qu'il doit y avoir des histoires de voyage temporel
                 // Ou un truc du genre

@@ -209,6 +209,7 @@ public class Pawn implements Serializable {
         Multiplayer.courrier.sendMessage("wantToTakePawn " + Colors.getColor(color));
         try {
             Multiplayer.cyclicBarrier.await();
+            // Pour synchroniser les threads
         } catch (Exception e) {
             e.printStackTrace();
         }

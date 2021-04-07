@@ -211,16 +211,6 @@ public class Queue implements Serializable {
         shown.setVisible(true);
     }
 
-    private boolean checkServerForClickable() {
-        Multiplayer.courrier.sendMessage("wantToTakeTile none");
-        try {
-            Multiplayer.cyclicBarrier.await();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return Multiplayer.courrier.getAnswer();
-    }
-
     public void makingMovable() {
         shown.setVisible(false);
         sprite.setVisible(true);
@@ -258,6 +248,18 @@ public class Queue implements Serializable {
         Multiplayer.courrier.sendMessage("wantToPlaceTile none");
         try {
             Multiplayer.cyclicBarrier.await();
+            // Pour synchroniser les threads
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return Multiplayer.courrier.getAnswer();
+    }
+
+    private boolean checkServerForClickable() {
+        Multiplayer.courrier.sendMessage("wantToTakeTile none");
+        try {
+            Multiplayer.cyclicBarrier.await();
+            // Pour synchroniser les threads
         } catch (Exception e) {
             e.printStackTrace();
         }
