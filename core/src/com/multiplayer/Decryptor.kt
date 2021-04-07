@@ -50,7 +50,7 @@ class Decryptor() {
                         println("$suffix: Getting a Queue")
                         val inputStream = courrier.receivingSocket.inputStream
                         val tempString = BufferedReader(InputStreamReader(inputStream)).readLine()
-                        TileAndCases.queue = Queue(tempString)
+                        if (TileAndCases.queue==null) TileAndCases.queue = Queue(tempString)
                     }
                     "else" -> {
                     }
@@ -90,15 +90,17 @@ class Decryptor() {
                         }
                     }
                 }
-                try {
-                    val x = message.split(' ')[3].toFloat()
-                    val y = message.split(' ')[4].toFloat()
-                    // Try and do a bit of interpolation here
-                    // Edit: it's mostly done i think
-                    tempPawn.sendToTarget()
-                    tempPawn.setTarget(x,y)
-                } catch (e: Exception) {
-                    println("Wrong Numbers Sent")
+                else {
+                    try {
+                        val x = message.split(' ')[3].toFloat()
+                        val y = message.split(' ')[4].toFloat()
+                        // Try and do a bit of interpolation here
+                        // Edit: it's mostly done i think
+                        tempPawn.sendToTarget()
+                        tempPawn.setTarget(x, y)
+                    } catch (e: Exception) {
+                        println("Wrong Numbers Sent")
+                    }
                 }
             }
             "placePawn" -> {
@@ -108,7 +110,8 @@ class Decryptor() {
             }
             "wantToPlacePawn" -> {
                 val tempPawn = Functions.getPawn(receiver)
-                if (Functions.findCase(tempPawn.position).pawn.equals(null)) {
+                val tempCase = Functions.findCase(tempPawn.position)
+                if (true || null == tempCase.pawn) {
                     clientList.getClient(sender).sendMessage("answer true")
                     for (tempClient in clientList.clientList) {
                         if (!tempClient.id.equals(sender)) {

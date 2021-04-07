@@ -161,6 +161,7 @@ public class Case implements Serializable {
         if (!seen && isAccessible && (player.pawn == pawn || pawn == null)) {
             seen = true; // Parcours de graphe classique pour éviter les StackOverflow
             explored();
+            System.out.println("hoi");
             if (tempPlayer.north) {
                 index = modulo(north + tile.rotation, numberDirections);
                 if (caseList[index] != null) {

@@ -72,6 +72,9 @@ public class Pawn implements Serializable {
     }
 
     private float size;
+    public float getSize() {
+        return size;
+    }
     // Je le met parce que Compte me l'a demandé
     // mais je pense pas que ça vaille le coup vu qu'il est forcèment chargé ?
 
@@ -175,6 +178,7 @@ public class Pawn implements Serializable {
         if (isMovable) {
             if (!hasExplored) { // On fait le pathfinding une seule fois
                 setCase.show(); // On montre la case de départ
+                player.takesPawn(this);
                 setCase.explore(player); // On lance le pathfinding (structure récursive)
                 hasExplored = true; // Et on montre qu'on a déjà fait le pathfinding
             }
@@ -190,6 +194,7 @@ public class Pawn implements Serializable {
             if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) { // Puis si on clique quelque part
                 if (canPlaceHere(Functions.mouseInput(), player)) {
                     place(Functions.mouseInput());
+                    player.dropsPawn(this);
                 }
             }
         } else isMovable = (Gdx.input.isButtonJustPressed(Input.Buttons.RIGHT) &&

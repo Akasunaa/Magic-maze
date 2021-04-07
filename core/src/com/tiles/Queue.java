@@ -236,6 +236,7 @@ public class Queue implements Serializable {
             place(mousePosition); // On pose la tuile
             hide();
         } else if (head.canPlaceThere()) {
+            System.out.println("hoi");
             Functions.snap(mousePosition); // Tu alignes les coordonées sur la "grille"
             place(mousePosition);
             hide();

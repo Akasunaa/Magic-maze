@@ -25,7 +25,7 @@ public class TileAndCases {
     public static Matrix3 newBase = new Matrix3(new float[]{tileSize, -caseSize, 0f, caseSize, tileSize, 0f, 0f, 0f, 1f});
     public static Matrix3 newBaseInvert = new Matrix3(newBase).inv();
 
-    public static Queue queue;
+    public static Queue queue=null;
 
     public static ArrayList<Pawn> pawnList = new ArrayList();
 
