@@ -34,8 +34,8 @@ public class LobbyScreen extends BaseScreen{
     {
         super(g);
 
-        //instrumental.setVolume(audioVolume);
-        //audioSlider.setValue( audioVolume );
+        instrumental.setVolume(audioVolume);
+        audioSlider.setValue( audioVolume );
     }
 
     public void create()
@@ -55,11 +55,11 @@ public class LobbyScreen extends BaseScreen{
 
 
         // passer audio volume en variable globale de MagicGame.java
-//        instrumental = Gdx.audio.newMusic(Gdx.files.internal("Music&Sound/MusicMenu.wav"));
-//        audioVolume = 0.70f;
-//        instrumental.setLooping(true);
-//        instrumental.setVolume(audioVolume);
-//        instrumental.play();
+        instrumental = Gdx.audio.newMusic(Gdx.files.internal("Music&Sound/MusicMenu.wav"));
+        audioVolume = 0.70f;
+        instrumental.setLooping(true);
+        instrumental.setVolume(audioVolume);
+        instrumental.play();
 
         BaseActor background = new BaseActor();
         background.setTexture( new Texture(Gdx.files.internal("MenuAssets/BlurryMallBackground.jpg")) );
@@ -224,11 +224,11 @@ public class LobbyScreen extends BaseScreen{
                         }
                         public void touchUp (InputEvent event, float x, float y, int pointer, int button)
                         {
-//                            Cell<BaseActor> cell = uiTable.getCell(playerList[finalI][AvatarNumbers[finalI]]);
-//                            cell.clearActor();
-//
-//                            AvatarNumbers[finalI] = modulo(AvatarNumbers[finalI] - 1, 10);
-//                            cell.setActor(playerList[finalI][AvatarNumbers[finalI]]);
+                            Cell<BaseActor> cell = uiTable.getCell(playerList[finalI][AvatarNumbers[finalI]]);
+                            cell.clearActor();
+
+                            AvatarNumbers[finalI] = modulo(AvatarNumbers[finalI] - 1, 10);
+                            cell.setActor(playerList[finalI][AvatarNumbers[finalI]]);
 
                         }
                     });
@@ -244,11 +244,11 @@ public class LobbyScreen extends BaseScreen{
                         }
                         public void touchUp (InputEvent event, float x, float y, int pointer, int button)
                         {
-//                            Cell<BaseActor> cell = uiTable.getCell(playerList[finalI][AvatarNumbers[finalI]]);
-//                            cell.clearActor();
-//
-//                            AvatarNumbers[finalI] = modulo(AvatarNumbers[finalI] + 1, 10);
-//                            cell.setActor(playerList[finalI][AvatarNumbers[finalI]]);
+                            Cell<BaseActor> cell = uiTable.getCell(playerList[finalI][AvatarNumbers[finalI]]);
+                            cell.clearActor();
+
+                            AvatarNumbers[finalI] = modulo(AvatarNumbers[finalI] + 1, 10);
+                            cell.setActor(playerList[finalI][AvatarNumbers[finalI]]);
 
                         }
                     });
@@ -264,13 +264,13 @@ public class LobbyScreen extends BaseScreen{
         for (int i=0; i<4; i++){
             uiTable.row();
             uiTable.add(leftButtonList[i]).left();
-            //uiTable.add(avatarImages[i]).center().pad(20, 20, 20, 20);
+            uiTable.add(avatarImages[i]).center().pad(20, 20, 20, 20);
             uiTable.add(rightButtonList[i]).right();
         }
-//        for (int i=0; i<4; i++) {
-//            uiTable.row();
-//            uiTable.add(avatarLabel).colspan(3).center().padTop(20);
-//        }
+        for (int i=0; i<4; i++) {
+            uiTable.row();
+            uiTable.add(avatarLabel).colspan(3).center().padTop(20);
+        }
         uiTable.row();
         uiTable.add(optionButton).center().colspan(3).padTop(20);
         uiTable.row();
