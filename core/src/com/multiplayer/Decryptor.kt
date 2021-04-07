@@ -6,6 +6,7 @@ import com.badlogic.gdx.scenes.scene2d.actions.Actions
 import com.tiles.Player
 import com.tiles.Queue
 import com.utils.Functions
+import com.utils.Multiplayer
 import com.utils.Multiplayer.*
 import com.utils.TileAndCases
 import java.io.BufferedReader
@@ -23,6 +24,8 @@ class Decryptor() {
         when (action) {
             "answer" -> {
                 courrier.answer = receiver.toBoolean()
+                cyclicBarrier.await()
+                cyclicBarrier.reset()
             }
             "sending" -> {
                 when (receiver) {

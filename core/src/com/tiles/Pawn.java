@@ -15,6 +15,7 @@ import com.utils.Functions;
 import com.utils.Multiplayer;
 
 import java.io.Serializable;
+import java.util.concurrent.BrokenBarrierException;
 
 import static com.utils.Functions.findCase;
 import static com.utils.GameScreens.mainScreen;
@@ -207,8 +208,8 @@ public class Pawn implements Serializable {
     private boolean checkServerForClickable() {
         Multiplayer.courrier.sendMessage("wantToTakePawn " + Colors.getColor(color));
         try {
-            Thread.sleep(10);
-        } catch (InterruptedException e) {
+            Multiplayer.cyclicBarrier.await();
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return Multiplayer.courrier.getAnswer();

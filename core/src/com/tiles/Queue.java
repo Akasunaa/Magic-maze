@@ -214,8 +214,8 @@ public class Queue implements Serializable {
     private boolean checkServerForClickable() {
         Multiplayer.courrier.sendMessage("wantToTakeTile none");
         try {
-            Thread.sleep(10);
-        } catch (InterruptedException e) {
+            Multiplayer.cyclicBarrier.await();
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return Multiplayer.courrier.getAnswer();
@@ -257,8 +257,8 @@ public class Queue implements Serializable {
         }
         Multiplayer.courrier.sendMessage("wantToPlaceTile none");
         try {
-            Thread.sleep(10);
-        } catch (InterruptedException e) {
+            Multiplayer.cyclicBarrier.await();
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return Multiplayer.courrier.getAnswer();
