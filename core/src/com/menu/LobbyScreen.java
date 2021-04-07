@@ -43,23 +43,23 @@ public class LobbyScreen extends BaseScreen{
         AvatarNumbers = new int[]{0, 1, 2, 3};
 
         Skin uiSkin = new Skin(Gdx.files.internal("GameUIAssets/uiskin.json"));
-//        for (int i =0; i<3; i++) {
-//            usernameTextFields[i] = new TextField("Pseudo...", uiSkin);
-//        }
-        usernameTextField0 = new TextField("Pseudo...", uiSkin);
-        usernameTextField1 = new TextField("Pseudo...", uiSkin);
-        usernameTextField2 = new TextField("Pseudo...", uiSkin);
-        usernameTextField3 = new TextField("Pseudo...", uiSkin);
+        usernameTextFields = new TextField[4];
+        for (int i =0; i<3; i++) {
+            usernameTextFields[i] = new TextField("Pseudo...", uiSkin);
+        }
+        usernameTextField0 = new TextField("Joueur1", uiSkin);
+        usernameTextField1 = new TextField("Joueur2", uiSkin);
+        usernameTextField2 = new TextField("Joueur3", uiSkin);
+        usernameTextField3 = new TextField("Joueur4", uiSkin);
 
         Gdx.input.setInputProcessor(uiStage);
 
-
-        // passer audio volume en variable globale de MagicGame.java
+        // pour le son
         instrumental = Gdx.audio.newMusic(Gdx.files.internal("Music&Sound/MusicMenu.wav"));
-        audioVolume = 0.70f;
-        instrumental.setLooping(true);
-        instrumental.setVolume(audioVolume);
-        instrumental.play();
+        //audioVolume = 0.70f;
+        //instrumental.setLooping(true);
+        //instrumental.setVolume(audioVolume);
+        //instrumental.play();
 
         BaseActor background = new BaseActor();
         background.setTexture( new Texture(Gdx.files.internal("MenuAssets/BlurryMallBackground.jpg")) );
@@ -86,8 +86,6 @@ public class LobbyScreen extends BaseScreen{
 //                    playerNames[3] = usernameTextField3.getText();
 
                 mainScreen = new MainScreen(game, AvatarNumbers, playerNames, audioVolume);
-
-
 
                 mainScreen.load();
                 game.setScreen( mainScreen );
@@ -255,26 +253,27 @@ public class LobbyScreen extends BaseScreen{
         }
 
         uiTable.pad(20);
-        uiTable.add(quitButton).colspan(3).right().expandX();;
+        uiTable.add(quitButton).colspan(12).right().expandX();;
         uiTable.row();
-        uiTable.add(usernameTextField0).center().padTop(20);
-        uiTable.add(usernameTextField1).center().padTop(20);
-        uiTable.add(usernameTextField2).center().padTop(20);
-        uiTable.add(usernameTextField3).center().padTop(20);
+        uiTable.add(usernameTextField0).center().padTop(200).colspan(3);
+        uiTable.add(usernameTextField1).center().padTop(200).colspan(3);
+        uiTable.add(usernameTextField2).center().padTop(200).colspan(3);
+        uiTable.add(usernameTextField3).center().padTop(200).colspan(3);
+        uiTable.row();
         for (int i=0; i<4; i++){
-            uiTable.row();
-            uiTable.add(leftButtonList[i]).left();
-            uiTable.add(avatarImages[i]).center().pad(20, 20, 20, 20);
-            uiTable.add(rightButtonList[i]).right();
+            //uiTable.row();
+            uiTable.add(leftButtonList[i]).pad(20, 20, 20, 20);
+            uiTable.add(playerList[i][i]).pad(20, 0, 20, 0);
+            uiTable.add(rightButtonList[i]).pad(20, 20, 20, 20);
         }
-        for (int i=0; i<4; i++) {
-            uiTable.row();
-            uiTable.add(avatarLabel).colspan(3).center().padTop(20);
-        }
+//        for (int i=0; i<4; i++) {
+//            uiTable.row();
+//            uiTable.add(avatarLabel).colspan(3).center().padTop(20);
+//        }
         uiTable.row();
-        uiTable.add(optionButton).center().colspan(3).padTop(20);
+        uiTable.add(optionButton).center().colspan(12).padTop(150);
         uiTable.row();
-        uiTable.add(startButton).center().colspan(3).padTop(20);
+        uiTable.add(startButton).center().colspan(12).padTop(100);
         uiTable.add().center().padTop(20);
         uiTable.row();
 
@@ -290,4 +289,10 @@ public class LobbyScreen extends BaseScreen{
     public boolean scrolled(float amountX, float amountY) {
         return false;
     }
+
+    public void dispose()
+    {
+        instrumental.dispose();
+    }
 }
+

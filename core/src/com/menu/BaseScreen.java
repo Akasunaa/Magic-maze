@@ -68,20 +68,32 @@ public abstract class BaseScreen implements Screen, InputProcessor {
         Texture tempAvatar;
         final String[] animalNames = new String[] {"elephant","giraffe","hippo","monkey","panda","parrot","penguin","pig","rabbit","snake"};
         avatarImages = new BaseActor[animalNames.length];
+        player0Avatars = new BaseActor[animalNames.length];
+        player1Avatars = new BaseActor[animalNames.length];
+        player2Avatars = new BaseActor[animalNames.length];
+        player3Avatars = new BaseActor[animalNames.length];
         for (int i = 0; i < animalNames.length; i++) {
             tempAvatar = new Texture(Gdx.files.internal("Avatars/" + animalNames[i] + ".png"));
             tempAvatar.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
-            avatarImages[i].setTexture(tempAvatar);
+//            avatarImages[i] = new BaseActor();
+//            avatarImages[i].setTexture(tempAvatar);
+//            avatarImages[i].scaleBy(0.01f, 0.01f);
             player0Avatars[i] = new BaseActor();
             player0Avatars[i].setTexture(tempAvatar);
+            player0Avatars[i].setSize(150,150);
             player1Avatars[i] = new BaseActor();
             player1Avatars[i].setTexture(tempAvatar);
+            player1Avatars[i].setSize(150,150);
             player2Avatars[i] = new BaseActor();
             player2Avatars[i].setTexture(tempAvatar);
+            player2Avatars[i].setSize(150,150);
             player3Avatars[i] = new BaseActor();
             player3Avatars[i].setTexture(tempAvatar);
-            }
+            player3Avatars[i].setSize(150,150);
 
+        }
+
+        // liste des listes des images des avatars des joueurs
         playerList = new BaseActor[][]{player0Avatars, player1Avatars, player2Avatars, player3Avatars};
 
         buttonHover = Gdx.audio.newSound(Gdx.files.internal("Music&Sound/buttonHover.mp3"));

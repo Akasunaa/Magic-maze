@@ -69,7 +69,7 @@ public class MainMenu extends BaseScreen
             }
             public void touchUp (InputEvent event, float x, float y, int pointer, int button)
             {
-                dispose();
+                // dispose();
                 LobbyScreen lobbyScreen = new LobbyScreen(game, audioVolume);
                 game.setScreen( lobbyScreen );
             }
@@ -107,7 +107,7 @@ public class MainMenu extends BaseScreen
                     { return true; }
                     public void touchUp (InputEvent event, float x, float y, int pointer, int button)
                     {
-                        dispose();
+                        // dispose();
                         LobbyScreen lobbyScreen = new LobbyScreen(game, audioVolume);
                         game.setScreen( lobbyScreen );
                     }
@@ -148,7 +148,7 @@ public class MainMenu extends BaseScreen
                 });
 
 
-        TextButton optionButton = new TextButton("Options", game.skin, "uiTextButtonStyle");
+        TextButton optionButton = new TextButton("Options et aide", game.skin, "uiTextButtonStyle");
         optionButton.addListener(
                 new InputListener()
                 {
@@ -162,8 +162,9 @@ public class MainMenu extends BaseScreen
                     }
                 });
 
-        Label optionLabel = new Label("Options :", game.skin, "uiLabelStyle");
+        Label optionLabel = new Label("Options et aide :", game.skin, "uiLabelStyle");
         Label volumeLabel = new Label("Volume", game.skin, "uiLabelStyle");
+        Label helpLabel = new Label("Voici comment rejoindre une partie et créer une partie : ", game.skin, "uiLabelStyle");
 
         TextButton returnButton = new TextButton("Return", game.skin, "uiTextButtonStyle");
         returnButton.addListener(
@@ -199,6 +200,8 @@ public class MainMenu extends BaseScreen
         optionOverlay.add(volumeLabel).padBottom(20);
         optionOverlay.row();
         optionOverlay.add(audioSlider).width(400).padBottom(50);
+        optionOverlay.row();
+        optionOverlay.add(helpLabel).padBottom(50);
         optionOverlay.row();
         optionOverlay.add(returnButton);
 
