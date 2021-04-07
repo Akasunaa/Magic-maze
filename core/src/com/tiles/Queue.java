@@ -170,7 +170,7 @@ public class Queue implements Serializable {
         sprite = head.getSprite();
         sprite.setVisible(false);
         shown.setTexture(sprite.region.getTexture());
-        shown.setVisible(false);
+        if (isHidden) shown.setVisible(false);
         shown.setRotation(0);
     }
 
@@ -181,6 +181,7 @@ public class Queue implements Serializable {
 
     public void place(Vector2 mousePosition) {
         sprite.toBack();
+        head.place();
         tileList.add(head); // On pose la tuile
         head.x = mousePosition.x; //Bon c'est classique ça
         head.y = mousePosition.y;
@@ -199,7 +200,9 @@ public class Queue implements Serializable {
             reveal();
         }
     }
+
     public void reveal() {
+        System.out.println("Revealing Queue");
         if (!isHidden) {
             numberRevealsDown ++;
         }
@@ -236,7 +239,6 @@ public class Queue implements Serializable {
             place(mousePosition); // On pose la tuile
             hide();
         } else if (head.canPlaceThere()) {
-            System.out.println("hoi");
             Functions.snap(mousePosition); // Tu alignes les coordonées sur la "grille"
             place(mousePosition);
             hide();

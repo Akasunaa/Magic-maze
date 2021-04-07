@@ -107,7 +107,7 @@ class Decryptor() {
             "wantToPlacePawn" -> {
                 val tempPawn = Functions.getPawn(receiver)
                 val tempCase = Functions.findCase(tempPawn.position)
-                if (true || null == tempCase.pawn) {
+                if (tempCase?.pawn == null) {
                     clientList.getClient(sender).sendMessage("answer true")
                     for (tempClient in clientList.clientList) {
                         if (!tempClient.id.equals(sender)) {

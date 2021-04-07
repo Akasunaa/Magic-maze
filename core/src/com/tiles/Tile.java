@@ -285,10 +285,11 @@ public class Tile implements Serializable {
         return false;
     }
 
+
     private Tile[] getNeighbouringTiles() {
         Vector2 mousePosition = new Vector2(sprite.getX(),sprite.getY());
         mousePosition.sub(TileAndCases.origin);
-        mousePosition.sub(tileSize / 2, tileSize / 2);
+//        mousePosition.sub(tileSize / 2, tileSize / 2);
         mousePosition.mul(TileAndCases.newBaseInvert);
         int x = Math.round(mousePosition.x);
         int y = Math.round(mousePosition.y);
@@ -331,7 +332,7 @@ public class Tile implements Serializable {
             for (int i = 0; i < numberDirections; i++) {
                 if (exits[i]) { // On commence par vérifier que i est bien une sortie
                     direction = modulo(i + rotation, numberDirections);
-                    if (isValidPlacement(neighbors[direction], direction)) {
+                    if ((neighbors[direction] != null && neighbors[direction].exits[modulo(direction + 2- neighbors[direction].rotation, numberDirections)])) {
                         // On fait la même chose qu'avant, mais on considère simplement
                         // notre exit comme une entrance
                         link(exitCases[i], neighbors[direction].exitCases[modulo(direction + 2 - neighbors[direction].rotation, numberDirections)], direction);
