@@ -1,12 +1,16 @@
 package com.menu;
 
 import com.badlogic.gdx.Gdx;
+//import com.badlogic.gdx.ai.btree.Task;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.*;
+import com.badlogic.gdx.scenes.scene2d.Action;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.utils.Timer;
 
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
@@ -61,9 +65,16 @@ public class LobbyScreen extends BaseScreen{
         //instrumental.setVolume(audioVolume);
         //instrumental.play();
 
-        BaseActor background = new BaseActor();
-        background.setTexture( new Texture(Gdx.files.internal("MenuAssets/BlurryMallBackground.jpg")) );
-        uiStage.addActor( background );
+        //final BaseActor background = new BaseActor();
+        //background.setTexture( new Texture(Gdx.files.internal("MenuAssets/BlurryMallBackground.jpg")) );
+        //uiStage.addActor( background );
+
+        final BaseActor transparentBackground = new BaseActor();
+        transparentBackground.setTexture( new Texture(Gdx.files.internal("MenuAssets/black.jpg")));
+        transparentBackground.setSize(1920,1080);
+        //transparentBackground.setColor(0,0,0,1);
+        uiStage.addActor (transparentBackground);
+
 
         final Sound buttonHover = Gdx.audio.newSound(Gdx.files.internal("Music&Sound/buttonHover.mp3"));
 
@@ -77,7 +88,26 @@ public class LobbyScreen extends BaseScreen{
             }
             public void touchUp (InputEvent event, float x, float y, int pointer, int button)
             {
-                dispose();
+//                Action fadeToBlack = Actions.sequence(
+//                        Actions.alpha(1f), // set transparency value
+//                        Actions.show(), // set visible to true
+//                        Actions.forever(
+//                                Actions.sequence(
+//                                        // color shade to approach, duration
+//                                        Actions.color(new Color(0, 0, 0, 1), 2)
+//
+//                                )
+//                        )
+//                );
+//                transparentBackground.addAction(fadeToBlack);
+
+                float delay = 2; // seconds
+
+                Timer.schedule(new Timer.Task(){
+                    @Override
+                    public void run() {
+
+                        dispose();
 
 
 //                    playerNames[0] = usernameTextField0.getText();
@@ -85,10 +115,14 @@ public class LobbyScreen extends BaseScreen{
 //                    playerNames[2] = usernameTextField2.getText();
 //                    playerNames[3] = usernameTextField3.getText();
 
-                mainScreen = new MainScreen(game, AvatarNumbers, playerNames, audioVolume);
+                        mainScreen = new MainScreen(game, AvatarNumbers, playerNames, audioVolume);
 
-                mainScreen.load();
-                game.setScreen( mainScreen );
+                        mainScreen.load();
+                        game.setScreen( mainScreen );
+                    }
+                }, delay);
+
+
             }
         });
 
@@ -194,7 +228,8 @@ public class LobbyScreen extends BaseScreen{
 
         optionOverlay.setBackground(optionBackground);
 
-        background.toBack();
+        //background.toBack();
+        transparentBackground.toBack();
 
         Texture leftArrowTexture = new Texture(Gdx.files.internal("MenuAssets/arrowSilver_left.png"));
         game.skin.add("leftArrow", leftArrowTexture );
@@ -251,6 +286,7 @@ public class LobbyScreen extends BaseScreen{
                         }
                     });
         }
+
 
         uiTable.pad(20);
         uiTable.add(quitButton).colspan(12).right().expandX();;
