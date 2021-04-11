@@ -44,14 +44,22 @@ public class Courrier {
         try {
             sendingSocket = Gdx.net.newClientSocket(Net.Protocol.TCP, ip, port, socketHints);
             sendMessage("connected $ip");
-            String waitForIt = (new BufferedReader(new InputStreamReader(sendingSocket.getInputStream()))).readLine();
+        } catch (Exception e) {
+            throw new ServerNotReachedException("Server not found");
+        }
+        String waitForIt = null;
+        try {
+            waitForIt = (new BufferedReader(new InputStreamReader(sendingSocket.getInputStream()))).readLine();
+            if (waitForIt.equals("server rejected you"))
+                throw new ServerNotReachedException("Username is already taken");
             receivingSocket = Gdx.net.newClientSocket(Net.Protocol.TCP, ip, port, socketHints);
             waitForIt = (new BufferedReader(new InputStreamReader(receivingSocket.getInputStream()))).readLine();
-            sendObject(Multiplayer.me);
-            new ClientListener(Multiplayer.key, receivingSocket).startThread();
-        } catch (Exception e) {
-            throw new ServerNotReachedException();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+
+        sendObject(Multiplayer.me);
+        new ClientListener(Multiplayer.key, receivingSocket).startThread();
 
     }
 

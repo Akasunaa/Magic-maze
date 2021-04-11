@@ -59,6 +59,9 @@ public class ServerMaker {
                         clientList.add(client); // On vérifie si le client n'est pas dans la liste, et on l'ajoute
                         System.out.println("Server: Client added: " + client.getIp() + " as " + client.getId());
                     }
+                    else {
+                        client.sendMessage("rejected you");
+                    }
                 }
 
                 // Deuxième boucle pour bien mettre en place les sockets

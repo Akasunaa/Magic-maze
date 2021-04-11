@@ -56,11 +56,7 @@ public class MainScreen extends BaseScreen {
         if (Multiplayer.isServer) {
             new ServerMaker(Multiplayer.port, Multiplayer.clientList).startThread();
         }
-        try {
-            Multiplayer.courrier = new Courrier(Multiplayer.me.pseudo, Multiplayer.port, Multiplayer.serverIP);
-        } catch (ServerNotReachedException e) {
-            throw new ServerNotReachedException();
-        }
+        Multiplayer.courrier = new Courrier(Multiplayer.me.pseudo, Multiplayer.port, Multiplayer.serverIP);
 
         // Raaaah c'est ça qui renvoie l'erreur
         InputMultiplexer inputMultiplexer = new InputMultiplexer(uiStage, mainStage, new MouseWheelChecker());

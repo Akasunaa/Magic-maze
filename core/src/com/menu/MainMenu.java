@@ -97,7 +97,7 @@ public class MainMenu extends BaseScreen {
                     dispose();
                     game.setScreen(mainScreen);
                 } catch (ServerNotReachedException exception) {
-                    System.out.println("Unable to reach server, was the IP you provided the good one ?");
+                    exception.printError();
                 }
             }
         });

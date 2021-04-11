@@ -37,7 +37,7 @@ class KotlinCourrier(val id: String, port: Int, ip: String) {
             sendObject(Multiplayer.me)
             ClientListener(Multiplayer.key, receivingSocket).startThread()
         } catch (e: Exception) {
-            throw(ServerNotReachedException())
+            throw(ServerNotReachedException("blabla osef"))
         }
 
     }
