@@ -24,7 +24,7 @@ import static com.utils.TileAndCases.*;
 
 
 public class Pawn implements Serializable {
-    private int color; // La couleur du pion
+    private final int color; // La couleur du pion
     public Player player = null;
 
     public int getColor() {
@@ -106,8 +106,8 @@ public class Pawn implements Serializable {
         position.y = target.y;
     }
 
-    private static Vector2 target = new Vector2(0,0);
-    private static Vector2 position = new Vector2(0,0);
+    private static final Vector2 target = new Vector2(0,0);
+    private static final Vector2 position = new Vector2(0,0);
     public boolean hasTarget= false;
     public float speed = 0;
     public void setTarget(float x, float y) {

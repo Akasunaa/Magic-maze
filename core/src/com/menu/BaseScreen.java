@@ -10,6 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.multiplayer.ServerNotReachedException;
 
 public abstract class BaseScreen implements Screen {
     protected MagicGame game;
@@ -32,7 +33,7 @@ public abstract class BaseScreen implements Screen {
 
     public boolean hasBackground = true;
 
-    public BaseScreen(MagicGame g) {
+    public BaseScreen(MagicGame g) throws ServerNotReachedException{
         game = g;
         mainStage = new Stage(new FitViewport(viewWidth, viewHeight));
         uiStage = new Stage(new FitViewport(viewWidth, viewHeight));
@@ -58,7 +59,7 @@ public abstract class BaseScreen implements Screen {
         create();
     }
 
-    public abstract void create();
+    public abstract void create() throws ServerNotReachedException;
     public abstract void update(float dt);
 
     // gameloop code; update, then render.

@@ -35,7 +35,7 @@ public class Queue implements Serializable {
     // Coordonées et taille
     private float x;
     private float y;
-    private float size = tileSize/2;
+    private final float size = tileSize/2;
     public boolean isFirst = true;
     // Pour placer le premier
 
@@ -212,6 +212,8 @@ public class Queue implements Serializable {
     }
 
     public void makingMovable() {
+        // Le genre de méthode qu'on doit créer pour gérer le multijoueur plus facilement
+        // C'est utilisé dans Decryptor
         shown.setVisible(false);
         sprite.setVisible(true);
         sprite.toFront();
@@ -273,12 +275,13 @@ public class Queue implements Serializable {
         Vector2 mousePosition = Functions.mouseInput();
         // Je le sauvegarde parce qu'on va le modifier
         if (!isEmpty) { // On fait rien si elle est vide
-            if (!isMovable && !isHidden &&
-                    Gdx.input.isButtonJustPressed(Input.Buttons.RIGHT) &&
-                    (x < mousePositionStatic.x) && (mousePositionStatic.x < x + size) &&
+            // Beaaucoup de Booléen donc je vais préciser
+            if (!isMovable && !isHidden && // Si elle n'est pas bougeable, révélée
+                    Gdx.input.isButtonJustPressed(Input.Buttons.RIGHT) && // Qu'on clique droit
+                    (x < mousePositionStatic.x) && (mousePositionStatic.x < x + size) && // Qu'on est dessus
                     (y < mousePositionStatic.y) && (mousePositionStatic.y < y + size) &&
-                    checkServerForClickable()) {
-                makingMovable();
+                    checkServerForClickable()) { // Et qu'on a le droit
+                makingMovable(); // Alors c'est bon
                 isMovable = true;
             }
             if (isMovable) { // Truc classique pour avoir deux comportements sur un seul objet
@@ -289,6 +292,7 @@ public class Queue implements Serializable {
                     count = 0;
                 }
                 count ++;
+                // Gestion de la rotation
                 if (Gdx.input.isKeyJustPressed(Input.Keys.E)) {
                     rotate(1);
                     Multiplayer.courrier.sendMessage("rotateTile 1");

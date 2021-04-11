@@ -12,6 +12,7 @@ import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.multiplayer.ServerNotReachedException;
 import com.tiles.Pawn;
 import com.utils.GameScreens;
 import com.utils.Multiplayer;
@@ -35,7 +36,7 @@ public class GameInterface extends BaseScreen {
 
 
     //constructeur
-    public GameInterface(MagicGame g) {
+    public GameInterface(MagicGame g) throws ServerNotReachedException {
         super(g);
     }
 

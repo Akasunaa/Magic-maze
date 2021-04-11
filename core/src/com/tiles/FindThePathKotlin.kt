@@ -33,7 +33,7 @@ class FindThePathKotlin : ApplicationAdapter() {
 
     // Le pion
     lateinit var greenPawn: Pawn
-    var pawntimeBaby = false;
+    var pawntimeBaby = false
 
     // Le joueur
     lateinit var player: Player
@@ -55,7 +55,7 @@ class FindThePathKotlin : ApplicationAdapter() {
         MainConstants.camera = camera
         // Cette caméra nous sert à avoir le bon système de coordonées
         mouseWheelChecker = MouseWheelChecker()
-        Gdx.input.setInputProcessor(mouseWheelChecker)
+        Gdx.input.inputProcessor = mouseWheelChecker
 
         tileList = ArrayList()
         //tileList.add(Tile(2))
@@ -93,7 +93,7 @@ class FindThePathKotlin : ApplicationAdapter() {
         Gdx.gl.glClearColor(125f / 255, 125f / 255, 125f / 255, 1f)
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT)
         // Couleur d'arrière plan, et on clear tout
-        batch.setProjectionMatrix(camera.combined) // On change le système de coordonées
+        batch.projectionMatrix = camera.combined // On change le système de coordonées
 
         batch.begin()
         coordMouse.draw(batch, stringMousePosition() + "\n$origin", 700f, 150f) // On écrit les coordonées

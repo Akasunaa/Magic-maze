@@ -1,7 +1,6 @@
 package com.tiles;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
@@ -10,31 +9,21 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Interpolation;
-import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.menu.BaseActor;
-import com.menu.GameInterface;
 import com.menu.BaseScreen;
+import com.menu.GameInterface;
 import com.menu.MagicGame;
 import com.multiplayer.Client;
 import com.multiplayer.Courrier;
 import com.multiplayer.ServerMaker;
+import com.multiplayer.ServerNotReachedException;
 import com.utils.Functions;
 import com.utils.Multiplayer;
 
-
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.concurrent.BrokenBarrierException;
 
-// La caméra
-import static com.utils.Functions.*;
-
-// La liste des tuiles affichées sur l'écran
-
-// le batch pour dessiner
+import static com.utils.Functions.mouseInput;
 import static com.utils.MainConstants.*;
 import static com.utils.TileAndCases.*;
 
@@ -55,13 +44,25 @@ public class MainScreen extends BaseScreen {
         return "x = " + (int) mouseInput(camera).x + "; y = " + (int) mouseInput(camera).y;
     }
 
-    public MainScreen(MagicGame g) {
+    public MainScreen(MagicGame g) throws ServerNotReachedException {
+        // L'exception vient de la création d'une instance de Courrier
         super(g);
     }
 
     BaseActor background;
 
-    public void create() {
+    public void create() throws ServerNotReachedException{
+
+        if (Multiplayer.isServer) {
+            new ServerMaker(Multiplayer.port, Multiplayer.clientList).startThread();
+        }
+        try {
+            Multiplayer.courrier = new Courrier(Multiplayer.me.pseudo, Multiplayer.port, Multiplayer.serverIP);
+        } catch (ServerNotReachedException e) {
+            throw new ServerNotReachedException();
+        }
+
+        // Raaaah c'est ça qui renvoie l'erreur
         InputMultiplexer inputMultiplexer = new InputMultiplexer(uiStage, mainStage, new MouseWheelChecker());
         Gdx.input.setInputProcessor(inputMultiplexer);
         background = new BaseActor();
@@ -89,10 +90,7 @@ public class MainScreen extends BaseScreen {
         uiStage.addActor(coordMouse);
         uiStage.addActor(numberCase);
 
-        if (Multiplayer.isServer) {
-            new ServerMaker(Multiplayer.port, Multiplayer.clientList).startThread();
-        }
-        Multiplayer.courrier = new Courrier(Multiplayer.me.pseudo, Multiplayer.port, Multiplayer.serverIP);
+
 
         try {
             Multiplayer.cyclicBarrier.await();
@@ -118,7 +116,11 @@ public class MainScreen extends BaseScreen {
         for (Tile tile : tileList) {
             tile.load();
         }
-        gameInterface = new GameInterface(game);
+        try {
+            gameInterface = new GameInterface(game);
+        } catch (ServerNotReachedException e) {
+            e.printStackTrace();
+        }
         gameInterface.hasBackground = false;
         queue.setCoordinates(1920 - tileSize / 2 - 20, 20);
         queue.load();

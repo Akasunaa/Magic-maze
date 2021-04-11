@@ -89,7 +89,7 @@ class PushTheButton : ApplicationAdapter() {
     override fun render() {
         Gdx.gl.glClearColor(1f, 1f, 1f, 1f)
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT)
-        batch.setProjectionMatrix(camera.combined) // On change le système de coordonées
+        batch.projectionMatrix = camera.combined // On change le système de coordonées
         batch.begin()
 
         // Drawing the coordinates

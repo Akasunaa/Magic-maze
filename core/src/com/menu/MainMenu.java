@@ -12,6 +12,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
+import com.multiplayer.ServerNotReachedException;
 import com.tiles.MainScreen;
 import com.tiles.Player;
 import com.utils.Multiplayer;
@@ -31,7 +32,7 @@ public class MainMenu extends BaseScreen {
     public BaseActor currentAvatar;
 
 
-    public MainMenu(MagicGame g) {
+    public MainMenu(MagicGame g) throws ServerNotReachedException{
         super(g);
     }
 
@@ -89,11 +90,15 @@ public class MainMenu extends BaseScreen {
             }
 
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-                dispose();
-                Multiplayer.me.pseudo = usernameTextField.getText();
-                mainScreen = new MainScreen(game);
-                mainScreen.load();
-                game.setScreen(mainScreen);
+                try {
+                    Multiplayer.me.pseudo = usernameTextField.getText();
+                    mainScreen = new MainScreen(game);
+                    mainScreen.load();
+                    dispose();
+                    game.setScreen(mainScreen);
+                } catch (ServerNotReachedException exception) {
+                    System.out.println("Unable to reach server, was the IP you provided the good one ?");
+                }
             }
         });
 
@@ -128,11 +133,16 @@ public class MainMenu extends BaseScreen {
                     }
 
                     public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-                        dispose();
-                        Multiplayer.me.pseudo = usernameTextField.getText();
-                        mainScreen = new MainScreen(game);
-                        mainScreen.load();
-                        game.setScreen(mainScreen);
+                        try {
+                            Multiplayer.me.pseudo = usernameTextField.getText();
+                            mainScreen = new MainScreen(game);
+                            mainScreen.load();
+                            dispose();
+                            game.setScreen(mainScreen);
+                        } catch (ServerNotReachedException exception) {
+                            System.out.println("Unable to reach server, was the IP you provided the good one ?");
+                        }
+
                     }
                 });
 

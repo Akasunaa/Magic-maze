@@ -13,7 +13,7 @@ import java.io.BufferedReader
 import java.io.InputStreamReader
 import java.util.Objects.isNull
 
-class Decryptor() {
+class Decryptor {
     fun decryptMessage(message: String, isServer: Boolean) {
         val suffix = if (isServer) "Server" else "Client"
         println("$suffix: Message Received = $message")
@@ -149,7 +149,7 @@ class Decryptor() {
                     // There's no need for a specification of what tile we're sending
                     // Try and do a bit of interpolation here
                     // Edit: it's mostly done i think
-                    TileAndCases.queue.setSpritePosition(x,y);
+                    TileAndCases.queue.setSpritePosition(x,y)
                 } catch (e: Exception) {
                     println("Wrong Numbers Sent")
                 }
@@ -165,7 +165,7 @@ class Decryptor() {
                 else TileAndCases.queue.rotate(receiver.toInt())
             }
             "placeTile" -> {
-                TileAndCases.queue.placeHandleAll(TileAndCases.queue.getSpritePosition());
+                TileAndCases.queue.placeHandleAll(TileAndCases.queue.spritePosition)
             }
             "wantToPlaceTile" -> {
                 if (true) { // Je vois pas trop ce qu'il faut demander mais bon

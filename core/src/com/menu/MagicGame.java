@@ -13,6 +13,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.graphics.g2d.NinePatch;
 
 import com.badlogic.gdx.scenes.scene2d.ui.Slider.SliderStyle;
+import com.multiplayer.ServerNotReachedException;
 
 public class MagicGame extends Game {
     public Skin skin;
@@ -61,7 +62,12 @@ public class MagicGame extends Game {
         skin.add("uiSliderStyle", uiSliderStyle);
 
         //Toujours à la fin
-        MainMenu cm = new MainMenu(this);
+        MainMenu cm = null;
+        try {
+            cm = new MainMenu(this);
+        } catch (ServerNotReachedException e) {
+            e.printStackTrace();
+        }
         setScreen( cm );
     }
     public void dispose() {

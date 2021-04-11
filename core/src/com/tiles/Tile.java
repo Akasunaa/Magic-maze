@@ -23,7 +23,7 @@ import static com.utils.TileAndCases.*;
 
 public class Tile implements Serializable {
     public int number; // numéro de tuile
-    private String path; // path de la tuile
+    private final String path; // path de la tuile
     private transient BaseActor sprite; // transient ça veut dire qu'on le stock pas dans la serialization
 
     public BaseActor getSprite() {
@@ -31,7 +31,7 @@ public class Tile implements Serializable {
     } // On en a besoin pour la pile
 
     public Case[][] caseList; // Un tableau de 4x4 avec les cases
-    private Case[][][] caseListofCases; // Pour la serialization
+    private final Case[][][] caseListofCases; // Pour la serialization
     public int rotation = 0; // Indicateur de rotation (dans le sens trigonométrique)
     public boolean[] exits;
     public Case[] exitCases;
@@ -53,7 +53,7 @@ public class Tile implements Serializable {
 
     public float x = 0;
     public float y = 0;
-    private float size = TileAndCases.tileSize;
+    private final float size = TileAndCases.tileSize;
 
     public float getX() {
         return x;

@@ -6,10 +6,11 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.multiplayer.ServerNotReachedException;
 
 public class DefeatScreen extends BaseScreen {
 
-    public DefeatScreen(MagicGame g) {
+    public DefeatScreen(MagicGame g) throws ServerNotReachedException {
         super(g);
     }
 
