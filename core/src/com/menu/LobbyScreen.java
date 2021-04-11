@@ -65,16 +65,18 @@ public class LobbyScreen extends BaseScreen{
         //instrumental.setVolume(audioVolume);
         //instrumental.play();
 
-        //final BaseActor background = new BaseActor();
-        //background.setTexture( new Texture(Gdx.files.internal("MenuAssets/BlurryMallBackground.jpg")) );
-        //uiStage.addActor( background );
+        final BaseActor background = new BaseActor();
+        background.setTexture( new Texture(Gdx.files.internal("MenuAssets/BlurryMallBackground.jpg")) );
+        uiStage.addActor( background );
 
-        final BaseActor transparentBackground = new BaseActor();
-        transparentBackground.setTexture( new Texture(Gdx.files.internal("MenuAssets/black.jpg")));
-        transparentBackground.setSize(1920,1080);
-        //transparentBackground.setColor(0,0,0,1);
-        uiStage.addActor (transparentBackground);
+        final BaseActor transparentForeground = new BaseActor();
+        transparentForeground.setTexture( new Texture(Gdx.files.internal("MenuAssets/Black.gif")));
+        transparentForeground.setSize(1920,1080);
+        transparentForeground.setColor(0,0,0,0);
+        transparentForeground.setTouchable(Touchable.disabled);
+        uiStage.addActor (transparentForeground);
 
+        background.toBack();
 
         final Sound buttonHover = Gdx.audio.newSound(Gdx.files.internal("Music&Sound/buttonHover.mp3"));
 
@@ -88,18 +90,20 @@ public class LobbyScreen extends BaseScreen{
             }
             public void touchUp (InputEvent event, float x, float y, int pointer, int button)
             {
-//                Action fadeToBlack = Actions.sequence(
-//                        Actions.alpha(1f), // set transparency value
-//                        Actions.show(), // set visible to true
-//                        Actions.forever(
-//                                Actions.sequence(
-//                                        // color shade to approach, duration
-//                                        Actions.color(new Color(0, 0, 0, 1), 2)
-//
-//                                )
-//                        )
-//                );
-//                transparentBackground.addAction(fadeToBlack);
+                transparentForeground.setTouchable(Touchable.enabled);
+
+                Action fadeToBlack = Actions.sequence(
+                        //Actions.alpha(1f), // set transparency value
+                        Actions.show(), // set visible to true
+                        Actions.forever(
+                                Actions.sequence(
+                                        // color shade to approach, duration
+                                        Actions.color(new Color(0, 0, 0, 1), 2)
+
+                                )
+                        )
+                );
+                transparentForeground.addAction(fadeToBlack);
 
                 float delay = 2; // seconds
 
@@ -228,9 +232,6 @@ public class LobbyScreen extends BaseScreen{
 
         optionOverlay.setBackground(optionBackground);
 
-        //background.toBack();
-        transparentBackground.toBack();
-
         Texture leftArrowTexture = new Texture(Gdx.files.internal("MenuAssets/arrowSilver_left.png"));
         game.skin.add("leftArrow", leftArrowTexture );
         Button.ButtonStyle leftArrowStyle = new Button.ButtonStyle();
@@ -312,6 +313,9 @@ public class LobbyScreen extends BaseScreen{
         uiTable.add(startButton).center().colspan(12).padTop(100);
         uiTable.add().center().padTop(20);
         uiTable.row();
+
+        transparentForeground.toFront();
+
 
     }
 
