@@ -22,8 +22,11 @@ import com.multiplayer.ServerMaker;
 import com.multiplayer.ServerNotReachedException;
 import com.tiles.MainScreen;
 import com.tiles.MouseWheelChecker;
+import com.tiles.Player;
 import com.tiles.Queue;
 import com.utils.Multiplayer;
+
+import java.util.ArrayList;
 
 import static com.utils.Functions.modulo;
 import static com.utils.GameScreens.mainScreen;
@@ -34,7 +37,12 @@ public class LobbyScreen extends BaseScreen {
     //Button leftButton;
 
     private Table optionOverlay;
-    private PlayerMaker[] playerMakerList;
+    private ArrayList<PlayerMaker> playerMakerList;
+    private Skin uiSkin;
+
+    private TextButton startButton;
+    private TextButton quitButton;
+    private TextButton optionButton;
 
     public LobbyScreen(MagicGame g, float audioVolume) {
         super(g);
@@ -66,7 +74,7 @@ public class LobbyScreen extends BaseScreen {
 
         final Sound buttonHover = Gdx.audio.newSound(Gdx.files.internal("Music&Sound/buttonHover.mp3"));
 
-        TextButton startButton = new TextButton("Demarrer la partie", game.skin, "uiTextButtonStyle");
+        startButton = new TextButton("Demarrer la partie", game.skin, "uiTextButtonStyle");
         startButton.addListener(new InputListener() {
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 return true;
@@ -124,7 +132,7 @@ public class LobbyScreen extends BaseScreen {
         });
         startButton.getLabel().setTouchable(Touchable.disabled);
 
-        TextButton quitButton = new TextButton("Quit", game.skin, "uiTextButtonStyle");
+        quitButton = new TextButton("Quit", game.skin, "uiTextButtonStyle");
         quitButton.addListener(new InputListener() {
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 return true;
@@ -135,7 +143,7 @@ public class LobbyScreen extends BaseScreen {
             }
         });
 
-        TextButton optionButton = new TextButton("Options", game.skin, "uiTextButtonStyle");
+        optionButton = new TextButton("Options", game.skin, "uiTextButtonStyle");
         optionButton.addListener(new InputListener() {
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 return true;
@@ -193,29 +201,11 @@ public class LobbyScreen extends BaseScreen {
 
         optionOverlay.setBackground(optionBackground);
 
-        Skin uiSkin = new Skin(Gdx.files.internal("GameUIAssets/uiskin.json"));
-        playerMakerList = new PlayerMaker[]{
-                new PlayerMaker("Joueur 1", animalNames[0], uiSkin, true),
-                new PlayerMaker("Joueur 2", animalNames[1], uiSkin, false),
-                new PlayerMaker("Joueur 3", animalNames[2], uiSkin, false),
-                new PlayerMaker("Joueur 4", animalNames[3], uiSkin, false)
-        };
+        uiSkin = new Skin(Gdx.files.internal("GameUIAssets/uiskin.json"));
+        playerMakerList = new ArrayList<PlayerMaker>();
+        playerMakerList.add(new PlayerMaker(Multiplayer.me, uiSkin, true));
 
-        uiTable.pad(20);
-        uiTable.add(quitButton).colspan(12).right().expandX();
-        ;
-        uiTable.row();
-        for (PlayerMaker temp : playerMakerList) temp.addTextField(uiTable);
-        uiTable.row();
-        for (PlayerMaker temp : playerMakerList) {
-            temp.load(uiSkin, uiTable);
-        }
-        uiTable.row();
-        uiTable.add(optionButton).center().colspan(12).padTop(150);
-        uiTable.row();
-        uiTable.add(startButton).center().colspan(12).padTop(100);
-        uiTable.add().center().padTop(20);
-        uiTable.row();
+        makeUiTable();
 
         transparentForeground.toFront();
     }
@@ -252,14 +242,45 @@ public class LobbyScreen extends BaseScreen {
     public void load() {
         //TODO(Load)
     }
-
+    private boolean setToUpdate = false;
+    private Player playerToAdd;
     @Override
     public void update(float dt) {
-
+        if (setToUpdate) {
+            //TODO: faire en sorte que les icones de joueur se rajoutent une à une
+            uiTable.clear();
+            playerMakerList.add(new PlayerMaker(playerToAdd, uiSkin, false));
+            makeUiTable();
+            setToUpdate = false;
+        }
     }
 
     public void dispose() {
         instrumental.dispose();
+    }
+
+    public void addPlayer(Player player) {
+        setToUpdate = true;
+        playerToAdd = player;
+    }
+
+    private void makeUiTable() {
+        System.out.println(playerMakerList.size());
+        uiTable.pad(20);
+        uiTable.add(quitButton).colspan(12).right().expandX();
+        ;
+        uiTable.row();
+        for (PlayerMaker temp : playerMakerList) temp.addTextField(uiTable, playerMakerList.size());
+        uiTable.row();
+        for (PlayerMaker temp : playerMakerList) {
+            temp.load(uiSkin, uiTable, playerMakerList.size());
+        }
+        uiTable.row();
+        uiTable.add(optionButton).center().colspan(12).padTop(150);
+        uiTable.row();
+        uiTable.add(startButton).center().colspan(12).padTop(100);
+        uiTable.add().center().padTop(20);
+        uiTable.row();
     }
 }
 

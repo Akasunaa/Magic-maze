@@ -91,22 +91,24 @@ public class ServerMaker {
                             e.printStackTrace();
                         }
                         for (Client tempClient : Multiplayer.clientList.clientList) {
-                            sleep();
-                            tempClient.sendClearMessage(client.getId() + " sending Player");
-                            sleep();
-                            tempClient.sendClearMessage(tempString);
-                            System.out.println("Server: Redistributing the Player of " + client.getId() + " to " + tempClient.getId());
-                            sleep();
-                            client.sendClearMessage(tempClient.getId() + " sending Player");
-                            sleep();
-                            try {
-                                client.sendClearMessage(Multiplayer.mapper.writeValueAsString(tempClient.player));
-                            } catch (JsonProcessingException e) {
-                                e.printStackTrace();
+                            if (!tempClient.getId().equals(client.getId())) {
+                                sleep();
+                                tempClient.sendClearMessage(client.getId() + " sending Player");
+                                sleep();
+                                tempClient.sendClearMessage(tempString);
+                                System.out.println("Server: Redistributing the Player of " + client.getId() + " to " + tempClient.getId());
+                                sleep();
+                                client.sendClearMessage(tempClient.getId() + " sending Player");
+                                sleep();
+                                try {
+                                    client.sendClearMessage(Multiplayer.mapper.writeValueAsString(tempClient.player));
+                                } catch (JsonProcessingException e) {
+                                    e.printStackTrace();
+                                }
+                                // Très chiant ces try catch partout mais bon
+                                System.out.println("Server: Redistributing the Player of " + tempClient.getId() + " to " + client.getId());
+                                sleep();
                             }
-                            // Très chiant ces try catch partout mais bon
-                            System.out.println("Server: Redistributing the Player of " + tempClient.getId() + " to " + client.getId());
-                            sleep();
                         }
                     }
                     else {

@@ -18,6 +18,7 @@ import com.tiles.Player;
 import com.utils.Multiplayer;
 
 import static com.utils.Functions.modulo;
+import static com.utils.GameScreens.lobbyScreen;
 import static com.utils.GameScreens.mainScreen;
 
 public class MainMenu extends BaseScreen {
@@ -90,7 +91,8 @@ public class MainMenu extends BaseScreen {
 
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
                 // dispose();
-                LobbyScreen lobbyScreen = new LobbyScreen(game, audioVolume);
+                Multiplayer.startServer();
+                lobbyScreen = new LobbyScreen(game, audioVolume);
                 try {
                     lobbyScreen.multiplayerShenanigans();
                     lobbyScreen.load();
@@ -132,7 +134,8 @@ public class MainMenu extends BaseScreen {
 
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
                 // dispose();
-                LobbyScreen lobbyScreen = new LobbyScreen(game, audioVolume);
+                Multiplayer.stopServer();
+                lobbyScreen = new LobbyScreen(game, audioVolume);
                 try {
                     lobbyScreen.multiplayerShenanigans();
                     lobbyScreen.load();

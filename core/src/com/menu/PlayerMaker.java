@@ -33,7 +33,7 @@ public class PlayerMaker {
             }
         }
         // On doit faire ça pour récupérer le numéro de l'avatar
-        avatar.setSize(150,150);
+        //avatar.setSize(300,300);
     }
 
     PlayerMaker(Player player, Skin uiSkin, boolean isModifiable) {
@@ -51,22 +51,24 @@ public class PlayerMaker {
         }
     }
 
-    public void addTextField(Table uiTable) {
-        uiTable.add(textField).center().padTop(200).colspan(3);
+    public void addTextField(Table uiTable, int numberOfPlayers) {
+        uiTable.add(textField).center().padTop(200).colspan(3*(5-numberOfPlayers));
+        uiTable.getCell(textField).width(300);
+        textField.setMaxLength(13);
     }
 
-    private void addAvatar(Table uiTable) {
-        uiTable.add(avatar).pad(20,0,20,0);
+    private void addAvatar(Table uiTable, int numberOfPlayers) {
+        uiTable.add(avatar).center().pad(20,0,20,0).colspan((5-numberOfPlayers));
     }
-    public void load(Skin skin, final Table uiTable) {
+    public void load(Skin skin, final Table uiTable, int numberOfPlayers) {
         if (isModifiable) {
             textField.setDisabled(false);
         }
-        addLeftArrow(skin, uiTable);
-        addAvatar(uiTable);
-        addRightArrow(skin, uiTable);
+        addLeftArrow(skin, uiTable,numberOfPlayers);
+        addAvatar(uiTable,numberOfPlayers);
+        addRightArrow(skin, uiTable,numberOfPlayers);
     }
-    private void addLeftArrow(Skin skin, final Table uiTable) {
+    private void addLeftArrow(Skin skin, final Table uiTable,int numberOfPlayers) {
         Texture leftArrowTexture = new Texture(Gdx.files.internal("MenuAssets/arrowSilver_left.png"));
         skin.add("leftArrow", leftArrowTexture );
         Button.ButtonStyle leftArrowStyle = new Button.ButtonStyle();
@@ -82,16 +84,16 @@ public class PlayerMaker {
                         public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
                             avatarNum = modulo(avatarNum - 1, 10);
                             avatar.setTexture(new Texture(Gdx.files.internal("Avatars/" + BaseScreen.animalNames[avatarNum] + ".png")));
-                            avatar.setSize(150, 150);
+                            //avatar.setSize(150, 150);
 
                         }
                     });
         }
-        uiTable.add(leftArrow).pad(20, 20, 20, 20);
+        uiTable.add(leftArrow).right().pad(20, 20, 20, 20).colspan((5-numberOfPlayers));
         leftArrow.setVisible(isModifiable);
 
     }
-    private void addRightArrow(Skin skin, final Table uiTable) {
+    private void addRightArrow(Skin skin, final Table uiTable,int numberOfPlayers) {
         Texture rightArrowTexture = new Texture(Gdx.files.internal("MenuAssets/arrowSilver_right.png"));
         skin.add("rightArrow", rightArrowTexture);
         Button.ButtonStyle rightArrowStyle = new Button.ButtonStyle();
@@ -107,12 +109,12 @@ public class PlayerMaker {
                         public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
                             avatarNum = modulo(avatarNum + 1, 10);
                             avatar.setTexture(new Texture(Gdx.files.internal("Avatars/" + BaseScreen.animalNames[avatarNum] + ".png")));
-                            avatar.setSize(150, 150);
+                            //avatar.setSize(150, 150);
 
                         }
                     });
         }
-        uiTable.add(rightArrow).pad(20, 20, 20, 20);
+        uiTable.add(rightArrow).left().pad(20, 20, 20, 20).colspan((5-numberOfPlayers));
         rightArrow.setVisible(isModifiable);
     }
 

@@ -6,6 +6,7 @@ import com.badlogic.gdx.scenes.scene2d.actions.Actions
 import com.tiles.Player
 import com.tiles.Queue
 import com.utils.Functions
+import com.utils.GameScreens.lobbyScreen
 import com.utils.Multiplayer
 import com.utils.Multiplayer.*
 import com.utils.TileAndCases
@@ -38,7 +39,10 @@ class Decryptor {
                         val tempPlayer = mapper.readValue(tempString, Player::class.java)
                         if (isServer) {
                             clientList.getClient(sender).player = tempPlayer
-                        } else playerList.add(tempPlayer)
+                        } else {
+                            playerList.add(tempPlayer)
+                            lobbyScreen.addPlayer(tempPlayer)
+                        }
                     }
                     "Queue" -> {
                         println("$suffix: Getting a Queue")

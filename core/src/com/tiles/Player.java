@@ -19,7 +19,7 @@ public class Player implements Serializable {
     boolean shortcutTaker;
     boolean escalatorTaker;
 
-    public String pseudo;
+    public String pseudo = "Placeholder2";
     public transient BaseActor avatar;
     public String avatarName;
 
