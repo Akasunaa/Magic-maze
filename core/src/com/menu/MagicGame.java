@@ -63,11 +63,7 @@ public class MagicGame extends Game {
 
         //Toujours à la fin
         MainMenu cm = null;
-        try {
-            cm = new MainMenu(this);
-        } catch (ServerNotReachedException e) {
-            e.printStackTrace();
-        }
+        cm = new MainMenu(this);
         setScreen( cm );
     }
     public void dispose() {

@@ -44,23 +44,14 @@ public class MainScreen extends BaseScreen {
         return "x = " + (int) mouseInput(camera).x + "; y = " + (int) mouseInput(camera).y;
     }
 
-    public MainScreen(MagicGame g) throws ServerNotReachedException {
-        // L'exception vient de la création d'une instance de Courrier
+    public MainScreen(MagicGame g){
         super(g);
     }
 
     BaseActor background;
 
-    public void create() throws ServerNotReachedException{
+    public void create(){
 
-        if (Multiplayer.isServer) {
-            new ServerMaker(Multiplayer.port, Multiplayer.clientList).startThread();
-        }
-        Multiplayer.courrier = new Courrier(Multiplayer.me.pseudo, Multiplayer.port, Multiplayer.serverIP);
-
-        // Raaaah c'est ça qui renvoie l'erreur
-        InputMultiplexer inputMultiplexer = new InputMultiplexer(uiStage, mainStage, new MouseWheelChecker());
-        Gdx.input.setInputProcessor(inputMultiplexer);
         background = new BaseActor();
         background.setTexture(new Texture("GameUIAssets/floorboard.png"));
 
@@ -88,11 +79,24 @@ public class MainScreen extends BaseScreen {
 
 
 
+
+    }
+
+    public void multiplayerShenanigans() throws ServerNotReachedException{
+        if (Multiplayer.isServer) {
+            new ServerMaker(Multiplayer.port, Multiplayer.clientList).startThread();
+        }
+        Multiplayer.courrier = new Courrier(Multiplayer.me.pseudo, Multiplayer.port, Multiplayer.serverIP);
         try {
             Multiplayer.cyclicBarrier.await();
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        // Obligé de mettre le multiplexeur ici pour éviter les problèmes lors du lancement du jeu
+        InputMultiplexer inputMultiplexer = new InputMultiplexer(uiStage, mainStage, new MouseWheelChecker());
+        Gdx.input.setInputProcessor(inputMultiplexer);
+
         if (Multiplayer.isServer) {
             queue = new Queue(9); // J'ai fait les cases uniquement jusqu'à la 9
             for (Client client : Multiplayer.clientList.clientList) {
@@ -112,11 +116,7 @@ public class MainScreen extends BaseScreen {
         for (Tile tile : tileList) {
             tile.load();
         }
-        try {
-            gameInterface = new GameInterface(game);
-        } catch (ServerNotReachedException e) {
-            e.printStackTrace();
-        }
+        gameInterface = new GameInterface(game);
         gameInterface.hasBackground = false;
         queue.setCoordinates(1920 - tileSize / 2 - 20, 20);
         queue.load();

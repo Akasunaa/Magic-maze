@@ -36,7 +36,7 @@ public class GameInterface extends BaseScreen {
 
 
     //constructeur
-    public GameInterface(MagicGame g) throws ServerNotReachedException {
+    public GameInterface(MagicGame g){
         super(g);
     }
 

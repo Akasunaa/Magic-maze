@@ -10,7 +10,7 @@ import com.multiplayer.ServerNotReachedException;
 
 public class VictoryScreen extends BaseScreen {
 
-    public VictoryScreen(MagicGame g) throws ServerNotReachedException {
+    public VictoryScreen(MagicGame g){
         super(g);
     }
 

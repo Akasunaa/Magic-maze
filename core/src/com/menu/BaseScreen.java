@@ -33,7 +33,7 @@ public abstract class BaseScreen implements Screen {
 
     public boolean hasBackground = true;
 
-    public BaseScreen(MagicGame g) throws ServerNotReachedException{
+    public BaseScreen(MagicGame g){
         game = g;
         mainStage = new Stage(new FitViewport(viewWidth, viewHeight));
         uiStage = new Stage(new FitViewport(viewWidth, viewHeight));
@@ -59,7 +59,7 @@ public abstract class BaseScreen implements Screen {
         create();
     }
 
-    public abstract void create() throws ServerNotReachedException;
+    public abstract void create();
     public abstract void update(float dt);
 
     // gameloop code; update, then render.

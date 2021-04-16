@@ -32,7 +32,7 @@ public class MainMenu extends BaseScreen {
     public BaseActor currentAvatar;
 
 
-    public MainMenu(MagicGame g) throws ServerNotReachedException{
+    public MainMenu(MagicGame g){
         super(g);
     }
 
@@ -93,6 +93,7 @@ public class MainMenu extends BaseScreen {
                 try {
                     Multiplayer.me.pseudo = usernameTextField.getText();
                     mainScreen = new MainScreen(game);
+                    mainScreen.multiplayerShenanigans();
                     mainScreen.load();
                     dispose();
                     game.setScreen(mainScreen);
@@ -136,6 +137,7 @@ public class MainMenu extends BaseScreen {
                         try {
                             Multiplayer.me.pseudo = usernameTextField.getText();
                             mainScreen = new MainScreen(game);
+                            mainScreen.multiplayerShenanigans();
                             mainScreen.load();
                             dispose();
                             game.setScreen(mainScreen);
