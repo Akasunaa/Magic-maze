@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.tiles.Player;
 
 import static com.utils.Functions.modulo;
 
@@ -33,22 +34,36 @@ public class PlayerMaker {
         }
         // On doit faire ça pour récupérer le numéro de l'avatar
         avatar.setSize(150,150);
+    }
 
+    PlayerMaker(Player player, Skin uiSkin, boolean isModifiable) {
+        // Pour faire un de ces trucs à partir d'un Player
+        this.isModifiable = isModifiable;
+        pseudo = player.pseudo;
+        avatar = player.avatar;
+        textField = new TextField(pseudo,uiSkin);
+        textField.setDisabled(true);
+        for (int i = 0; i < BaseScreen.animalNames.length; i++) {
+            if (BaseScreen.animalNames[i].equals(player.avatarName)) {
+                avatarNum = i;
+                break;
+            }
+        }
     }
 
     public void addTextField(Table uiTable) {
         uiTable.add(textField).center().padTop(200).colspan(3);
     }
 
-    private void addAvatar(Table uiTable, int left, int right) {
-        uiTable.add(avatar).pad(20,left,20,right);
+    private void addAvatar(Table uiTable) {
+        uiTable.add(avatar).pad(20,0,20,0);
     }
     public void load(Skin skin, final Table uiTable) {
         if (isModifiable) {
             textField.setDisabled(false);
         }
         addLeftArrow(skin, uiTable);
-        addAvatar(uiTable, 0, 0);
+        addAvatar(uiTable);
         addRightArrow(skin, uiTable);
     }
     private void addLeftArrow(Skin skin, final Table uiTable) {

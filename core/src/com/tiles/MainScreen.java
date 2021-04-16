@@ -131,7 +131,7 @@ public class MainScreen extends BaseScreen {
         for (Tile tile : tileList) {
             tile.load();
         }
-        gameInterface = new GameInterface(game, players, numbers);
+        gameInterface = new GameInterface(game);
         gameInterface.hasBackground = false;
         queue.setCoordinates(1920 - tileSize / 2 - 20, 20);
         queue.load();

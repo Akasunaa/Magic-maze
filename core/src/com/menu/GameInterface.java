@@ -47,6 +47,10 @@ public class GameInterface extends BaseScreen {
 
     private Label[] pseudoLabels;
 
+    int timeElapsed;
+    int remainingTime;
+    Label timeLabel;
+
     //constructeur
     public GameInterface(MagicGame g){
         super(g);
@@ -418,8 +422,6 @@ public class GameInterface extends BaseScreen {
             }
         }
     }
-
-    }
-
 }
+
 

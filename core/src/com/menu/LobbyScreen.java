@@ -244,12 +244,6 @@ public class LobbyScreen extends BaseScreen{
     {
 
     }
-
-    @Override
-    public boolean scrolled(float amountX, float amountY) {
-        return false;
-    }
-
     public void dispose()
     {
         instrumental.dispose();

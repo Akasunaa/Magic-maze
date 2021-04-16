@@ -56,7 +56,6 @@ public class MainMenu extends BaseScreen {
         currentAvatarNumber = 0;
         Multiplayer.me.avatarName = animalNames[currentAvatarNumber];
 
-
         // passer audio volume en variable globale de MagicGame.java
         instrumental = Gdx.audio.newMusic(Gdx.files.internal("Music&Sound/MusicMenu.wav"));
         audioVolume = 0.70f;
@@ -83,10 +82,6 @@ public class MainMenu extends BaseScreen {
 
         final Sound buttonHover = Gdx.audio.newSound(Gdx.files.internal("Music&Sound/buttonHover.mp3"));
 
-        TextButton startButton = new TextButton("Demarrer une partie", game.skin, "uiTextButtonStyle");
-        startButton.addListener(new InputListener() {
-            public boolean touchDown(InputEvent event, float x, float y, int pointer,
-                                     int button) {
         TextButton startButton = new TextButton("Créer une partie", game.skin, "uiTextButtonStyle");
         startButton.addListener(new InputListener()
         {
