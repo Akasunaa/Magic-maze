@@ -25,15 +25,7 @@ public class LobbyScreen extends BaseScreen{
     //Button leftButton;
 
     private Table optionOverlay;
-
-    public int[] AvatarNumbers;
-    public TextField[] usernameTextFields;
-    public TextField usernameTextField0;
-    public TextField usernameTextField1;
-    public TextField usernameTextField2;
-    public TextField usernameTextField3;
-    public String playerNames[];
-
+    private PlayerMaker[] playerMakerList;
     public LobbyScreen(MagicGame g, float audioVolume)
     {
         super(g);
@@ -44,18 +36,6 @@ public class LobbyScreen extends BaseScreen{
 
     public void create()
     {
-        AvatarNumbers = new int[]{0, 1, 2, 3};
-
-        Skin uiSkin = new Skin(Gdx.files.internal("GameUIAssets/uiskin.json"));
-        usernameTextFields = new TextField[4];
-        for (int i =0; i<3; i++) {
-            usernameTextFields[i] = new TextField("Pseudo...", uiSkin);
-        }
-        usernameTextField0 = new TextField("Joueur1", uiSkin);
-        usernameTextField1 = new TextField("Joueur2", uiSkin);
-        usernameTextField2 = new TextField("Joueur3", uiSkin);
-        usernameTextField3 = new TextField("Joueur4", uiSkin);
-
         Gdx.input.setInputProcessor(uiStage);
 
         // pour le son
@@ -119,7 +99,8 @@ public class LobbyScreen extends BaseScreen{
 //                    playerNames[2] = usernameTextField2.getText();
 //                    playerNames[3] = usernameTextField3.getText();
 
-                        mainScreen = new MainScreen(game, AvatarNumbers, playerNames, audioVolume);
+                        //mainScreen = new MainScreen(game, AvatarNumbers, playerNames, audioVolume);
+                        //TODO("Fix this shit")
 
                         mainScreen.load();
                         game.setScreen( mainScreen );
@@ -164,8 +145,6 @@ public class LobbyScreen extends BaseScreen{
                         Gdx.app.exit();
                     }
                 });
-
-        Label avatarLabel = new Label("Choix de l'avatar :", game.skin, "uiLabelStyle");
 
         TextButton optionButton = new TextButton("Options", game.skin, "uiTextButtonStyle");
         optionButton.addListener(
@@ -232,81 +211,22 @@ public class LobbyScreen extends BaseScreen{
 
         optionOverlay.setBackground(optionBackground);
 
-        Texture leftArrowTexture = new Texture(Gdx.files.internal("MenuAssets/arrowSilver_left.png"));
-        game.skin.add("leftArrow", leftArrowTexture );
-        Button.ButtonStyle leftArrowStyle = new Button.ButtonStyle();
-        leftArrowStyle.up = game.skin.getDrawable("leftArrow");
-        Button[] leftButtonList = new Button[4];
-
-        Texture rightArrowTexture = new Texture(Gdx.files.internal("MenuAssets/arrowSilver_right.png"));
-        game.skin.add("rightArrow", rightArrowTexture );
-        Button.ButtonStyle rightArrowStyle = new Button.ButtonStyle();
-        rightArrowStyle.up = game.skin.getDrawable("rightArrow");
-        Button[] rightButtonList= new Button[4];
-
-        for ( int i=0; i<4; i++){
-
-            leftButtonList[i] = new Button( leftArrowStyle );
-            final int finalI = i;
-
-            leftButtonList[i].addListener(
-                    new InputListener()
-                    {
-                        public boolean touchDown (InputEvent event, float x, float y, int pointer, int button)
-                        {
-                            return true;
-                        }
-                        public void touchUp (InputEvent event, float x, float y, int pointer, int button)
-                        {
-                            Cell<BaseActor> cell = uiTable.getCell(playerList[finalI][AvatarNumbers[finalI]]);
-                            cell.clearActor();
-
-                            AvatarNumbers[finalI] = modulo(AvatarNumbers[finalI] - 1, 10);
-                            cell.setActor(playerList[finalI][AvatarNumbers[finalI]]);
-
-                        }
-                    });
-
-
-            rightButtonList[i] = new Button( rightArrowStyle );
-            rightButtonList[i].addListener(
-                    new InputListener()
-                    {
-                        public boolean touchDown (InputEvent event, float x, float y, int pointer, int button)
-                        {
-                            return true;
-                        }
-                        public void touchUp (InputEvent event, float x, float y, int pointer, int button)
-                        {
-                            Cell<BaseActor> cell = uiTable.getCell(playerList[finalI][AvatarNumbers[finalI]]);
-                            cell.clearActor();
-
-                            AvatarNumbers[finalI] = modulo(AvatarNumbers[finalI] + 1, 10);
-                            cell.setActor(playerList[finalI][AvatarNumbers[finalI]]);
-
-                        }
-                    });
-        }
-
+        Skin uiSkin = new Skin(Gdx.files.internal("GameUIAssets/uiskin.json"));
+        playerMakerList = new PlayerMaker[] {
+                new PlayerMaker("Joueur 1",animalNames[0],uiSkin, true),
+                new PlayerMaker("Joueur 2",animalNames[1],uiSkin, false),
+                new PlayerMaker("Joueur 3",animalNames[2],uiSkin, false),
+                new PlayerMaker("Joueur 4",animalNames[3],uiSkin, false)
+        };
 
         uiTable.pad(20);
         uiTable.add(quitButton).colspan(12).right().expandX();;
         uiTable.row();
-        uiTable.add(usernameTextField0).center().padTop(200).colspan(3);
-        uiTable.add(usernameTextField1).center().padTop(200).colspan(3);
-        uiTable.add(usernameTextField2).center().padTop(200).colspan(3);
-        uiTable.add(usernameTextField3).center().padTop(200).colspan(3);
+        for (PlayerMaker temp: playerMakerList) temp.addTextField(uiTable);
         uiTable.row();
-        for (int i=0; i<4; i++){
-            //uiTable.row();
-            uiTable.add(leftButtonList[i]).pad(20, 20, 20, 20);
-            uiTable.add(playerList[i][i]).pad(20, 0, 20, 0);
-            uiTable.add(rightButtonList[i]).pad(20, 20, 20, 20);
+        for (PlayerMaker temp: playerMakerList){
+            temp.load(uiSkin,uiTable);
         }
-//        for (int i=0; i<4; i++) {
-//            uiTable.row();
-//            uiTable.add(avatarLabel).colspan(3).center().padTop(20);
-//        }
         uiTable.row();
         uiTable.add(optionButton).center().colspan(12).padTop(150);
         uiTable.row();
