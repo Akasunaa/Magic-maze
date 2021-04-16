@@ -42,7 +42,7 @@ public class Multiplayer {
 
     public static Player me = new Player();
 
-    public static void launchServer() {
+    public static void startServer() {
         isServer = true;
     }
 

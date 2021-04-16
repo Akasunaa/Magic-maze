@@ -12,7 +12,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 
 public class Courrier {
-    private Socket sendingSocket;
+    private final Socket sendingSocket;
 
     public boolean getAnswer() {
         return answer;
@@ -23,27 +23,22 @@ public class Courrier {
     }
 
     private Socket receivingSocket;
-    private SocketHints socketHints;
 
     boolean answer = false; // This will be used to get answers from the server
-    private String id;
-    private int port;
-    private String ip;
+    private final String id;
 
     // sendingSocket: La socket pour envoyer des messages au serveur
     // receivingSocket: La socket pour recevoir des messages du serveur
 
     public Courrier(String id, int port, String ip) throws ServerNotReachedException {
         this.id = id;
-        this.port = port;
-        this.ip = ip;
-        socketHints = new SocketHints();
+        SocketHints socketHints = new SocketHints();
         socketHints.connectTimeout = 0;
         socketHints.sendBufferSize = 1024;
         socketHints.receiveBufferSize = 1024;
         try {
             sendingSocket = Gdx.net.newClientSocket(Net.Protocol.TCP, ip, port, socketHints);
-            sendMessage("connected $ip");
+            sendMessage("connected " + ip);
         } catch (Exception e) {
             throw new ServerNotReachedException("Server not found");
         }
@@ -66,7 +61,7 @@ public class Courrier {
     public void sendMessage(String message) {
         try {
             //println("Client: Sending $message")
-            sendingSocket.getOutputStream().write(("$id $message \n").getBytes());
+            sendingSocket.getOutputStream().write((id + " " + message + "\n").getBytes());
         } catch (IOException e) {
             e.printStackTrace();
         }

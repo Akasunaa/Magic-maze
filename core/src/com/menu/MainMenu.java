@@ -32,8 +32,7 @@ public class MainMenu extends BaseScreen {
     public BaseActor currentAvatar;
 
 
-    public MainMenu(MagicGame g)
-    {
+    public MainMenu(MagicGame g) {
         super(g);
     }
 
@@ -83,18 +82,22 @@ public class MainMenu extends BaseScreen {
         final Sound buttonHover = Gdx.audio.newSound(Gdx.files.internal("Music&Sound/buttonHover.mp3"));
 
         TextButton startButton = new TextButton("Créer une partie", game.skin, "uiTextButtonStyle");
-        startButton.addListener(new InputListener()
-        {
-            public boolean touchDown (InputEvent event, float x, float y, int pointer,
-                                      int button)
-            {
+        startButton.addListener(new InputListener() {
+            public boolean touchDown(InputEvent event, float x, float y, int pointer,
+                                     int button) {
                 return true;
             }
-            public void touchUp (InputEvent event, float x, float y, int pointer, int button)
-            {
+
+            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
                 // dispose();
                 LobbyScreen lobbyScreen = new LobbyScreen(game, audioVolume);
-                game.setScreen( lobbyScreen );
+                try {
+                    lobbyScreen.multiplayerShenanigans();
+                    lobbyScreen.load();
+                    game.setScreen(lobbyScreen);
+                } catch (ServerNotReachedException e) {
+                    e.printError();
+                }
             }
         });
 
@@ -121,19 +124,24 @@ public class MainMenu extends BaseScreen {
 
         TextButton joinButton = new TextButton("Rejoindre une partie", game.skin, "uiTextButtonStyle");
         joinButton.getLabel().setTouchable(Touchable.disabled);
-        joinButton.addListener(
-                new InputListener()
-                {
-                    public boolean touchDown (InputEvent event, float x, float y, int pointer,
-                                              int button)
-                    { return true; }
-                    public void touchUp (InputEvent event, float x, float y, int pointer, int button)
-                    {
-                        // dispose();
-                        LobbyScreen lobbyScreen = new LobbyScreen(game, audioVolume);
-                        game.setScreen( lobbyScreen );
-                    }
-                });
+        joinButton.addListener(new InputListener() {
+            public boolean touchDown(InputEvent event, float x, float y, int pointer,
+                                     int button) {
+                return true;
+            }
+
+            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+                // dispose();
+                LobbyScreen lobbyScreen = new LobbyScreen(game, audioVolume);
+                try {
+                    lobbyScreen.multiplayerShenanigans();
+                    lobbyScreen.load();
+                    game.setScreen(lobbyScreen);
+                } catch (ServerNotReachedException e) {
+                    e.printError();
+                }
+            }
+        });
 
         joinButton.addListener(new InputListener() {
             boolean playing = false;
@@ -156,59 +164,55 @@ public class MainMenu extends BaseScreen {
         });
 
         TextButton quitButton = new TextButton("Quit", game.skin, "uiTextButtonStyle");
-        quitButton.addListener(
-                new InputListener()
-                {
-                    public boolean touchDown (InputEvent event, float x, float y, int pointer,
-                                              int button)
-                    { return true; }
-                    public void touchUp (InputEvent event, float x, float y, int pointer, int button)
-                    {
-                        Gdx.app.exit();
-                    }
-                });
+        quitButton.addListener(new InputListener() {
+            public boolean touchDown(InputEvent event, float x, float y, int pointer,
+                                     int button) {
+                return true;
+            }
+
+            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+                Gdx.app.exit();
+            }
+        });
 
 
         TextButton optionButton = new TextButton("Options et aide", game.skin, "uiTextButtonStyle");
-        optionButton.addListener(
-                new InputListener()
-                {
-                    public boolean touchDown (InputEvent event, float x, float y, int pointer,
-                                              int button)
-                    { return true; }
-                    public void touchUp (InputEvent event, float x, float y, int pointer, int button)
-                    {
-                        togglePaused();
-                        optionOverlay.setVisible( true );
-                    }
-                });
+        optionButton.addListener(new InputListener() {
+            public boolean touchDown(InputEvent event, float x, float y, int pointer,
+                                     int button) {
+                return true;
+            }
+
+            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+                togglePaused();
+                optionOverlay.setVisible(true);
+            }
+        });
 
         Label optionLabel = new Label("Options et aide :", game.skin, "uiLabelStyle");
         Label volumeLabel = new Label("Volume", game.skin, "uiLabelStyle");
         Label helpLabel = new Label("Voici comment rejoindre une partie et créer une partie : ", game.skin, "uiLabelStyle");
 
         TextButton returnButton = new TextButton("Return", game.skin, "uiTextButtonStyle");
-        returnButton.addListener(
-                new InputListener() {
-                    public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                        return true;
-                    }
+        returnButton.addListener(new InputListener() {
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                return true;
+            }
 
-                    public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-                        togglePaused();
-                        optionOverlay.setVisible(false);
-                    }
-                });
+            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+                togglePaused();
+                optionOverlay.setVisible(false);
+            }
+        });
 
         final Slider audioSlider = new Slider(0, 1, 0.005f, false, game.skin, "uiSliderStyle");
         audioSlider.setValue(audioVolume);
-        audioSlider.addListener(
-                new ChangeListener() {
-                    public void changed(ChangeEvent event, Actor actor) {
-                        audioVolume = audioSlider.getValue();
-                        instrumental.setVolume(audioVolume);
-                    }
-                });
+        audioSlider.addListener(new ChangeListener() {
+            public void changed(ChangeEvent event, Actor actor) {
+                audioVolume = audioSlider.getValue();
+                instrumental.setVolume(audioVolume);
+            }
+        });
 
         optionOverlay = new Table();
         optionOverlay.setFillParent(true);
@@ -241,31 +245,29 @@ public class MainMenu extends BaseScreen {
         Button.ButtonStyle leftArrowStyle = new Button.ButtonStyle();
         leftArrowStyle.up = game.skin.getDrawable("leftArrow");
         leftButton = new Button(leftArrowStyle);
-        leftButton.addListener(
-                new InputListener() {
-                    public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                        return true;
-                    }
+        leftButton.addListener(new InputListener() {
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                return true;
+            }
 
-                    public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-                        Cell<BaseActor> cell = uiTable.getCell(currentAvatar);
-                        cell.clearActor();
+            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+                Cell<BaseActor> cell = uiTable.getCell(currentAvatar);
+                cell.clearActor();
 
-                        currentAvatarNumber = modulo(currentAvatarNumber - 1, 10);
-                        currentAvatar = avatarImages[currentAvatarNumber];
-                        Multiplayer.me.avatar = currentAvatar;
-                        Multiplayer.me.avatarName = animalNames[currentAvatarNumber];
-                        cell.setActor(currentAvatar);
-                    }
-                });
+                currentAvatarNumber = modulo(currentAvatarNumber - 1, 10);
+                currentAvatar = avatarImages[currentAvatarNumber];
+                Multiplayer.me.avatar = currentAvatar;
+                Multiplayer.me.avatarName = animalNames[currentAvatarNumber];
+                cell.setActor(currentAvatar);
+            }
+        });
 
         Texture rightArrowTexture = new Texture(Gdx.files.internal("MenuAssets/arrowSilver_right.png"));
         game.skin.add("rightArrow", rightArrowTexture);
         Button.ButtonStyle rightArrowStyle = new Button.ButtonStyle();
         rightArrowStyle.up = game.skin.getDrawable("rightArrow");
         Button rightButton = new Button(rightArrowStyle);
-        rightButton.addListener(
-                new InputListener() {
+        rightButton.addListener(new InputListener() {
                     public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                         return true;
                     }

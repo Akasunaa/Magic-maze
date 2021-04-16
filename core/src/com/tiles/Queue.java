@@ -122,7 +122,7 @@ public class Queue implements Serializable {
         updateText();
     }
 
-    Queue(int number) {
+    public Queue(int number) {
         // Création d'une pile de carte de manière aléatoire
         ArrayList<Tile> tempList = new ArrayList<Tile>();
         for (int i = 2; i <= number; i++) tempList.add(new Tile(i));

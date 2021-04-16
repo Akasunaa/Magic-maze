@@ -71,6 +71,9 @@ public class MainScreen extends BaseScreen {
 
     public void create(){
 
+        InputMultiplexer inputMultiplexer = new InputMultiplexer(uiStage, mainStage, new MouseWheelChecker());
+        Gdx.input.setInputProcessor(inputMultiplexer);
+
         background = new BaseActor();
         background.setTexture(new Texture("GameUIAssets/floorboard.png"));
 

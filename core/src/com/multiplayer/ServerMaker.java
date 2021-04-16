@@ -49,6 +49,9 @@ public class ServerMaker {
                 ServerSocket serverSocket = Gdx.net.newServerSocket(Net.Protocol.TCP, port, serverSocketHint);
                 Socket socket;
                 Client client;
+                BufferedReader buffer; // Le Buffer
+                InputStream inputStream; // Et l'InputStream
+                String tempString=null;
 
                 // Première boucle pour récupérer tous les clients
                 System.out.println("Server: Beginning first loop");
@@ -58,60 +61,60 @@ public class ServerMaker {
                     if (!clientList.isIn(client)) {
                         clientList.add(client); // On vérifie si le client n'est pas dans la liste, et on l'ajoute
                         System.out.println("Server: Client added: " + client.getIp() + " as " + client.getId());
+                        // On lui demande de renvoyer une nouvelle socket
+                        try {
+                            client.getSendingSocket().getOutputStream().write(("Server send ReceivingSocket \n").getBytes());
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        // On dit que la nouvelle socket c'est à lui (et on espère que c'est bien le cas
+                        //TODO Vérifier que c'est bien le cas
+                        socket = serverSocket.accept(null);
+                        client.receiveSocket(socket);
+                        // Maintenant on récupère les avatars des joueurs
+                        client.sendMessage("send Player");
+                        socket = client.getSendingSocket(); // On prends la socket du client
+                        inputStream = socket.getInputStream(); // On prends l'inputStream
+                        try {
+                            // On lit la data depuis la socket dans un buffer
+                            buffer = new BufferedReader(new InputStreamReader(inputStream));
+                            //Et on la décrypte
+                            key.decryptMessage(buffer.readLine(), true);
+                        } catch (IOException e) { //Standard Procedure for dealing with Sockets
+                            e.printStackTrace();
+                        }
+                        // Maintenant on renvois le joueur à tout le monde
+                        // Et également on envois tout le monde au joueur
+                        try {
+                            tempString = Multiplayer.mapper.writeValueAsString(client.player);
+                        } catch (JsonProcessingException e) {
+                            e.printStackTrace();
+                        }
+                        for (Client tempClient : Multiplayer.clientList.clientList) {
+                            sleep();
+                            tempClient.sendClearMessage(client.getId() + " sending Player");
+                            sleep();
+                            tempClient.sendClearMessage(tempString);
+                            System.out.println("Server: Redistributing the Player of " + client.getId() + " to " + tempClient.getId());
+                            sleep();
+                            client.sendClearMessage(tempClient.getId() + " sending Player");
+                            sleep();
+                            try {
+                                client.sendClearMessage(Multiplayer.mapper.writeValueAsString(tempClient.player));
+                            } catch (JsonProcessingException e) {
+                                e.printStackTrace();
+                            }
+                            // Très chiant ces try catch partout mais bon
+                            System.out.println("Server: Redistributing the Player of " + tempClient.getId() + " to " + client.getId());
+                            sleep();
+                        }
                     }
                     else {
                         client.sendMessage("rejected you");
                     }
                 }
 
-                // Deuxième boucle pour bien mettre en place les sockets
-                System.out.println("Server: Beginning second loop");
-                for (Client tempClient : clientList.clientList) {
-                    try {
-                        tempClient.getSendingSocket().getOutputStream().write(("Server send ReceivingSocket \n").getBytes());
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    socket = serverSocket.accept(null);
-                    tempClient.receiveSocket(socket);
-                }
-
-                System.out.println("Server: Beginning third loop");
-                BufferedReader buffer; // Le Buffer
-                InputStream inputStream; // Et l'InputStream
-                // Une boucle pour récupérer les avatars, rien à changer par rapport à une boucle normale
-                for (Client tempClient : clientList.clientList) {
-                    tempClient.sendMessage("send Player");
-                    socket = tempClient.getSendingSocket(); // On prends la socket du client
-                    inputStream = socket.getInputStream();
-                    try {
-                        // On lit la data depuis la socket dans un buffer
-                        buffer = new BufferedReader(new InputStreamReader(inputStream));
-                        //Et on la décrypte
-                        key.decryptMessage(buffer.readLine(), true);
-                    } catch (IOException e) { //Standard Procedure for dealing with Sockets
-                        e.printStackTrace();
-                    }
-                }
-
-                // Une boucle pour redistribuer les players
-                for (Client tempClient : Multiplayer.clientList.clientList) {
-                    String tempString = null;
-                    try {
-                        tempString = Multiplayer.mapper.writeValueAsString(tempClient.player);
-                    } catch (JsonProcessingException e) {
-                        e.printStackTrace();
-                    }
-                    for (Client tempTempClient : Multiplayer.clientList.clientList) {
-                        sleep();
-                        tempTempClient.sendClearMessage(tempClient.getId() + " sending Player");
-                        sleep();
-                        tempTempClient.sendClearMessage(tempString + " \n");
-                        System.out.println("Server: Redistributing the Player of " + tempClient.getId() + " to " + tempTempClient.getId());
-                    }
-                }
-
-                sleep();
+                //sleep();
                 // Je... ne suis pas sûr de pourquoi je suis obligé de faire ça
                 // C'est très bizarre, je pense qu'il doit y avoir des histoires de voyage temporel
                 // Ou un truc du genre

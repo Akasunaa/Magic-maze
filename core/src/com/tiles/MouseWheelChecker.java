@@ -10,7 +10,7 @@ import static com.utils.Functions.mouseInput;
 import static com.utils.MainConstants.camera;
 public class MouseWheelChecker implements InputProcessor {
 
-    MouseWheelChecker() {}
+    public MouseWheelChecker() {}
 
     @Override
     public boolean keyDown(int keycode) {
