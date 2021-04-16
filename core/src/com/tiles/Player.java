@@ -27,6 +27,8 @@ public class Player implements Serializable {
 
     public Player() {
     }
+
+
     public Player load() {
         avatar = new BaseActor(new Texture(Gdx.files.internal("Avatars/" + avatarName + ".png")));
         return this;

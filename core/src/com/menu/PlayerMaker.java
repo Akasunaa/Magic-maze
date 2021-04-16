@@ -52,13 +52,13 @@ public class PlayerMaker {
     }
 
     public void addTextField(Table uiTable, int numberOfPlayers) {
-        uiTable.add(textField).center().padTop(200).colspan(3*(5-numberOfPlayers));
+        uiTable.add(textField).center().padTop(200).colspan(24/numberOfPlayers);
         uiTable.getCell(textField).width(300);
         textField.setMaxLength(13);
     }
 
     private void addAvatar(Table uiTable, int numberOfPlayers) {
-        uiTable.add(avatar).center().pad(20,0,20,0).colspan((5-numberOfPlayers));
+        uiTable.add(avatar).center().pad(20,0,20,0).colspan(4);
     }
     public void load(Skin skin, final Table uiTable, int numberOfPlayers) {
         if (isModifiable) {
@@ -89,7 +89,7 @@ public class PlayerMaker {
                         }
                     });
         }
-        uiTable.add(leftArrow).right().pad(20, 20, 20, 20).colspan((5-numberOfPlayers));
+        uiTable.add(leftArrow).center().pad(20, 0, 20, 0).colspan((24-4*numberOfPlayers)/(2*numberOfPlayers));
         leftArrow.setVisible(isModifiable);
 
     }
@@ -114,7 +114,7 @@ public class PlayerMaker {
                         }
                     });
         }
-        uiTable.add(rightArrow).left().pad(20, 20, 20, 20).colspan((5-numberOfPlayers));
+        uiTable.add(rightArrow).center().pad(20, 0, 20, 0).colspan((24-4*numberOfPlayers)/(2*numberOfPlayers));
         rightArrow.setVisible(isModifiable);
     }
 

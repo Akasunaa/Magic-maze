@@ -2,6 +2,7 @@ package com.menu;
 
 import com.badlogic.gdx.Gdx;
 //import com.badlogic.gdx.ai.btree.Task;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
@@ -205,6 +206,7 @@ public class LobbyScreen extends BaseScreen {
         playerMakerList = new ArrayList<PlayerMaker>();
         playerMakerList.add(new PlayerMaker(Multiplayer.me, uiSkin, true));
 
+
         makeUiTable();
 
         transparentForeground.toFront();
@@ -237,6 +239,26 @@ public class LobbyScreen extends BaseScreen {
 
         // On met ça ici parce que sinon problèmes lors de l'appel
         Gdx.input.setInputProcessor(uiStage);
+        uiStage.addListener(new InputListener() {
+            int count = 0;
+            String[] nameList =  new String[]{"Boris","Naruto","Babar"};
+            public boolean keyDown(InputEvent event, int keyCode) {
+                return true;
+            }
+
+            public boolean keyUp(InputEvent event, int keycode) {
+                if (keycode == Input.Keys.SPACE) {
+                    final Player temp = new Player();
+                    temp.pseudo = nameList[count];
+                    temp.avatarName = animalNames[count];
+                    temp.load();
+                    addPlayer(temp);
+                    count ++;
+                    if (count == 4) uiStage.removeListener(this);
+                }
+                return true;
+            }
+        });
     }
 
     public void load() {
@@ -265,10 +287,8 @@ public class LobbyScreen extends BaseScreen {
     }
 
     private void makeUiTable() {
-        System.out.println(playerMakerList.size());
         uiTable.pad(20);
-        uiTable.add(quitButton).colspan(12).right().expandX();
-        ;
+        uiTable.add(quitButton).colspan(24).right();
         uiTable.row();
         for (PlayerMaker temp : playerMakerList) temp.addTextField(uiTable, playerMakerList.size());
         uiTable.row();
@@ -276,9 +296,9 @@ public class LobbyScreen extends BaseScreen {
             temp.load(uiSkin, uiTable, playerMakerList.size());
         }
         uiTable.row();
-        uiTable.add(optionButton).center().colspan(12).padTop(150);
+        uiTable.add(optionButton).center().colspan(24).padTop(150);
         uiTable.row();
-        uiTable.add(startButton).center().colspan(12).padTop(100);
+        uiTable.add(startButton).center().colspan(24).padTop(100);
         uiTable.add().center().padTop(20);
         uiTable.row();
     }
