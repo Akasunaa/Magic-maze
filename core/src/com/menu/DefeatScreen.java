@@ -21,7 +21,7 @@ public class DefeatScreen extends BaseScreen {
         instrumental.setLooping(true);
         instrumental.play();
 
-        Label defeatLabel = new Label( "Défaite...", game.skin, "uiLabelStyle" );
+        Label defeatLabel = new Label( "Defaite...", game.skin, "uiLabelStyle" );
 
         BaseActor background = new BaseActor();
         background.setTexture( new Texture(Gdx.files.internal("GameAssets/DefeatImage.jpg")) );

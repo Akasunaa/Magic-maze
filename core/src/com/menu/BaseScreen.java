@@ -2,6 +2,7 @@ package com.menu;
 
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -29,9 +30,11 @@ public abstract class BaseScreen implements Screen {
     public float audioVolume;
     public Music instrumental;
 
+    public Sound buttonHover;
     public Slider audioSlider;
 
     public boolean hasBackground = true;
+    final static String[] animalNames = new String[] {"elephant","giraffe","hippo","monkey","panda","parrot","penguin","pig","rabbit","snake"};
 
     public BaseScreen(MagicGame g){
         game = g;
@@ -43,6 +46,19 @@ public abstract class BaseScreen implements Screen {
         uiTable = new Table();
         uiTable.setFillParent(true);
         uiStage.addActor(uiTable);
+
+        // Création de la liste des avatars pour gérer les différents avatars
+        Texture tempAvatar;
+        for (int i = 0; i < animalNames.length; i++) {
+            tempAvatar = new Texture(Gdx.files.internal("Avatars/" + animalNames[i] + ".png"));
+            tempAvatar.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
+//            avatarImages[i] = new BaseActor();
+//            avatarImages[i].setTexture(tempAvatar);
+//            avatarImages[i].scaleBy(0.01f, 0.01f);
+        }
+
+
+        buttonHover = Gdx.audio.newSound(Gdx.files.internal("Music&Sound/buttonHover.mp3"));
 
         audioSlider = new Slider(0, 1, 0.005f, false, game.skin, "uiSliderStyle" );
         audioSlider.addListener(

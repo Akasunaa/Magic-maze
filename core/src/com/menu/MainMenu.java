@@ -32,7 +32,8 @@ public class MainMenu extends BaseScreen {
     public BaseActor currentAvatar;
 
 
-    public MainMenu(MagicGame g){
+    public MainMenu(MagicGame g)
+    {
         super(g);
     }
 
@@ -58,7 +59,7 @@ public class MainMenu extends BaseScreen {
 
         // passer audio volume en variable globale de MagicGame.java
         instrumental = Gdx.audio.newMusic(Gdx.files.internal("Music&Sound/MusicMenu.wav"));
-        audioVolume = 0.80f;
+        audioVolume = 0.70f;
         instrumental.setLooping(true);
         instrumental.setVolume(audioVolume);
         instrumental.play();
@@ -86,20 +87,19 @@ public class MainMenu extends BaseScreen {
         startButton.addListener(new InputListener() {
             public boolean touchDown(InputEvent event, float x, float y, int pointer,
                                      int button) {
+        TextButton startButton = new TextButton("Créer une partie", game.skin, "uiTextButtonStyle");
+        startButton.addListener(new InputListener()
+        {
+            public boolean touchDown (InputEvent event, float x, float y, int pointer,
+                                      int button)
+            {
                 return true;
             }
-
-            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-                try {
-                    Multiplayer.me.pseudo = usernameTextField.getText();
-                    mainScreen = new MainScreen(game);
-                    mainScreen.multiplayerShenanigans();
-                    mainScreen.load();
-                    dispose();
-                    game.setScreen(mainScreen);
-                } catch (ServerNotReachedException exception) {
-                    exception.printError();
-                }
+            public void touchUp (InputEvent event, float x, float y, int pointer, int button)
+            {
+                // dispose();
+                LobbyScreen lobbyScreen = new LobbyScreen(game, audioVolume);
+                game.setScreen( lobbyScreen );
             }
         });
 
@@ -127,24 +127,16 @@ public class MainMenu extends BaseScreen {
         TextButton joinButton = new TextButton("Rejoindre une partie", game.skin, "uiTextButtonStyle");
         joinButton.getLabel().setTouchable(Touchable.disabled);
         joinButton.addListener(
-                new InputListener() {
-                    public boolean touchDown(InputEvent event, float x, float y, int pointer,
-                                             int button) {
-                        return true;
-                    }
-
-                    public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-                        try {
-                            Multiplayer.me.pseudo = usernameTextField.getText();
-                            mainScreen = new MainScreen(game);
-                            mainScreen.multiplayerShenanigans();
-                            mainScreen.load();
-                            dispose();
-                            game.setScreen(mainScreen);
-                        } catch (ServerNotReachedException exception) {
-                            System.out.println("Unable to reach server, was the IP you provided the good one ?");
-                        }
-
+                new InputListener()
+                {
+                    public boolean touchDown (InputEvent event, float x, float y, int pointer,
+                                              int button)
+                    { return true; }
+                    public void touchUp (InputEvent event, float x, float y, int pointer, int button)
+                    {
+                        // dispose();
+                        LobbyScreen lobbyScreen = new LobbyScreen(game, audioVolume);
+                        game.setScreen( lobbyScreen );
                     }
                 });
 
@@ -170,36 +162,35 @@ public class MainMenu extends BaseScreen {
 
         TextButton quitButton = new TextButton("Quit", game.skin, "uiTextButtonStyle");
         quitButton.addListener(
-                new InputListener() {
-                    public boolean touchDown(InputEvent event, float x, float y, int pointer,
-                                             int button) {
-                        return true;
-                    }
-
-                    public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-                        System.out.println("yo");
+                new InputListener()
+                {
+                    public boolean touchDown (InputEvent event, float x, float y, int pointer,
+                                              int button)
+                    { return true; }
+                    public void touchUp (InputEvent event, float x, float y, int pointer, int button)
+                    {
                         Gdx.app.exit();
                     }
                 });
 
 
-        Label avatarLabel = new Label("Choix de l'avatar :", game.skin, "uiLabelStyle");
-
-        TextButton optionButton = new TextButton("Options", game.skin, "uiTextButtonStyle");
+        TextButton optionButton = new TextButton("Options et aide", game.skin, "uiTextButtonStyle");
         optionButton.addListener(
-                new InputListener() {
-                    public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                        return true;
-                    }
-
-                    public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+                new InputListener()
+                {
+                    public boolean touchDown (InputEvent event, float x, float y, int pointer,
+                                              int button)
+                    { return true; }
+                    public void touchUp (InputEvent event, float x, float y, int pointer, int button)
+                    {
                         togglePaused();
-                        optionOverlay.setVisible(true);
+                        optionOverlay.setVisible( true );
                     }
                 });
 
-        Label optionLabel = new Label("Options :", game.skin, "uiLabelStyle");
+        Label optionLabel = new Label("Options et aide :", game.skin, "uiLabelStyle");
         Label volumeLabel = new Label("Volume", game.skin, "uiLabelStyle");
+        Label helpLabel = new Label("Voici comment rejoindre une partie et créer une partie : ", game.skin, "uiLabelStyle");
 
         TextButton returnButton = new TextButton("Return", game.skin, "uiTextButtonStyle");
         returnButton.addListener(
@@ -232,6 +223,8 @@ public class MainMenu extends BaseScreen {
         optionOverlay.add(volumeLabel).padBottom(20);
         optionOverlay.row();
         optionOverlay.add(audioSlider).width(400).padBottom(50);
+        optionOverlay.row();
+        optionOverlay.add(helpLabel).padBottom(50);
         optionOverlay.row();
         optionOverlay.add(returnButton);
 
@@ -300,27 +293,23 @@ public class MainMenu extends BaseScreen {
         Gdx.input.setInputProcessor(uiStage);
 
         uiTable.pad(20);
-        uiTable.add(quitButton).colspan(5).right().expandX();
+        uiTable.add(quitButton).colspan(4).right().expandX().padBottom(100);
         uiTable.row();
-        uiTable.add(titleImage).colspan(5).center();
-        uiTable.row();
-        uiTable.add(usernameTextField).center().colspan(5).padTop(20);
+        uiTable.add(titleImage).center().colspan(4);
         uiTable.row();
         uiTable.add(groupImage1).left().expandX();
-        uiTable.add(leftButton).left();
-        uiTable.add(currentAvatar).center().pad(20, 20, 20, 20);
-        uiTable.add(rightButton).right();
+        uiTable.add();
+        uiTable.add();
         uiTable.add(groupImage2).right().expandX();
         uiTable.row();
-        uiTable.add(avatarLabel).colspan(5).center().padTop(20);
+        uiTable.add(optionButton).center().padTop(70).colspan(4);
         uiTable.row();
-        uiTable.add(optionButton).center().colspan(5).padTop(20);
+        uiTable.add();
+        uiTable.add(startButton).padTop(70).padRight(40).center();
+        uiTable.add(joinButton).padTop(70).padLeft(40).center();
+        uiTable.add();
         uiTable.row();
-        uiTable.add(startButton).right().colspan(2).padTop(20);
-        uiTable.add().center().padTop(20);
-        uiTable.add(joinButton).left().colspan(2).padTop(20);
-        uiTable.row();
-        uiTable.add(genintImage).colspan(5).left().expandX();
+        uiTable.add(genintImage).colspan(4).left().expandX().padTop(100);
 
 
     }
