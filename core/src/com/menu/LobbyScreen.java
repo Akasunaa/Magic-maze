@@ -287,19 +287,20 @@ public class LobbyScreen extends BaseScreen {
     }
 
     private void makeUiTable() {
+        //uiTable.reset();
+        int numberOfColumns = 24;
         uiTable.pad(20);
-        uiTable.add(quitButton).colspan(24).right();
+        uiTable.add(quitButton).colspan(numberOfColumns).right().expandX();
         uiTable.row();
-        for (PlayerMaker temp : playerMakerList) temp.addTextField(uiTable, playerMakerList.size());
+        for (PlayerMaker temp : playerMakerList) temp.addTextField(uiTable, numberOfColumns/playerMakerList.size(), playerMakerList.size());
         uiTable.row();
         for (PlayerMaker temp : playerMakerList) {
-            temp.load(uiSkin, uiTable, playerMakerList.size());
+            temp.load(uiSkin, uiTable, playerMakerList.size(), numberOfColumns);
         }
         uiTable.row();
-        uiTable.add(optionButton).center().colspan(24).padTop(150);
+        uiTable.add(optionButton).center().colspan(numberOfColumns).padTop(150);
         uiTable.row();
-        uiTable.add(startButton).center().colspan(24).padTop(100);
-        uiTable.add().center().padTop(20);
+        uiTable.add(startButton).center().colspan(numberOfColumns).padTop(100);
         uiTable.row();
     }
 }

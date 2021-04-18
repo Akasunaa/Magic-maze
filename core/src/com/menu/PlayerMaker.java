@@ -51,24 +51,29 @@ public class PlayerMaker {
         }
     }
 
-    public void addTextField(Table uiTable, int numberOfPlayers) {
-        uiTable.add(textField).center().padTop(200).colspan(24/numberOfPlayers);
-        uiTable.getCell(textField).width(300);
+    public void addTextField(Table uiTable, int colspan, int numberOfPlayer) {
+        uiTable.add(textField).center().padTop(200).colspan(colspan);
+        uiTable.getCell(textField).fill(0.18f*numberOfPlayer,1f);
+        //uiTable.getCell(textField).width(200);
         textField.setMaxLength(13);
     }
 
-    private void addAvatar(Table uiTable, int numberOfPlayers) {
-        uiTable.add(avatar).center().pad(20,0,20,0).colspan(4);
+    private void addAvatar(Table uiTable, int colspan) {
+        uiTable.add(avatar).center().pad(20,0,20,0).colspan(colspan).fill();
     }
-    public void load(Skin skin, final Table uiTable, int numberOfPlayers) {
+
+    private BaseActor blank = new BaseActor();
+
+    public void load(Skin skin, final Table uiTable, int numberOfPlayers, int numberOfColumns) {
         if (isModifiable) {
             textField.setDisabled(false);
         }
-        addLeftArrow(skin, uiTable,numberOfPlayers);
-        addAvatar(uiTable,numberOfPlayers);
-        addRightArrow(skin, uiTable,numberOfPlayers);
+        //System.out.println((numberOfColumns-4*numberOfPlayers)/(2*numberOfPlayers));
+        addLeftArrow(skin, uiTable,(numberOfColumns-4*numberOfPlayers)/(2*numberOfPlayers));
+        addAvatar(uiTable,4);
+        addRightArrow(skin, uiTable,(numberOfColumns-4*numberOfPlayers)/(2*numberOfPlayers));
     }
-    private void addLeftArrow(Skin skin, final Table uiTable,int numberOfPlayers) {
+    private void addLeftArrow(Skin skin, final Table uiTable,int colspan) {
         Texture leftArrowTexture = new Texture(Gdx.files.internal("MenuAssets/arrowSilver_left.png"));
         skin.add("leftArrow", leftArrowTexture );
         Button.ButtonStyle leftArrowStyle = new Button.ButtonStyle();
@@ -89,11 +94,12 @@ public class PlayerMaker {
                         }
                     });
         }
-        uiTable.add(leftArrow).center().pad(20, 0, 20, 0).colspan((24-4*numberOfPlayers)/(2*numberOfPlayers));
+        uiTable.add(leftArrow).right().pad(20, 0, 20, 0).colspan(colspan);
+        if (colspan == 1) uiTable.getCell(leftArrow).center();
         leftArrow.setVisible(isModifiable);
 
     }
-    private void addRightArrow(Skin skin, final Table uiTable,int numberOfPlayers) {
+    private void addRightArrow(Skin skin, final Table uiTable,int colspan) {
         Texture rightArrowTexture = new Texture(Gdx.files.internal("MenuAssets/arrowSilver_right.png"));
         skin.add("rightArrow", rightArrowTexture);
         Button.ButtonStyle rightArrowStyle = new Button.ButtonStyle();
@@ -114,7 +120,8 @@ public class PlayerMaker {
                         }
                     });
         }
-        uiTable.add(rightArrow).center().pad(20, 0, 20, 0).colspan((24-4*numberOfPlayers)/(2*numberOfPlayers));
+        uiTable.add(rightArrow).left().pad(20, 0, 20, 0).colspan(colspan);
+        if (colspan == 1) uiTable.getCell(rightArrow).center();
         rightArrow.setVisible(isModifiable);
     }
 
