@@ -242,12 +242,14 @@ public class LobbyScreen extends BaseScreen {
         uiStage.addListener(new InputListener() {
             int count = 0;
             String[] nameList =  new String[]{"Boris","Naruto","Babar"};
+            // J'étais inspiré pour les noms
             public boolean keyDown(InputEvent event, int keyCode) {
                 return true;
             }
 
             public boolean keyUp(InputEvent event, int keycode) {
                 if (keycode == Input.Keys.SPACE) {
+                    // Exécute l'action quand on appuie sur la touche espace
                     final Player temp = new Player();
                     temp.pseudo = nameList[count];
                     temp.avatarName = animalNames[count];
