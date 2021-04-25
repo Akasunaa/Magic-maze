@@ -191,6 +191,7 @@ public class GameInterface extends BaseScreen {
                     // Pour l'expliquer simplement: plutôt que de créer l'action en final en dehors de toute ça,
                     // Il faut la créer nous même à chaque fois que l'inputListener est appellé
                     // Désolé d'avoir craché sur les InputListener de LibGDX, ils sont très bien.
+                    //TODO Envoyer un ping à la bonne personne
                     return true;
                 }
             });

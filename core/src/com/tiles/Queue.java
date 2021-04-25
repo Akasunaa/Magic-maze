@@ -277,7 +277,7 @@ public class Queue implements Serializable {
         if (!isEmpty) { // On fait rien si elle est vide
             // Beaaucoup de Booléen donc je vais préciser
             if (!isMovable && !isHidden && // Si elle n'est pas bougeable, révélée
-                    Gdx.input.isButtonJustPressed(Input.Buttons.RIGHT) && // Qu'on clique droit
+                    Gdx.input.isButtonJustPressed(Input.Buttons.LEFT) && // Qu'on clique droit
                     (x < mousePositionStatic.x) && (mousePositionStatic.x < x + size) && // Qu'on est dessus
                     (y < mousePositionStatic.y) && (mousePositionStatic.y < y + size) &&
                     checkServerForClickable()) { // Et qu'on a le droit
