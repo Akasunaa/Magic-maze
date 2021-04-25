@@ -275,15 +275,6 @@ public class Queue implements Serializable {
         Vector2 mousePosition = Functions.mouseInput();
         // Je le sauvegarde parce qu'on va le modifier
         if (!isEmpty) { // On fait rien si elle est vide
-            // Beaaucoup de Booléen donc je vais préciser
-            if (!isMovable && !isHidden && // Si elle n'est pas bougeable, révélée
-                    Gdx.input.isButtonJustPressed(Input.Buttons.LEFT) && // Qu'on clique droit
-                    (x < mousePositionStatic.x) && (mousePositionStatic.x < x + size) && // Qu'on est dessus
-                    (y < mousePositionStatic.y) && (mousePositionStatic.y < y + size) &&
-                    checkServerForClickable()) { // Et qu'on a le droit
-                makingMovable(); // Alors c'est bon
-                isMovable = true;
-            }
             if (isMovable) { // Truc classique pour avoir deux comportements sur un seul objet
                 mousePosition.sub(tileSize / 2, tileSize / 2); // Pour que le sprite soit centré sur la souris
                 setSpritePosition(mousePosition.x,mousePosition.y); // On suit la souris
@@ -304,6 +295,17 @@ public class Queue implements Serializable {
                 if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT) && checkServerForPlacable()) {// si on sélectionne un endroit
                     placeHandleAll(mousePosition);
                     isMovable = false;
+                }
+            }
+            else {// Beaaucoup de Booléen donc je vais préciser
+                if (!isHidden && // Si elle n'est pas bougeable, révélée
+                        Gdx.input.isButtonJustPressed(Input.Buttons.LEFT) && // Qu'on clique droit
+                        (x < mousePositionStatic.x) && (mousePositionStatic.x < x + size) && // Qu'on est dessus
+                        (y < mousePositionStatic.y) && (mousePositionStatic.y < y + size) &&
+                        checkServerForClickable()) { // Et qu'on a le droit
+                    makingMovable(); // Alors c'est bon
+                    setSpritePosition(Functions.mouseInput().x - tileSize/2,Functions.mouseInput().y - tileSize/2);
+                    isMovable = true;
                 }
             }
         }

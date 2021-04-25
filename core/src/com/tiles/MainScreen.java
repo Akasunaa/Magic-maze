@@ -178,6 +178,5 @@ public class MainScreen extends BaseScreen {
         for (Pawn pawn : pawnList) {
             pawn.dispose();
         }
-        instrumental.dispose();
     }
 }

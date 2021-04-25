@@ -102,7 +102,6 @@ public class LobbyScreen extends BaseScreen {
                 Timer.schedule(new Timer.Task() {
                     @Override
                     public void run() {
-                        dispose();
                         mainScreen = new MainScreen(game);
                         mainScreen.load(audioVolume);
                         game.setScreen( mainScreen );
@@ -276,10 +275,6 @@ public class LobbyScreen extends BaseScreen {
             makeUiTable();
             setToUpdate = false;
         }
-    }
-
-    public void dispose() {
-        instrumental.dispose();
     }
 
     public void addPlayer(Player player) {

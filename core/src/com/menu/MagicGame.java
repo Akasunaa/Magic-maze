@@ -2,6 +2,7 @@ package com.menu;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.graphics.Color;
@@ -68,5 +69,17 @@ public class MagicGame extends Game {
     }
     public void dispose() {
         skin.dispose();
+    }
+    @Override
+    public void setScreen (Screen screen) {
+        if (this.screen != null) {
+            this.screen.dispose();
+            this.screen.hide();
+        }
+        this.screen = screen;
+        if (this.screen != null) {
+            this.screen.show();
+            this.screen.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        }
     }
 }

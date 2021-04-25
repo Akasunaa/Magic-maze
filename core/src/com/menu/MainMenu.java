@@ -95,7 +95,6 @@ public class MainMenu extends BaseScreen {
             }
 
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-                dispose();
                 Multiplayer.startServer();
                 lobbyScreen = new LobbyScreen(game, audioVolume);
                 try {
@@ -138,7 +137,6 @@ public class MainMenu extends BaseScreen {
             }
 
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-                dispose();
                 Multiplayer.stopServer();
                 lobbyScreen = new LobbyScreen(game, audioVolume);
                 try {
@@ -329,9 +327,4 @@ public class MainMenu extends BaseScreen {
     public void update(float dt) {
 
     }
-
-    public void dispose() {
-        instrumental.dispose();
-    }
-
 }

@@ -191,7 +191,6 @@ public class GameInterface extends BaseScreen {
                     // Pour l'expliquer simplement: plutôt que de créer l'action en final en dehors de toute ça,
                     // Il faut la créer nous même à chaque fois que l'inputListener est appellé
                     // Désolé d'avoir craché sur les InputListener de LibGDX, ils sont très bien.
-                    //TODO Envoyer un ping à la bonne personne
                     return true;
                 }
             });
@@ -413,14 +412,11 @@ public class GameInterface extends BaseScreen {
 
             // Check if timer reached 0
             if (remainingTime < 0) {
-                dispose();
+                remainingTime = 10f;
+                // Parce que comme ça au moins je suis sûr qu'il va pas me faire une saloperie
                 game.setScreen(new DefeatScreen(game));
             }
         }
-    }
-    @Override
-    public void dispose() {
-        instrumental.dispose();
     }
 }
 
