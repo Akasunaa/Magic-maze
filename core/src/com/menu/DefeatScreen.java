@@ -17,7 +17,7 @@ public class DefeatScreen extends BaseScreen {
     @Override
     public void create() {
 
-        instrumental = Gdx.audio.newMusic(Gdx.files.internal("Music&Sound/VictoryMusic.wav"));
+        instrumental = Gdx.audio.newMusic(Gdx.files.internal("Music&Sound/damedane.mp3"));
         instrumental.setLooping(true);
         instrumental.play();
 

@@ -285,7 +285,7 @@ public class GameInterface extends BaseScreen {
         win = false;
 
         //Temps écoulé et temps restant
-        remainingTime = 20f;
+        remainingTime = 10f;
 
         // Pour l'instant on touche pas à ça!!!!
 //        Animatedhourglass = new AnimatedActor();
@@ -408,7 +408,7 @@ public class GameInterface extends BaseScreen {
 
         if (!win) {
             timeLabel.setText( "Time: " + (int)remainingTime );
-            remainingTime -= dt*5;
+            remainingTime -= dt/3;
 
             // Check if timer reached 0
             if (remainingTime < 0) {
