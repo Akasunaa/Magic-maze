@@ -150,7 +150,7 @@ public class GameInterface extends BaseScreen {
         String[] pseudoList = new String[]{"Joueur 1", "Joueur 2", "Joueur 3", "Joueur 4"};
 
         for (int i = 0; i < Multiplayer.playerList.size(); i++) {
-            avatars[i] = Multiplayer.playerList.get(i).load().avatar;
+            avatars[i] = Multiplayer.playerList.get(i).avatar;
             avatars[i].setSize(90, 90);
             avatars[i].setPosition(viewWidth - avatars[i].getWidth() - 45, viewHeight - avatars[i].getHeight() - 225 - 135 * i);
             uiStage.addActor(avatars[i]);

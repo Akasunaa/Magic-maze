@@ -71,7 +71,6 @@ public class PlayerMaker {
         uiTable.add(avatar).center().pad(20,0,20,0).colspan(colspan).fill();
     }
 
-    private BaseActor blank = new BaseActor();
 
     public void load(Skin skin, final Table uiTable, int numberOfPlayers, int numberOfColumns) {
         if (isModifiable) {
