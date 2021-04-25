@@ -2,10 +2,13 @@ package com.menu;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.tiles.Player;
+import com.utils.Multiplayer;
 
 import static com.utils.Functions.modulo;
 
@@ -36,7 +39,7 @@ public class PlayerMaker {
         //avatar.setSize(300,300);
     }
 
-    PlayerMaker(Player player, Skin uiSkin, boolean isModifiable) {
+    PlayerMaker(final Player player, Skin uiSkin, boolean isModifiable) {
         // Pour faire un de ces trucs à partir d'un Player
         this.isModifiable = isModifiable;
         pseudo = player.pseudo;
@@ -49,6 +52,12 @@ public class PlayerMaker {
                 break;
             }
         }
+        textField.addListener(new ChangeListener() {
+            public void changed(ChangeEvent event, Actor actor) {
+                player.pseudo = textField.getText();
+                //TODO Envoyer un message au server pour dire qu'on a changé de nom
+            }
+        });
     }
 
     public void addTextField(Table uiTable, int colspan, int numberOfPlayer) {

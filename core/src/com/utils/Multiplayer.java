@@ -7,6 +7,8 @@ import com.tiles.Player;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CyclicBarrier;
 
@@ -22,8 +24,6 @@ public class Multiplayer {
     // L'ip de mon PC fixe
     public static String ip;
 
-    public static boolean isHoldingPawn = false;
-
     public volatile static boolean isServerSetAndGo = false;
     public static CyclicBarrier cyclicBarrier = new CyclicBarrier(2);
 
@@ -38,9 +38,10 @@ public class Multiplayer {
         }
     }
 
-    public static List<Player> playerList = new ArrayList<Player>();
+    public static final Player me = new Player();
 
-    public static Player me = new Player();
+    public static List<Player> playerList = new ArrayList<>(Collections.singletonList(me));
+    // ça c'est juste pour que la liste me contienne moi de base
 
     public static void startServer() {
         isServer = true;

@@ -54,11 +54,11 @@ public class LobbyScreen extends BaseScreen {
 
     public void create() {
         // pour le son
-        instrumental = Gdx.audio.newMusic(Gdx.files.internal("Music&Sound/MusicMenu.wav"));
-        //audioVolume = 0.70f;
-        //instrumental.setLooping(true);
-        //instrumental.setVolume(audioVolume);
-        //instrumental.play();
+        instrumental = Gdx.audio.newMusic(Gdx.files.internal("Music&Sound/DonDokodokoDon.mp3"));
+        audioVolume = 0.70f;
+        instrumental.setLooping(true);
+        instrumental.setVolume(audioVolume);
+        instrumental.play();
 
         final BaseActor background = new BaseActor();
         background.setTexture(new Texture(Gdx.files.internal("MenuAssets/BlurryMallBackground.jpg")));
@@ -89,7 +89,7 @@ public class LobbyScreen extends BaseScreen {
                         Actions.show(), // set visible to true
                         Actions.forever(
                                 Actions.sequence(
-                                        // color shade to approach, duration
+                                        // Fondu de transition
                                         Actions.color(new Color(0, 0, 0, 1), 2)
 
                                 )
@@ -103,10 +103,9 @@ public class LobbyScreen extends BaseScreen {
                     @Override
                     public void run() {
                         dispose();
-                        //mainScreen = new MainScreen(game, AvatarNumbers, playerNames, audioVolume);
-                        //TODO("Fix this shit")
-                        //mainScreen.load();
-                        //game.setScreen( mainScreen );
+                        mainScreen = new MainScreen(game);
+                        mainScreen.load(audioVolume);
+                        game.setScreen( mainScreen );
                     }
                 }, delay);
             }
@@ -265,13 +264,13 @@ public class LobbyScreen extends BaseScreen {
 
     public void load() {
         //TODO(Load)
+        //Hum j'aurais du commenter ça parce que je sais plus ce qu'il faut que je fasse
     }
     private boolean setToUpdate = false;
     private Player playerToAdd;
     @Override
     public void update(float dt) {
         if (setToUpdate) {
-            //TODO: faire en sorte que les icones de joueur se rajoutent une à une
             uiTable.clear();
             playerMakerList.add(new PlayerMaker(playerToAdd, uiSkin, false));
             makeUiTable();
@@ -286,6 +285,7 @@ public class LobbyScreen extends BaseScreen {
     public void addPlayer(Player player) {
         setToUpdate = true;
         playerToAdd = player;
+        Multiplayer.playerList.add(player);
     }
 
     private void makeUiTable() {

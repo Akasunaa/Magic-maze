@@ -25,6 +25,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.menu.*;
 import com.utils.Functions;
+import com.utils.GameScreens;
 import com.utils.Multiplayer;
 
 import java.util.ArrayList;
@@ -47,30 +48,19 @@ public class MainScreen extends BaseScreen {
 
     GameInterface gameInterface;
 
-
-
-    private String[] players;
-    private int[] numbers;
-
     public String stringMousePosition(OrthographicCamera camera) {
         return "x = " + (int) mouseInput(camera).x + "; y = " + (int) mouseInput(camera).y;
     }
 
-    public MainScreen(MagicGame g, int[] AvatarNumbers, String[] playerNames, float audioVolume){
+    public MainScreen(MagicGame g) {
         super(g);
 
-//        instrumental.setVolume(audioVolume);
-//        audioSlider.setValue( audioVolume );
-
-        players = playerNames;
-        numbers = AvatarNumbers;
 
     }
 
     BaseActor background;
 
     public void create(){
-
         InputMultiplexer inputMultiplexer = new InputMultiplexer(uiStage, mainStage, new MouseWheelChecker());
         Gdx.input.setInputProcessor(inputMultiplexer);
 
@@ -98,6 +88,8 @@ public class MainScreen extends BaseScreen {
         numberCase.setPosition(200,100);
         uiStage.addActor(coordMouse);
         uiStage.addActor(numberCase);
+
+
     }
 
     public void multiplayerShenanigans() throws ServerNotReachedException{
@@ -130,11 +122,11 @@ public class MainScreen extends BaseScreen {
         System.out.println("Getting over it");
     }
 
-    public void load() {
+    public void load(float audioVolume) {
         for (Tile tile : tileList) {
             tile.load();
         }
-        gameInterface = new GameInterface(game);
+        gameInterface = new GameInterface(game, audioVolume);
         gameInterface.hasBackground = false;
         queue.setCoordinates(1920 - tileSize / 2 - 20, 20);
         queue.load();
@@ -180,7 +172,9 @@ public class MainScreen extends BaseScreen {
         for (Tile tile : tileList) {
             tile.dispose();
         }
-        //greenPawn.dispose();
+        for (Pawn pawn : pawnList) {
+            pawn.dispose();
+        }
         instrumental.dispose();
     }
 }

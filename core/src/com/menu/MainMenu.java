@@ -12,6 +12,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
+import com.badlogic.gdx.utils.Scaling;
 import com.multiplayer.ServerNotReachedException;
 import com.tiles.MainScreen;
 import com.tiles.Player;
@@ -70,15 +71,19 @@ public class MainMenu extends BaseScreen {
         Texture titleText = new Texture(Gdx.files.internal("MenuAssets/MagicLogo.png"));
         titleText.setFilter(TextureFilter.Linear, TextureFilter.Linear);
         Image titleImage = new Image(titleText);
+        titleImage.setScaling(Scaling.fit);
 
         Texture genint = new Texture(Gdx.files.internal("MenuAssets/genintLogo.png"));
         genint.setFilter(TextureFilter.Linear, TextureFilter.Linear);
         Image genintImage = new Image(genint);
+        genintImage.setScaling(Scaling.fit);
 
         Texture group = new Texture(Gdx.files.internal("MenuAssets/MagicGroup.png"));
         group.setFilter(TextureFilter.Linear, TextureFilter.Linear);
         Image groupImage1 = new Image(group);
+        groupImage1.setScaling(Scaling.fit);
         Image groupImage2 = new Image(group);
+        groupImage2.setScaling(Scaling.fit);
 
         final Sound buttonHover = Gdx.audio.newSound(Gdx.files.internal("Music&Sound/buttonHover.mp3"));
 
@@ -90,7 +95,7 @@ public class MainMenu extends BaseScreen {
             }
 
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-                // dispose();
+                dispose();
                 Multiplayer.startServer();
                 lobbyScreen = new LobbyScreen(game, audioVolume);
                 try {
@@ -133,7 +138,7 @@ public class MainMenu extends BaseScreen {
             }
 
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-                // dispose();
+                dispose();
                 Multiplayer.stopServer();
                 lobbyScreen = new LobbyScreen(game, audioVolume);
                 try {
@@ -290,26 +295,33 @@ public class MainMenu extends BaseScreen {
 
         Skin uiSkin = new Skin(Gdx.files.internal("GameUIAssets/uiskin.json"));
         usernameTextField = new TextField("Pseudo...", uiSkin);
+        usernameTextField.setMaxLength(13);
+        usernameTextField.addListener(new ChangeListener() {
+            public void changed(ChangeEvent event, Actor actor) {
+                Multiplayer.me.pseudo = usernameTextField.getText();
+            }
+        });
+        Multiplayer.me.pseudo = usernameTextField.getText();
+
         Gdx.input.setInputProcessor(uiStage);
 
         uiTable.pad(20);
-        uiTable.add(quitButton).colspan(4).right().expandX().padBottom(100);
+        uiTable.add(quitButton).right().colspan(4).expandX();
         uiTable.row();
-        uiTable.add(titleImage).center().colspan(4);
+        uiTable.add(titleImage).center().height(250).colspan(4);
         uiTable.row();
-        uiTable.add(groupImage1).left().expandX();
-        uiTable.add();
-        uiTable.add();
-        uiTable.add(groupImage2).right().expandX();
+        uiTable.add(groupImage1).left();
+        uiTable.add(usernameTextField).colspan(2).fill(1,0.1f);
+        uiTable.add(groupImage2).right();
         uiTable.row();
         uiTable.add(optionButton).center().padTop(70).colspan(4);
         uiTable.row();
-        uiTable.add();
-        uiTable.add(startButton).padTop(70).padRight(40).center();
-        uiTable.add(joinButton).padTop(70).padLeft(40).center();
-        uiTable.add();
+        uiTable.add(startButton).padTop(20).colspan(2).right().padRight(40);
+        uiTable.add(joinButton).padTop(20).colspan(2).left().padLeft(0);
         uiTable.row();
-        uiTable.add(genintImage).colspan(4).left().expandX().padTop(100);
+        uiTable.add(genintImage).left().colspan(4).padTop(50);
+
+        //uiTable.debugCell();
 
 
     }

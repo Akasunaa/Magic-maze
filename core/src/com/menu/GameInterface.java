@@ -15,12 +15,15 @@ import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.multiplayer.ServerNotReachedException;
 import com.tiles.Pawn;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.Array;
 import com.utils.GameScreens;
+import com.utils.MainConstants;
 import com.utils.Multiplayer;
 
 import static com.utils.Colors.currentColor;
@@ -40,6 +43,7 @@ public class GameInterface extends BaseScreen {
 
     TextButton loadPawnButton;
 
+
     // Pour le "menu" de "pause" (en vrai à voir si c'est nécessaire et comment c'est géré evec le multi
     private Table pauseOverlay;
 
@@ -47,24 +51,18 @@ public class GameInterface extends BaseScreen {
 
     private Label[] pseudoLabels;
 
-    int timeElapsed;
-    int remainingTime;
+    float remainingTime;
     Label timeLabel;
 
     //constructeur
-    public GameInterface(MagicGame g){
+    public GameInterface(MagicGame g, float audioVolume){
         super(g);
+
+        instrumental.setVolume(audioVolume);
+        audioSlider.setValue(audioVolume);
     }
 
     public void create() {
-        //C'est nawak???? wtf pourquoi je suis obligé de faire ça???
-        // Le pseudo initial est vide et est remplacer par le constructeur
-//        pseudoLabels = new Label[3];
-//        for (int i=0; i<3; i++){
-//            pseudoLabels[i] = new Label("", game.skin, "uiLabelStyle");
-//
-//        }
-
         uiStage = GameScreens.mainScreen.getUiStage();
         mainStage = GameScreens.mainScreen.getMainStage();
 
@@ -151,10 +149,10 @@ public class GameInterface extends BaseScreen {
         // On créé cette liste ici pour mettre des placeholders qu'on remplace ensuite par des vrais noms.
         String[] pseudoList = new String[]{"Joueur 1", "Joueur 2", "Joueur 3", "Joueur 4"};
 
-        for (int i = 0; i < Multiplayer.numberOfPlayers; i++) {
+        for (int i = 0; i < Multiplayer.playerList.size(); i++) {
             avatars[i] = Multiplayer.playerList.get(i).load().avatar;
             avatars[i].setSize(90, 90);
-            avatars[i].setPosition(viewWidth - avatars[i].getWidth() - 45, viewHeight - avatars[i].getHeight() - 225 - 150 * i);
+            avatars[i].setPosition(viewWidth - avatars[i].getWidth() - 45, viewHeight - avatars[i].getHeight() - 225 - 135 * i);
             uiStage.addActor(avatars[i]);
             final int temp = i;
             avatars[i].addListener(new InputListener() {
@@ -175,10 +173,10 @@ public class GameInterface extends BaseScreen {
             });
             pseudoList[i] = Multiplayer.playerList.get(i).pseudo;
         }
-        for (int i = Multiplayer.numberOfPlayers; i < 4; i++) {
+        for (int i = Multiplayer.playerList.size(); i < 4; i++) {
             avatars[i] = new BaseActor(new Texture(Gdx.files.internal("interface/kuro" + i + ".png")));
             avatars[i].setSize(90, 90);
-            avatars[i].setPosition(viewWidth - avatars[i].getWidth() - 45, viewHeight - avatars[i].getHeight() - 225 - 150 * i);
+            avatars[i].setPosition(viewWidth - avatars[i].getWidth() - 45, viewHeight - avatars[i].getHeight() - 225 - 135 * i);
             uiStage.addActor(avatars[i]);
             final int temp = i;
             avatars[i].addListener(new InputListener() {
@@ -284,12 +282,10 @@ public class GameInterface extends BaseScreen {
         loadPawnButton.setPosition(10,1000);
 
         //Ici c'est le bordel rajouté par Nathan
-
         win = false;
 
         //Temps écoulé et temps restant
-        timeElapsed = 0;
-        remainingTime = 20;
+        remainingTime = 20f;
 
         // Pour l'instant on touche pas à ça!!!!
 //        Animatedhourglass = new AnimatedActor();
@@ -308,15 +304,15 @@ public class GameInterface extends BaseScreen {
 //        mainStage.addActor(Animatedhourglass);
 
         // Temps restant
-        //BitmapFont font = new BitmapFont();
+        font = MainConstants.getFontSize(40);
         String text = "Time: ";
-        //LabelStyle style = new LabelStyle(font, Color.NAVY);
+        style = new LabelStyle(font, Color.NAVY);
         timeLabel = new Label(text, style);
         timeLabel.setFontScale(1.5f);
         timeLabel.setPosition(960, 1000);
         uiStage.addActor(timeLabel);
 
-        instrumental = Gdx.audio.newMusic(Gdx.files.internal("Music&Sound/Gaur_Plain.ogg"));
+        instrumental = Gdx.audio.newMusic(Gdx.files.internal("Music&Sound/The Path of the Goblin King.mp3"));
         instrumental.setLooping(true);
         instrumental.play();
 
@@ -326,15 +322,16 @@ public class GameInterface extends BaseScreen {
         pauseStyle.up = game.skin.getDrawable("pauseImage");
         Button pauseButton = new Button( pauseStyle );
         pauseButton.addListener(
-                new InputListener()
-                {
-                    public boolean touchDown (InputEvent event, float x, float y, int pointer, int button)
-                    {
+                new InputListener() {
+                    public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
                         togglePaused();
                         pauseOverlay.setVisible( isPaused() );
                         return true;
                     }
                 });
+        pauseButton.setSize(pauseButton.getWidth()*2, pauseButton.getHeight()*2);
+        pauseButton.setPosition(1920*4.6f/6, 1080-pauseButton.getHeight() - 10);
+        uiStage.addActor(pauseButton);
 
         pauseOverlay = new Table();
         pauseOverlay.setFillParent(true);
@@ -359,6 +356,7 @@ public class GameInterface extends BaseScreen {
                     public void touchUp (InputEvent event, float x, float y, int pointer, int button)
                     {
                         togglePaused();
+                        pauseOverlay.toFront();
                         pauseOverlay.setVisible( isPaused() );
                     }
                 });
@@ -408,12 +406,9 @@ public class GameInterface extends BaseScreen {
     public void update(float dt) {
         textTilesLeft.setText(queue.textTileLeft);
 
-        // Pourquoi je dois mettre ça dans le render pour que ça marche et pas dans update? (non pas que ça me pose problème mais c'est chelou)
-        if (!win)
-        {
-            timeElapsed += dt;
+        if (!win) {
             timeLabel.setText( "Time: " + (int)remainingTime );
-            remainingTime -= dt;
+            remainingTime -= dt*5;
 
             // Check if timer reached 0
             if (remainingTime < 0) {
@@ -421,6 +416,10 @@ public class GameInterface extends BaseScreen {
                 game.setScreen(new DefeatScreen(game));
             }
         }
+    }
+    @Override
+    public void dispose() {
+        instrumental.dispose();
     }
 }
 

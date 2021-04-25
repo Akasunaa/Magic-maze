@@ -80,13 +80,11 @@ public abstract class BaseScreen implements Screen {
     public abstract void update(float dt);
 
     // gameloop code; update, then render.
-    public void render(float dt)
-    {
+    public void render(float dt) {
         update(dt);
         uiStage.act(dt);
         // only pause gameplay events, not UI events
-        if ( !isPaused() )
-        {
+        if ( !isPaused() ) {
             mainStage.act(dt);
             update(dt);
         }
