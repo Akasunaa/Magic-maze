@@ -23,12 +23,12 @@ import static com.utils.GameScreens.lobbyScreen;
 import static com.utils.GameScreens.mainScreen;
 
 public class MainMenu extends BaseScreen {
-    Button leftButton;
 
     private Table optionOverlay;
 
     public int currentAvatarNumber;
     public TextField usernameTextField;
+    public TextField ipAddress;
 
     public BaseActor[] avatarImages;
     public BaseActor currentAvatar;
@@ -246,51 +246,6 @@ public class MainMenu extends BaseScreen {
 
         background.toBack();
 
-        Texture leftArrowTexture = new Texture(Gdx.files.internal("MenuAssets/arrowSilver_left.png"));
-        game.skin.add("leftArrow", leftArrowTexture);
-        Button.ButtonStyle leftArrowStyle = new Button.ButtonStyle();
-        leftArrowStyle.up = game.skin.getDrawable("leftArrow");
-        leftButton = new Button(leftArrowStyle);
-        leftButton.addListener(new InputListener() {
-            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                return true;
-            }
-
-            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-                Cell<BaseActor> cell = uiTable.getCell(currentAvatar);
-                cell.clearActor();
-
-                currentAvatarNumber = modulo(currentAvatarNumber - 1, 10);
-                currentAvatar = avatarImages[currentAvatarNumber];
-                Multiplayer.me.avatar = currentAvatar;
-                Multiplayer.me.avatarName = animalNames[currentAvatarNumber];
-                cell.setActor(currentAvatar);
-            }
-        });
-
-        Texture rightArrowTexture = new Texture(Gdx.files.internal("MenuAssets/arrowSilver_right.png"));
-        game.skin.add("rightArrow", rightArrowTexture);
-        Button.ButtonStyle rightArrowStyle = new Button.ButtonStyle();
-        rightArrowStyle.up = game.skin.getDrawable("rightArrow");
-        Button rightButton = new Button(rightArrowStyle);
-        rightButton.addListener(new InputListener() {
-                    public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                        return true;
-                    }
-
-                    public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-                        Cell<BaseActor> cell = uiTable.getCell(currentAvatar);
-                        cell.clearActor();
-
-                        currentAvatarNumber = modulo(currentAvatarNumber + 1, 10);
-                        currentAvatar = avatarImages[currentAvatarNumber];
-                        Multiplayer.me.avatar = currentAvatar;
-                        Multiplayer.me.avatarName = animalNames[currentAvatarNumber];
-                        cell.setActor(currentAvatar);
-
-                    }
-                });
-
         Skin uiSkin = new Skin(Gdx.files.internal("GameUIAssets/uiskin.json"));
         usernameTextField = new TextField("Pseudo...", uiSkin);
         usernameTextField.setMaxLength(13);
@@ -301,7 +256,18 @@ public class MainMenu extends BaseScreen {
         });
         Multiplayer.me.pseudo = usernameTextField.getText();
 
-        Gdx.input.setInputProcessor(uiStage);
+        ipAddress = new TextField(Multiplayer.ip, uiSkin);
+        ipAddress.setMaxLength(15);
+        ipAddress.addListener(new ChangeListener() {
+            public void changed(ChangeEvent event, Actor actor) {
+                Multiplayer.serverIP = usernameTextField.getText();
+            }
+        });
+
+        Table padTable = new Table();
+        padTable.add(usernameTextField).fill(1,0.1f).expandX().padBottom(25);
+        padTable.row();
+        padTable.add(ipAddress).fill(1,0.1f).expandX().padTop(25);
 
         uiTable.pad(20);
         uiTable.add(quitButton).right().colspan(4).expandX();
@@ -309,7 +275,7 @@ public class MainMenu extends BaseScreen {
         uiTable.add(titleImage).center().height(250).colspan(4);
         uiTable.row();
         uiTable.add(groupImage1).left();
-        uiTable.add(usernameTextField).colspan(2).fill(1,0.1f);
+        uiTable.add(padTable).colspan(2).fill();
         uiTable.add(groupImage2).right();
         uiTable.row();
         uiTable.add(optionButton).center().padTop(70).colspan(4);

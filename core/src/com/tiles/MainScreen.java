@@ -172,6 +172,7 @@ public class MainScreen extends BaseScreen {
     @Override
     public void dispose() {
         batch.dispose();
+        gameInterface.dispose();
         for (Tile tile : tileList) {
             tile.dispose();
         }

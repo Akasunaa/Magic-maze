@@ -45,6 +45,7 @@ public class Multiplayer {
 
     public static void startServer() {
         isServer = true;
+        serverIP = "127.0.0.1";
     }
 
     public static void stopServer() {

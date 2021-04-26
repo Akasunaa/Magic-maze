@@ -91,8 +91,7 @@ public class GameInterface extends BaseScreen {
         restart.setPosition(0, 0);
         uiStage.addActor(restart);
         restart.addListener(
-                new InputListener()
-                {
+                new InputListener() {
                     public boolean touchDown(InputEvent ev, float x, float y, int pointer, int button) {
                         BaseActor wantToRestart = new BaseActor();
                         wantToRestart.setTexture(new Texture(Gdx.files.internal("interface/restart-button.png")));
@@ -400,8 +399,6 @@ public class GameInterface extends BaseScreen {
 
 
     }
-
-
 
     public void update(float dt) {
         textTilesLeft.setText(queue.textTileLeft);
