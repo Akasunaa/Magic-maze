@@ -12,6 +12,7 @@ public class ClientListener {
 
     //private Decryptor key;
     //private Socket socket;
+    public boolean isRunning = true;
     private boolean exit = false;
     ClientListener(final Decryptor key, final Socket socket) {
         //this.key = key;
@@ -21,7 +22,7 @@ public class ClientListener {
             public void run() {
                 BufferedReader buffer;
                 InputStreamReader inputStreamReader = new InputStreamReader(socket.getInputStream());
-                while (true) {
+                while (isRunning) {
                     try {
                         buffer = new BufferedReader(inputStreamReader);
                         String message = buffer.readLine();
@@ -40,7 +41,7 @@ public class ClientListener {
     }
     public void killThread() {
         exit = true;
-        thread.stop();
+        isRunning = false;
         System.out.println("Client: Killing Courrier");
     }
 }

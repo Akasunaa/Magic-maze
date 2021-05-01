@@ -5,6 +5,7 @@ import com.badlogic.gdx.Net;
 import com.badlogic.gdx.net.ServerSocket;
 import com.badlogic.gdx.net.ServerSocketHints;
 import com.badlogic.gdx.net.Socket;
+import com.badlogic.gdx.net.SocketHints;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.utils.Multiplayer;
 
@@ -44,7 +45,7 @@ public class ServerMaker {
             public void run() {
                 ServerSocketHints serverSocketHint = new ServerSocketHints();
                 // No timeout
-                serverSocketHint.acceptTimeout = 0;
+                serverSocketHint.acceptTimeout = 50;
 
                 // On créé la socket serveur en utilisant le protocol TCP, et en écoutant le port donné
                 serverSocket = Gdx.net.newServerSocket(Net.Protocol.TCP, port, serverSocketHint);
@@ -58,6 +59,7 @@ public class ServerMaker {
                 System.out.println("Server: Beginning first loop");
                 while (!clientList.isFull()) {
                     socket = serverSocket.accept(null); // On récupère une socket qui demande une connection
+                    System.out.println("accepted");
                     client = new Client(socket);
                     if (!clientList.isIn(client)) {
                         clientList.add(client); // On vérifie si le client n'est pas dans la liste, et on l'ajoute
