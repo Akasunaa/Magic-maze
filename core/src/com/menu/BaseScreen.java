@@ -115,7 +115,14 @@ public abstract class BaseScreen implements Screen {
     // methods required by Screen interface
     public void pause() { }
     public void resume() { }
-    public void dispose() { instrumental.dispose();}
+
+    public void dispose() {
+        try {
+            instrumental.dispose();
+        } catch(Exception e) {
+            //e.printStackTrace();
+        }
+    }
     public void show() { }
     public void hide() { }
 }

@@ -30,6 +30,8 @@ public class Courrier {
     // sendingSocket: La socket pour envoyer des messages au serveur
     // receivingSocket: La socket pour recevoir des messages du serveur
 
+    private ClientListener clientListener;
+
     public Courrier(String id, int port, String ip) throws ServerNotReachedException {
         this.id = id;
         SocketHints socketHints = new SocketHints();
@@ -54,7 +56,8 @@ public class Courrier {
         }
 
         sendObject(Multiplayer.me);
-        new ClientListener(Multiplayer.key, receivingSocket).startThread();
+        clientListener = new ClientListener(Multiplayer.key, receivingSocket);
+        clientListener.startThread();
 
     }
 
@@ -85,5 +88,9 @@ public class Courrier {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public void killThread() {
+        clientListener.killThread();
     }
 }

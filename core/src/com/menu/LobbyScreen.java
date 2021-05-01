@@ -48,17 +48,11 @@ public class LobbyScreen extends BaseScreen {
     public LobbyScreen(MagicGame g, float audioVolume) {
         super(g);
 
-        instrumental.setVolume(audioVolume);
-        audioSlider.setValue(audioVolume);
     }
 
     public void create() {
         // pour le son
-        instrumental = Gdx.audio.newMusic(Gdx.files.internal("Music&Sound/DonDokodokoDon.mp3"));
-        audioVolume = 0.70f;
-        instrumental.setLooping(true);
-        instrumental.setVolume(audioVolume);
-        instrumental.play();
+
 
         final BaseActor background = new BaseActor();
         background.setTexture(new Texture(Gdx.files.internal("MenuAssets/BlurryMallBackground.jpg")));
@@ -138,6 +132,8 @@ public class LobbyScreen extends BaseScreen {
             }
 
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+                Multiplayer.courrier.killThread();
+                if (Multiplayer.isServer) Multiplayer.serverMaker.killThread();
                 Gdx.app.exit();
             }
         });
@@ -212,7 +208,8 @@ public class LobbyScreen extends BaseScreen {
 
     public void multiplayerShenanigans() throws ServerNotReachedException {
         if (Multiplayer.isServer) {
-            new ServerMaker(Multiplayer.port, Multiplayer.clientList).startThread();
+            Multiplayer.serverMaker = new ServerMaker(Multiplayer.port, Multiplayer.clientList);
+            Multiplayer.serverMaker.startThread();
         }
         Multiplayer.courrier = new Courrier(Multiplayer.me.pseudo, Multiplayer.port, Multiplayer.serverIP);
         try {
@@ -263,6 +260,11 @@ public class LobbyScreen extends BaseScreen {
 
     public void load() {
         //TODO(Load)
+        audioSlider.setValue(audioVolume);
+        instrumental = Gdx.audio.newMusic(Gdx.files.internal("Music&Sound/DonDokodokoDon.mp3"));
+        instrumental.setLooping(true);
+        instrumental.setVolume(audioVolume);
+        instrumental.play();
         //Hum j'aurais du commenter ça parce que je sais plus ce qu'il faut que je fasse
     }
     private boolean setToUpdate = false;

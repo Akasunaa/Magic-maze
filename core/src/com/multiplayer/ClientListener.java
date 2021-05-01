@@ -12,6 +12,7 @@ public class ClientListener {
 
     //private Decryptor key;
     //private Socket socket;
+    private boolean exit = false;
     ClientListener(final Decryptor key, final Socket socket) {
         //this.key = key;
         //this.socket = socket;
@@ -36,5 +37,10 @@ public class ClientListener {
 
     public void startThread() {
         thread.start();
+    }
+    public void killThread() {
+        exit = true;
+        thread.stop();
+        System.out.println("Client: Killing Courrier");
     }
 }

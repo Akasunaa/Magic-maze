@@ -26,6 +26,7 @@ import static com.utils.Multiplayer.key;
 
 public class ServerMaker {
     Thread thread;
+    ServerSocket serverSocket;
 
     public ServerMaker(final int port, final ClientList clientList) {
         //clientList = cL;
@@ -46,7 +47,7 @@ public class ServerMaker {
                 serverSocketHint.acceptTimeout = 0;
 
                 // On créé la socket serveur en utilisant le protocol TCP, et en écoutant le port donné
-                ServerSocket serverSocket = Gdx.net.newServerSocket(Net.Protocol.TCP, port, serverSocketHint);
+                serverSocket = Gdx.net.newServerSocket(Net.Protocol.TCP, port, serverSocketHint);
                 Socket socket;
                 Client client;
                 BufferedReader buffer; // Le Buffer
@@ -155,5 +156,11 @@ public class ServerMaker {
 
     public void startThread() {
         thread.start();
+    }
+
+    public void killThread() {
+        System.out.println("Server: Killing Server");
+        thread.stop();
+        serverSocket.dispose();
     }
 }

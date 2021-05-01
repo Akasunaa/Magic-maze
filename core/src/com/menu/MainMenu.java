@@ -103,6 +103,7 @@ public class MainMenu extends BaseScreen {
                     game.setScreen(lobbyScreen);
                 } catch (ServerNotReachedException e) {
                     e.printError();
+                    lobbyScreen.dispose();
                 }
             }
         });
@@ -145,6 +146,7 @@ public class MainMenu extends BaseScreen {
                     game.setScreen(lobbyScreen);
                 } catch (ServerNotReachedException e) {
                     e.printError();
+                    lobbyScreen.dispose();
                 }
             }
         });
@@ -285,7 +287,7 @@ public class MainMenu extends BaseScreen {
         uiTable.row();
         uiTable.add(genintImage).left().colspan(4).padTop(50);
 
-        //uiTable.debugCell();
+        uiTable.debugCell();
 
 
     }

@@ -369,6 +369,8 @@ public class GameInterface extends BaseScreen {
                     public void touchUp (InputEvent event, float x, float y, int pointer, int button)
                     {
                         dispose();
+                        Multiplayer.courrier.killThread();
+                        if (Multiplayer.isServer) Multiplayer.serverMaker.killThread();
                         Gdx.app.exit();
                     }
                 });
