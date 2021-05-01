@@ -16,8 +16,7 @@ public class Multiplayer {
     public static Courrier courrier;
     public static ServerMaker serverMaker;
     public static ButtonList buttonList;
-    public static int numberOfPlayers = 1;
-    public static ClientList clientList = new ClientList(Multiplayer.numberOfPlayers);
+    public static ClientList clientList = new ClientList();
     public static Decryptor key = new Decryptor();
     public static boolean isServer = false;
     public static int port = 6969;
@@ -25,7 +24,6 @@ public class Multiplayer {
     // L'ip de mon PC fixe
     public static String ip;
 
-    public volatile static boolean isServerSetAndGo = false;
     public static CyclicBarrier cyclicBarrier = new CyclicBarrier(2);
 
     // Pour la sérialisation

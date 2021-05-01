@@ -1,21 +1,19 @@
 package com.multiplayer;
 
+import com.utils.GameScreens;
+import com.utils.Multiplayer;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class ClientList {
     public List<Client> clientList;
     int numberClient = 0;
-    int maxClient;
 
-    public ClientList(int max) {
+    public ClientList() {
         clientList = new ArrayList<>();
-        maxClient = max;
     }
 
-    public boolean isFull() {
-        return numberClient >= maxClient;
-    }
 
     public void add(Client client) {
         clientList.add(client);

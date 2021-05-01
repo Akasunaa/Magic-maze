@@ -95,36 +95,6 @@ public class MainScreen extends BaseScreen {
 
     }
 
-    public void multiplayerShenanigans() throws ServerNotReachedException{
-        if (Multiplayer.isServer) {
-            new ServerMaker(Multiplayer.port, Multiplayer.clientList).startThread();
-        }
-        Multiplayer.courrier = new Courrier(Multiplayer.me.pseudo, Multiplayer.port, Multiplayer.serverIP);
-        try {
-            Multiplayer.cyclicBarrier.await();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        // Obligé de mettre le multiplexeur ici pour éviter les problèmes lors du lancement du jeu
-        InputMultiplexer inputMultiplexer = new InputMultiplexer(uiStage, mainStage, new MouseWheelChecker());
-        Gdx.input.setInputProcessor(inputMultiplexer);
-
-        if (Multiplayer.isServer) {
-            queue = new Queue(9); // J'ai fait les cases uniquement jusqu'à la 9
-            for (Client client : Multiplayer.clientList.clientList) {
-                client.sendMessage("sending Queue");
-                client.sendClearMessage(queue.serialize());
-            }
-        }
-        try {
-            Multiplayer.cyclicBarrier.await();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        System.out.println("Getting over it");
-    }
-
     public void load(float audioVolume) {
         for (Tile tile : tileList) {
             tile.load();

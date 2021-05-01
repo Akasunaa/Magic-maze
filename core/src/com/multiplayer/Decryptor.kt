@@ -58,8 +58,8 @@ class Decryptor {
             "setAndGo" -> {
                 cyclicBarrier.await()
                 cyclicBarrier.reset()
-
             }
+            "beginGame" -> if (!Multiplayer.isServer) lobbyScreen.passToGameScreen()
             "ping" -> {
                 if (isServer) {
                     for (client in clientList.clientList) {
