@@ -55,7 +55,7 @@ public class Pawn implements Serializable {
         setCase.pawn = this;
         if (setCase.isExit && setCase.color == color) {
             queue.reveal();
-            isLocked = true;
+            isLocked = !queue.isEmpty;
         }
     }
 
