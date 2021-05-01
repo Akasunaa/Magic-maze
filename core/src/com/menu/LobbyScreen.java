@@ -45,6 +45,8 @@ public class LobbyScreen extends BaseScreen {
     private TextButton quitButton;
     private TextButton optionButton;
 
+    private BaseActor ping;
+
     public LobbyScreen(MagicGame g, float audioVolume) {
         super(g);
 
@@ -62,23 +64,21 @@ public class LobbyScreen extends BaseScreen {
     public void create() {
         // pour le son
 
-        //instrumental = Gdx.audio.newMusic(Gdx.files.internal("Music&Sound/Musique_lobby.mp3"));
-        //audioVolume = 0.60f;
-        //instrumental.setLooping(true);
-        //instrumental.setVolume(audioVolume);
-        //instrumental.play();
-
 
         final BaseActor background = new BaseActor();
         background.setTexture(new Texture(Gdx.files.internal("MenuAssets/BlurryMallBackground.jpg")));
         uiStage.addActor(background);
 
         final BaseActor transparentForeground = new BaseActor();
-        transparentForeground.setTexture(new Texture(Gdx.files.internal("MenuAssets/Black.gif")));
+        transparentForeground.setTexture(new Texture(Gdx.files.internal("MenuAssets/black.jpg")));
         transparentForeground.setSize(1920, 1080);
-        transparentForeground.setColor(0, 0, 0, 0);
+        //transparentForeground.setColor(0, 0, 0, 0);
         transparentForeground.setTouchable(Touchable.disabled);
         uiStage.addActor(transparentForeground);
+
+        ping = new BaseActor();
+        ping.setTexture(new Texture(Gdx.files.internal("GameUIAssets/fond transparent.png")));
+        uiStage.addActor(ping);
 
         background.toBack();
 
@@ -219,6 +219,33 @@ public class LobbyScreen extends BaseScreen {
         makeUiTable();
 
         transparentForeground.toFront();
+
+
+
+            transparentForeground.addListener(new InputListener(){
+                public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                    transparentForeground.addAction(Actions.sequence(
+                            Actions.color(new Color(1, 0, 0, 1), (float) 0.20),
+                            Actions.color(new Color(1, 1, 1, 1), (float) 0.20)));
+                    return true;
+                }
+            });
+
+
+
+
+
+        /*for (int i = 0; i < Multiplayer.playerList.size(); i++) {
+            avatars[i] = Multiplayer.playerList.get(i).avatar;
+            avatars[i].setSize(90, 90);
+            avatars[i].setPosition(viewWidth - avatars[i].getWidth() - 45, viewHeight - avatars[i].getHeight() - 225 - 135 * i);
+            uiStage.addActor(avatars[i]);
+            final int temp = i;
+            avatars[i].addListener(new InputListener() {
+                public boolean touchDown(InputEvent ev, float x, float y, int pointer, int button) {
+                    avatars[temp].addAction(Actions.sequence(
+                            Actions.color(new Color(1,0,0,1),(float)0.20),
+                            Actions.color(new Color(1,1,1,1),(float)0.20)));*/
     }
 
     public void multiplayerShenanigans() throws ServerNotReachedException {
@@ -266,8 +293,13 @@ public class LobbyScreen extends BaseScreen {
                     temp.avatarName = animalNames[count];
                     temp.load();
                     addPlayer(temp);
-                    count ++;
+                    count++;
                     if (count == 4) uiStage.removeListener(this);
+                }
+                if (keycode == Input.Keys.U) {
+                    ping.addAction(Actions.sequence(
+                            Actions.color(new Color(1, 0, 0, 1), (float) 0.20),
+                            Actions.color(new Color(1, 1, 1, 1), (float) 0.20)));
                 }
                 return true;
             }
@@ -276,12 +308,11 @@ public class LobbyScreen extends BaseScreen {
 
     public void load() {
         //TODO(Load)
-        audioVolume = 0.60f;
         //audioSlider.setValue(audioVolume);
-        //instrumental = Gdx.audio.newMusic(Gdx.files.internal("Music&Sound/Musique_lobby.mp3"));
-        //instrumental.setLooping(true);
-        //instrumental.setVolume(audioVolume);
-        //instrumental.play();
+        instrumental = Gdx.audio.newMusic(Gdx.files.internal("Music&Sound/Musique_lobby.mp3"));
+        instrumental.setLooping(true);
+        instrumental.setVolume(audioVolume);
+        instrumental.play();
         //Hum j'aurais du commenter ça parce que je sais plus ce qu'il faut que je fasse
     }
     private boolean setToUpdate = false;

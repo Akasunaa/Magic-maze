@@ -95,7 +95,6 @@ public class MainMenu extends BaseScreen {
             }
 
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-                instrumental.stop();
                 Multiplayer.startServer();
                 lobbyScreen = new LobbyScreen(game, audioVolume);
                 try {
