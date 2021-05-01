@@ -62,6 +62,12 @@ public class LobbyScreen extends BaseScreen {
     public void create() {
         // pour le son
 
+        //instrumental = Gdx.audio.newMusic(Gdx.files.internal("Music&Sound/Musique_lobby.mp3"));
+        //audioVolume = 0.60f;
+        //instrumental.setLooping(true);
+        //instrumental.setVolume(audioVolume);
+        //instrumental.play();
+
 
         final BaseActor background = new BaseActor();
         background.setTexture(new Texture(Gdx.files.internal("MenuAssets/BlurryMallBackground.jpg")));
@@ -99,6 +105,8 @@ public class LobbyScreen extends BaseScreen {
                         )
                 );
                 transparentForeground.addAction(fadeToBlack);
+
+                instrumental.stop();
 
                 float delay = 2; // seconds
 
@@ -268,11 +276,12 @@ public class LobbyScreen extends BaseScreen {
 
     public void load() {
         //TODO(Load)
-        audioSlider.setValue(audioVolume);
-        instrumental = Gdx.audio.newMusic(Gdx.files.internal("Music&Sound/DonDokodokoDon.mp3"));
-        instrumental.setLooping(true);
-        instrumental.setVolume(audioVolume);
-        instrumental.play();
+        audioVolume = 0.60f;
+        //audioSlider.setValue(audioVolume);
+        //instrumental = Gdx.audio.newMusic(Gdx.files.internal("Music&Sound/Musique_lobby.mp3"));
+        //instrumental.setLooping(true);
+        //instrumental.setVolume(audioVolume);
+        //instrumental.play();
         //Hum j'aurais du commenter ça parce que je sais plus ce qu'il faut que je fasse
     }
     private boolean setToUpdate = false;
