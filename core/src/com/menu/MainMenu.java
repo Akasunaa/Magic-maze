@@ -262,7 +262,7 @@ public class MainMenu extends BaseScreen {
         ipAddress.setMaxLength(15);
         ipAddress.addListener(new ChangeListener() {
             public void changed(ChangeEvent event, Actor actor) {
-                Multiplayer.serverIP = usernameTextField.getText();
+                Multiplayer.serverIP = ipAddress.getText();
             }
         });
 
