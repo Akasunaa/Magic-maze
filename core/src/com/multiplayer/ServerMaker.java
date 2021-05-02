@@ -59,7 +59,7 @@ public class ServerMaker {
 
                 for (Client tempClient : clientList.clientList) {
                     tempClient.sendMessage("beginGame nothing");
-                    System.out.println("Server: sent setAndGo to "+ tempClient.getId());
+                    System.out.println("Server: sent beginGame to "+ tempClient.getId());
                 }
                 // On signal que le serveur est prêt et que normalement les clients ont tout reçu
 
