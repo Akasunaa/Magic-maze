@@ -279,16 +279,16 @@ public class Tile implements Serializable {
         // Relativement à la tile que l'on cherche à poser
         // On vérifie simplement qu'il y a bien une case, qu'il s'agit bien d'une sortie
         // Et, le cas échéant, qu'il y a bien un pion de la bonne couleur
-        if (tileToJoin != null && tileToJoin.exits[modulo(direction + 2- tileToJoin.rotation, numberDirections)]) {
-            final Case exitCase = tileToJoin.exitCases[modulo(direction + 2- tileToJoin.rotation, numberDirections)];
-            return exitCase.pawn !=null && exitCase.color == exitCase.pawn.getColor();
+        if (tileToJoin != null && tileToJoin.exits[modulo(direction + 2 - tileToJoin.rotation, numberDirections)]) {
+            final Case exitCase = tileToJoin.exitCases[modulo(direction + 2 - tileToJoin.rotation, numberDirections)];
+            return exitCase.pawn != null && exitCase.color == exitCase.pawn.getColor();
         }
         return false;
     }
 
 
     private Tile[] getNeighbouringTiles() {
-        Vector2 mousePosition = new Vector2(sprite.getX(),sprite.getY());
+        Vector2 mousePosition = new Vector2(sprite.getX(), sprite.getY());
         mousePosition.sub(TileAndCases.origin);
 //        mousePosition.sub(tileSize / 2, tileSize / 2);
         mousePosition.mul(TileAndCases.newBaseInvert);
@@ -333,7 +333,7 @@ public class Tile implements Serializable {
             for (int i = 0; i < numberDirections; i++) {
                 if (exits[i]) { // On commence par vérifier que i est bien une sortie
                     direction = modulo(i + rotation, numberDirections);
-                    if ((neighbors[direction] != null && neighbors[direction].exits[modulo(direction + 2- neighbors[direction].rotation, numberDirections)])) {
+                    if ((neighbors[direction] != null && neighbors[direction].exits[modulo(direction + 2 - neighbors[direction].rotation, numberDirections)])) {
                         // On fait la même chose qu'avant, mais on considère simplement
                         // notre exit comme une entrance
                         link(exitCases[i], neighbors[direction].exitCases[modulo(direction + 2 - neighbors[direction].rotation, numberDirections)], direction);
@@ -341,5 +341,13 @@ public class Tile implements Serializable {
                 }
             }
         }
+        for (Case[] ligne : caseList) {
+            for (Case tempCase : ligne) {
+                if (tempCase.hasPortal) {
+                    portalList[tempCase.color].add(tempCase);
+                }
+            }
+        }
     }
 }
+

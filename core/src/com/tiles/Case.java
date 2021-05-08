@@ -3,6 +3,7 @@ package com.tiles;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.menu.BaseActor;
+import com.utils.TileAndCases;
 
 import java.io.Serializable;
 
@@ -213,9 +214,9 @@ public class Case implements Serializable {
                 }
             }
 
-            if (player.portalTaker && hasPortal && color==player.pawn.getColor()){
-                for (Case case : listPortal[color]){
-                    case.explore(player);
+            if (player.portalTaker){
+                for (Case tempCase : TileAndCases.portalList[player.pawn.getColor()]){
+                    tempCase.explore(player);
                 }
             }
         }
@@ -269,6 +270,13 @@ public class Case implements Serializable {
                 if (shortcut != null) {
                     shortcut.unexplored();
                     shortcut.revert(player);
+                }
+            }
+
+            if (player.portalTaker){
+                for (Case tempCase : TileAndCases.portalList[player.pawn.getColor()]){
+                    tempCase.unexplored();
+                    tempCase.revert(player);
                 }
             }
         }

@@ -70,7 +70,7 @@ class FindThePathKotlin : ApplicationAdapter() {
         // On sélectionne le bon numéro de case et on la charge
         // Le chargement est nécessaire pour le rendre sérializable
 
-        player = Player(true, true, false, false, false, false)
+        player = Player(true, true, false, false, false, false,false)
         //player = Player(false, false, true, true, false, false)
 
 
