@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
+import static com.utils.Multiplayer.clientList;
 import static com.utils.Multiplayer.key;
 
 
@@ -36,19 +37,33 @@ public class ServerMaker {
         //this.key = key;
         this.port = port;
         thread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                Socket socket;
-                BufferedReader buffer; // Le Buffer
-                InputStream inputStream; // Et l'InputStream
-
-                while (!isSetAndGo) {
-                    int sleepTime = 30;
+            private void catchMessage() {
+                // Une fonction qui choppe tous les messages de tout le monde
+                for (Client tempClient : clientList.clientList) {
+                    Socket socket = tempClient.getSendingSocket(); // On prends la socket du client
+                    InputStream inputStream = socket.getInputStream();
                     try {
-                        Thread.sleep(sleepTime);
-                    } catch (InterruptedException e) {
+                        if (inputStream.available() != 0) {
+                            // On lit la data depuis la socket dans un buffer
+                            BufferedReader buffer = new BufferedReader(new InputStreamReader(inputStream));
+                            //Et on la décrypte
+                            key.decryptMessage(buffer.readLine(), true);
+                        }
+                    } catch (IOException e) { //Standard Procedure for dealing with Sockets
                         e.printStackTrace();
                     }
+                }
+            }
+            @Override
+            public void run() {
+                while (!isSetAndGo) {
+                    catchMessage();
+//                    int sleepTime = 30;
+//                    try {
+//                        Thread.sleep(sleepTime);
+//                    } catch (InterruptedException e) {
+//                        e.printStackTrace();
+//                    }
                 }
 
                 //sleep();
@@ -64,26 +79,14 @@ public class ServerMaker {
                 // On signal que le serveur est prêt et que normalement les clients ont tout reçu
 
                 System.out.println("Server: Beginning last loop");
-                while (true) {
-                    for (Client tempClient : clientList.clientList) {
-                        socket = tempClient.getSendingSocket(); // On prends la socket du client
-                        inputStream = socket.getInputStream();
-                        try {
-                            if (inputStream.available() != 0) {
-                                // On lit la data depuis la socket dans un buffer
-                                buffer = new BufferedReader(new InputStreamReader(inputStream));
-                                //Et on la décrypte
-                                key.decryptMessage(buffer.readLine(), true);
-                            }
-                        } catch (IOException e) { //Standard Procedure for dealing with Sockets
-                            e.printStackTrace();
-                        }
-                    }
+                while (isRunning) {
+                    catchMessage();
                 }
             }
         });
     }
     private boolean isInLobby = false;
+    private boolean isRunning = false;
     private void startLobby() {
         new Thread(new Runnable() {
             Socket socket;
@@ -185,6 +188,7 @@ public class ServerMaker {
     public void quitLobby() {
         isInLobby = false;
         isSetAndGo = true;
+        isRunning = true;
     }
     public void startThread() {
         thread.start();
@@ -192,7 +196,11 @@ public class ServerMaker {
 
     public void killThread() {
         System.out.println("Server: Killing Server");
-        thread.stop();
+        isRunning = false;
+//        thread.stop();
+        for (Client client: clientList.clientList) {
+            client.sendMessage("stopping game");
+        }
         serverSocket.dispose();
     }
 }

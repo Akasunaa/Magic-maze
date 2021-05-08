@@ -22,6 +22,7 @@ import com.multiplayer.ServerNotReachedException;
 import com.tiles.Pawn;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.Array;
+import com.utils.Functions;
 import com.utils.GameScreens;
 import com.utils.MainConstants;
 import com.utils.Multiplayer;
@@ -369,9 +370,7 @@ public class GameInterface extends BaseScreen {
                     public void touchUp (InputEvent event, float x, float y, int pointer, int button)
                     {
                         dispose();
-                        Multiplayer.courrier.killThread();
-                        if (Multiplayer.isServer) Multiplayer.serverMaker.killThread();
-                        Gdx.app.exit();
+                        Functions.quit();
                     }
                 });
         Label volumeLabel = new Label("Volume", game.skin, "uiLabelStyle");

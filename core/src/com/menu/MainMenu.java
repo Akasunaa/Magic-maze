@@ -16,6 +16,7 @@ import com.badlogic.gdx.utils.Scaling;
 import com.multiplayer.ServerNotReachedException;
 import com.tiles.MainScreen;
 import com.tiles.Player;
+import com.utils.GameScreens;
 import com.utils.Multiplayer;
 
 import static com.utils.Functions.modulo;
@@ -36,6 +37,7 @@ public class MainMenu extends BaseScreen {
 
     public MainMenu(MagicGame g) {
         super(g);
+        GameScreens.mainMenu = this;
     }
 
     public void create() {

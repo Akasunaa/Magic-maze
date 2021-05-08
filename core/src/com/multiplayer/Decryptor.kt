@@ -3,9 +3,11 @@ package com.multiplayer
 
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.scenes.scene2d.actions.Actions
+import com.menu.MainMenu
 import com.tiles.Player
 import com.tiles.Queue
 import com.utils.Functions
+import com.utils.GameScreens
 import com.utils.GameScreens.lobbyScreen
 import com.utils.Multiplayer
 import com.utils.Multiplayer.*
@@ -183,6 +185,22 @@ class Decryptor {
                         }
                     }
                 } else clientList.getClient(sender).sendMessage("answer false")
+            }
+            "quitting" -> {
+                if (isServer) {
+                    for (tempClient in clientList.clientList) {
+                        if (!tempClient.id.equals(sender)) {
+                            tempClient.sendMessage("quitting $sender")
+                        }
+                    }
+                }
+                else {
+                    lobbyScreen.removePlayer(receiver)
+                }
+            }
+            "stopping" -> {
+                GameScreens.game.setScreen(MainMenu(GameScreens.game))
+                courrier.killThread()
             }
             else -> println("$suffix: Action not recognized")
         }

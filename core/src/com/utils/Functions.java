@@ -31,6 +31,13 @@ public class Functions {
         return new Vector2(temp.x, temp.y);
     }
 
+    public static void quit() {
+        Multiplayer.courrier.sendMessage("quitting game");
+        Multiplayer.courrier.killThread();
+        if (Multiplayer.isServer) Multiplayer.serverMaker.killThread();
+        Gdx.app.exit();
+    }
+
     public static void snap(Vector2 mousePosition) {
         // Beaucoup de debug ici
         // C'est essentiellement un changement de base, un arrondissement à l'entier, puis on remet la bonne base

@@ -15,6 +15,7 @@ import com.badlogic.gdx.graphics.g2d.NinePatch;
 
 import com.badlogic.gdx.scenes.scene2d.ui.Slider.SliderStyle;
 import com.multiplayer.ServerNotReachedException;
+import com.utils.GameScreens;
 
 public class MagicGame extends Game {
     public Skin skin;
@@ -63,8 +64,8 @@ public class MagicGame extends Game {
         skin.add("uiSliderStyle", uiSliderStyle);
 
         //Toujours à la fin
-        MainMenu cm = null;
-        cm = new MainMenu(this);
+        MainMenu cm = new MainMenu(this);
+        GameScreens.game = this;
         setScreen( cm );
     }
     public void dispose() {
