@@ -25,7 +25,6 @@ import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.menu.*;
 import com.utils.Functions;
 import com.utils.GameScreens;

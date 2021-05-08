@@ -18,6 +18,7 @@ public class Player implements Serializable {
     boolean west;
     boolean shortcutTaker;
     boolean escalatorTaker;
+    boolean portalTaker;
 
     public String pseudo = "Pseudo";
     public transient BaseActor avatar;

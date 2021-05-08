@@ -22,6 +22,7 @@ import com.multiplayer.ServerNotReachedException;
 import com.tiles.Pawn;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.Array;
+import com.utils.Clock;
 import com.utils.GameScreens;
 import com.utils.MainConstants;
 import com.utils.Multiplayer;
@@ -51,11 +52,9 @@ public class GameInterface extends BaseScreen {
 
     private Label[] pseudoLabels;
 
-    float remainingTime;
-    Label timeLabel;
 
     //constructeur
-    public GameInterface(MagicGame g, float audioVolume){
+    public GameInterface(MagicGame g, float audioVolume) {
         super(g);
 
         instrumental.setVolume(audioVolume);
@@ -72,7 +71,7 @@ public class GameInterface extends BaseScreen {
         // pour indiquer la phase
         BaseActor phaseA = new BaseActor();
         phaseA.setTexture(new Texture(Gdx.files.internal("interface/phaseA.jpg")));
-        phaseA.setSize(3*60+45,150);
+        phaseA.setSize(3 * 60 + 45, 150);
         phaseA.setPosition(viewWidth - phaseA.getWidth(), viewHeight - phaseA.getHeight());
         isPhaseA = true;
         uiStage.addActor(phaseA);
@@ -87,7 +86,7 @@ public class GameInterface extends BaseScreen {
         //le bouton restart que j'ai pris sur internet, va falloir en refaire un
         BaseActor restart = new BaseActor();
         restart.setTexture(new Texture(Gdx.files.internal("interface/restart-button.png")));
-        restart.setSize(150,50);
+        restart.setSize(150, 50);
         restart.setPosition(0, 0);
         uiStage.addActor(restart);
         restart.addListener(
@@ -95,7 +94,7 @@ public class GameInterface extends BaseScreen {
                     public boolean touchDown(InputEvent ev, float x, float y, int pointer, int button) {
                         BaseActor wantToRestart = new BaseActor();
                         wantToRestart.setTexture(new Texture(Gdx.files.internal("interface/restart-button.png")));
-                        wantToRestart.setPosition(avatars[0].getX() - 15, avatars[0].getY() + avatars[0].getHeight()*1.5f / 2);
+                        wantToRestart.setPosition(avatars[0].getX() - 15, avatars[0].getY() + avatars[0].getHeight() * 1.5f / 2);
                         uiStage.addActor(wantToRestart);
                         return true;
                     }
@@ -105,39 +104,39 @@ public class GameInterface extends BaseScreen {
         //le log c'est juste un rectangle transparent ^^'
         BaseActor log = new BaseActor();
         log.setTexture(new Texture(Gdx.files.internal("interface/log.png")));
-        log.setSize(150,300);
+        log.setSize(150, 300);
         log.setPosition(0, restart.getHeight());
         uiStage.addActor(log);
 
         //la c'est juste des faux bouton
         BaseActor hourglass = new BaseActor();
         hourglass.setTexture(new Texture(Gdx.files.internal("interface/sablier.jpg")));
-        hourglass.setSize(60,45);
+        hourglass.setSize(60, 45);
         hourglass.setPosition(viewWidth - hourglass.getWidth(), viewHeight - phaseA.getHeight() - hourglass.getHeight());
         uiStage.addActor(hourglass);
 
         BaseActor zoomMoins = new BaseActor();
         zoomMoins.setTexture(new Texture(Gdx.files.internal("interface/zoommoins.jpg")));
-        zoomMoins.setSize(60,45);
+        zoomMoins.setSize(60, 45);
         zoomMoins.setPosition(viewWidth - hourglass.getWidth() - zoomMoins.getWidth(), viewHeight - phaseA.getHeight() - zoomMoins.getHeight());
         uiStage.addActor(zoomMoins);
 
         BaseActor zoomPlus = new BaseActor();
         zoomPlus.setTexture(new Texture(Gdx.files.internal("interface/zoomplus.jpg")));
-        zoomPlus.setSize(60,45);
+        zoomPlus.setSize(60, 45);
         zoomPlus.setPosition(viewWidth - hourglass.getWidth() - zoomMoins.getWidth() - zoomPlus.getWidth(), viewHeight - phaseA.getHeight() - zoomPlus.getHeight());
         uiStage.addActor(zoomPlus);
 
         BaseActor volume = new BaseActor();
         volume.setTexture(new Texture(Gdx.files.internal("interface/haut-parleur.png")));
-        volume.setSize(45,45);
+        volume.setSize(45, 45);
         volume.setPosition(viewWidth - hourglass.getWidth() - zoomMoins.getWidth() - zoomPlus.getWidth() - volume.getWidth(), viewHeight - phaseA.getHeight() - volume.getHeight());
         voiceOn = true;
         uiStage.addActor(volume);
 
         BaseActor cross = new BaseActor();
         cross.setTexture(new Texture(Gdx.files.internal("interface/croix.png")));
-        cross.setSize(45,45);
+        cross.setSize(45, 45);
         cross.setPosition(viewWidth - hourglass.getWidth() - zoomMoins.getWidth() - zoomPlus.getWidth() - volume.getWidth(), viewHeight - phaseA.getHeight() - volume.getHeight());
         cross.setVisible(false);
         uiStage.addActor(cross);
@@ -157,8 +156,8 @@ public class GameInterface extends BaseScreen {
             avatars[i].addListener(new InputListener() {
                 public boolean touchDown(InputEvent ev, float x, float y, int pointer, int button) {
                     avatars[temp].addAction(Actions.sequence(
-                            Actions.color(new Color(1,0,0,1),(float)0.20),
-                            Actions.color(new Color(1,1,1,1),(float)0.20)));
+                            Actions.color(new Color(1, 0, 0, 1), (float) 0.20),
+                            Actions.color(new Color(1, 1, 1, 1), (float) 0.20)));
                     courrier.sendMessage("ping " + Multiplayer.playerList.get(temp).pseudo);
                     // What
                     // the
@@ -181,8 +180,8 @@ public class GameInterface extends BaseScreen {
             avatars[i].addListener(new InputListener() {
                 public boolean touchDown(InputEvent ev, float x, float y, int pointer, int button) {
                     avatars[temp].addAction(Actions.sequence(
-                            Actions.color(new Color(1,0,0,1),(float)0.20),
-                            Actions.color(new Color(1,1,1,1),(float)0.20)));
+                            Actions.color(new Color(1, 0, 0, 1), (float) 0.20),
+                            Actions.color(new Color(1, 1, 1, 1), (float) 0.20)));
                     // What
                     // the
                     // fuck
@@ -196,14 +195,14 @@ public class GameInterface extends BaseScreen {
         }
 
         //affichage des pseudos des joueurs
-        BitmapFont pseudoFont = getFontSize(18*2);
+        BitmapFont pseudoFont = getFontSize(18 * 2);
         LabelStyle pseudoStyle = new LabelStyle(pseudoFont, Color.WHITE);
         //Les pseudos en tant que label
         Label[] pseudoLabelList = new Label[4];
-        for (int i = 0; i <=3; i ++) {
+        for (int i = 0; i <= 3; i++) {
             pseudoLabelList[i] = new Label(pseudoList[i], pseudoStyle);
             pseudoLabelList[i].setFontScale(0.5f);
-            pseudoLabelList[i].setPosition(avatars[i].getX(), avatars[i].getY()-30);
+            pseudoLabelList[i].setPosition(avatars[i].getX(), avatars[i].getY() - 30);
             uiStage.addActor(pseudoLabelList[i]);
         }
 
@@ -245,12 +244,12 @@ public class GameInterface extends BaseScreen {
 
         //la c'est le compteur de plaques restantes en bas a droite
 
-        BitmapFont font = getFontSize(48*2);
+        BitmapFont font = getFontSize(48 * 2);
         LabelStyle style = new LabelStyle(font, Color.BLACK);
 
         textTilesLeft = new Label(queue.textTileLeft, style);
         textTilesLeft.setFontScale(0.5f);
-        textTilesLeft.setPosition(viewWidth - tileSize/2 - textTilesLeft.getWidth()/2 - 40, 0);
+        textTilesLeft.setPosition(viewWidth - tileSize / 2 - textTilesLeft.getWidth() / 2 - 40, 0);
         uiStage.addActor(textTilesLeft);
 
 //        for (Actor actor: uiStage.getActors()) {
@@ -258,18 +257,19 @@ public class GameInterface extends BaseScreen {
 //            // Parce qu'on est plus en 1280 mais en 1920 oupsy doopsy déso chloé
 //        }
 
-        loadPawnButton = new TextButton("Afficher le pion "+ getColor(currentColor), game.skin, "uiTextButtonStyle");
+        loadPawnButton = new TextButton("Afficher le pion " + getColor(currentColor), game.skin, "uiTextButtonStyle");
         loadPawnButton.addListener(new InputListener() {
-            public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 return true;
             }
-            public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
+
+            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
                 if (!tileList.isEmpty()) {
                     pawnList.add(new Pawn(currentColor));
                     pawnList.get(currentColor).setFirstCase();
                     pawnList.get(currentColor).load();
-                    currentColor ++;
-                    loadPawnButton.setText("Afficher le pion "+ getColor(currentColor));
+                    currentColor++;
+                    loadPawnButton.setText("Afficher le pion " + getColor(currentColor));
                     if (currentColor >= 4) {
                         loadPawnButton.remove();
                     }
@@ -278,13 +278,11 @@ public class GameInterface extends BaseScreen {
             }
         });
         uiStage.addActor(loadPawnButton);
-        loadPawnButton.setPosition(10,1000);
+        loadPawnButton.setPosition(10, 1000);
 
         //Ici c'est le bordel rajouté par Nathan
         win = false;
 
-        //Temps écoulé et temps restant
-        remainingTime = 10f;
 
         // Pour l'instant on touche pas à ça!!!!
 //        Animatedhourglass = new AnimatedActor();
@@ -306,30 +304,30 @@ public class GameInterface extends BaseScreen {
         font = MainConstants.getFontSize(40);
         String text = "Time: ";
         style = new LabelStyle(font, Color.NAVY);
-        timeLabel = new Label(text, style);
-        timeLabel.setFontScale(1.5f);
-        timeLabel.setPosition(960, 1000);
-        uiStage.addActor(timeLabel);
+        Clock.clock = new Clock(style);
+        Clock.clock.setFontScale(1.5f);
+        Clock.clock.setPosition(960, 1000);
+        uiStage.addActor(Clock.clock);
 
         instrumental = Gdx.audio.newMusic(Gdx.files.internal("Music&Sound/The Path of the Goblin King.mp3"));
         instrumental.setLooping(true);
         instrumental.play();
 
         Texture pauseTexture = new Texture(Gdx.files.internal("GameUIAssets/barsHorizontal.png"));
-        game.skin.add("pauseImage", pauseTexture );
+        game.skin.add("pauseImage", pauseTexture);
         Button.ButtonStyle pauseStyle = new Button.ButtonStyle();
         pauseStyle.up = game.skin.getDrawable("pauseImage");
-        Button pauseButton = new Button( pauseStyle );
+        Button pauseButton = new Button(pauseStyle);
         pauseButton.addListener(
                 new InputListener() {
-                    public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
+                    public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                         togglePaused();
-                        pauseOverlay.setVisible( isPaused() );
+                        pauseOverlay.setVisible(isPaused());
                         return true;
                     }
                 });
-        pauseButton.setSize(pauseButton.getWidth()*2, pauseButton.getHeight()*2);
-        pauseButton.setPosition(1920*4.6f/6, 1080-pauseButton.getHeight() - 10);
+        pauseButton.setSize(pauseButton.getWidth() * 2, pauseButton.getHeight() * 2);
+        pauseButton.setPosition(1920 * 4.6f / 6, 1080 - pauseButton.getHeight() - 10);
         uiStage.addActor(pauseButton);
 
         pauseOverlay = new Table();
@@ -341,33 +339,33 @@ public class GameInterface extends BaseScreen {
         stacker.add(uiTable);
         stacker.add(pauseOverlay);
 
-        game.skin.add("white", new Texture( Gdx.files.internal("GameUIAssets/white4px.png")) );
-        Drawable pauseBackground = game.skin.newDrawable("white", new Color(0,0,0,0.8f) );
+        game.skin.add("white", new Texture(Gdx.files.internal("GameUIAssets/white4px.png")));
+        Drawable pauseBackground = game.skin.newDrawable("white", new Color(0, 0, 0, 0.8f));
 
         Label pauseLabel = new Label("Paused", game.skin, "uiLabelStyle");
         TextButton resumeButton = new TextButton("Resume", game.skin, "uiTextButtonStyle");
         resumeButton.addListener(
-                new InputListener()
-                {
-                    public boolean touchDown (InputEvent event, float x, float y, int pointer,
-                                              int button)
-                    { return true; }
-                    public void touchUp (InputEvent event, float x, float y, int pointer, int button)
-                    {
+                new InputListener() {
+                    public boolean touchDown(InputEvent event, float x, float y, int pointer,
+                                             int button) {
+                        return true;
+                    }
+
+                    public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
                         togglePaused();
                         pauseOverlay.toFront();
-                        pauseOverlay.setVisible( isPaused() );
+                        pauseOverlay.setVisible(isPaused());
                     }
                 });
         TextButton quitButton = new TextButton("Quit", game.skin, "uiTextButtonStyle");
         quitButton.addListener(
-                new InputListener()
-                {
-                    public boolean touchDown (InputEvent event, float x, float y, int pointer,
-                                              int button)
-                    { return true; }
-                    public void touchUp (InputEvent event, float x, float y, int pointer, int button)
-                    {
+                new InputListener() {
+                    public boolean touchDown(InputEvent event, float x, float y, int pointer,
+                                             int button) {
+                        return true;
+                    }
+
+                    public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
                         dispose();
                         Multiplayer.courrier.killThread();
                         if (Multiplayer.isServer) Multiplayer.serverMaker.killThread();
@@ -405,18 +403,7 @@ public class GameInterface extends BaseScreen {
     public void update(float dt) {
         textTilesLeft.setText(queue.textTileLeft);
 
-        if (!win) {
-            timeLabel.setText( "Time: " + (int)remainingTime );
-            remainingTime -= dt/3;
-
-            // Check if timer reached 0
-            if (remainingTime < 0) {
-                remainingTime = 10f;
-                // Parce que comme ça au moins je suis sûr qu'il va pas me faire une saloperie
-                game.setScreen(new DefeatScreen(game));
-            }
-        }
+        Clock.clock.update(game);
     }
 }
-
 

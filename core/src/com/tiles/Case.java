@@ -1,5 +1,6 @@
 package com.tiles;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.menu.BaseActor;
 
@@ -21,6 +22,7 @@ public class Case implements Serializable {
 
     public boolean isAccessible; // Je suis même pas sûr qu'on l'utilise ça
     public boolean hasPortal;
+    public boolean hasHourglass;
     public boolean isExit;
     public boolean isEntrance;
     public boolean hasWeapon;
@@ -42,10 +44,12 @@ public class Case implements Serializable {
         isAccessible = (number != unnacessible);
         color = number % 10;
         isEntrance = number == entrance;
+        hasHourglass = number == hourglass;
         isExit = number / 10 == exit / 10;
         hasPortal = number / 10 == portal / 10;
         hasWeapon = number / 10 == weapon / 10;
         isFinalExit = number / 10 == finalExit / 10;
+        System.out.println(hasHourglass);
     }
 
     public void getNeighbours(int[][] horizontalWalls, int[][] verticalWalls) {
@@ -148,6 +152,14 @@ public class Case implements Serializable {
         greenDot.setVisible(isValid);
     }
 
+    public void used(){
+        Texture t = new Texture(Gdx.files.internal("tuiles/used.png"));
+        BaseActor cross = new BaseActor(t);
+        cross.setOrigin((int) (cross.getWidth()/2));
+        cross.setPosition(getX(x),getY(y));
+        mainScreen.getMainStage().addActor(cross);
+    }
+
     public void draw() {
         if (isShowed) redDot.draw(batch, 1);
         else if (isValid) greenDot.draw(batch, 1);
@@ -158,18 +170,18 @@ public class Case implements Serializable {
     public void explore(Player player) {
         int index; // On utilise index pour éviter de devoir réécrire les modulos trop de fois
         Player tempPlayer = player.rotate(tile.rotation);
-        if (!seen && isAccessible && (player.pawn == pawn || pawn == null)) {
+        if (!seen && isAccessible && (player.pawn == pawn || pawn == null)) { //non vue, accessible, pas de pion sur la case et d'où on vient
             seen = true; // Parcours de graphe classique pour éviter les StackOverflow
             explored();
             System.out.println("hoi");
-            if (tempPlayer.north) {
+            if (tempPlayer.north) {  //si on peut aller vers le nord
                 index = modulo(north + tile.rotation, numberDirections);
                 if (caseList[index] != null) {
                     caseList[index].explore(player);
                 }
             }
 
-            if (tempPlayer.west) {
+            if (tempPlayer.west) { //exploration de l'est
                 index = modulo(west + tile.rotation, numberDirections);
                 if (caseList[index] != null) {
                     caseList[index].explore(player);
@@ -198,6 +210,12 @@ public class Case implements Serializable {
             if (player.shortcutTaker) {
                 if (shortcut != null) {
                     shortcut.explore(player);
+                }
+            }
+
+            if (player.portalTaker && hasPortal && color==player.pawn.getColor()){
+                for (Case case : listPortal[color]){
+                    case.explore(player);
                 }
             }
         }

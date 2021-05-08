@@ -41,6 +41,7 @@ public class Tile implements Serializable {
     public Case entranceCase;
     // L'entrée représente la direction cardinale de la tuile
 
+
     private long cooldown;
 
     public void startCooldown() {

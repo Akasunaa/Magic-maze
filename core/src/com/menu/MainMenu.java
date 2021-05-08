@@ -38,6 +38,7 @@ public class MainMenu extends BaseScreen {
         super(g);
     }
 
+
     public void create() {
         // On met le bon InputProcessor
         InputMultiplexer inputMultiplexer = new InputMultiplexer(uiStage, mainStage);

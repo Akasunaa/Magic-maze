@@ -7,13 +7,13 @@ import com.badlogic.gdx.math.MathUtils;
 
 public class AnimatedActor extends BaseActor
 {
-    public float elapsedTime;
+
     public Animation anim;
 
     public AnimatedActor()
     {
         super();
-        elapsedTime = 0;
+
     }
 
     public void setAnimation(Animation a)
@@ -26,15 +26,15 @@ public class AnimatedActor extends BaseActor
     public void act(float dt)
     {
         super.act( dt );
-        elapsedTime += dt;
+
         if (velocityX != 0 || velocityY != 0)
             setRotation( MathUtils.atan2( velocityY, velocityX ) * MathUtils.radiansToDegrees );
     }
 
     public void draw(Batch batch, float parentAlpha)
     {
-        TextureRegion t2 = (TextureRegion) anim.getKeyFrame(elapsedTime);
-        region.setRegion( t2.getTexture() );
-        super.draw(batch, parentAlpha);
+        //TextureRegion t2 = (TextureRegion) anim.getKeyFrame(Clocl);
+        //region.setRegion( t2.getTexture() );
+        //super.draw(batch, parentAlpha);
     }
 }
