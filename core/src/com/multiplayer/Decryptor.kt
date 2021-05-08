@@ -52,14 +52,16 @@ class Decryptor {
                         val inputStream = courrier.receivingSocket.inputStream
                         val tempString = BufferedReader(InputStreamReader(inputStream)).readLine()
                         if (TileAndCases.queue==null) TileAndCases.queue = Queue(tempString)
-//                        cyclicBarrier.await()
+                        cyclicBarrier.await()
                     }
                     "else" -> {
                     }
                 }
             }
             "setAndGo" -> {
-                cyclicBarrier.await()
+                //cyclicBarrier.await()
+                // En fait ça servait à rien de mettre une barrière ici étant donné que la
+                // Création du courrier se fait de manière linéaire dans le thread principal
             }
             "beginGame" -> {
 //                cyclicBarrier.await()
