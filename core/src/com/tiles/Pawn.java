@@ -49,7 +49,7 @@ public class Pawn implements Serializable {
         try {
             setCase.pawn = null;
         } catch (Exception e) {
-            System.out.println("Error in Pawn.setCase(): Pawn hasn't got a Case yet");
+            //System.out.println("Error in Pawn.setCase(): Pawn hasn't got a Case yet");
         }
         setCase = tempCase;
         setCase.pawn = this;
@@ -81,11 +81,11 @@ public class Pawn implements Serializable {
 
     private void setSize(float size) {
         this.size = size;
-        sprite.setSize(size, 2 * size);
+        sprite.setSize(size/2, size);
     }
 
     public void setSize() {
-        setSize(caseSize / 1.5f);
+        setSize(caseSize / 0.95f);
     }
     // Fonctions classiques pour gérer la taille
 
@@ -127,14 +127,16 @@ public class Pawn implements Serializable {
     }
     public void updateCoordinates() {
         sprite.setX(setCase.getX(setCase.x) + (caseSize - sprite.getWidth()) / 2);
-        sprite.setY(setCase.getY(setCase.y) + caseSize / 3);
+        sprite.setY(setCase.getY(setCase.y) + caseSize / 10);
     }
 
     public void dispose() {
         sprite.remove();
     }
 
-    private boolean hasExplored = false; // Pour regarder si on a déjà fait le pathfinding et éviter de le faire trop de fois
+    private boolean hasExplored = false;
+    // Pour regarder si on a déjà fait le pathfinding et éviter de le faire trop de fois
+    // Wow this is useless
 
     public Vector2 getPosition() {
         return position;
@@ -143,14 +145,8 @@ public class Pawn implements Serializable {
 
     public boolean canPlaceHere(Vector2 coordinates, Player player) {
         try {
-            Multiplayer.courrier.sendMessage("wantToPlacePawn " + Colors.getColor(color));
             Case nextCase = findCase(coordinates); // Est-on sur une case ?
-            try {
-                Thread.sleep(10);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            if (!(nextCase == null) && nextCase.isValid && Multiplayer.courrier.getAnswer()) { // Si elle existe et est non nulle
+            if (!(nextCase == null) && nextCase.isValid && checkServerForPlaceable()) {// Si elle existe et est non nulle
                 setCase.revert(player); // On annule le pathfinding... avec un autre pathfinding
                 setCase.hide(); // On cache la case de départ
                 hasExplored = false; // On réinitialise les variables booléennes
@@ -160,6 +156,8 @@ public class Pawn implements Serializable {
             }
         } catch (NullPointerException e) {
             System.out.println("No Tile found in Pawn.handleInput");
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return false;
     }
@@ -177,16 +175,9 @@ public class Pawn implements Serializable {
 
     public void handleInput(Player player) {
         if (isMovable) {
-            if (!hasExplored) { // On fait le pathfinding une seule fois
-                setCase.show(); // On montre la case de départ
-                player.takesPawn(this);
-                setCase.explore(player); // On lance le pathfinding (structure récursive)
-                hasExplored = true; // Et on montre qu'on a déjà fait le pathfinding
-            }
             float x = Functions.mouseInput().x - sprite.getWidth() / 2;
             float y = Functions.mouseInput().y - sprite.getHeight() / 2;
-            sprite.setX(x);
-            sprite.setY(y);
+            setSpritePosition(new Vector2(x,y));
             if (count == 2) { // On veut pas avoir à le faire trop souvent
                 Multiplayer.courrier.sendMessage("movingPawn " + Colors.getColor(color) + " " + x + " " + y);
                 count = 0;
@@ -198,11 +189,19 @@ public class Pawn implements Serializable {
                     player.dropsPawn(this);
                 }
             }
-        } else isMovable = (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT) &&
-                (sprite.getX() < Functions.mouseInput().x) && (Functions.mouseInput().x < sprite.getX() + sprite.getWidth() &&
-                (sprite.getY() < Functions.mouseInput().y) && (Functions.mouseInput().y < sprite.getY() + sprite.getHeight())) &&
-                !isLocked &&
-                checkServerForClickable());
+        } else {
+            isMovable = (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT) &&
+                    (sprite.getX() < Functions.mouseInput().x) && (Functions.mouseInput().x < sprite.getX() + sprite.getWidth() &&
+                    (sprite.getY() < Functions.mouseInput().y) && (Functions.mouseInput().y < sprite.getY() + sprite.getHeight())) &&
+                    !isLocked && !player.isHoldingPawn() &&
+                    checkServerForClickable());
+            if (isMovable) {
+                setCase.show(); // On montre la case de départ
+                player.takesPawn(this);
+                setCase.explore(player); // On lance le pathfinding (structure récursive)
+                hasExplored = true; // Et on montre qu'on a déjà fait le pathfinding
+            }
+        }
     }
 
     private boolean checkServerForClickable() {
@@ -213,6 +212,20 @@ public class Pawn implements Serializable {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        System.out.println(Multiplayer.courrier.getAnswer());
+        return Multiplayer.courrier.getAnswer();
+    }
+
+    private boolean checkServerForPlaceable() {
+        Multiplayer.courrier.sendMessage("wantToPlacePawn " + Colors.getColor(color));
+        System.out.println("Client: checked for placeable");
+        try {
+            Multiplayer.cyclicBarrier.await();
+            // Pour synchroniser les threads
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        System.out.println(Multiplayer.courrier.getAnswer());
         return Multiplayer.courrier.getAnswer();
     }
 

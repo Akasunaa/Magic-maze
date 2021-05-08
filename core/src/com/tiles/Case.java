@@ -81,11 +81,11 @@ public class Case implements Serializable {
     }
 
     public float getX(int x) {
-        return tile.getX() + offset + (x * caseSize);
+        return tile.x + offset + (x * caseSize);
     }
 
     public float getY(int y) {
-        return tile.getY() + offset + (y * caseSize);
+        return tile.y + offset + (y * caseSize);
     }
 
     private void setSpriteCoordinates() { // self explanatory
@@ -161,7 +161,6 @@ public class Case implements Serializable {
         if (!seen && isAccessible && (player.pawn == pawn || pawn == null)) {
             seen = true; // Parcours de graphe classique pour éviter les StackOverflow
             explored();
-            System.out.println("hoi");
             if (tempPlayer.north) {
                 index = modulo(north + tile.rotation, numberDirections);
                 if (caseList[index] != null) {

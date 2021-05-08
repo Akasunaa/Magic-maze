@@ -59,7 +59,7 @@ public class MainMenu extends BaseScreen {
 
         // passer audio volume en variable globale de MagicGame.java
         instrumental = Gdx.audio.newMusic(Gdx.files.internal("Music&Sound/MusicMenu.wav"));
-        audioVolume = 0.70f;
+        audioVolume = 0.00f;
         instrumental.setLooping(true);
         instrumental.setVolume(audioVolume);
         instrumental.play();

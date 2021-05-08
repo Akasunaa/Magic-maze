@@ -27,6 +27,7 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.menu.*;
+import com.utils.Colors;
 import com.utils.Functions;
 import com.utils.GameScreens;
 import com.utils.Multiplayer;
@@ -73,7 +74,7 @@ public class MainScreen extends BaseScreen {
         //camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         camera = (OrthographicCamera) mainStage.getCamera();
         camera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        camera.zoom = 2;
+        camera.zoom = 1;
         camera.position.set(1920f/2,1080f/2,0f);
         // Cette caméra nous sert à avoir le bon système de coordonées
 
@@ -103,6 +104,22 @@ public class MainScreen extends BaseScreen {
         gameInterface.hasBackground = false;
         queue.setCoordinates(1920 - tileSize / 2 - 20, 20);
         queue.load();
+        placeFirstTile();
+    }
+
+    private void placeFirstTile() {
+        Tile temp = new Tile(1);
+        temp.x = (1920 - tileSize)/2f;
+        temp.y = (1080 - tileSize)/2f;
+        origin.add(temp.x, temp.y);
+        temp.load();
+        tileList.add(temp);
+        for (int color : Colors.colors) {
+            Pawn tempPawn = new Pawn(color);
+            tempPawn.setCase(temp.caseList[1+(color/2)][1+(color%2)]);
+            tempPawn.load();
+            pawnList.add(tempPawn);
+        }
     }
 
     @Override

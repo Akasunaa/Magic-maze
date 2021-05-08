@@ -220,11 +220,6 @@ public class LobbyScreen extends BaseScreen {
             Multiplayer.serverMaker.enterLobby();
         }
         Multiplayer.courrier = new Courrier(Multiplayer.me.pseudo, Multiplayer.port, Multiplayer.serverIP);
-        try {
-            Multiplayer.cyclicBarrier.await();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
 
         if (Multiplayer.isServer) {
             queue = new Queue(9); // J'ai fait les cases uniquement jusqu'à la 9
@@ -238,7 +233,7 @@ public class LobbyScreen extends BaseScreen {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        System.out.println("Getting over it");
+        System.out.println("Client: Launching Lobby");
 
         // On met ça ici parce que sinon problèmes lors de l'appel
         Gdx.input.setInputProcessor(uiStage);

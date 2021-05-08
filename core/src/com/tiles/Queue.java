@@ -36,7 +36,7 @@ public class Queue implements Serializable {
     private float x;
     private float y;
     private final float size = tileSize/2;
-    public boolean isFirst = true;
+    public boolean isFirst = false;
     // Pour placer le premier
 
     // Booléens pour savoir si on est en train de placer la tuile, et si la liste est vide
@@ -129,8 +129,8 @@ public class Queue implements Serializable {
         Collections.shuffle(tempList);
         tail = null; // Utile ?
         for (Tile tile : tempList) add(tile);
-        add(new Tile(1)); // On commence toujours par la case numéro 1 I guess
-        length = number;
+        //add(new Tile(1)); // On commence toujours par la case numéro 1 I guess
+        length = number-1;
         updateText();
     }
 
@@ -226,6 +226,7 @@ public class Queue implements Serializable {
 
     public void placeHandleAll(Vector2 mousePosition) {
         if (isFirst) {
+            // Relique de l'époque où on devait placer cette tuile à la main, sorry
             isFirst = false;
             origin.add(mousePosition);// Si c'est la première, on stock ses coordonées
             place(mousePosition); // On pose la tuile

@@ -2,6 +2,7 @@ package com.tiles;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.menu.BaseActor;
 import com.utils.Multiplayer;
 
@@ -24,6 +25,11 @@ public class Player implements Serializable {
     public String avatarName;
 
     Pawn pawn = null;
+
+    @JsonIgnore
+    public boolean isHoldingPawn() {
+        return pawn !=null;
+    }
 
     public Player() {
     }

@@ -26,7 +26,8 @@ class Decryptor {
             "answer" -> {
                 courrier.answer = receiver.toBoolean()
                 cyclicBarrier.await() // Pour synchroniser les threads
-                cyclicBarrier.reset()
+                println("Client: Processed Answer " + receiver)
+
             }
             "sending" -> {
                 when (receiver) {
@@ -49,7 +50,7 @@ class Decryptor {
                         val inputStream = courrier.receivingSocket.inputStream
                         val tempString = BufferedReader(InputStreamReader(inputStream)).readLine()
                         if (TileAndCases.queue==null) TileAndCases.queue = Queue(tempString)
-                        cyclicBarrier.await()
+//                        cyclicBarrier.await()
                     }
                     "else" -> {
                     }
@@ -57,11 +58,9 @@ class Decryptor {
             }
             "setAndGo" -> {
                 cyclicBarrier.await()
-                cyclicBarrier.reset()
             }
             "beginGame" -> {
-                cyclicBarrier.await()
-                cyclicBarrier.reset()
+//                cyclicBarrier.await()
                 if (!Multiplayer.isServer) lobbyScreen.passToGameScreen()
             }
             "ping" -> {
