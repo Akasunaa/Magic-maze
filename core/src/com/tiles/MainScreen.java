@@ -79,7 +79,7 @@ public class MainScreen extends BaseScreen {
 
         tileList = new ArrayList<Tile>();
 
-        Multiplayer.me.setPlayer(new Player(true, true, true, true, false, false));
+        Multiplayer.me.setPlayer(new Player(true, true, true, true, false, true));
 
         // Bon là c'est le batch et les trucs pour écrire, rien d'important
         batch = new SpriteBatch();
@@ -91,7 +91,6 @@ public class MainScreen extends BaseScreen {
         numberCase.setPosition(200,100);
         uiStage.addActor(coordMouse);
         uiStage.addActor(numberCase);
-
 
     }
 

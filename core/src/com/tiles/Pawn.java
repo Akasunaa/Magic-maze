@@ -140,7 +140,6 @@ public class Pawn implements Serializable {
         return position;
     }
 
-
     public boolean canPlaceHere(Vector2 coordinates, Player player) {
         try {
             Multiplayer.courrier.sendMessage("wantToPlacePawn " + Colors.getColor(color));

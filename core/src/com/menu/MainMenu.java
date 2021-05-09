@@ -25,6 +25,7 @@ import static com.utils.GameScreens.mainScreen;
 public class MainMenu extends BaseScreen {
 
     private Table optionOverlay;
+    private Table ruleTable;
 
     public int currentAvatarNumber;
     public TextField usernameTextField;
@@ -78,6 +79,31 @@ public class MainMenu extends BaseScreen {
         Image genintImage = new Image(genint);
         genintImage.setScaling(Scaling.fit);
 
+        Texture règles1 = new Texture(Gdx.files.internal("MenuAssets/regle_page-0001.jpg"));
+        règles1.setFilter(TextureFilter.Linear, TextureFilter.Linear);
+        Image règlesImage1 = new Image(règles1);
+        règlesImage1.setScaling(Scaling.fit);
+
+        Texture règles2 = new Texture(Gdx.files.internal("MenuAssets/regle_page-0002.jpg"));
+        règles2.setFilter(TextureFilter.Linear, TextureFilter.Linear);
+        Image règlesImage2 = new Image(règles2);
+        règlesImage2.setScaling(Scaling.fit);
+
+        Texture règles3 = new Texture(Gdx.files.internal("MenuAssets/regle_page-0003.jpg"));
+        règles3.setFilter(TextureFilter.Linear, TextureFilter.Linear);
+        Image règlesImage3 = new Image(règles3);
+        règlesImage3.setScaling(Scaling.fit);
+
+        Texture règles4 = new Texture(Gdx.files.internal("MenuAssets/regle_page-0004.jpg"));
+        règles1.setFilter(TextureFilter.Linear, TextureFilter.Linear);
+        Image règlesImage4 = new Image(règles4);
+        règlesImage4.setScaling(Scaling.fit);
+
+        Texture règles5 = new Texture(Gdx.files.internal("MenuAssets/regle_page-0005.jpg"));
+        règles5.setFilter(TextureFilter.Linear, TextureFilter.Linear);
+        Image règlesImage5 = new Image(règles5);
+        règlesImage5.setScaling(Scaling.fit);
+
         Texture group = new Texture(Gdx.files.internal("MenuAssets/MagicGroup.png"));
         group.setFilter(TextureFilter.Linear, TextureFilter.Linear);
         Image groupImage1 = new Image(group);
@@ -86,6 +112,8 @@ public class MainMenu extends BaseScreen {
         groupImage2.setScaling(Scaling.fit);
 
         final Sound buttonHover = Gdx.audio.newSound(Gdx.files.internal("Music&Sound/buttonHover.mp3"));
+
+        Label ipLabel = new Label("Rentrez ici l'adresse ip du host de la partie :", game.skin, "uiLabelStyle");
 
         TextButton startButton = new TextButton("Créer une partie", game.skin, "uiTextButtonStyle");
         startButton.addListener(new InputListener() {
@@ -183,8 +211,61 @@ public class MainMenu extends BaseScreen {
             }
         });
 
+        TextButton returnButton1 = new TextButton("Return", game.skin, "uiTextButtonStyle");
+        returnButton1.addListener(new InputListener() {
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                return true;
+            }
 
-        TextButton optionButton = new TextButton("Options et aide", game.skin, "uiTextButtonStyle");
+            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+                togglePaused();
+                optionOverlay.setVisible(false);
+            }
+        });
+
+        TextButton returnButton2 = new TextButton("Return", game.skin, "uiTextButtonStyle");
+        returnButton2.addListener(new InputListener() {
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                return true;
+            }
+
+            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+                togglePaused();
+                ruleTable.setVisible(false);
+            }
+        });
+
+        TextButton ruleButton = new TextButton("Règles du jeu", game.skin, "uiTextButtonStyle");
+        ruleButton.addListener(new InputListener() {
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) { return true; }
+
+            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+                togglePaused();
+                ruleTable.setVisible(true);
+            }
+        });
+
+        final Table scrollTable = new Table();
+        scrollTable.add(règlesImage1);
+        scrollTable.row();
+        scrollTable.add(règlesImage2);
+        scrollTable.row();
+        scrollTable.add(règlesImage3);
+        scrollTable.row();
+        scrollTable.add(règlesImage4);
+        scrollTable.row();
+        scrollTable.add(règlesImage5);
+
+        final ScrollPane scroller = new ScrollPane(scrollTable);
+
+        ruleTable = new Table();
+        ruleTable.setVisible(false);
+        ruleTable.setFillParent(true);
+        ruleTable.add(returnButton2).padTop(25);
+        ruleTable.row();
+        ruleTable.add(scroller).padTop(25); //.expand(); //.fill()
+
+        TextButton optionButton = new TextButton("Options et commandes", game.skin, "uiTextButtonStyle");
         optionButton.addListener(new InputListener() {
             public boolean touchDown(InputEvent event, float x, float y, int pointer,
                                      int button) {
@@ -199,19 +280,11 @@ public class MainMenu extends BaseScreen {
 
         Label optionLabel = new Label("Options et aide :", game.skin, "uiLabelStyle");
         Label volumeLabel = new Label("Volume", game.skin, "uiLabelStyle");
-        Label helpLabel = new Label("Voici comment rejoindre une partie et créer une partie : ", game.skin, "uiLabelStyle");
+        Label helpLabel = new Label("Commandes", game.skin, "uiLabelStyle");
+        Label helpLabel1 = new Label("zoomer : ", game.skin, "uiLabelStyle");
+        Label helpLabel2 = new Label("dezoomer :", game.skin, "uiLabelStyle");
+        Label helpLabel3 = new Label("poser une tuile/déplacer un pion :", game.skin, "uiLabelStyle");
 
-        TextButton returnButton = new TextButton("Return", game.skin, "uiTextButtonStyle");
-        returnButton.addListener(new InputListener() {
-            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                return true;
-            }
-
-            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-                togglePaused();
-                optionOverlay.setVisible(false);
-            }
-        });
 
         final Slider audioSlider = new Slider(0, 1, 0.005f, false, game.skin, "uiSliderStyle");
         audioSlider.setValue(audioVolume);
@@ -225,31 +298,38 @@ public class MainMenu extends BaseScreen {
         optionOverlay = new Table();
         optionOverlay.setFillParent(true);
         optionOverlay.setVisible(false);
-        optionOverlay.add(optionLabel).pad(100);
+        optionOverlay.add(optionLabel).pad(100).colspan(2);
         optionOverlay.row();
-        optionOverlay.add(volumeLabel).padBottom(20);
+        optionOverlay.add(volumeLabel).padBottom(20).colspan(2);
         optionOverlay.row();
-        optionOverlay.add(audioSlider).width(400).padBottom(50);
+        optionOverlay.add(audioSlider).width(400).padBottom(50).colspan(2);
         optionOverlay.row();
-        optionOverlay.add(helpLabel).padBottom(50);
+        optionOverlay.add(helpLabel).padBottom(20).colspan(2);
         optionOverlay.row();
-        optionOverlay.add(returnButton);
+        optionOverlay.add(helpLabel1).padBottom(20);
+        optionOverlay.add(helpLabel2).padBottom(20);
+        optionOverlay.row();
+        optionOverlay.add(helpLabel3).padBottom(50).colspan(2);
+        optionOverlay.row();
+        optionOverlay.add(returnButton1).colspan(2);
 
         Stack stacker = new Stack();
         stacker.setFillParent(true);
         uiStage.addActor(stacker);
         stacker.add(uiTable);
         stacker.add(optionOverlay);
+        stacker.add(ruleTable);
 
         game.skin.add("white", new Texture(Gdx.files.internal("GameUIAssets/white4px.png")));
-        Drawable optionBackground = game.skin.newDrawable("white", new Color(0, 0, 0, 0.8f));
+        Drawable blackBackground = game.skin.newDrawable("white", new Color(0, 0, 0, 0.8f));
 
-        optionOverlay.setBackground(optionBackground);
+        optionOverlay.setBackground(blackBackground);
+        ruleTable.setBackground(blackBackground);
 
         background.toBack();
 
         Skin uiSkin = new Skin(Gdx.files.internal("GameUIAssets/uiskin.json"));
-        usernameTextField = new TextField("Pseudo...", uiSkin);
+        usernameTextField = new TextField("Rentrez votre pseudo", uiSkin);
         usernameTextField.setMaxLength(13);
         usernameTextField.addListener(new ChangeListener() {
             public void changed(ChangeEvent event, Actor actor) {
@@ -262,30 +342,33 @@ public class MainMenu extends BaseScreen {
         ipAddress.setMaxLength(15);
         ipAddress.addListener(new ChangeListener() {
             public void changed(ChangeEvent event, Actor actor) {
-                Multiplayer.serverIP = usernameTextField.getText();
+                Multiplayer.serverIP = ipAddress.getText();
             }
         });
 
         Table padTable = new Table();
-        padTable.add(usernameTextField).fill(1,0.1f).expandX().padBottom(25);
+        padTable.add(usernameTextField).expandX().padBottom(25).minWidth(415); //.fill(1,0.1f)
         padTable.row();
-        padTable.add(ipAddress).fill(1,0.1f).expandX().padTop(25);
+        padTable.add(ipLabel);
+        padTable.row();
+        padTable.add(ipAddress).expandX().padTop(25).minWidth(200); //.fill(1,0.1f)
 
         uiTable.pad(20);
-        uiTable.add(quitButton).right().colspan(4).expandX();
+        uiTable.add(quitButton).right().colspan(4).expandX().padRight(200);
         uiTable.row();
         uiTable.add(titleImage).center().height(250).colspan(4);
         uiTable.row();
-        uiTable.add(groupImage1).left();
-        uiTable.add(padTable).colspan(2).fill();
-        uiTable.add(groupImage2).right();
+        uiTable.add(groupImage1).right().padRight(25); //.left() .maxWidth(400)
+        uiTable.add(padTable).colspan(2); //.fill()
+        uiTable.add(groupImage2).left().padLeft(25); //.right() .maxWidth(400)
         uiTable.row();
-        uiTable.add(optionButton).center().padTop(70).colspan(4);
+        uiTable.add(optionButton).padTop(20).colspan(2).right().padRight(40);
+        uiTable.add(ruleButton).padTop(20).colspan(2).left().padLeft(0).minSize(419,5);
         uiTable.row();
-        uiTable.add(startButton).padTop(20).colspan(2).right().padRight(40);
+        uiTable.add(startButton).padTop(20).colspan(2).right().padRight(40).minSize(475,5);
         uiTable.add(joinButton).padTop(20).colspan(2).left().padLeft(0);
         uiTable.row();
-        uiTable.add(genintImage).left().colspan(4).padTop(50);
+        uiTable.add(genintImage).left().colspan(4).padTop(50).padLeft(200);
 
         uiTable.debugCell();
 

@@ -34,6 +34,7 @@ public class Courrier {
 
     public Courrier(String id, int port, String ip) throws ServerNotReachedException {
         this.id = id;
+        System.out.println(ip);
         SocketHints socketHints = new SocketHints();
         socketHints.connectTimeout = 5000;
         socketHints.sendBufferSize = 1024;
@@ -58,6 +59,7 @@ public class Courrier {
         sendObject(Multiplayer.me);
         clientListener = new ClientListener(Multiplayer.key, receivingSocket);
         clientListener.startThread();
+
 
     }
 
