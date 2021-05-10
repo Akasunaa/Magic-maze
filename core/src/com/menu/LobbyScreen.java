@@ -253,7 +253,7 @@ public class LobbyScreen extends BaseScreen {
                         count++;
                     }
                     else if (count == 3) {
-                        removePlayer(playerToAdd.pseudo);
+                        removePlayer("Babar");
                         uiStage.removeListener(this);
                     }
                 }
@@ -272,44 +272,61 @@ public class LobbyScreen extends BaseScreen {
         //Hum j'aurais du commenter ça parce que je sais plus ce qu'il faut que je fasse
     }
     private boolean hasPlayerToAdd = false;
-    private Player playerToAdd;
+    private final ArrayList<Player> playersToAdd = new ArrayList<Player>();
     private boolean hasPlayerToRemove = false;
-    private String playerToRemove;
+    private final ArrayList<String> playersToRemove = new ArrayList<String>();
     @Override
     public void update(float dt) {
         if (hasPlayerToAdd) {
             uiTable.clear();
-            playerMakerList.add(new PlayerMaker(playerToAdd, uiSkin, false));
+            for (Player playerToAdd : playersToAdd) {
+                playerMakerList.add(new PlayerMaker(playerToAdd, uiSkin, false));
+            }
             makeUiTable();
             hasPlayerToAdd = false;
+            playersToAdd.clear();
         }
         if (hasPlayerToRemove) {
             uiTable.clear();
             PlayerMaker toFind = null;
-            for (PlayerMaker playerMaker : playerMakerList) {
-                if (playerMaker.pseudo.equals(playerToRemove)) {
-                    toFind = playerMaker;
-                    break;
+            for (String playerToRemove : playersToRemove) {
+                for (PlayerMaker playerMaker : playerMakerList) {
+                    if (playerMaker.getPseudo().equals(playerToRemove)) {
+                        toFind = playerMaker;
+                        break;
+                    }
+                    playerMakerList.remove(toFind);
                 }
             }
-            playerMakerList.remove(toFind);
             makeUiTable();
-            hasPlayerToAdd = false;
+            hasPlayerToRemove = false;
+            playersToRemove.clear();
+        }
+        if (hasChangedPseudo) {
+            updateNames();
+            hasChangedPseudo = false;
+        }
+        if (toUpdate.size() > 0) {
+            for (PlayerMaker playerMaker : toUpdate) {
+                playerMaker.updateAvatar();
+            }
         }
     }
 
+    public boolean hasChangedPseudo = false;
+
     public void addPlayer(Player player) {
         hasPlayerToAdd = true;
-        playerToAdd = player;
+        playersToAdd.add(player);
         playerList.add(player);
     }
 
     public void removePlayer(String player) {
         hasPlayerToRemove = true;
-        playerToRemove = player;
+        playersToRemove.add(player);
         Player temp = null;
         for (Player playerMaker : playerList) {
-            if (playerMaker.pseudo.equals(playerToRemove)) {
+            if (playerMaker.pseudo.equals(player)) {
                 temp = playerMaker;
                 break;
             }
@@ -333,6 +350,21 @@ public class LobbyScreen extends BaseScreen {
         uiTable.row();
         uiTable.add(startButton).center().colspan(numberOfColumns).padTop(100);
         uiTable.row();
+    }
+
+    public void updateNames() {
+        for (PlayerMaker temp : playerMakerList) {
+            temp.updateName();
+        }
+    }
+
+    private ArrayList<PlayerMaker> toUpdate = new ArrayList<>();
+    public void setToUpdateAvatar(String pseudo) {
+        for (PlayerMaker playerMaker : playerMakerList) {
+            if (playerMaker.getPseudo().equals(pseudo)) {
+                toUpdate.add(playerMaker);
+            }
+        }
     }
 }
 

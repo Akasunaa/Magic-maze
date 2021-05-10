@@ -204,6 +204,42 @@ class Decryptor {
                 GameScreens.game.setScreen(MainMenu(GameScreens.game))
                 courrier.killThread()
             }
+            "changePseudo" -> {
+                if (isServer) {
+                    val tempClient = clientList.getClient(sender)
+                    tempClient.id = receiver;
+                    for (tempClient in clientList.clientList) {
+                        if (!tempClient.id.equals(sender)) {
+                            tempClient.sendClearMessage(message)
+                        }
+                    }
+                }
+                else {
+                    for (player: Player in playerList) {
+                        if (player.pseudo == sender) {
+                            player.pseudo = receiver
+                            lobbyScreen.hasChangedPseudo = true
+                        }
+                    }
+                }
+            }
+            "changeAvatar" -> {
+                if (isServer) {
+                    for (tempClient in clientList.clientList) {
+                        if (!tempClient.id.equals(sender)) {
+                            tempClient.sendClearMessage(message)
+                        }
+                    }
+                }
+                else {
+                    for (player: Player in playerList) {
+                        if (player.pseudo == sender) {
+                            player.avatarName = receiver;
+                            lobbyScreen.setToUpdateAvatar(sender);
+                        }
+                    }
+                }
+            }
             else -> println("$suffix: Action not recognized")
         }
     }

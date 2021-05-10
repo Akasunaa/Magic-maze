@@ -13,38 +13,22 @@ import com.utils.Multiplayer;
 import static com.utils.Functions.modulo;
 
 public class PlayerMaker {
-    BaseActor avatar;
-    String pseudo;
     Button rightArrow;
     Button leftArrow;
     int avatarNum = 0; // à changer
     // Pas besoin de flèches pour modifier les avatars des autres, ça n'a aucun sens ?
     TextField textField;
     boolean isModifiable;
+    private Player player;
 
-    PlayerMaker(String pseudo, String avatarName, Skin uiSkin, boolean isModifiable) {
-        this.isModifiable = isModifiable;
-        this.pseudo = pseudo;
-        textField = new TextField(pseudo,uiSkin);
-        textField.setDisabled(true);
-        this.avatar = new BaseActor();
-        avatar.setTexture(new Texture(Gdx.files.internal("Avatars/" + avatarName + ".png")));
-        for (int i = 0; i < BaseScreen.animalNames.length; i++) {
-            if (BaseScreen.animalNames[i].equals(avatarName)) {
-                avatarNum = i;
-                break;
-            }
-        }
-        // On doit faire ça pour récupérer le numéro de l'avatar
-        //avatar.setSize(300,300);
+    public String getPseudo() {
+        return player.pseudo;
     }
-
     PlayerMaker(final Player player, Skin uiSkin, boolean isModifiable) {
         // Pour faire un de ces trucs à partir d'un Player
         this.isModifiable = isModifiable;
-        pseudo = player.pseudo;
-        avatar = player.avatar;
-        textField = new TextField(pseudo,uiSkin);
+        this.player = player;
+        textField = new TextField(player.pseudo,uiSkin);
         textField.setDisabled(true);
         for (int i = 0; i < BaseScreen.animalNames.length; i++) {
             if (BaseScreen.animalNames[i].equals(player.avatarName)) {
@@ -68,7 +52,15 @@ public class PlayerMaker {
     }
 
     private void addAvatar(Table uiTable, int colspan) {
-        uiTable.add(avatar).center().pad(20,0,20,0).colspan(colspan).fill();
+        uiTable.add(player.avatar).center().pad(20,0,20,0).colspan(colspan).fill();
+    }
+
+    public void updateName() {
+        textField.setText(player.pseudo);
+    }
+
+    public void updateAvatar() {
+        player.avatar.setTexture(new Texture(player.avatarName));
     }
 
 
@@ -96,9 +88,10 @@ public class PlayerMaker {
 
                         public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
                             avatarNum = modulo(avatarNum - 1, 10);
-                            avatar.setTexture(new Texture(Gdx.files.internal("Avatars/" + BaseScreen.animalNames[avatarNum] + ".png")));
+                            player.avatarName = BaseScreen.animalNames[avatarNum];
+                            Multiplayer.courrier.sendMessage("changeAvatar " + player.avatarName);
+                            player.avatar.setTexture(new Texture(Gdx.files.internal("Avatars/" + player.avatarName + ".png")));
                             //avatar.setSize(150, 150);
-
                         }
                     });
         }
@@ -122,7 +115,9 @@ public class PlayerMaker {
 
                         public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
                             avatarNum = modulo(avatarNum + 1, 10);
-                            avatar.setTexture(new Texture(Gdx.files.internal("Avatars/" + BaseScreen.animalNames[avatarNum] + ".png")));
+                            player.avatarName = BaseScreen.animalNames[avatarNum];
+                            Multiplayer.courrier.sendMessage("changeAvatar " + player.avatarName);
+                            player.avatar.setTexture(new Texture(Gdx.files.internal("Avatars/" + player.avatarName + ".png")));
                             //avatar.setSize(150, 150);
 
                         }

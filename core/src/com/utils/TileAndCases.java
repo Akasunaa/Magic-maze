@@ -8,6 +8,7 @@ import com.tiles.Queue;
 import com.tiles.Tile;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class TileAndCases {
     /*
@@ -27,7 +28,7 @@ public class TileAndCases {
 
     public static Queue queue=null;
 
-    public static ArrayList<Pawn> pawnList = new ArrayList();
+    public static ArrayList<Pawn> pawnList = new ArrayList<Pawn>();
 
 
 }
