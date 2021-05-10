@@ -3,23 +3,17 @@ package com.tiles;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.menu.BaseActor;
 import com.utils.Colors;
 import com.utils.Functions;
 import com.utils.Multiplayer;
 
 import java.io.Serializable;
-import java.util.concurrent.BrokenBarrierException;
 
 import static com.utils.Functions.findCase;
 import static com.utils.GameScreens.mainScreen;
-import static com.utils.MainConstants.batch;
 import static com.utils.TileAndCases.*;
 
 
@@ -27,7 +21,10 @@ public class Pawn implements Serializable {
     private final int color; // La couleur du pion
     public Player player = null;
 
-    public boolean onWeapon = false; //si le pion est sur son arme de couleur
+    public boolean hasWeapon = false;
+    //Booléen qui indique si le pion a récupéré son arme
+    public boolean onExit = false;
+    //Booléen qui indique si le pion est sur la sortie
 
     public int getColor() {
         return color;
@@ -60,9 +57,9 @@ public class Pawn implements Serializable {
             isLocked = !queue.isEmpty;
         }
 
-        if (setCase.hasWeapon == true && setCase.color == color ) {
-            onWeapon=true;
-        }
+        hasWeapon = setCase.hasWeapon && setCase.color == color;
+        onExit = setCase.isFinalExit;
+        // Si on fait plus de scénarii, il faudra rajouter le fait qu'il faut que ce soit de la bonne couleur
     }
 
     public void setFirstCase() {
