@@ -85,11 +85,11 @@ public class Case implements Serializable {
     }
 
     public float getX(int x) {
-        return tile.getX() + offset + (x * caseSize);
+        return tile.x + offset + (x * caseSize);
     }
 
     public float getY(int y) {
-        return tile.getY() + offset + (y * caseSize);
+        return tile.y + offset + (y * caseSize);
     }
 
     private void setSpriteCoordinates() { // self explanatory
@@ -170,17 +170,17 @@ public class Case implements Serializable {
     public void explore(Player player) {
         int index; // On utilise index pour éviter de devoir réécrire les modulos trop de fois
         Player tempPlayer = player.rotate(tile.rotation);
-        if (!seen && isAccessible && (player.pawn == pawn || pawn == null)) { //non vue, accessible, pas de pion sur la case et d'où on vient
+        if (!seen && isAccessible && (player.pawn == pawn || pawn == null)) {
             seen = true; // Parcours de graphe classique pour éviter les StackOverflow
             explored();
-            if (tempPlayer.north) {  //si on peut aller vers le nord
+            if (tempPlayer.north) {
                 index = modulo(north + tile.rotation, numberDirections);
                 if (caseList[index] != null) {
                     caseList[index].explore(player);
                 }
             }
 
-            if (tempPlayer.west) { //exploration de l'est
+            if (tempPlayer.west) {
                 index = modulo(west + tile.rotation, numberDirections);
                 if (caseList[index] != null) {
                     caseList[index].explore(player);

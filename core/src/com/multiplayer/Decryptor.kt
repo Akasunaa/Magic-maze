@@ -3,9 +3,11 @@ package com.multiplayer
 
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.scenes.scene2d.actions.Actions
+import com.menu.MainMenu
 import com.tiles.Player
 import com.tiles.Queue
 import com.utils.Functions
+import com.utils.GameScreens
 import com.utils.GameScreens.lobbyScreen
 import com.utils.Multiplayer
 import com.utils.Multiplayer.*
@@ -26,7 +28,8 @@ class Decryptor {
             "answer" -> {
                 courrier.answer = receiver.toBoolean()
                 cyclicBarrier.await() // Pour synchroniser les threads
-                cyclicBarrier.reset()
+                println("Client: Processed Answer " + receiver)
+
             }
             "sending" -> {
                 when (receiver) {
@@ -49,7 +52,7 @@ class Decryptor {
                         val inputStream = courrier.receivingSocket.inputStream
                         val tempString = BufferedReader(InputStreamReader(inputStream)).readLine()
                         if (TileAndCases.queue==null) TileAndCases.queue = Queue(tempString)
-                        cyclicBarrier.await()
+//                        cyclicBarrier.await()
                     }
                     "else" -> {
                     }
@@ -57,9 +60,11 @@ class Decryptor {
             }
             "setAndGo" -> {
                 cyclicBarrier.await()
-                cyclicBarrier.reset()
             }
-            "beginGame" -> if (!Multiplayer.isServer) lobbyScreen.passToGameScreen()
+            "beginGame" -> {
+//                cyclicBarrier.await()
+                if (!Multiplayer.isServer) lobbyScreen.passToGameScreen()
+            }
             "ping" -> {
                 if (isServer) {
                     for (client in clientList.clientList) {
@@ -180,6 +185,22 @@ class Decryptor {
                         }
                     }
                 } else clientList.getClient(sender).sendMessage("answer false")
+            }
+            "quitting" -> {
+                if (isServer) {
+                    for (tempClient in clientList.clientList) {
+                        if (!tempClient.id.equals(sender)) {
+                            tempClient.sendMessage("quitting $sender")
+                        }
+                    }
+                }
+                else {
+                    lobbyScreen.removePlayer(receiver)
+                }
+            }
+            "stopping" -> {
+                GameScreens.game.setScreen(MainMenu(GameScreens.game))
+                courrier.killThread()
             }
             else -> println("$suffix: Action not recognized")
         }

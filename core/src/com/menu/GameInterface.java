@@ -23,6 +23,7 @@ import com.tiles.Pawn;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.Array;
 import com.utils.Clock;
+import com.utils.Functions;
 import com.utils.GameScreens;
 import com.utils.MainConstants;
 import com.utils.Multiplayer;
@@ -42,7 +43,7 @@ public class GameInterface extends BaseScreen {
     boolean isPhaseA;
     boolean voiceOn;
 
-    TextButton loadPawnButton;
+    //TextButton loadPawnButton;
 
 
     // Pour le "menu" de "pause" (en vrai à voir si c'est nécessaire et comment c'est géré evec le multi
@@ -257,27 +258,27 @@ public class GameInterface extends BaseScreen {
 //            // Parce qu'on est plus en 1280 mais en 1920 oupsy doopsy déso chloé
 //        }
 
-        loadPawnButton = new TextButton("Afficher le pion "+ getColor(currentColor), game.skin, "uiTextButtonStyle");
-        loadPawnButton.addListener(new InputListener() {
-            public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
-                return true;
-            }
-            public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
-                if (!tileList.isEmpty()) {
-                    pawnList.add(new Pawn(currentColor));
-                    pawnList.get(currentColor).setFirstCase();
-                    pawnList.get(currentColor).load();
-                    currentColor ++;
-                    loadPawnButton.setText("Afficher le pion "+ getColor(currentColor));
-                    if (currentColor >= 4) {
-                        loadPawnButton.remove();
-                    }
-                }
-
-            }
-        });
-        uiStage.addActor(loadPawnButton);
-        loadPawnButton.setPosition(10,1000);
+//        loadPawnButton = new TextButton("Afficher le pion "+ getColor(currentColor), game.skin, "uiTextButtonStyle");
+//        loadPawnButton.addListener(new InputListener() {
+//            public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
+//                return true;
+//            }
+//            public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
+//                if (!tileList.isEmpty()) {
+//                    pawnList.add(new Pawn(currentColor));
+//                    pawnList.get(currentColor).setFirstCase();
+//                    pawnList.get(currentColor).load();
+//                    currentColor ++;
+//                    loadPawnButton.setText("Afficher le pion "+ getColor(currentColor));
+//                    if (currentColor >= 4) {
+//                        loadPawnButton.remove();
+//                    }
+//                }
+//
+//            }
+//        });
+//        uiStage.addActor(loadPawnButton);
+//        loadPawnButton.setPosition(10,1000);
 
         //Ici c'est le bordel rajouté par Nathan
         win = false;
@@ -366,9 +367,7 @@ public class GameInterface extends BaseScreen {
 
                     public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
                         dispose();
-                        Multiplayer.courrier.killThread();
-                        if (Multiplayer.isServer) Multiplayer.serverMaker.killThread();
-                        Gdx.app.exit();
+                        Functions.quit();
                     }
                 });
         Label volumeLabel = new Label("Volume", game.skin, "uiLabelStyle");
@@ -405,4 +404,5 @@ public class GameInterface extends BaseScreen {
         Clock.clock.update(game);
     }
 }
+
 

@@ -9,6 +9,7 @@ public class Colors {
     public static int currentColor = 0;
 
     private static final String[] colorList = {"green","purple","yellow","orange"};
+    public static final int[] colors = {green, purple, yellow, orange};
     public static String getColor(int color) {
         if (color >= 4 || color < 0) return "none";
         else return colorList[color];

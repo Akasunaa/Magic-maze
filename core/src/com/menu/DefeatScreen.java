@@ -20,6 +20,7 @@ public class DefeatScreen extends BaseScreen {
         instrumental = Gdx.audio.newMusic(Gdx.files.internal("Music&Sound/damedane.mp3"));
         instrumental.setLooping(true);
         instrumental.play();
+        instrumental.setVolume(audioVolume);
 
         Label defeatLabel = new Label( "Defaite...", game.skin, "uiLabelStyle" );
 

@@ -31,6 +31,13 @@ public class Functions {
         return new Vector2(temp.x, temp.y);
     }
 
+    public static void quit() {
+        Multiplayer.courrier.sendMessage("quitting game");
+        Multiplayer.courrier.killThread();
+        if (Multiplayer.isServer) Multiplayer.serverMaker.killThread();
+        Gdx.app.exit();
+    }
+
     public static void snap(Vector2 mousePosition) {
         // Beaucoup de debug ici
         // C'est essentiellement un changement de base, un arrondissement à l'entier, puis on remet la bonne base
@@ -84,8 +91,8 @@ public class Functions {
     }
     public static Case findCase() {
         for (Tile tile : tileList) {
-            if (tile.getX() <= Functions.mouseInput().x && Functions.mouseInput().x <= tile.getX() + tile.getSize() &&
-                    tile.getY() <= Functions.mouseInput().y && Functions.mouseInput().y <= tile.getY() + tile.getSize()) {
+            if (tile.x <= Functions.mouseInput().x && Functions.mouseInput().x <= tile.x + tile.getSize() &&
+                    tile.y <= Functions.mouseInput().y && Functions.mouseInput().y <= tile.y + tile.getSize()) {
                 try {
                     return tile.getCase(Functions.mouseInput());
                 } catch (ArrayIndexOutOfBoundsException e) {
@@ -98,8 +105,8 @@ public class Functions {
 
     public static Case findCase(Vector2 coordinates) {
         for (Tile tile : tileList) {
-            if (tile.getX() <= coordinates.x && coordinates.x <= tile.getX() + tile.getSize() &&
-                    tile.getY() <= coordinates.y && coordinates.y <= tile.getY() + tile.getSize()) {
+            if (tile.x <= coordinates.x && coordinates.x <= tile.x + tile.getSize() &&
+                    tile.y <= coordinates.y && coordinates.y <= tile.y + tile.getSize()) {
                 try {
                     return tile.getCase(coordinates);
                 } catch (ArrayIndexOutOfBoundsException e) {

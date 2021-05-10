@@ -3,7 +3,6 @@ package com.menu;
 import com.badlogic.gdx.Gdx;
 //import com.badlogic.gdx.ai.btree.Task;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
@@ -14,7 +13,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.utils.Timer;
 
-import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.multiplayer.Client;
@@ -22,15 +20,15 @@ import com.multiplayer.Courrier;
 import com.multiplayer.ServerMaker;
 import com.multiplayer.ServerNotReachedException;
 import com.tiles.MainScreen;
-import com.tiles.MouseWheelChecker;
 import com.tiles.Player;
 import com.tiles.Queue;
+import com.utils.Functions;
 import com.utils.Multiplayer;
 
 import java.util.ArrayList;
 
-import static com.utils.Functions.modulo;
 import static com.utils.GameScreens.mainScreen;
+import static com.utils.Multiplayer.playerList;
 import static com.utils.TileAndCases.queue;
 
 public class LobbyScreen extends BaseScreen {
@@ -139,9 +137,7 @@ public class LobbyScreen extends BaseScreen {
             }
 
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-                Multiplayer.courrier.killThread();
-                if (Multiplayer.isServer) Multiplayer.serverMaker.killThread();
-                Gdx.app.exit();
+                Functions.quit();
             }
         });
 
@@ -220,11 +216,6 @@ public class LobbyScreen extends BaseScreen {
             Multiplayer.serverMaker.enterLobby();
         }
         Multiplayer.courrier = new Courrier(Multiplayer.me.pseudo, Multiplayer.port, Multiplayer.serverIP);
-        try {
-            Multiplayer.cyclicBarrier.await();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
 
         if (Multiplayer.isServer) {
             queue = new Queue(9); // J'ai fait les cases uniquement jusqu'à la 9
@@ -238,7 +229,7 @@ public class LobbyScreen extends BaseScreen {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        System.out.println("Getting over it");
+        System.out.println("Client: Launching Lobby");
 
         // On met ça ici parce que sinon problèmes lors de l'appel
         Gdx.input.setInputProcessor(uiStage);
@@ -253,13 +244,18 @@ public class LobbyScreen extends BaseScreen {
             public boolean keyUp(InputEvent event, int keycode) {
                 if (keycode == Input.Keys.SPACE) {
                     // Exécute l'action quand on appuie sur la touche espace
-                    final Player temp = new Player();
-                    temp.pseudo = nameList[count];
-                    temp.avatarName = animalNames[count];
-                    temp.load();
-                    addPlayer(temp);
-                    count ++;
-                    if (count == 4) uiStage.removeListener(this);
+                    if (count <= 2) {
+                        final Player temp = new Player();
+                        temp.pseudo = nameList[count];
+                        temp.avatarName = animalNames[count];
+                        temp.load();
+                        addPlayer(temp);
+                        count++;
+                    }
+                    else if (count == 3) {
+                        removePlayer(playerToAdd.pseudo);
+                        uiStage.removeListener(this);
+                    }
                 }
                 return true;
             }
@@ -275,22 +271,50 @@ public class LobbyScreen extends BaseScreen {
         instrumental.play();
         //Hum j'aurais du commenter ça parce que je sais plus ce qu'il faut que je fasse
     }
-    private boolean setToUpdate = false;
+    private boolean hasPlayerToAdd = false;
     private Player playerToAdd;
+    private boolean hasPlayerToRemove = false;
+    private String playerToRemove;
     @Override
     public void update(float dt) {
-        if (setToUpdate) {
+        if (hasPlayerToAdd) {
             uiTable.clear();
             playerMakerList.add(new PlayerMaker(playerToAdd, uiSkin, false));
             makeUiTable();
-            setToUpdate = false;
+            hasPlayerToAdd = false;
+        }
+        if (hasPlayerToRemove) {
+            uiTable.clear();
+            PlayerMaker toFind = null;
+            for (PlayerMaker playerMaker : playerMakerList) {
+                if (playerMaker.pseudo.equals(playerToRemove)) {
+                    toFind = playerMaker;
+                    break;
+                }
+            }
+            playerMakerList.remove(toFind);
+            makeUiTable();
+            hasPlayerToAdd = false;
         }
     }
 
     public void addPlayer(Player player) {
-        setToUpdate = true;
+        hasPlayerToAdd = true;
         playerToAdd = player;
-        Multiplayer.playerList.add(player);
+        playerList.add(player);
+    }
+
+    public void removePlayer(String player) {
+        hasPlayerToRemove = true;
+        playerToRemove = player;
+        Player temp = null;
+        for (Player playerMaker : playerList) {
+            if (playerMaker.pseudo.equals(playerToRemove)) {
+                temp = playerMaker;
+                break;
+            }
+        }
+        playerList.remove(temp);
     }
 
     private void makeUiTable() {

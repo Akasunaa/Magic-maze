@@ -16,6 +16,7 @@ import com.badlogic.gdx.utils.Scaling;
 import com.multiplayer.ServerNotReachedException;
 import com.tiles.MainScreen;
 import com.tiles.Player;
+import com.utils.GameScreens;
 import com.utils.Multiplayer;
 
 import static com.utils.Functions.modulo;
@@ -37,6 +38,7 @@ public class MainMenu extends BaseScreen {
 
     public MainMenu(MagicGame g) {
         super(g);
+        GameScreens.mainMenu = this;
     }
 
 
@@ -61,7 +63,7 @@ public class MainMenu extends BaseScreen {
 
         // passer audio volume en variable globale de MagicGame.java
         instrumental = Gdx.audio.newMusic(Gdx.files.internal("Music&Sound/MusicMenu.wav"));
-        audioVolume = 0.70f;
+        audioVolume = 0.00f;
         instrumental.setLooping(true);
         instrumental.setVolume(audioVolume);
         instrumental.play();

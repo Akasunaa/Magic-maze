@@ -56,14 +56,6 @@ public class Tile implements Serializable {
     public float y = 0;
     private final float size = TileAndCases.tileSize;
 
-    public float getX() {
-        return x;
-    }
-
-    public float getY() {
-        return y;
-    }
-
     public void updateAll() {
         sprite.setX(x);
         sprite.setY(y);
@@ -161,8 +153,7 @@ public class Tile implements Serializable {
     }
 
     public void load() { // Obligatoire pour la serialization
-        sprite = new BaseActor(); // On se charge soit même
-        sprite.setTexture(new Texture(path));
+        sprite = new BaseActor(new Texture(path)); // On se charge soit même
         sprite.setOrigin(tileSize / 2, tileSize / 2);
         mainScreen.getMainStage().addActor(sprite);
         for (int i = 0; i <= 3; i++) {

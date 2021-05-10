@@ -11,12 +11,12 @@ public class ClientListener {
     public Thread thread;
 
     //private Decryptor key;
-    //private Socket socket;
+    private Socket socket;
     public boolean isRunning = true;
     private boolean exit = false;
     ClientListener(final Decryptor key, final Socket socket) {
         //this.key = key;
-        //this.socket = socket;
+        this.socket = socket;
         thread = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -42,6 +42,7 @@ public class ClientListener {
     public void killThread() {
         exit = true;
         isRunning = false;
+        socket.dispose();
         System.out.println("Client: Killing Courrier");
     }
 }
