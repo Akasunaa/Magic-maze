@@ -23,6 +23,8 @@ public class Pawn implements Serializable {
 
     public boolean hasWeapon = false;
     //Booléen qui indique si le pion a récupéré son arme
+    public boolean onExit = false;
+    //Booléen qui indique si le pion est sur la sortie
 
     public int getColor() {
         return color;
@@ -56,6 +58,8 @@ public class Pawn implements Serializable {
         }
 
         hasWeapon = setCase.hasWeapon && setCase.color == color;
+        onExit = setCase.isFinalExit;
+        // Si on fait plus de scénarii, il faudra rajouter le fait qu'il faut que ce soit de la bonne couleur
     }
 
     public void setFirstCase() {
