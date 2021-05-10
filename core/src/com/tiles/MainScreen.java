@@ -14,21 +14,7 @@ import com.menu.BaseActor;
 import com.menu.BaseScreen;
 import com.menu.GameInterface;
 import com.menu.MagicGame;
-import com.multiplayer.Client;
-import com.multiplayer.Courrier;
-import com.multiplayer.ServerMaker;
-import com.multiplayer.ServerNotReachedException;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.InputListener;
-import com.badlogic.gdx.scenes.scene2d.ui.*;
-import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
-import com.badlogic.gdx.math.Interpolation;
-import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.menu.*;
 import com.utils.Functions;
-import com.utils.GameScreens;
 import com.utils.Multiplayer;
 
 import java.util.ArrayList;
@@ -138,11 +124,11 @@ public class MainScreen extends BaseScreen {
 
         int numberOfPawnReady = 0;
         for (Pawn pawn : pawnList) {
-            if (pawn.onWeapon == true) {
+            if (pawn.hasWeapon) {
                 numberOfPawnReady += 1;
             }
-
         }
+
         if (numberOfPawnReady == 4) {
             gameInterface.instrumental.dispose();
             instrumental = Gdx.audio.newMusic(Gdx.files.internal("Music&Sound/Musique_jeu_principal_phase_B.mp3"));
