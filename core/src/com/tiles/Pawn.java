@@ -186,7 +186,11 @@ public class Pawn implements Serializable {
             float x = Functions.mouseInput().x - sprite.getWidth() / 2;
             float y = Functions.mouseInput().y - sprite.getHeight() / 2;
             setSpritePosition(new Vector2(x,y));
-            if (count == 2) { // On veut pas avoir à le faire trop souvent
+            if (count == 1) { // On veut pas avoir à le faire trop souvent
+                // Edit: ça vient d'un vieux fragment de code où je n'envoyais ma position que toutes les na ctualisations
+                // Ca causait des problèmes que je ne comprends pas, où le thread de render restait bloqué
+                // J'ai aucune idée de pourquoi, mais bon en mettant 1 ça fonctionne
+                // ça rends aussi totalement inutile mon code d'interpolation mais bon
                 Multiplayer.courrier.sendMessage("movingPawn " + Colors.getColor(color) + " " + x + " " + y);
                 count = 0;
             }
@@ -215,7 +219,9 @@ public class Pawn implements Serializable {
     private boolean checkServerForClickable() {
         Multiplayer.courrier.sendMessage("wantToTakePawn " + Colors.getColor(color));
         try {
+            System.out.println("Blocking in pawn check click");
             Multiplayer.cyclicBarrier.await();
+            System.out.println("Unlocking in pawn check click");
             // Pour synchroniser les threads
         } catch (Exception e) {
             e.printStackTrace();
@@ -228,7 +234,9 @@ public class Pawn implements Serializable {
         Multiplayer.courrier.sendMessage("wantToPlacePawn " + Colors.getColor(color));
         System.out.println("Client: checked for placeable");
         try {
+            System.out.println("Blocking in pawn check place");
             Multiplayer.cyclicBarrier.await();
+            System.out.println("Unlocking in pawn check palce");
             // Pour synchroniser les threads
         } catch (Exception e) {
             e.printStackTrace();

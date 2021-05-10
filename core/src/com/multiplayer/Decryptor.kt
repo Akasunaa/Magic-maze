@@ -52,7 +52,9 @@ class Decryptor {
                         val inputStream = courrier.receivingSocket.inputStream
                         val tempString = BufferedReader(InputStreamReader(inputStream)).readLine()
                         if (TileAndCases.queue==null) TileAndCases.queue = Queue(tempString)
+                        println("Blocking in decryptor queue")
                         cyclicBarrier.await()
+                        println("Unlocking in decryptor queue")
                     }
                     "else" -> {
                     }

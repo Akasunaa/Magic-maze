@@ -225,7 +225,9 @@ public class LobbyScreen extends BaseScreen {
             }
         }
         try {
+            System.out.println("Blocking in lobbyScreen");
             Multiplayer.cyclicBarrier.await();
+            System.out.println("Unlocking in lobbyScreen");
         } catch (Exception e) {
             e.printStackTrace();
         }
