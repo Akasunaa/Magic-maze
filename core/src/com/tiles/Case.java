@@ -81,7 +81,6 @@ public class Case implements Serializable {
         setSpriteCoordinates();
         mainScreen.getMainStage().addActor(greenDot);
         mainScreen.getMainStage().addActor(redDot);
-
     }
 
     public float getX(int x) {
