@@ -39,6 +39,7 @@ class Decryptor {
                             if (isServer) clientList.getClient(sender).sendingSocket.inputStream
                             else courrier.receivingSocket.inputStream
                         val tempString = BufferedReader(InputStreamReader(inputStream)).readLine()
+                        println(tempString)
                         val tempPlayer = mapper.readValue(tempString, Player::class.java)
                         if (isServer) {
                             clientList.getClient(sender).player = tempPlayer

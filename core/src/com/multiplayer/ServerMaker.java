@@ -134,6 +134,8 @@ public class ServerMaker {
                 while (isInLobby) {
                     System.out.println("looking for players");
                     socket = serverSocket.accept(null); // On récupère une socket qui demande une connection
+                    if (!isInLobby) break;
+                    // Petite ligne qui me perme de quitter automatiquement une fois que tout ça est fini.
                     client = new Client(socket);
                     if (!clientList.isIn(client)) {
                         clientList.add(client); // On vérifie si le client n'est pas dans la liste, et on l'ajoute
@@ -210,6 +212,9 @@ public class ServerMaker {
 
     public void quitLobby() {
         isInLobby = false;
+        Socket temp = Gdx.net.newClientSocket(Net.Protocol.TCP, "127.0.0.1", port, new SocketHints());
+        temp.dispose();
+        // C'est pas propre mais ça fonctionne, pour déconnecter proprement on est obligé de faire ça
         isSetAndGo = true;
         isRunning = true;
     }
@@ -219,6 +224,7 @@ public class ServerMaker {
 
     public void killThread() {
         System.out.println("Server: Killing Server");
+        isInLobby = false;
         isRunning = false;
 //        thread.stop();
         for (Client client: clientList.clientList) {

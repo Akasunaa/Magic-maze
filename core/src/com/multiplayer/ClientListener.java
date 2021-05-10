@@ -7,13 +7,14 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
+import static com.utils.Multiplayer.key;
+
 public class ClientListener {
     public Thread thread;
 
     //private Decryptor key;
     private Socket socket;
     public boolean isRunning = true;
-    private boolean exit = false;
     ClientListener(final Decryptor key, final Socket socket) {
         //this.key = key;
         this.socket = socket;
@@ -21,12 +22,15 @@ public class ClientListener {
             @Override
             public void run() {
                 BufferedReader buffer;
-                InputStreamReader inputStreamReader = new InputStreamReader(socket.getInputStream());
+                InputStream inputStream = socket.getInputStream();
                 while (isRunning) {
                     try {
-                        buffer = new BufferedReader(inputStreamReader);
-                        String message = buffer.readLine();
-                        key.decryptMessage(message, false);
+                        if (inputStream.available() != 0) {
+                            // On lit la data depuis la socket dans un buffer
+                            buffer = new BufferedReader(new InputStreamReader(inputStream));
+                            //Et on la décrypte
+                            key.decryptMessage(buffer.readLine(), true);
+                        }
                     } catch (IOException e) {
                         e.printStackTrace();
                         System.out.println("Error here");
@@ -40,7 +44,6 @@ public class ClientListener {
         thread.start();
     }
     public void killThread() {
-        exit = true;
         isRunning = false;
         socket.dispose();
         System.out.println("Client: Killing Courrier");
