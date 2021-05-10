@@ -307,9 +307,6 @@ public class Tile implements Serializable {
     }
 
     public boolean canPlaceThere() {
-        // Attention !!! Cette fonction place la tuile !!!
-        // Ce n'est pas qu'une fonction de check !!!
-        // Pire idée du monde pourquoi j'ai fait ça je suis stupidus maximus moi oskour
         Tile[] neighbors = getNeighbouringTiles();
         int direction = modulo(entrance + rotation, numberDirections);
         return (isValidPlacement(neighbors[direction], direction) && noOverlap());

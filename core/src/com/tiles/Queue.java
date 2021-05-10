@@ -231,7 +231,7 @@ public class Queue implements Serializable {
             origin.add(mousePosition);// Si c'est la première, on stock ses coordonées
             place(mousePosition); // On pose la tuile
             hide();
-        } else if (head.canPlaceThere()) {
+        } else if (head.canPlaceThere()) { // techniquement pas besoin mais bon
             Functions.snap(mousePosition); // Tu alignes les coordonées sur la "grille"
             place(mousePosition);
             hide();
