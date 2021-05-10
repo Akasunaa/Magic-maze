@@ -25,11 +25,9 @@ import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.menu.*;
 import com.utils.Colors;
 import com.utils.Functions;
-import com.utils.GameScreens;
 import com.utils.Multiplayer;
 
 import java.util.ArrayList;
@@ -80,7 +78,7 @@ public class MainScreen extends BaseScreen {
 
         tileList = new ArrayList<Tile>();
 
-        Multiplayer.me.setPlayer(new Player(true, true, true, true, false, false));
+        Multiplayer.me.setPlayer(new Player(true, true, true, true, true, true,true));
 
         // Bon là c'est le batch et les trucs pour écrire, rien d'important
         batch = new SpriteBatch();
@@ -92,7 +90,6 @@ public class MainScreen extends BaseScreen {
         numberCase.setPosition(200,100);
         uiStage.addActor(coordMouse);
         uiStage.addActor(numberCase);
-
 
     }
 
@@ -153,6 +150,48 @@ public class MainScreen extends BaseScreen {
         }
         if (queue.toRemove) queue.remove();
         batch.end();
+
+        if (!isInPhaseB) {
+            // Si on est encore en phase A
+            int numberOfPawnReady = 0;
+            for (Pawn pawn : pawnList) {
+                if (pawn.hasWeapon) {
+                    numberOfPawnReady += 1;
+                }
+            }
+            // On check le nombre de pions qui ont leur armes
+
+            if (numberOfPawnReady == 4) {
+                gameInterface.instrumental.dispose();
+                instrumental = Gdx.audio.newMusic(Gdx.files.internal("Music&Sound/Musique_jeu_principal_phase_B.mp3"));
+                instrumental.setLooping(true);
+                instrumental.play();
+                isInPhaseB = true;
+            }
+            // S'ils ont tous leurs armes, on commence la phase B
+        }
+        else {
+            // Si on est en phase B
+            int numberOfPawnOnExit = 0;
+            for (Pawn pawn: pawnList) {
+                if (pawn.onExit) {
+                    numberOfPawnOnExit ++;
+                }
+            }
+            // On check si les personnages sont sur la sortie finale
+            if (numberOfPawnOnExit == 4) {
+                //TODO Le Jeu est gagné
+            }
+        }
+
+
+//            for (Tile tile : tileList) {
+//                for (case : tile.caseList ) {
+//                    if (case)
+//                }
+//            }
+
+
     }
 
 

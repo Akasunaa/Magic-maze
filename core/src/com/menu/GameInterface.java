@@ -22,6 +22,7 @@ import com.multiplayer.ServerNotReachedException;
 import com.tiles.Pawn;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.Array;
+import com.utils.Clock;
 import com.utils.Functions;
 import com.utils.GameScreens;
 import com.utils.MainConstants;
@@ -52,8 +53,6 @@ public class GameInterface extends BaseScreen {
 
     private Label[] pseudoLabels;
 
-    float remainingTime;
-    Label timeLabel;
 
     //constructeur
     public GameInterface(MagicGame g, float audioVolume){
@@ -73,7 +72,7 @@ public class GameInterface extends BaseScreen {
         // pour indiquer la phase
         BaseActor phaseA = new BaseActor();
         phaseA.setTexture(new Texture(Gdx.files.internal("interface/phaseA.jpg")));
-        phaseA.setSize(3*60+45,150);
+        phaseA.setSize(3 * 60 + 45, 150);
         phaseA.setPosition(viewWidth - phaseA.getWidth(), viewHeight - phaseA.getHeight());
         isPhaseA = true;
         uiStage.addActor(phaseA);
@@ -88,7 +87,7 @@ public class GameInterface extends BaseScreen {
         //le bouton restart que j'ai pris sur internet, va falloir en refaire un
         BaseActor restart = new BaseActor();
         restart.setTexture(new Texture(Gdx.files.internal("interface/restart-button.png")));
-        restart.setSize(150,50);
+        restart.setSize(150, 50);
         restart.setPosition(0, 0);
         uiStage.addActor(restart);
         restart.addListener(
@@ -284,8 +283,6 @@ public class GameInterface extends BaseScreen {
         //Ici c'est le bordel rajouté par Nathan
         win = false;
 
-        //Temps écoulé et temps restant
-        remainingTime = 1000f;
 
         // Pour l'instant on touche pas à ça!!!!
 //        Animatedhourglass = new AnimatedActor();
@@ -307,30 +304,30 @@ public class GameInterface extends BaseScreen {
         font = MainConstants.getFontSize(40);
         String text = "Time: ";
         style = new LabelStyle(font, Color.NAVY);
-        timeLabel = new Label(text, style);
-        timeLabel.setFontScale(1.5f);
-        timeLabel.setPosition(960, 1000);
-        uiStage.addActor(timeLabel);
+        Clock.clock = new Clock(style);
+        Clock.clock.setFontScale(1.5f);
+        Clock.clock.setPosition(960, 1000);
+        uiStage.addActor(Clock.clock);
 
         instrumental = Gdx.audio.newMusic(Gdx.files.internal("Music&Sound/The Path of the Goblin King.mp3"));
         instrumental.setLooping(true);
         instrumental.play();
 
         Texture pauseTexture = new Texture(Gdx.files.internal("GameUIAssets/barsHorizontal.png"));
-        game.skin.add("pauseImage", pauseTexture );
+        game.skin.add("pauseImage", pauseTexture);
         Button.ButtonStyle pauseStyle = new Button.ButtonStyle();
         pauseStyle.up = game.skin.getDrawable("pauseImage");
-        Button pauseButton = new Button( pauseStyle );
+        Button pauseButton = new Button(pauseStyle);
         pauseButton.addListener(
                 new InputListener() {
-                    public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
+                    public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                         togglePaused();
-                        pauseOverlay.setVisible( isPaused() );
+                        pauseOverlay.setVisible(isPaused());
                         return true;
                     }
                 });
-        pauseButton.setSize(pauseButton.getWidth()*2, pauseButton.getHeight()*2);
-        pauseButton.setPosition(1920*4.6f/6, 1080-pauseButton.getHeight() - 10);
+        pauseButton.setSize(pauseButton.getWidth() * 2, pauseButton.getHeight() * 2);
+        pauseButton.setPosition(1920 * 4.6f / 6, 1080 - pauseButton.getHeight() - 10);
         uiStage.addActor(pauseButton);
 
         pauseOverlay = new Table();
@@ -342,19 +339,19 @@ public class GameInterface extends BaseScreen {
         stacker.add(uiTable);
         stacker.add(pauseOverlay);
 
-        game.skin.add("white", new Texture( Gdx.files.internal("GameUIAssets/white4px.png")) );
-        Drawable pauseBackground = game.skin.newDrawable("white", new Color(0,0,0,0.8f) );
+        game.skin.add("white", new Texture(Gdx.files.internal("GameUIAssets/white4px.png")));
+        Drawable pauseBackground = game.skin.newDrawable("white", new Color(0, 0, 0, 0.8f));
 
         Label pauseLabel = new Label("Paused", game.skin, "uiLabelStyle");
         TextButton resumeButton = new TextButton("Resume", game.skin, "uiTextButtonStyle");
         resumeButton.addListener(
-                new InputListener()
-                {
-                    public boolean touchDown (InputEvent event, float x, float y, int pointer,
-                                              int button)
-                    { return true; }
-                    public void touchUp (InputEvent event, float x, float y, int pointer, int button)
-                    {
+                new InputListener() {
+                    public boolean touchDown(InputEvent event, float x, float y, int pointer,
+                                             int button) {
+                        return true;
+                    }
+
+                    public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
                         togglePaused();
                         pauseOverlay.toFront();
                         pauseOverlay.setVisible( isPaused() );
@@ -362,13 +359,13 @@ public class GameInterface extends BaseScreen {
                 });
         TextButton quitButton = new TextButton("Quit", game.skin, "uiTextButtonStyle");
         quitButton.addListener(
-                new InputListener()
-                {
-                    public boolean touchDown (InputEvent event, float x, float y, int pointer,
-                                              int button)
-                    { return true; }
-                    public void touchUp (InputEvent event, float x, float y, int pointer, int button)
-                    {
+                new InputListener() {
+                    public boolean touchDown(InputEvent event, float x, float y, int pointer,
+                                             int button) {
+                        return true;
+                    }
+
+                    public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
                         dispose();
                         Functions.quit();
                     }
@@ -404,17 +401,7 @@ public class GameInterface extends BaseScreen {
     public void update(float dt) {
         textTilesLeft.setText(queue.textTileLeft);
 
-        if (!win) {
-            timeLabel.setText( "Time: " + (int)remainingTime );
-            remainingTime -= dt/3;
-
-            // Check if timer reached 0
-            if (remainingTime < 0) {
-                remainingTime = 10f;
-                // Parce que comme ça au moins je suis sûr qu'il va pas me faire une saloperie
-                game.setScreen(new DefeatScreen(game));
-            }
-        }
+        Clock.clock.update(game);
     }
 }
 

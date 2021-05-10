@@ -60,6 +60,7 @@ public class Courrier {
         clientListener = new ClientListener(Multiplayer.key, receivingSocket);
         clientListener.startThread();
 
+
     }
 
     public void sendMessage(String message) {

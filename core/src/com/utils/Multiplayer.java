@@ -1,9 +1,8 @@
 package com.utils;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.multiplayer.*;
 import com.tiles.Player;
-
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
@@ -20,7 +19,7 @@ public class Multiplayer {
     public static Decryptor key = new Decryptor();
     public static boolean isServer = false;
     public static int port = 6969;
-    public static String serverIP = "127.0.0.1"; //"157.159.41.36";
+    public static String serverIP = "127.0.0.1"; //; "157.159.41.36"
     // L'ip de mon PC fixe
     public static String ip;
 

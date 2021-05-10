@@ -12,7 +12,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.multiplayer.ServerNotReachedException;
+import com.utils.Clock;
 
 public abstract class BaseScreen implements Screen {
     protected MagicGame game;

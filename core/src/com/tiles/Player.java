@@ -19,6 +19,7 @@ public class Player implements Serializable {
     boolean west;
     boolean shortcutTaker;
     boolean escalatorTaker;
+    boolean portalTaker;
 
     public String pseudo = "Pseudo";
     public transient BaseActor avatar;
@@ -46,6 +47,7 @@ public class Player implements Serializable {
             boolean west,
             boolean shortcutTaker,
             boolean escalatorTaker,
+            boolean portalTaker,
             Pawn pawn) {
         this.north = north;
         this.south = south;
@@ -54,19 +56,24 @@ public class Player implements Serializable {
         this.shortcutTaker = shortcutTaker;
         this.escalatorTaker = escalatorTaker;
         this.pawn = pawn;
+        this.portalTaker = portalTaker;
     }
     public Player(boolean north,
                   boolean south,
                   boolean east,
                   boolean west,
                   boolean shortcutTaker,
-                  boolean escalatorTaker) {
+                  boolean escalatorTaker,
+                  boolean portalTaker
+                  ) {
         this.north = north;
         this.south = south;
         this.east = east;
         this.west = west;
         this.shortcutTaker = shortcutTaker;
         this.escalatorTaker = escalatorTaker;
+        this.portalTaker = portalTaker;
+
     }
 
     public void setPlayer(Player player) {
@@ -76,11 +83,12 @@ public class Player implements Serializable {
         east = player.east;
         escalatorTaker = player.escalatorTaker;
         shortcutTaker = player.shortcutTaker;
+        portalTaker = player.portalTaker;
     }
 
     public Player rotate(int i) {
         if (i==0) return this;
-        else return (new Player(south,north,west,east,shortcutTaker,escalatorTaker,pawn)).rotate(modulo(i-1,numberDirections));
+        else return (new Player(south,north,west,east,shortcutTaker,escalatorTaker,portalTaker,pawn)).rotate(modulo(i-1,numberDirections));
     }
     public void takesPawn(Pawn pawn) {
         this.pawn = pawn;

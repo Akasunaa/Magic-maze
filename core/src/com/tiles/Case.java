@@ -1,7 +1,9 @@
 package com.tiles;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.menu.BaseActor;
+import com.utils.TileAndCases;
 
 import java.io.Serializable;
 
@@ -21,6 +23,7 @@ public class Case implements Serializable {
 
     public boolean isAccessible; // Je suis même pas sûr qu'on l'utilise ça
     public boolean hasPortal;
+    public boolean hasHourglass;
     public boolean isExit;
     public boolean isEntrance;
     public boolean hasWeapon;
@@ -42,6 +45,7 @@ public class Case implements Serializable {
         isAccessible = (number != unnacessible);
         color = number % 10;
         isEntrance = number == entrance;
+        hasHourglass = number == hourglass;
         isExit = number / 10 == exit / 10;
         hasPortal = number / 10 == portal / 10;
         hasWeapon = number / 10 == weapon / 10;
@@ -77,7 +81,6 @@ public class Case implements Serializable {
         setSpriteCoordinates();
         mainScreen.getMainStage().addActor(greenDot);
         mainScreen.getMainStage().addActor(redDot);
-
     }
 
     public float getX(int x) {
@@ -148,6 +151,14 @@ public class Case implements Serializable {
         greenDot.setVisible(isValid);
     }
 
+    public void used(){
+        Texture t = new Texture(Gdx.files.internal("tuiles/used.png"));
+        BaseActor cross = new BaseActor(t);
+        cross.setOrigin((int) (cross.getWidth()/2));
+        cross.setPosition(getX(x),getY(y));
+        mainScreen.getMainStage().addActor(cross);
+    }
+
     public void draw() {
         if (isShowed) redDot.draw(batch, 1);
         else if (isValid) greenDot.draw(batch, 1);
@@ -197,6 +208,12 @@ public class Case implements Serializable {
             if (player.shortcutTaker) {
                 if (shortcut != null) {
                     shortcut.explore(player);
+                }
+            }
+
+            if (player.portalTaker){
+                for (Case tempCase : TileAndCases.portalList[player.pawn.getColor()]){
+                    tempCase.explore(player);
                 }
             }
         }
@@ -250,6 +267,13 @@ public class Case implements Serializable {
                 if (shortcut != null) {
                     shortcut.unexplored();
                     shortcut.revert(player);
+                }
+            }
+
+            if (player.portalTaker){
+                for (Case tempCase : TileAndCases.portalList[player.pawn.getColor()]){
+                    tempCase.unexplored();
+                    tempCase.revert(player);
                 }
             }
         }

@@ -6,6 +6,7 @@ import com.tiles.Case;
 import com.tiles.Pawn;
 import com.tiles.Queue;
 import com.tiles.Tile;
+import java.util.List;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +22,11 @@ public class TileAndCases {
     public static float caseSize = (tileSize - 2 * offset) / 4;
     public static Vector2 origin = new Vector2();
     public static ArrayList<Tile> tileList;
+    public static List<Case>[] portalList = new List[]{new ArrayList<Case>(),new ArrayList<Case>(),new ArrayList<Case>(),new ArrayList<Case>()};
+
     public static Case lastExploredCase;
+
+    public static boolean isInPhaseB = false;
 
     public static Matrix3 newBase = new Matrix3(new float[]{tileSize, -caseSize, 0f, caseSize, tileSize, 0f, 0f, 0f, 1f});
     public static Matrix3 newBaseInvert = new Matrix3(newBase).inv();
