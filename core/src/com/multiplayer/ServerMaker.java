@@ -7,6 +7,9 @@ import com.badlogic.gdx.net.ServerSocketHints;
 import com.badlogic.gdx.net.Socket;
 import com.badlogic.gdx.net.SocketHints;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.menu.BaseScreen;
+import com.menu.MainMenu;
+import com.tiles.Player;
 import com.utils.Multiplayer;
 
 import java.io.BufferedReader;
@@ -14,8 +17,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
-import static com.utils.Multiplayer.clientList;
-import static com.utils.Multiplayer.key;
+import static com.utils.Multiplayer.*;
 
 
 // Cette classe existe uniquement parce que j'ai aucune idée de comment faire ça en Kotlin
@@ -104,6 +106,22 @@ public class ServerMaker {
                 }
             }
 
+            private String findFreeAvatar() {
+                for (String avatarName : BaseScreen.animalNames) {
+                    boolean isUsed = false;
+                    for (Player player : playerList) {
+                        if (player.avatarName.equals(avatarName)) {
+                            isUsed = true;
+                        }
+                    }
+                    if (!isUsed) {
+                        return avatarName;
+                    }
+                }
+                // Nom au cas où, mais ça ne devrait jamais arriver
+                return "Robert";
+            }
+
             @Override
             public void run() {
                 ServerSocketHints serverSocketHint = new ServerSocketHints();
@@ -130,7 +148,8 @@ public class ServerMaker {
                         //TODO Vérifier que c'est bien le cas
                         socket = serverSocket.accept(null);
                         client.receiveSocket(socket);
-                        // Maintenant on récupère les avatars des joueurs
+                        // Maintenant on récupère les pseudos des joueurs et d'autres infos I guess
+                        // En soit cette partie sert plus vraiment mais l'enlever serait chiant
                         client.sendMessage("send Player");
                         socket = client.getSendingSocket(); // On prends la socket du client
                         inputStream = socket.getInputStream(); // On prends l'inputStream
@@ -142,6 +161,10 @@ public class ServerMaker {
                         } catch (IOException e) { //Standard Procedure for dealing with Sockets
                             e.printStackTrace();
                         }
+                        // Maintenant on sélectionne un avatar pour le joueur, et on lui fait savoir
+                        client.player.avatarName = findFreeAvatar();
+                        client.sendMessage("setAvatar " + client.player.avatarName);
+
                         // Maintenant on renvois le joueur à tout le monde
                         // Et également on envois tout le monde au joueur
                         try {

@@ -35,7 +35,7 @@ public abstract class BaseScreen implements Screen {
     public Slider audioSlider;
 
     public boolean hasBackground = true;
-    final static String[] animalNames = new String[] {"elephant","giraffe","hippo","monkey","panda","parrot","penguin","pig","rabbit","snake"};
+    public final static String[] animalNames = new String[] {"elephant","giraffe","hippo","monkey","panda","parrot","penguin","pig","rabbit","snake"};
 
     public BaseScreen(MagicGame g){
         game = g;

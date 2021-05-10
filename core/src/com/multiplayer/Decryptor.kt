@@ -240,6 +240,10 @@ class Decryptor {
                     }
                 }
             }
+            "setAvatar" -> {
+                me.avatarName = receiver
+                lobbyScreen.setToUpdateAvatar(sender)
+            }
             else -> println("$suffix: Action not recognized")
         }
     }
