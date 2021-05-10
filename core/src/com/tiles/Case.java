@@ -50,7 +50,6 @@ public class Case implements Serializable {
         hasPortal = number / 10 == portal / 10;
         hasWeapon = number / 10 == weapon / 10;
         isFinalExit = number / 10 == finalExit / 10;
-        System.out.println(hasHourglass);
     }
 
     public void getNeighbours(int[][] horizontalWalls, int[][] verticalWalls) {
@@ -174,7 +173,6 @@ public class Case implements Serializable {
         if (!seen && isAccessible && (player.pawn == pawn || pawn == null)) { //non vue, accessible, pas de pion sur la case et d'où on vient
             seen = true; // Parcours de graphe classique pour éviter les StackOverflow
             explored();
-            System.out.println("hoi");
             if (tempPlayer.north) {  //si on peut aller vers le nord
                 index = modulo(north + tile.rotation, numberDirections);
                 if (caseList[index] != null) {
