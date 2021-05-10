@@ -30,12 +30,13 @@ public class Courrier {
     // sendingSocket: La socket pour envoyer des messages au serveur
     // receivingSocket: La socket pour recevoir des messages du serveur
 
-    private ClientListener clientListener;
+    private final ClientListener clientListener;
 
     public Courrier(String id, int port, String ip) throws ServerNotReachedException {
         this.id = id;
+        System.out.println(ip);
         SocketHints socketHints = new SocketHints();
-        socketHints.connectTimeout = 0;
+        socketHints.connectTimeout = 5000;
         socketHints.sendBufferSize = 1024;
         socketHints.receiveBufferSize = 1024;
         try {
@@ -58,6 +59,7 @@ public class Courrier {
         sendObject(Multiplayer.me);
         clientListener = new ClientListener(Multiplayer.key, receivingSocket);
         clientListener.startThread();
+
 
     }
 

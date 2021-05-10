@@ -27,7 +27,6 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.menu.*;
 import com.utils.Functions;
-import com.utils.GameScreens;
 import com.utils.Multiplayer;
 
 import java.util.ArrayList;
@@ -91,37 +90,6 @@ public class MainScreen extends BaseScreen {
         uiStage.addActor(coordMouse);
         uiStage.addActor(numberCase);
 
-
-    }
-
-    public void multiplayerShenanigans() throws ServerNotReachedException{
-        if (Multiplayer.isServer) {
-            new ServerMaker(Multiplayer.port, Multiplayer.clientList).startThread();
-        }
-        Multiplayer.courrier = new Courrier(Multiplayer.me.pseudo, Multiplayer.port, Multiplayer.serverIP);
-        try {
-            Multiplayer.cyclicBarrier.await();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        // Obligé de mettre le multiplexeur ici pour éviter les problèmes lors du lancement du jeu
-        InputMultiplexer inputMultiplexer = new InputMultiplexer(uiStage, mainStage, new MouseWheelChecker());
-        Gdx.input.setInputProcessor(inputMultiplexer);
-
-        if (Multiplayer.isServer) {
-            queue = new Queue(9); // J'ai fait les cases uniquement jusqu'à la 9
-            for (Client client : Multiplayer.clientList.clientList) {
-                client.sendMessage("sending Queue");
-                client.sendClearMessage(queue.serialize());
-            }
-        }
-        try {
-            Multiplayer.cyclicBarrier.await();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        System.out.println("Getting over it");
     }
 
     public void load(float audioVolume) {
@@ -165,6 +133,48 @@ public class MainScreen extends BaseScreen {
         }
         if (queue.toRemove) queue.remove();
         batch.end();
+
+        if (!isInPhaseB) {
+            // Si on est encore en phase A
+            int numberOfPawnReady = 0;
+            for (Pawn pawn : pawnList) {
+                if (pawn.hasWeapon) {
+                    numberOfPawnReady += 1;
+                }
+            }
+            // On check le nombre de pions qui ont leur armes
+
+            if (numberOfPawnReady == 4) {
+                gameInterface.instrumental.dispose();
+                instrumental = Gdx.audio.newMusic(Gdx.files.internal("Music&Sound/Musique_jeu_principal_phase_B.mp3"));
+                instrumental.setLooping(true);
+                instrumental.play();
+                isInPhaseB = true;
+            }
+            // S'ils ont tous leurs armes, on commence la phase B
+        }
+        else {
+            // Si on est en phase B
+            int numberOfPawnOnExit = 0;
+            for (Pawn pawn: pawnList) {
+                if (pawn.onExit) {
+                    numberOfPawnOnExit ++;
+                }
+            }
+            // On check si les personnages sont sur la sortie finale
+            if (numberOfPawnOnExit == 4) {
+                //TODO Le Jeu est gagné
+            }
+        }
+
+
+//            for (Tile tile : tileList) {
+//                for (case : tile.caseList ) {
+//                    if (case)
+//                }
+//            }
+
+
     }
 
 

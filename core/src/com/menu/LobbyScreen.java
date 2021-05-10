@@ -50,6 +50,15 @@ public class LobbyScreen extends BaseScreen {
 
     }
 
+    public boolean hasPassedScreen = false;
+
+    public void passToGameScreen() {
+        mainScreen = new MainScreen(game);
+        mainScreen.load(audioVolume);
+        game.setScreen( mainScreen );
+        Multiplayer.serverMaker.quitLobby();
+        hasPassedScreen = true;
+    }
     public void create() {
         // pour le son
 
@@ -96,9 +105,7 @@ public class LobbyScreen extends BaseScreen {
                 Timer.schedule(new Timer.Task() {
                     @Override
                     public void run() {
-                        mainScreen = new MainScreen(game);
-                        mainScreen.load(audioVolume);
-                        game.setScreen( mainScreen );
+                        passToGameScreen();
                     }
                 }, delay);
             }
@@ -210,6 +217,7 @@ public class LobbyScreen extends BaseScreen {
         if (Multiplayer.isServer) {
             Multiplayer.serverMaker = new ServerMaker(Multiplayer.port, Multiplayer.clientList);
             Multiplayer.serverMaker.startThread();
+            Multiplayer.serverMaker.enterLobby();
         }
         Multiplayer.courrier = new Courrier(Multiplayer.me.pseudo, Multiplayer.port, Multiplayer.serverIP);
         try {
@@ -236,7 +244,7 @@ public class LobbyScreen extends BaseScreen {
         Gdx.input.setInputProcessor(uiStage);
         uiStage.addListener(new InputListener() {
             int count = 0;
-            String[] nameList =  new String[]{"Boris","Naruto","Babar"};
+            final String[] nameList =  new String[]{"Boris","Naruto","Babar"};
             // J'étais inspiré pour les noms
             public boolean keyDown(InputEvent event, int keyCode) {
                 return true;

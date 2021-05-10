@@ -15,16 +15,14 @@ public class Multiplayer {
     public static Courrier courrier;
     public static ServerMaker serverMaker;
     public static ButtonList buttonList;
-    public static int numberOfPlayers = 1;
-    public static ClientList clientList = new ClientList(Multiplayer.numberOfPlayers);
+    public static ClientList clientList = new ClientList();
     public static Decryptor key = new Decryptor();
     public static boolean isServer = false;
     public static int port = 6969;
-    public static String serverIP = "127.0.0.1"; //"157.159.41.36";
+    public static String serverIP = "127.0.0.1"; //; "157.159.41.36"
     // L'ip de mon PC fixe
     public static String ip;
 
-    public volatile static boolean isServerSetAndGo = false;
     public static CyclicBarrier cyclicBarrier = new CyclicBarrier(2);
 
     // Pour la sérialisation

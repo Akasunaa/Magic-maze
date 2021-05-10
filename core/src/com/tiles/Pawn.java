@@ -22,6 +22,11 @@ public class Pawn implements Serializable {
     private final int color; // La couleur du pion
     public Player player = null;
 
+    public boolean hasWeapon = false;
+    //Booléen qui indique si le pion a récupéré son arme
+    public boolean onExit = false;
+    //Booléen qui indique si le pion est sur la sortie
+
     public int getColor() {
         return color;
     }
@@ -50,14 +55,17 @@ public class Pawn implements Serializable {
         setCase.pawn = this;
         if (setCase.isExit && setCase.color == color) {
             queue.reveal();
-            isLocked = true;
+            isLocked = !queue.isEmpty;
         }
         if (setCase.hasHourglass){
             Clock.clock.reset();
             setCase.hasHourglass=false;
             setCase.used();
-
         }
+
+        hasWeapon = setCase.hasWeapon && setCase.color == color;
+        onExit = setCase.isFinalExit;
+        // Si on fait plus de scénarii, il faudra rajouter le fait qu'il faut que ce soit de la bonne couleur
     }
 
     public void setFirstCase() {
@@ -140,7 +148,6 @@ public class Pawn implements Serializable {
     public Vector2 getPosition() {
         return position;
     }
-
 
     public boolean canPlaceHere(Vector2 coordinates, Player player) {
         try {

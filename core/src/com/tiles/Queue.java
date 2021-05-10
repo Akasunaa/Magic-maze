@@ -41,7 +41,7 @@ public class Queue implements Serializable {
 
     // Booléens pour savoir si on est en train de placer la tuile, et si la liste est vide
     private boolean isMovable = false;
-    private boolean isEmpty = false;
+    public boolean isEmpty = false;
 
     // Booléen pour savoir si la prochaine carte est visible ou non
     private boolean isHidden = true;

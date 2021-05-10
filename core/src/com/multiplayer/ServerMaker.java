@@ -28,11 +28,70 @@ import static com.utils.Multiplayer.key;
 public class ServerMaker {
     Thread thread;
     ServerSocket serverSocket;
+    private boolean isSetAndGo = false;
+    int port;
 
     public ServerMaker(final int port, final ClientList clientList) {
         //clientList = cL;
         //this.key = key;
+        this.port = port;
         thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Socket socket;
+                BufferedReader buffer; // Le Buffer
+                InputStream inputStream; // Et l'InputStream
+
+                while (!isSetAndGo) {
+                    int sleepTime = 30;
+                    try {
+                        Thread.sleep(sleepTime);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                //sleep();
+                // Je... ne suis pas sûr de pourquoi je suis obligé de faire ça
+                // C'est très bizarre, je pense qu'il doit y avoir des histoires de voyage temporel
+                // Ou un truc du genre
+                // Parce que certains messages se retrouvent envoyés après ceux qui devraient l'être avant...
+
+                for (Client tempClient : clientList.clientList) {
+                    tempClient.sendMessage("beginGame nothing");
+                    System.out.println("Server: sent setAndGo to "+ tempClient.getId());
+                }
+                // On signal que le serveur est prêt et que normalement les clients ont tout reçu
+
+                System.out.println("Server: Beginning last loop");
+                while (true) {
+                    for (Client tempClient : clientList.clientList) {
+                        socket = tempClient.getSendingSocket(); // On prends la socket du client
+                        inputStream = socket.getInputStream();
+                        try {
+                            if (inputStream.available() != 0) {
+                                // On lit la data depuis la socket dans un buffer
+                                buffer = new BufferedReader(new InputStreamReader(inputStream));
+                                //Et on la décrypte
+                                key.decryptMessage(buffer.readLine(), true);
+                            }
+                        } catch (IOException e) { //Standard Procedure for dealing with Sockets
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            }
+        });
+    }
+    private boolean isInLobby = false;
+    private void startLobby() {
+        new Thread(new Runnable() {
+            Socket socket;
+            Client client;
+            final ClientList clientList = Multiplayer.clientList;
+            InputStream inputStream;
+            String tempString=null;
+
             private void sleep() {
                 int sleepTime = 30;
                 try {
@@ -41,25 +100,19 @@ public class ServerMaker {
                     e.printStackTrace();
                 }
             }
+
             @Override
             public void run() {
                 ServerSocketHints serverSocketHint = new ServerSocketHints();
                 // No timeout
-                serverSocketHint.acceptTimeout = 50;
+                serverSocketHint.acceptTimeout = 0;
 
                 // On créé la socket serveur en utilisant le protocol TCP, et en écoutant le port donné
                 serverSocket = Gdx.net.newServerSocket(Net.Protocol.TCP, port, serverSocketHint);
-                Socket socket;
-                Client client;
-                BufferedReader buffer; // Le Buffer
-                InputStream inputStream; // Et l'InputStream
-                String tempString=null;
-
-                // Première boucle pour récupérer tous les clients
-                System.out.println("Server: Beginning first loop");
-                while (!clientList.isFull()) {
+                System.out.println("Created serverSocket");
+                while (isInLobby) {
+                    System.out.println("looking for players");
                     socket = serverSocket.accept(null); // On récupère une socket qui demande une connection
-                    System.out.println("accepted");
                     client = new Client(socket);
                     if (!clientList.isIn(client)) {
                         clientList.add(client); // On vérifie si le client n'est pas dans la liste, et on l'ajoute
@@ -80,7 +133,7 @@ public class ServerMaker {
                         inputStream = socket.getInputStream(); // On prends l'inputStream
                         try {
                             // On lit la data depuis la socket dans un buffer
-                            buffer = new BufferedReader(new InputStreamReader(inputStream));
+                            BufferedReader buffer = new BufferedReader(new InputStreamReader(inputStream));
                             //Et on la décrypte
                             key.decryptMessage(buffer.readLine(), true);
                         } catch (IOException e) { //Standard Procedure for dealing with Sockets
@@ -113,49 +166,26 @@ public class ServerMaker {
                                 sleep();
                             }
                         }
+                        // Et on lui dit que c'est bon de notre coté
+                        client.sendMessage("setAndGo");
                     }
                     else {
                         client.sendMessage("rejected you");
                     }
                 }
-
-                //sleep();
-                // Je... ne suis pas sûr de pourquoi je suis obligé de faire ça
-                // C'est très bizarre, je pense qu'il doit y avoir des histoires de voyage temporel
-                // Ou un truc du genre
-                // Parce que certains messages se retrouvent envoyés après ceux qui devraient l'être avant...
-
-                for (Client tempClient : clientList.clientList) {
-                    try {
-                        tempClient.receivingSocket.getOutputStream().write(("Server setAndGo nothing \n").getBytes());
-                        System.out.println("Server: sent setAndGo to "+ tempClient.getId());
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-                // On signal que le serveur est prêt et que normalement les clients ont tout reçu
-
-                System.out.println("Server: Beginning last loop");
-                while (true) {
-                    for (Client tempClient : clientList.clientList) {
-                        socket = tempClient.getSendingSocket(); // On prends la socket du client
-                        inputStream = socket.getInputStream();
-                        try {
-                            if (inputStream.available() != 0) {
-                                // On lit la data depuis la socket dans un buffer
-                                buffer = new BufferedReader(new InputStreamReader(inputStream));
-                                //Et on la décrypte
-                                key.decryptMessage(buffer.readLine(), true);
-                            }
-                        } catch (IOException e) { //Standard Procedure for dealing with Sockets
-                            e.printStackTrace();
-                        }
-                    }
-                }
             }
-        });
+        }).start();
+        }
+
+    public void enterLobby() {
+        isInLobby = true;
+        startLobby();
     }
 
+    public void quitLobby() {
+        isInLobby = false;
+        isSetAndGo = true;
+    }
     public void startThread() {
         thread.start();
     }
