@@ -135,6 +135,27 @@ public class MainScreen extends BaseScreen {
         }
         if (queue.toRemove) queue.remove();
         batch.end();
+
+        int numberOfPawnReady = 0;
+        for (Pawn pawn : pawnList) {
+            if (pawn.onWeapon == true);
+                numberOfPawnReady+=1;
+
+        }
+        if (numberOfPawnReady == 4);
+            gameInterface.instrumental.dispose();
+            instrumental = Gdx.audio.newMusic(Gdx.files.internal("Music&Sound/Musique_jeu_principal_phase_B.mp3"));
+            instrumental.setLooping(true);
+            instrumental.play();
+
+
+//            for (Tile tile : tileList) {
+//                for (case : tile.caseList ) {
+//                    if (case)
+//                }
+//            }
+
+
     }
 
 

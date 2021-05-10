@@ -27,6 +27,8 @@ public class Pawn implements Serializable {
     private final int color; // La couleur du pion
     public Player player = null;
 
+    public boolean onWeapon = false; //si le pion est sur son arme de couleur
+
     public int getColor() {
         return color;
     }
@@ -56,6 +58,10 @@ public class Pawn implements Serializable {
         if (setCase.isExit && setCase.color == color) {
             queue.reveal();
             isLocked = !queue.isEmpty;
+        }
+
+        if (setCase.hasWeapon == true && setCase.color == color ) {
+            onWeapon=true;
         }
     }
 
