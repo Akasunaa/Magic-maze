@@ -284,7 +284,7 @@ public class GameInterface extends BaseScreen {
         win = false;
 
         //Temps écoulé et temps restant
-        remainingTime = 10f;
+        remainingTime = 10000f;
 
         // Pour l'instant on touche pas à ça!!!!
 //        Animatedhourglass = new AnimatedActor();
@@ -311,7 +311,7 @@ public class GameInterface extends BaseScreen {
         timeLabel.setPosition(960, 1000);
         uiStage.addActor(timeLabel);
 
-        instrumental = Gdx.audio.newMusic(Gdx.files.internal("Music&Sound/The Path of the Goblin King.mp3"));
+        instrumental = Gdx.audio.newMusic(Gdx.files.internal("Music&Sound/damedane.mp3"));
         instrumental.setLooping(true);
         instrumental.play();
 
