@@ -123,27 +123,33 @@ public class MainScreen extends BaseScreen {
         batch.end();
 
         if (!isInPhaseB) {
+            // Si on est encore en phase A
             int numberOfPawnReady = 0;
             for (Pawn pawn : pawnList) {
                 if (pawn.hasWeapon) {
                     numberOfPawnReady += 1;
                 }
             }
+            // On check le nombre de pions qui ont leur armes
 
             if (numberOfPawnReady == 4) {
                 gameInterface.instrumental.dispose();
                 instrumental = Gdx.audio.newMusic(Gdx.files.internal("Music&Sound/Musique_jeu_principal_phase_B.mp3"));
                 instrumental.setLooping(true);
                 instrumental.play();
+                isInPhaseB = true;
             }
+            // S'ils ont tous leurs armes, on commence la phase B
         }
         else {
+            // Si on est en phase B
             int numberOfPawnOnExit = 0;
             for (Pawn pawn: pawnList) {
                 if (pawn.onExit) {
                     numberOfPawnOnExit ++;
                 }
             }
+            // On check si les personnages sont sur la sortie finale
             if (numberOfPawnOnExit == 4) {
                 //TODO Le Jeu est gagné
             }
