@@ -6,6 +6,7 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.*;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 
@@ -138,6 +139,16 @@ public class MainMenu extends BaseScreen {
                         lobbyScreen.dispose();
                     }
                 }
+                else {
+                    float delay = 0.02f; // seconds
+                    warningLabel.setPosition(730,665);
+                    System.out.println(",ik");
+                    Timer.schedule(new Timer.Task() {
+                        @Override
+                        public void run() {
+                            warningLabel.setPosition(725,665);
+                        }}, delay);
+                }
             }
         });
 
@@ -182,6 +193,16 @@ public class MainMenu extends BaseScreen {
                         e.printError();
                         lobbyScreen.dispose();
                     }
+                }
+                else {
+                    float delay = 0.02f; // seconds
+                    warningLabel.setPosition(730,665);
+                    System.out.println(",ik");
+                    Timer.schedule(new Timer.Task() {
+                        @Override
+                        public void run() {
+                            warningLabel.setPosition(725,665);
+                        }}, delay);
                 }
             }
         });
@@ -338,6 +359,10 @@ public class MainMenu extends BaseScreen {
         warningLabel = new Label("Pseudo invalide : ' ' interdit", game.skin, "uiLabelStyle");
         uiStage.addActor(warningLabel);
         warningLabel.setVisible(false);
+        warningLabel.setPosition(725,665);
+//        warningLabel.setColor(1,0,0,1);
+//        System.out.println(warningLabel.getColor());
+
 
         Skin uiSkin = new Skin(Gdx.files.internal("GameUIAssets/uiskin.json"));
 
@@ -392,7 +417,6 @@ public class MainMenu extends BaseScreen {
     public void update(float dt) {
         if (usernameTextField.getText().contains(" ")){
             pseudoValid = false;
-            warningLabel.setPosition(725,665);
             warningLabel.setVisible(true);
 
             float delay = 0.5f; // seconds
