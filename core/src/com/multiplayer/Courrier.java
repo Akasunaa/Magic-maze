@@ -72,15 +72,6 @@ public class Courrier {
         }
     }
 
-    public void sendObject(BigButton toSend) {
-        sendMessage("sending BigButton");
-        //ObjectOutputStream(sendingSocket.outputStream).write(toSend.serialize().toByteArray())
-        try {
-            sendingSocket.getOutputStream().write(((toSend.serialize() + "\n").getBytes()));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 
     public void sendObject(Player toSend) {
         sendMessage("sending Player");

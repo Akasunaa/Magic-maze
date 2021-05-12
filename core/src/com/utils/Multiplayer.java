@@ -14,7 +14,6 @@ import java.util.concurrent.CyclicBarrier;
 public class Multiplayer {
     public static Courrier courrier;
     public static ServerMaker serverMaker;
-    public static ButtonList buttonList;
     public static ClientList clientList = new ClientList();
     public static Decryptor key = new Decryptor();
     public static boolean isServer = false;
