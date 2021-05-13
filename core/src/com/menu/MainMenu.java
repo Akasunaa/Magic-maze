@@ -6,6 +6,7 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.*;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 
@@ -13,6 +14,7 @@ import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.Scaling;
+import com.badlogic.gdx.utils.Timer;
 import com.multiplayer.ServerNotReachedException;
 import com.tiles.MainScreen;
 import com.tiles.Player;
@@ -35,6 +37,8 @@ public class MainMenu extends BaseScreen {
     public BaseActor[] avatarImages;
     public BaseActor currentAvatar;
 
+    private Label warningLabel;
+    private boolean pseudoValid;
 
     public MainMenu(MagicGame g) {
         super(g);
@@ -126,15 +130,27 @@ public class MainMenu extends BaseScreen {
             }
 
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-                Multiplayer.startServer();
-                lobbyScreen = new LobbyScreen(game, audioVolume);
-                try {
-                    lobbyScreen.multiplayerShenanigans();
-                    lobbyScreen.load();
-                    game.setScreen(lobbyScreen);
-                } catch (ServerNotReachedException e) {
-                    e.printError();
-                    lobbyScreen.dispose();
+                if (pseudoValid) {
+                    Multiplayer.startServer();
+                    lobbyScreen = new LobbyScreen(game, audioVolume);
+                    try {
+                        lobbyScreen.multiplayerShenanigans();
+                        lobbyScreen.load();
+                        game.setScreen(lobbyScreen);
+                    } catch (ServerNotReachedException e) {
+                        e.printError();
+                        lobbyScreen.dispose();
+                    }
+                }
+                else {
+                    float delay = 0.02f; // seconds
+                    warningLabel.setPosition(730,665);
+                    System.out.println(",ik");
+                    Timer.schedule(new Timer.Task() {
+                        @Override
+                        public void run() {
+                            warningLabel.setPosition(725,665);
+                        }}, delay);
                 }
             }
         });
@@ -169,15 +185,27 @@ public class MainMenu extends BaseScreen {
             }
 
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-                Multiplayer.stopServer();
-                lobbyScreen = new LobbyScreen(game, audioVolume);
-                try {
-                    lobbyScreen.multiplayerShenanigans();
-                    lobbyScreen.load();
-                    game.setScreen(lobbyScreen);
-                } catch (ServerNotReachedException e) {
-                    e.printError();
-                    lobbyScreen.dispose();
+                if (pseudoValid) {
+                    Multiplayer.stopServer();
+                    lobbyScreen = new LobbyScreen(game, audioVolume);
+                    try {
+                        lobbyScreen.multiplayerShenanigans();
+                        lobbyScreen.load();
+                        game.setScreen(lobbyScreen);
+                    } catch (ServerNotReachedException e) {
+                        e.printError();
+                        lobbyScreen.dispose();
+                    }
+                }
+                else {
+                    float delay = 0.02f; // seconds
+                    warningLabel.setPosition(730,665);
+                    System.out.println(",ik");
+                    Timer.schedule(new Timer.Task() {
+                        @Override
+                        public void run() {
+                            warningLabel.setPosition(725,665);
+                        }}, delay);
                 }
             }
         });
@@ -331,9 +359,20 @@ public class MainMenu extends BaseScreen {
 
         background.toBack();
 
+        warningLabel = new Label("Pseudo invalide : ' ' interdit", game.skin, "uiLabelStyle");
+        uiStage.addActor(warningLabel);
+        warningLabel.setVisible(false);
+        warningLabel.setPosition(725,665);
+//        warningLabel.setColor(1,0,0,1);
+//        System.out.println(warningLabel.getColor());
+
+
         Skin uiSkin = new Skin(Gdx.files.internal("GameUIAssets/uiskin.json"));
-        usernameTextField = new TextField("Rentrez votre pseudo", uiSkin);
+
+        pseudoValid = true;
+        usernameTextField = new TextField("Pseudo", uiSkin);
         usernameTextField.setMaxLength(13);
+
         usernameTextField.addListener(new ChangeListener() {
             public void changed(ChangeEvent event, Actor actor) {
                 Multiplayer.me.pseudo = usernameTextField.getText();
@@ -379,6 +418,18 @@ public class MainMenu extends BaseScreen {
     }
 
     public void update(float dt) {
+        if (usernameTextField.getText().contains(" ")){
+            pseudoValid = false;
+            warningLabel.setVisible(true);
 
+            float delay = 0.5f; // seconds
+
+            Timer.schedule(new Timer.Task() {
+                @Override
+                public void run() {
+                    warningLabel.setVisible(false);
+                }
+            }, delay);
+        }
     }
 }
