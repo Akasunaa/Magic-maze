@@ -265,13 +265,12 @@ public class LobbyScreen extends BaseScreen {
     }
 
     public void load() {
-        //TODO(Load)
+        // On charge les ressources importantes, classique
         audioSlider.setValue(audioVolume);
         instrumental = Gdx.audio.newMusic(Gdx.files.internal("Music&Sound/DonDokodokoDon.mp3"));
         instrumental.setLooping(true);
         instrumental.setVolume(audioVolume);
         instrumental.play();
-        //Hum j'aurais du commenter ça parce que je sais plus ce qu'il faut que je fasse
     }
     private boolean hasPlayerToAdd = false;
     private final ArrayList<Player> playersToAdd = new ArrayList<Player>();
@@ -295,9 +294,10 @@ public class LobbyScreen extends BaseScreen {
                 for (PlayerMaker playerMaker : playerMakerList) {
                     if (playerMaker.getPseudo().equals(playerToRemove)) {
                         toFind = playerMaker;
+//                        System.out.println("Found it" + toFind.getPseudo());
+                        playerMakerList.remove(toFind);
                         break;
                     }
-                    playerMakerList.remove(toFind);
                 }
             }
             makeUiTable();

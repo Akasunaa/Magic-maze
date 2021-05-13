@@ -162,7 +162,7 @@ public class Queue implements Serializable {
         loadSprite();
         updateSpriteSize();
         updateCoordinates();
-        reveal();
+//        reveal();
     }
 
     private void loadSprite() { // Obligatoire pour la sérialization
