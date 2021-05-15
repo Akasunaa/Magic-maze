@@ -4,11 +4,12 @@ package com.multiplayer
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.scenes.scene2d.actions.Actions
 import com.menu.MainMenu
+import com.tiles.MainScreen
 import com.tiles.Player
 import com.tiles.Queue
 import com.utils.Functions
 import com.utils.GameScreens
-import com.utils.GameScreens.lobbyScreen
+import com.utils.GameScreens.*
 import com.utils.Multiplayer
 import com.utils.Multiplayer.*
 import com.utils.TileAndCases
@@ -21,9 +22,33 @@ class Decryptor {
         val suffix = if (isServer) "Server" else "Client"
         println("$suffix: Message Received = $message")
         val phrase = message.split(' ')
-        val sender = phrase[0]
-        val action = phrase[1]
-        val receiver = phrase[2]
+
+        lateinit var sender: String
+        lateinit var action: String
+        lateinit var receiver: String
+        if (phrase.size <= 2) {
+            /*
+            Hopefully this will patch things up
+            En gros des fois sans raisons la serialisation du joueur échoue
+            Et du coup je suis obligé de dire "si tu recois un truc qui ressemble pas à un message normal,
+            Considère que c'est un joueur
+            */
+            val playerSent = message
+            val tempPlayer = mapper.readValue(playerSent, Player::class.java)
+            if (isServer) {
+                clientList.getClient(tempPlayer.pseudo).player = tempPlayer
+            } else {
+                playerList.add(tempPlayer)
+                lobbyScreen.addPlayer(tempPlayer)
+            }
+            cyclicBarrier.await()
+            action = "pass"
+        }
+        else {
+            sender = phrase[0]
+            action = phrase[1]
+            receiver = phrase[2]
+        }
         when (action) {
             "answer" -> {
                 courrier.answer = receiver.toBoolean()
