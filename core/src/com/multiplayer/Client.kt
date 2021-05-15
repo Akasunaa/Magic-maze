@@ -2,7 +2,7 @@ package com.multiplayer
 
 import com.badlogic.gdx.net.Socket
 import com.multiplayer.messages.Message
-import com.tiles.Player
+import com.screens.game.board.Player
 import java.io.BufferedReader
 import java.io.InputStreamReader
 
@@ -13,7 +13,7 @@ class Client(var ip: String, val sendingSocket: Socket, var id: String) {
         ip = waitForIt[2]
     }
 
-    lateinit var receivingSocket: Socket
+    lateinit private var receivingSocket: Socket
     fun receiveSocket(socket: Socket) {
         receivingSocket = socket
     }

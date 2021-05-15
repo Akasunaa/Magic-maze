@@ -1,4 +1,4 @@
-package com.menu;
+package com.screens;
 
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.audio.Music;
@@ -12,7 +12,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.utils.Clock;
+import com.screens.MagicGame;
 
 public abstract class BaseScreen implements Screen {
     protected MagicGame game;
@@ -50,8 +50,8 @@ public abstract class BaseScreen implements Screen {
 
         // Création de la liste des avatars pour gérer les différents avatars
         Texture tempAvatar;
-        for (int i = 0; i < animalNames.length; i++) {
-            tempAvatar = new Texture(Gdx.files.internal("Avatars/" + animalNames[i] + ".png"));
+        for (String animalName : animalNames) {
+            tempAvatar = new Texture(Gdx.files.internal("Avatars/" + animalName + ".png"));
             tempAvatar.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
 //            avatarImages[i] = new BaseActor();
 //            avatarImages[i].setTexture(tempAvatar);

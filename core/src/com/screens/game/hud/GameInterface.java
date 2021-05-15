@@ -1,36 +1,25 @@
-package com.menu;
+package com.screens.game.hud;
 
 //ça c'est réellement l'interface que j'ai fait
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.scenes.scene2d.Action;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
-import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.multiplayer.ServerNotReachedException;
 import com.multiplayer.messages.Ping;
-import com.tiles.Pawn;
-import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
-import com.badlogic.gdx.utils.Array;
-import com.utils.Clock;
-import com.utils.Functions;
-import com.utils.GameScreens;
-import com.utils.MainConstants;
-import com.utils.Multiplayer;
+import com.screens.BaseScreen;
+import com.screens.GameScreens;
+import com.screens.MagicGame;
+import com.screens.game.BaseActor;
+import com.utils.*;
 
-import static com.utils.Colors.currentColor;
-import static com.utils.Colors.getColor;
 import static com.utils.MainConstants.getFontSize;
 import static com.utils.Multiplayer.courrier;
 import static com.utils.TileAndCases.*;
@@ -47,13 +36,8 @@ public class GameInterface extends BaseScreen {
     //TextButton loadPawnButton;
 
 
-    // Pour le "menu" de "pause" (en vrai à voir si c'est nécessaire et comment c'est géré evec le multi
+    // Pour le "menu" de "pause" (en vrai à voir si c'est nécessaire et comment c'est géré avec le multi
     private Table pauseOverlay;
-
-    private boolean win;
-
-    private Label[] pseudoLabels;
-
 
     //constructeur
     public GameInterface(MagicGame g, float audioVolume){
@@ -71,31 +55,27 @@ public class GameInterface extends BaseScreen {
 
         //d'abord les 2 indicateurs de phase en haut à droite qu'on a scanné (un seul est visible à la fois)
         // pour indiquer la phase
-        BaseActor phaseA = new BaseActor();
-        phaseA.setTexture(new Texture(Gdx.files.internal("interface/phaseA.jpg")));
+        BaseActor phaseA = new BaseActor(new Texture(Gdx.files.internal("interface/phaseA.jpg")));
         phaseA.setSize(3 * 60 + 45, 150);
         phaseA.setPosition(viewWidth - phaseA.getWidth(), viewHeight - phaseA.getHeight());
         isPhaseA = true;
         uiStage.addActor(phaseA);
 
-        BaseActor phaseB = new BaseActor();
-        phaseB.setTexture(new Texture(Gdx.files.internal("interface/phaseB.jpg")));
+        BaseActor phaseB = new BaseActor(new Texture(Gdx.files.internal("interface/phaseB.jpg")));
         phaseB.setSize(phaseA.getWidth(), phaseA.getHeight());
         phaseB.setPosition(viewWidth - phaseB.getWidth(), viewHeight - phaseB.getHeight());
         phaseB.setVisible(false);
         uiStage.addActor(phaseB);
 
         //le bouton restart que j'ai pris sur internet, va falloir en refaire un
-        BaseActor restart = new BaseActor();
-        restart.setTexture(new Texture(Gdx.files.internal("interface/restart-button.png")));
+        BaseActor restart = new BaseActor(new Texture(Gdx.files.internal("interface/restart-button.png")));
         restart.setSize(150, 50);
         restart.setPosition(0, 0);
         uiStage.addActor(restart);
         restart.addListener(
                 new InputListener() {
                     public boolean touchDown(InputEvent ev, float x, float y, int pointer, int button) {
-                        BaseActor wantToRestart = new BaseActor();
-                        wantToRestart.setTexture(new Texture(Gdx.files.internal("interface/restart-button.png")));
+                        BaseActor wantToRestart = new BaseActor(new Texture(Gdx.files.internal("interface/restart-button.png")));
                         wantToRestart.setPosition(avatars[0].getX() - 15, avatars[0].getY() + avatars[0].getHeight()*1.5f / 2);
                         uiStage.addActor(wantToRestart);
                         return true;
@@ -104,40 +84,34 @@ public class GameInterface extends BaseScreen {
         );
 
         //le log c'est juste un rectangle transparent ^^'
-        BaseActor log = new BaseActor();
-        log.setTexture(new Texture(Gdx.files.internal("interface/log.png")));
+        BaseActor log = new BaseActor(new Texture(Gdx.files.internal("interface/log.png")));
         log.setSize(150,300);
         log.setPosition(0, restart.getHeight());
         uiStage.addActor(log);
 
         //la c'est juste des faux bouton
-        BaseActor hourglass = new BaseActor();
-        hourglass.setTexture(new Texture(Gdx.files.internal("interface/sablier.jpg")));
+        BaseActor hourglass = new BaseActor(new Texture(Gdx.files.internal("interface/sablier.jpg")));
         hourglass.setSize(60,45);
         hourglass.setPosition(viewWidth - hourglass.getWidth(), viewHeight - phaseA.getHeight() - hourglass.getHeight());
         uiStage.addActor(hourglass);
 
-        BaseActor zoomMoins = new BaseActor();
-        zoomMoins.setTexture(new Texture(Gdx.files.internal("interface/zoommoins.jpg")));
+        BaseActor zoomMoins = new BaseActor(new Texture(Gdx.files.internal("interface/zoommoins.jpg")));
         zoomMoins.setSize(60,45);
         zoomMoins.setPosition(viewWidth - hourglass.getWidth() - zoomMoins.getWidth(), viewHeight - phaseA.getHeight() - zoomMoins.getHeight());
         uiStage.addActor(zoomMoins);
 
-        BaseActor zoomPlus = new BaseActor();
-        zoomPlus.setTexture(new Texture(Gdx.files.internal("interface/zoomplus.jpg")));
+        BaseActor zoomPlus = new BaseActor(new Texture(Gdx.files.internal("interface/zoomplus.jpg")));
         zoomPlus.setSize(60,45);
         zoomPlus.setPosition(viewWidth - hourglass.getWidth() - zoomMoins.getWidth() - zoomPlus.getWidth(), viewHeight - phaseA.getHeight() - zoomPlus.getHeight());
         uiStage.addActor(zoomPlus);
 
-        BaseActor volume = new BaseActor();
-        volume.setTexture(new Texture(Gdx.files.internal("interface/haut-parleur.png")));
+        BaseActor volume = new BaseActor(new Texture(Gdx.files.internal("interface/haut-parleur.png")));
         volume.setSize(45,45);
         volume.setPosition(viewWidth - hourglass.getWidth() - zoomMoins.getWidth() - zoomPlus.getWidth() - volume.getWidth(), viewHeight - phaseA.getHeight() - volume.getHeight());
         voiceOn = true;
         uiStage.addActor(volume);
 
-        BaseActor cross = new BaseActor();
-        cross.setTexture(new Texture(Gdx.files.internal("interface/croix.png")));
+        BaseActor cross = new BaseActor(new Texture(Gdx.files.internal("interface/croix.png")));
         cross.setSize(45,45);
         cross.setPosition(viewWidth - hourglass.getWidth() - zoomMoins.getWidth() - zoomPlus.getWidth() - volume.getWidth(), viewHeight - phaseA.getHeight() - volume.getHeight());
         cross.setVisible(false);
@@ -209,38 +183,31 @@ public class GameInterface extends BaseScreen {
         }
 
         // Les pouvoirs (il doit y avoir un moyen de faire ça plus propre)
-        BaseActor up = new BaseActor();
-        up.setTexture(new Texture(Gdx.files.internal("interface/flechehaut.png")));
+        BaseActor up = new BaseActor(new Texture(Gdx.files.internal("interface/flechehaut.png")));
         up.setPosition(viewWidth - avatars[0].getWidth() - 50, viewHeight - avatars[0].getHeight() - 219);
         uiStage.addActor(up);
 
-        BaseActor left = new BaseActor();
-        left.setTexture(new Texture(Gdx.files.internal("interface/gauche.png")));
+        BaseActor left = new BaseActor(new Texture(Gdx.files.internal("interface/gauche.png")));
         left.setPosition(avatars[1].getX() - 9, avatars[1].getY() + 30);
         uiStage.addActor(left);
 
-        BaseActor portal = new BaseActor();
-        portal.setTexture(new Texture(Gdx.files.internal("interface/teleport.png")));
+        BaseActor portal = new BaseActor(new Texture(Gdx.files.internal("interface/teleport.png")));
         portal.setPosition(avatars[1].getX() - 12, avatars[1].getY());
         uiStage.addActor(portal);
 
-        BaseActor down = new BaseActor();
-        down.setTexture(new Texture(Gdx.files.internal("interface/bas.png")));
+        BaseActor down = new BaseActor(new Texture(Gdx.files.internal("interface/bas.png")));
         down.setPosition(avatars[2].getX() - 9, avatars[2].getY() + 30);
         uiStage.addActor(down);
 
-        BaseActor magnifier = new BaseActor();
-        magnifier.setTexture(new Texture(Gdx.files.internal("interface/loupa.png")));
+        BaseActor magnifier = new BaseActor(new Texture(Gdx.files.internal("interface/loupa.png")));
         magnifier.setPosition(avatars[2].getX() - 12, avatars[2].getY());
         uiStage.addActor(magnifier);
 
-        BaseActor right = new BaseActor();
-        right.setTexture(new Texture(Gdx.files.internal("interface/droite.png")));
+        BaseActor right = new BaseActor(new Texture(Gdx.files.internal("interface/droite.png")));
         right.setPosition(avatars[3].getX() - 9, avatars[3].getY() + 30);
         uiStage.addActor(right);
 
-        BaseActor elevator = new BaseActor();
-        elevator.setTexture(new Texture(Gdx.files.internal("interface/escalator.png")));
+        BaseActor elevator = new BaseActor(new Texture(Gdx.files.internal("interface/escalator.png")));
         elevator.setPosition(avatars[3].getX() - 12, avatars[3].getY());
         uiStage.addActor(elevator);
 
@@ -282,9 +249,6 @@ public class GameInterface extends BaseScreen {
 //        loadPawnButton.setPosition(10,1000);
 
         //Ici c'est le bordel rajouté par Nathan
-        win = false;
-
-
         // Pour l'instant on touche pas à ça!!!!
 //        Animatedhourglass = new AnimatedActor();
 //        TextureRegion[] hourglassFrames = new TextureRegion[118];
@@ -303,7 +267,6 @@ public class GameInterface extends BaseScreen {
 
         // Temps restant
         font = MainConstants.getFontSize(40);
-        String text = "Time: ";
         style = new LabelStyle(font, Color.NAVY);
         Clock.clock = new Clock(style);
         Clock.clock.setFontScale(1.5f);

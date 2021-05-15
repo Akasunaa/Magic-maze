@@ -1,6 +1,6 @@
 package com.multiplayer.messages;
 
-import com.tiles.Queue;
+import com.screens.game.board.Queue;
 
 public class PayloadQueue extends Message{
     public PayloadQueue(Queue queue) {

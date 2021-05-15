@@ -1,4 +1,4 @@
-package com.menu;
+package com.screens;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
@@ -14,8 +14,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.graphics.g2d.NinePatch;
 
 import com.badlogic.gdx.scenes.scene2d.ui.Slider.SliderStyle;
-import com.multiplayer.ServerNotReachedException;
-import com.utils.GameScreens;
+import com.screens.menu.MainMenu;
 
 public class MagicGame extends Game {
     public Skin skin;
@@ -30,7 +29,7 @@ public class MagicGame extends Game {
         LabelStyle uiLabelStyle = new LabelStyle(uiFont, Color.BLUE);
         skin.add("uiLabelStyle", uiLabelStyle);
 
-        //Texture boutton de base
+        //Texture bouton de base
         TextButtonStyle uiTextButtonStyle = new TextButtonStyle();
         uiTextButtonStyle.font = uiFont;
         uiTextButtonStyle.fontColor = Color.NAVY;
@@ -38,13 +37,13 @@ public class MagicGame extends Game {
         skin.add("buttonUp", new NinePatch(upTex, 26,26,16,20));
         uiTextButtonStyle.up = skin.getDrawable("buttonUp");
 
-        //Texture boutton quand survolé
+        //Texture bouton quand survolé
         Texture overTex = new Texture(Gdx.files.internal("GameUIAssets/ninepatch-2.png"));
         skin.add("buttonOver", new NinePatch(overTex, 26,26,16,20) );
         uiTextButtonStyle.over = skin.getDrawable("buttonOver");
         uiTextButtonStyle.overFontColor = Color.BLUE;
 
-        //Texture boutton quand appuyé
+        //Texture bouton quand appuyé
         Texture downTex = new Texture(Gdx.files.internal("GameUIAssets/ninepatch-3.png"));
         skin.add("buttonDown", new NinePatch(downTex, 26,26,16,20) );
         uiTextButtonStyle.down = skin.getDrawable("buttonDown");

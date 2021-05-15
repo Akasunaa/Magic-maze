@@ -1,10 +1,6 @@
 package com.multiplayer;
 
-import com.utils.GameScreens;
-import com.utils.Multiplayer;
-
 import java.util.ArrayList;
-import java.util.ConcurrentModificationException;
 import java.util.List;
 
 public class ClientList {

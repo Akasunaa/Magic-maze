@@ -1,4 +1,4 @@
-package com.menu;
+package com.screens.menu;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
@@ -6,7 +6,6 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.*;
-import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 
@@ -15,15 +14,14 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.Scaling;
 import com.badlogic.gdx.utils.Timer;
+import com.screens.MagicGame;
 import com.multiplayer.ServerNotReachedException;
-import com.tiles.MainScreen;
-import com.tiles.Player;
-import com.utils.GameScreens;
+import com.screens.game.BaseActor;
+import com.screens.BaseScreen;
+import com.screens.GameScreens;
 import com.utils.Multiplayer;
 
-import static com.utils.Functions.modulo;
-import static com.utils.GameScreens.lobbyScreen;
-import static com.utils.GameScreens.mainScreen;
+import static com.screens.GameScreens.lobbyScreen;
 
 public class MainMenu extends BaseScreen {
 
@@ -72,8 +70,7 @@ public class MainMenu extends BaseScreen {
         instrumental.setVolume(audioVolume);
         instrumental.play();
 
-        BaseActor background = new BaseActor();
-        background.setTexture(new Texture(Gdx.files.internal("MenuAssets/BlurryMallBackground.jpg")));
+        BaseActor background = new BaseActor(new Texture(Gdx.files.internal("MenuAssets/BlurryMallBackground.jpg")));
         uiStage.addActor(background);
 
         Texture titleText = new Texture(Gdx.files.internal("MenuAssets/MagicLogo.png"));
@@ -85,31 +82,6 @@ public class MainMenu extends BaseScreen {
         genint.setFilter(TextureFilter.Linear, TextureFilter.Linear);
         Image genintImage = new Image(genint);
         genintImage.setScaling(Scaling.fit);
-
-        Texture règles1 = new Texture(Gdx.files.internal("MenuAssets/regle_page-0001.jpg"));
-        règles1.setFilter(TextureFilter.Linear, TextureFilter.Linear);
-        Image règlesImage1 = new Image(règles1);
-        règlesImage1.setScaling(Scaling.fit);
-
-        Texture règles2 = new Texture(Gdx.files.internal("MenuAssets/regle_page-0002.jpg"));
-        règles2.setFilter(TextureFilter.Linear, TextureFilter.Linear);
-        Image règlesImage2 = new Image(règles2);
-        règlesImage2.setScaling(Scaling.fit);
-
-        Texture règles3 = new Texture(Gdx.files.internal("MenuAssets/regle_page-0003.jpg"));
-        règles3.setFilter(TextureFilter.Linear, TextureFilter.Linear);
-        Image règlesImage3 = new Image(règles3);
-        règlesImage3.setScaling(Scaling.fit);
-
-        Texture règles4 = new Texture(Gdx.files.internal("MenuAssets/regle_page-0004.jpg"));
-        règles1.setFilter(TextureFilter.Linear, TextureFilter.Linear);
-        Image règlesImage4 = new Image(règles4);
-        règlesImage4.setScaling(Scaling.fit);
-
-        Texture règles5 = new Texture(Gdx.files.internal("MenuAssets/regle_page-0005.jpg"));
-        règles5.setFilter(TextureFilter.Linear, TextureFilter.Linear);
-        Image règlesImage5 = new Image(règles5);
-        règlesImage5.setScaling(Scaling.fit);
 
         Texture group = new Texture(Gdx.files.internal("MenuAssets/MagicGroup.png"));
         group.setFilter(TextureFilter.Linear, TextureFilter.Linear);
@@ -277,15 +249,15 @@ public class MainMenu extends BaseScreen {
         });
 
         final Table scrollTable = new Table();
-        scrollTable.add(règlesImage1);
-        scrollTable.row();
-        scrollTable.add(règlesImage2);
-        scrollTable.row();
-        scrollTable.add(règlesImage3);
-        scrollTable.row();
-        scrollTable.add(règlesImage4);
-        scrollTable.row();
-        scrollTable.add(règlesImage5);
+        Image[] ruleBook = new Image[5];
+        for (int i = 0; i < 5; i ++) {
+            Texture temp = new Texture(Gdx.files.internal("MenuAssets/regle_page-000"+(i+1)+".jpg"));
+            temp.setFilter(TextureFilter.Linear, TextureFilter.Linear);
+            ruleBook[i] = new Image(temp);
+            ruleBook[i].setScaling(Scaling.fit);
+            scrollTable.add(ruleBook[i]);
+            scrollTable.row();
+        }
 
         final ScrollPane scroller = new ScrollPane(scrollTable);
 
@@ -412,7 +384,7 @@ public class MainMenu extends BaseScreen {
         uiTable.row();
         uiTable.add(genintImage).left().colspan(4).padTop(50).padLeft(200);
 
-        uiTable.debugCell();
+        //uiTable.debugCell();
 
 
     }

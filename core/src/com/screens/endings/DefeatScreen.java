@@ -1,4 +1,4 @@
-package com.menu;
+package com.screens.endings;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
@@ -6,30 +6,32 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.multiplayer.ServerNotReachedException;
+import com.screens.MagicGame;
+import com.screens.game.BaseActor;
+import com.screens.BaseScreen;
 
-public class VictoryScreen extends BaseScreen {
+public class DefeatScreen extends BaseScreen {
 
-    public VictoryScreen(MagicGame g){
+    public DefeatScreen(MagicGame g){
         super(g);
     }
 
     @Override
     public void create() {
 
-        instrumental = Gdx.audio.newMusic(Gdx.files.internal("Music&Sound/VictoryMusic.wav"));
+        instrumental = Gdx.audio.newMusic(Gdx.files.internal("Music&Sound/damedane.mp3"));
         instrumental.setLooping(true);
         instrumental.play();
+        instrumental.setVolume(audioVolume);
 
-        Label victoryLabel = new Label( "Victoire !!!!", game.skin, "uiLabelStyle" );
+        Label defeatLabel = new Label( "Defaite...", game.skin, "uiLabelStyle" );
 
-        BaseActor background = new BaseActor();
-        background.setTexture( new Texture(Gdx.files.internal("GameAssets/VictoryImage.jpg")) );
+        BaseActor background = new BaseActor(new Texture(Gdx.files.internal("GameAssets/DefeatImage.jpg")));
         uiStage.addActor( background );
 
         background.toBack();
 
-        uiTable.add(victoryLabel);
+        uiTable.add(defeatLabel);
 
         Action fadeInColorCycleForever = Actions.sequence(
                 Actions.alpha(0), // set transparency value
@@ -38,12 +40,12 @@ public class VictoryScreen extends BaseScreen {
                 Actions.forever(
                         Actions.sequence(
                                 // color shade to approach, duration
-                                Actions.color(new Color(1, 0, 0, 1), 1),
-                                Actions.color(new Color(0, 0, 1, 1), 1)
+                                Actions.color( new Color(1,0,0,1), 1 ),
+                                Actions.color( new Color(0,0,1,1), 1 )
                         )
                 )
         );
-        background.addAction(fadeInColorCycleForever);
+        background.addAction( fadeInColorCycleForever );
 
     }
 
@@ -51,5 +53,4 @@ public class VictoryScreen extends BaseScreen {
     public void update(float dt) {
 
     }
-
 }

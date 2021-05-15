@@ -1,4 +1,4 @@
-package com.tiles;
+package com.screens.game.board;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
@@ -10,10 +10,11 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.menu.BaseActor;
-import com.menu.BaseScreen;
-import com.menu.GameInterface;
-import com.menu.MagicGame;
+import com.screens.game.BaseActor;
+import com.screens.game.hud.GameInterface;
+import com.screens.game.hud.MouseWheelChecker;
+import com.screens.BaseScreen;
+import com.screens.MagicGame;
 import com.utils.Colors;
 import com.utils.Functions;
 import com.utils.Multiplayer;
@@ -26,14 +27,17 @@ import static com.utils.TileAndCases.*;
 
 // btw, le fait que MainScreen soit dans le dossier multi c'est un peu chelou niveau orga non?
 
-public class MainScreen extends BaseScreen {
+public class GameScreen extends BaseScreen {
     // Trucs de déboguages pour afficher les coordonées de la souris
     Label coordMouse;
     Label numberCase;
 
     GameInterface gameInterface;
+    public GameInterface getInterface() {
+        return gameInterface;
+    }
 
-    private ArrayList<Pawn> pawnToRemove = new ArrayList<>();
+    private final ArrayList<Pawn> pawnToRemove = new ArrayList<>();
     public void removePawn(Pawn pawn) {
         pawnToRemove.add(pawn);
     }
@@ -43,7 +47,7 @@ public class MainScreen extends BaseScreen {
         return "x = " + (int) mouseInput(camera).x + "; y = " + (int) mouseInput(camera).y;
     }
 
-    public MainScreen(MagicGame g) {
+    public GameScreen(MagicGame g) {
         super(g);
 
 
@@ -55,8 +59,7 @@ public class MainScreen extends BaseScreen {
         InputMultiplexer inputMultiplexer = new InputMultiplexer(uiStage, mainStage, new MouseWheelChecker());
         Gdx.input.setInputProcessor(inputMultiplexer);
 
-        background = new BaseActor();
-        background.setTexture(new Texture("GameUIAssets/floorboard.png"));
+        background = new BaseActor(new Texture("GameUIAssets/floorboard.png"));
 
         //camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         camera = (OrthographicCamera) mainStage.getCamera();

@@ -7,6 +7,6 @@ public class ServerNotReachedException extends Exception{
         this.errorMessage = "Could not connect to server: " + errorMessage;
     }
     public void printError() {
-        System.out.println(errorMessage);}
-
+        System.out.println(errorMessage);
+    }
 }

@@ -2,11 +2,10 @@ package com.utils;
 
 import com.badlogic.gdx.math.Matrix3;
 import com.badlogic.gdx.math.Vector2;
-import com.tiles.Case;
-import com.tiles.Pawn;
-import com.tiles.Queue;
-import com.tiles.Tile;
-import java.util.List;
+import com.screens.game.board.Case;
+import com.screens.game.board.Pawn;
+import com.screens.game.board.Queue;
+import com.screens.game.board.Tile;
 
 import java.util.ArrayList;
 import java.util.List;

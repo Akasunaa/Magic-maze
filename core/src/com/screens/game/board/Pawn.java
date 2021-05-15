@@ -1,11 +1,12 @@
-package com.tiles;
+package com.screens.game.board;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.Vector2;
-import com.menu.BaseActor;
+import com.screens.game.BaseActor;
+import com.screens.game.hud.Clock;
 import com.multiplayer.messages.pawn.AskPlacePawn;
 import com.multiplayer.messages.pawn.AskTakePawn;
 import com.multiplayer.messages.pawn.MovingPawn;
@@ -14,7 +15,7 @@ import com.utils.*;
 import java.io.Serializable;
 
 import static com.utils.Functions.findCase;
-import static com.utils.GameScreens.mainScreen;
+import static com.screens.GameScreens.mainScreen;
 import static com.utils.TileAndCases.*;
 
 
@@ -34,18 +35,18 @@ public class Pawn implements Serializable {
     private boolean isLocked = false;
 
     // Un petit booléen qui permet d'éviter qu'on bouge les pions tant qu'on a pas mis une tuile à la sortie
-    public void unlock() {
+    void unlock() {
         isLocked = false;
     }
 
-    public Case setCase; // La case sur laquelle est le pion
+    private Case setCase; // La case sur laquelle est le pion
     private transient BaseActor sprite;
 
-    public Pawn(int color) {
+    Pawn(int color) {
         this.color = color;
     }
 
-    public void setCase(Case tempCase) {
+    void setCase(Case tempCase) {
         try {
             setCase.pawn = null;
         } catch (Exception e) {
@@ -70,14 +71,15 @@ public class Pawn implements Serializable {
 
         if (setCase.isFinalExit) {        // Si on fait plus de scénarii, il faudra rajouter le fait qu'il faut que ce soit de la bonne couleur
             numberPawnsOut ++;
-            pawnList.remove(this);
+            mainScreen.removePawn(this);
             setCase.pawn = null;
             dispose();
         }
 
     }
 
-    public void setFirstCase() {
+    private void setFirstCase() {
+        // Relique de l'époque où on devait placer la toute première case
         for (Tile tile : tileList) {
             for (Case[] caseLine : tile.caseList) {
                 for (Case tempCase : caseLine) {
@@ -109,15 +111,14 @@ public class Pawn implements Serializable {
 
     private boolean isMovable = false; // Même principe que pour la Queue
 
-    public void load() { // Pour la sérialization
-        sprite = new BaseActor();
-        sprite.setTexture(new Texture("pions/" + Colors.getColor(color) + ".png"));
+    void load() { // Pour la sérialization
+        sprite = new BaseActor(new Texture("pions/" + Colors.getColor(color) + ".png"));
         mainScreen.getMainStage().addActor(sprite);
         setSize();
         updateCoordinates();
     }
 
-    public void setSpritePosition(Vector2 target) {
+    private void setSpritePosition(Vector2 target) {
         sprite.setX(target.x);
         sprite.setY(target.y);
         position.x = target.x;
@@ -129,6 +130,8 @@ public class Pawn implements Serializable {
     public boolean hasTarget= false;
     public float speed = 0;
     public void setTarget(float x, float y) {
+        // Anciennement pour de l'interpolation,
+        // A cause d'un problème non résolu, on ne fait en soit plus tellement de l'interpolation maintenant
         target.x = x;
         target.y = y;
         hasTarget = true;
@@ -152,22 +155,17 @@ public class Pawn implements Serializable {
         sprite.remove();
     }
 
-    private boolean hasExplored = false;
-    // Pour regarder si on a déjà fait le pathfinding et éviter de le faire trop de fois
-    // Wow this is useless
-
     public Vector2 getPosition() {
         return position;
     }
 
-    public boolean canPlaceHere(Vector2 coordinates, Player player) {
+    private boolean canPlaceHere(Vector2 coordinates, Player player) {
         try {
             Case nextCase = findCase(coordinates); // Est-on sur une case ?
             if ((!(nextCase == null) && nextCase.isValid && checkServerForPlaceable()) // Si elle existe et est non nulle, et qu'on peut la placer
                 || nextCase.equals(player.pawn.setCase)) { // Pour checker le cas où on veut la replacer là où elle était de base i guess
                 setCase.revert(player); // On annule le pathfinding... avec un autre pathfinding
                 setCase.hide(); // On cache la case de départ
-                hasExplored = false; // On réinitialise les variables booléennes
                 isMovable = false;
                 player.dropsPawn(this);
                 return true;
@@ -191,13 +189,17 @@ public class Pawn implements Serializable {
         }
     }
 
-    public void handleInput(Player player) {
+    void handleInput(Player player) {
+        // On me fait remarquer que la seule valeur que prends player c'est Multiplayer.me
+        // Ce ne serait pas le cas si le serveur checkait vraiment pour voir si tu peux le placer quelque part je crois
+        // Ou alors c'est géré autre part et je me souviens plus d'où
+        // Trop fatigué pour vérifier, je regarderai ça demain
         if (isMovable) {
             float x = Functions.mouseInput().x - sprite.getWidth() / 2;
             float y = Functions.mouseInput().y - sprite.getHeight() / 2;
             setSpritePosition(new Vector2(x,y));
             if (count == 1) { // On veut pas avoir à le faire trop souvent
-                // Edit: ça vient d'un vieux fragment de code où je n'envoyais ma position que toutes les na ctualisations
+                // Edit: ça vient d'un vieux fragment de code où je n'envoyais ma position que toutes les actualisations
                 // Ca causait des problèmes que je ne comprends pas, où le thread de render restait bloqué
                 // J'ai aucune idée de pourquoi, mais bon en mettant 1 ça fonctionne
                 // ça rends aussi totalement inutile mon code d'interpolation mais bon
@@ -221,7 +223,6 @@ public class Pawn implements Serializable {
                 setCase.show(); // On montre la case de départ
                 player.takesPawn(this);
                 setCase.explore(player); // On lance le pathfinding (structure récursive)
-                hasExplored = true; // Et on montre qu'on a déjà fait le pathfinding
             }
         }
     }

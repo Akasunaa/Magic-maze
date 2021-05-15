@@ -5,7 +5,7 @@ import com.badlogic.gdx.Net;
 import com.badlogic.gdx.net.Socket;
 import com.badlogic.gdx.net.SocketHints;
 import com.multiplayer.ServerNotReachedException;
-import com.tiles.Player;
+import com.screens.game.board.Player;
 import com.utils.Multiplayer;
 
 import java.io.BufferedReader;
@@ -26,7 +26,6 @@ public class Courrier {
     private Socket receivingSocket;
 
     boolean answer = false; // This will be used to get answers from the server
-    private final String id;
 
     // sendingSocket: La socket pour envoyer des messages au serveur
     // receivingSocket: La socket pour recevoir des messages du serveur
@@ -34,7 +33,6 @@ public class Courrier {
     private final ClientListener clientListener;
 
     public Courrier(String id, int port, String ip) throws ServerNotReachedException {
-        this.id = id;
         System.out.println(ip);
         SocketHints socketHints = new SocketHints();
         socketHints.connectTimeout = 5000;
@@ -46,9 +44,8 @@ public class Courrier {
         } catch (Exception e) {
             throw new ServerNotReachedException("Server not found");
         }
-        String waitForIt = null;
         try {
-            waitForIt = (new BufferedReader(new InputStreamReader(sendingSocket.getInputStream()))).readLine();
+            String waitForIt = (new BufferedReader(new InputStreamReader(sendingSocket.getInputStream()))).readLine();
             if (waitForIt.equals("server rejected you"))
                 throw new ServerNotReachedException("Username is already taken");
             receivingSocket = Gdx.net.newClientSocket(Net.Protocol.TCP, ip, port, socketHints);
