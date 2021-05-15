@@ -6,8 +6,6 @@ public class Colors {
     public static int yellow = 2;
     public static int orange = 3;
 
-    public static int currentColor = 0;
-
     private static final String[] colorList = {"green","purple","yellow","orange"};
     public static final int[] colors = {green, purple, yellow, orange};
     public static String getColor(int color) {

@@ -1,7 +1,7 @@
 package com.multiplayer.messages;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.tiles.Player;
+import com.screens.game.board.Player;
 import com.utils.Multiplayer;
 
 public class PayloadPlayer extends Message{

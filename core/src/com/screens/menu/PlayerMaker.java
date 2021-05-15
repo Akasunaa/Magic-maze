@@ -1,4 +1,4 @@
-package com.menu;
+package com.screens.menu;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
@@ -8,21 +8,25 @@ import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.multiplayer.messages.TextMessage;
-import com.tiles.Player;
+import com.screens.game.board.Player;
+import com.screens.BaseScreen;
 import com.utils.Multiplayer;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 
 import static com.utils.Functions.modulo;
 
 public class PlayerMaker {
-    Button rightArrow;
-    Button leftArrow;
-    int avatarNum = 0; // à changer
+    private Button rightArrow;
+    private Button leftArrow;
+    private int avatarNum = 0;
+    // pour pouvoir accéder facilement à la référence des avatars
     // Pas besoin de flèches pour modifier les avatars des autres, ça n'a aucun sens ?
-    TextField textField;
-    boolean isModifiable;
+    private TextField textField;
+    private boolean isModifiable;
     private Player player;
 
-    public String getPseudo() {
+    String getPseudo() {
         return player.pseudo;
     }
     PlayerMaker(final Player player, Skin uiSkin, boolean isModifiable) {
@@ -41,7 +45,6 @@ public class PlayerMaker {
             public void changed(ChangeEvent event, Actor actor) {
                 Multiplayer.courrier.sendMessage(new TextMessage("changePseudo", textField.getText()));
                 player.pseudo = textField.getText();
-                //TODO Envoyer un message au server pour dire qu'on a changé de nom
             }
         });
     }
@@ -65,6 +68,22 @@ public class PlayerMaker {
         player.avatar.setTexture(new Texture(Gdx.files.internal("Avatars/" + player.avatarName + ".png")));
     }
 
+    private InputListener arrowsInputListener(final int i) {
+        return new InputListener() {
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                return true;
+            }
+
+            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+                avatarNum = modulo(avatarNum + i, 10);
+                player.avatarName = BaseScreen.animalNames[avatarNum];
+                Multiplayer.courrier.sendMessage(new TextMessage("changeAvatar",player.avatarName));
+                player.avatar.setTexture(new Texture(Gdx.files.internal("Avatars/" + player.avatarName + ".png")));
+                //avatar.setSize(150, 150);
+            }
+        };
+    }
+
 
     public void load(Skin skin, final Table uiTable, int numberOfPlayers, int numberOfColumns) {
         if (isModifiable) {
@@ -82,20 +101,7 @@ public class PlayerMaker {
         leftArrowStyle.up = skin.getDrawable("leftArrow");
         leftArrow = new Button( leftArrowStyle );
         if (isModifiable) {
-            leftArrow.addListener(
-                    new InputListener() {
-                        public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                            return true;
-                        }
-
-                        public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-                            avatarNum = modulo(avatarNum - 1, 10);
-                            player.avatarName = BaseScreen.animalNames[avatarNum];
-                            Multiplayer.courrier.sendMessage(new TextMessage("changeAvatar",player.avatarName));
-                            player.avatar.setTexture(new Texture(Gdx.files.internal("Avatars/" + player.avatarName + ".png")));
-                            //avatar.setSize(150, 150);
-                        }
-                    });
+            leftArrow.addListener(arrowsInputListener(-1));
         }
         uiTable.add(leftArrow).right().pad(20, 0, 20, 0).colspan(colspan);
         if (colspan == 1) uiTable.getCell(leftArrow).center();
@@ -109,21 +115,7 @@ public class PlayerMaker {
         rightArrowStyle.up = skin.getDrawable("rightArrow");
         rightArrow = new Button( rightArrowStyle );
         if (isModifiable) {
-            rightArrow.addListener(
-                    new InputListener() {
-                        public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                            return true;
-                        }
-
-                        public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-                            avatarNum = modulo(avatarNum + 1, 10);
-                            player.avatarName = BaseScreen.animalNames[avatarNum];
-                            Multiplayer.courrier.sendMessage(new TextMessage("changeAvatar",player.avatarName));
-                            player.avatar.setTexture(new Texture(Gdx.files.internal("Avatars/" + player.avatarName + ".png")));
-                            //avatar.setSize(150, 150);
-
-                        }
-                    });
+            rightArrow.addListener(arrowsInputListener(+1));
         }
         uiTable.add(rightArrow).left().pad(20, 0, 20, 0).colspan(colspan);
         if (colspan == 1) uiTable.getCell(rightArrow).center();

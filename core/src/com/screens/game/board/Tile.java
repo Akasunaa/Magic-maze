@@ -1,28 +1,26 @@
-package com.tiles;
+package com.screens.game.board;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.menu.BaseActor;
+import com.screens.game.BaseActor;
 import com.utils.Functions;
 import com.utils.TileAndCases;
 
 import java.io.Serializable;
 
-import static com.tiles.Case.link;
+import static com.screens.game.board.Case.link;
 import static com.utils.Colors.getColor;
 import static com.utils.Directions.numberDirections;
 import static com.utils.Functions.modulo;
-import static com.utils.GameScreens.mainScreen;
-import static com.utils.MainConstants.batch;
+import static com.screens.GameScreens.mainScreen;
 import static com.utils.TileAndCases.*;
 
 public class Tile implements Serializable {
-    public int number; // numéro de tuile
+    int number; // numéro de tuile
     private final String path; // path de la tuile
     private transient BaseActor sprite; // transient ça veut dire qu'on le stock pas dans la serialization
 
@@ -41,22 +39,37 @@ public class Tile implements Serializable {
     public Case entranceCase;
     // L'entrée représente la direction cardinale de la tuile
 
-
+    /*
+     On peut ici remarquer que ce code est très vieux
+     En effet, il doit dater de début mars, époque où j'étais encore persuadé qu'il fallait
+     Que je commente un maximum de chose afin que mes camarades puissent
+    facilement comprendre mon code.
+    Nous sommes désormais le 15 mai, et je doute plus que jamais qu'ils aient déjà lu ces commentaires
+    Ils n'auront donc pas servi à grand chose, si ce n'est rajouter du texte dans ce code déjà bien chargé
+    Merci, Hadrien du passé.
+*/
     private long cooldown;
 
     public void startCooldown() {
         cooldown = System.currentTimeMillis();
     }
-    // L'utilité de cette variable et de cette méthode est questionnable
-    // Elles sont utiles pour éviter un phénomène que j'appelle le blinking
-    // Qui fait que, au moment où on dépose la carte, les trucs du pathfinding apparaissent
+    /*
+     L'utilité de cette variable et de cette méthode est questionnable
+     Elles sont utiles pour éviter un phénomène que j'appelle le blinking
+     Qui fait que, au moment où on dépose la carte, les trucs du pathfinding apparaissent
+     Edit: pour le contexte, ce phénomène était lié au fait qu'à l'époque, le pathfinding
+     se déclenchait quand je cliquais sur une case, pas besoin d'y mettre un pion.
+     Donc en soit on pourrait la supprimer, mais je la garde au kazoo on aurait besoin
+     de refaire du débuguage dans le futur. Better safe than sorry !
+    */
 
 
     public float x = 0;
     public float y = 0;
+    // Des variables très petites qui sont étonnement très utilisées
     private final float size = TileAndCases.tileSize;
 
-    public void updateAll() {
+    void updateAll() {
         sprite.setX(x);
         sprite.setY(y);
         updateSize();
@@ -71,16 +84,20 @@ public class Tile implements Serializable {
     public float getSize() {
         return size;
     }
+    // Methode uniquement utilisée dans la classe Functions d'ailleurs
 
-    public void updateSize() {
+    private void updateSize() {
         sprite.setSize(size, size);
         updateAllCases();
     }
 
-    // fonctions classiques j'ai envie de dire
     private boolean exploring = false;
 
     public void handleInput(Player player, Label numberCase) {
+        /*
+        Cette méthode est un vestige de l'époque où je faisais le pathfinding en cliquant sur une case
+        je le garde pour du déboguage éventuel futur
+         */
         Case tempCase;
         Vector2 mouseInput = Functions.mouseInput();
         // Puis si on clique gauche, boum, le pathfinding
@@ -100,7 +117,6 @@ public class Tile implements Serializable {
             TileAndCases.lastExploredCase.hide();
             exploring = false;
         }
-        // On gère la rotation
     }
 
 
@@ -152,7 +168,7 @@ public class Tile implements Serializable {
         // On récupère la coordonée d'entrée
     }
 
-    public void load() { // Obligatoire pour la serialization
+    void load() { // Obligatoire pour la serialization
         sprite = new BaseActor(new Texture(path)); // On se charge soit même
         sprite.setOrigin(tileSize / 2, tileSize / 2);
         mainScreen.getMainStage().addActor(sprite);
@@ -165,14 +181,6 @@ public class Tile implements Serializable {
         updateAll();
     }
 
-    public void draw() {
-        sprite.draw(batch, 1);
-        for (Case[] ligne : caseList) {
-            for (Case tempCase : ligne)
-                tempCase.draw();
-        }
-    }
-
     public void showAll(Batch batch) { // Truc de déboguage
         for (Case[] ligne : caseList) {
             for (Case tempCase : ligne)
@@ -180,8 +188,9 @@ public class Tile implements Serializable {
         }
     }
 
-    public int[] getCaseCoordinates(Case self) {
+    int[] getCaseCoordinates(Case self) {
         // C'est juste pour récupérer le x,y d'une case parce que flemme de le faire autrement
+        // Sous entendu, x et y valent 0,1,2 ou 3, c'est leur position dans caseList
         int[] xy = {0, 0};
         for (Case[] ligne : caseList) {
             xy[0] = 0;
@@ -195,6 +204,7 @@ public class Tile implements Serializable {
     }
 
     public Case getCase(Vector2 mouseInput) {
+        // Pour récupérer la case située à une certaine coordonée
         int tempX = (int) Math.floor((mouseInput.x - x - offset) / caseSize);
         int tempY = (int) Math.floor((mouseInput.y - y - offset) / caseSize);
         int buffer;
@@ -213,13 +223,12 @@ public class Tile implements Serializable {
             tempY = buffer;
         }
         return caseList[tempY][tempX];
-        // C'est du calcul simple, si tu comprends pas retourne en maternelle
     }
 
 
     public void rotate(int angle) {
         rotation += angle;
-        rotation = (rotation % 4 + 4) % 4; // Java et les modulos...
+        rotation = Functions.modulo(rotation, 4);
         sprite.rotateBy(angle * 90); // Dans le sens trigo
         updateAllCases();
     }
@@ -255,9 +264,11 @@ public class Tile implements Serializable {
         if (number == 16) Case.makeShortcut(caseList[1][2], caseList[1][3]);
         if (number == 19) Case.makeShortcut(caseList[1][2], caseList[1][3]);
         if (number == 24) Case.makeShortcut(caseList[0][2], caseList[0][3]);
+
+        // C'est du bon gros nesting mais bon, ça fonctionne, et c'est """compact"""
     }
 
-    public void dispose() { // fonction dispose classique
+    public void dispose() {
         sprite.remove();
         for (Case[] ligne : caseList) {
             for (Case tempCase : ligne)

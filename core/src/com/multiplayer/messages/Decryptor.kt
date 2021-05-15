@@ -3,14 +3,14 @@ package com.multiplayer.messages
 
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.scenes.scene2d.actions.Actions
-import com.menu.MainMenu
+import com.screens.menu.MainMenu
 import com.multiplayer.messages.pawn.PlacePawn
 import com.multiplayer.messages.tile.GonnaMoveTile
 import com.multiplayer.messages.tile.PlaceTile
-import com.tiles.Player
-import com.tiles.Queue
+import com.screens.game.board.Player
+import com.screens.game.board.Queue
 import com.utils.Functions
-import com.utils.GameScreens.*
+import com.screens.GameScreens.*
 import com.utils.Multiplayer
 import com.utils.Multiplayer.*
 import com.utils.TileAndCases
@@ -20,7 +20,7 @@ class Decryptor {
     fun decryptMessage(tempMessage: String, isServer: Boolean) {
         val suffix = if (isServer) "Server" else "Client"
         val message = mapper.readValue(tempMessage, Message::class.java)
-        println(suffix + " : " + message.getMessage())
+        println(suffix + " : " + message.message)
         when (message.action) {
             "answer" -> {
                 courrier.answer = message.target.toBoolean()
@@ -42,7 +42,8 @@ class Decryptor {
                     }
                     "Queue" -> {
                         println("$suffix: Getting a Queue")
-                        if (TileAndCases.queue==null) TileAndCases.queue = Queue(message.payload)
+                        if (TileAndCases.queue==null) TileAndCases.queue =
+                            Queue(message.payload)
                         println("Blocking in Decryptor Queue")
                         cyclicBarrier.await()
                         println("Unblocking in Decryptor Queue")
@@ -93,7 +94,7 @@ class Decryptor {
                 val tempPawn = Functions.getPawn(message.target)
                 if (isServer) {
                     for (tempClient in clientList.clientList) {
-                        if (!tempClient.id.equals(message.sender)) {
+                        if (tempClient.id != message.sender) {
                             tempClient.sendMessage(message)
                         }
                     }
@@ -124,7 +125,7 @@ class Decryptor {
                 if (tempCase?.pawn == null) {
                     clientList.getClient(message.sender).sendMessage(Answer(true))
                     for (tempClient in clientList.clientList) {
-                        if (!tempClient.id.equals(message.sender)) {
+                        if (tempClient.id != message.sender) {
                             tempClient.sendMessage(PlacePawn(message.target))
                         }
                     }
@@ -134,7 +135,7 @@ class Decryptor {
                 if (true) {
                     clientList.getClient(message.sender).sendMessage(Answer(true))
                     for (tempClient in clientList.clientList) {
-                        if (!tempClient.id.equals(message.sender)) {
+                        if (tempClient.id != message.sender) {
                             tempClient.sendMessage(GonnaMoveTile(message.sender))
                         }
                     }
@@ -149,7 +150,7 @@ class Decryptor {
             "movingTile" -> {
                 if (isServer) {
                     for (tempClient in clientList.clientList) {
-                        if (!tempClient.id.equals(message.sender)) {
+                        if (tempClient.id != message.sender) {
                             tempClient.sendMessage(message)
                         }
                     }
@@ -168,7 +169,7 @@ class Decryptor {
             "rotateTile" -> {
                 if (isServer) {
                     for (tempClient in clientList.clientList) {
-                        if (!tempClient.id.equals(message.sender)) {
+                        if (tempClient.id != message.sender) {
                             tempClient.sendMessage(message)
                         }
                     }
@@ -182,7 +183,7 @@ class Decryptor {
                 if (true) { // Je vois pas trop ce qu'il faut demander mais bon
                     clientList.getClient(message.sender).sendMessage(Answer(true))
                     for (tempClient in clientList.clientList) {
-                        if (!tempClient.id.equals(message.sender)) {
+                        if (tempClient.id != message.sender) {
                             tempClient.sendMessage(PlaceTile(message.sender, message.target))
                         }
                     }
@@ -191,7 +192,7 @@ class Decryptor {
             "quitting" -> {
                 if (isServer) {
                     for (tempClient in clientList.clientList) {
-                        if (!tempClient.id.equals(message.sender)) {
+                        if (tempClient.id != message.sender) {
                             tempClient.sendMessage(TextMessage("quitting",message.sender))
                         }
                     }
@@ -203,6 +204,9 @@ class Decryptor {
             }
             "stopping" -> {
                 game.setScreen(MainMenu(game))
+                // Je suis mort de rire
+                // IntelliJ pense que c'est équivalent à game.screen = MainMenu(game)
+                // BWAHAHAHAHAHA
                 courrier.killThread()
             }
             "changePseudo" -> {
@@ -210,7 +214,7 @@ class Decryptor {
                     val tempClient = clientList.getClient(message.sender)
                     tempClient.id = message.target
                     for (tempClient in clientList.clientList) {
-                        if (!tempClient.id.equals(message.sender)) {
+                        if (tempClient.id != message.sender) {
                             println(tempClient.id)
                             tempClient.sendMessage(message)
                         }
@@ -228,7 +232,7 @@ class Decryptor {
             "changeAvatar" -> {
                 if (isServer) {
                     for (tempClient in clientList.clientList) {
-                        if (!tempClient.id.equals(message.sender)) {
+                        if (tempClient.id != message.sender) {
                             tempClient.sendMessage(message)
                         }
                     }
@@ -237,7 +241,7 @@ class Decryptor {
                     for (player: Player in playerList) {
                         if (player.pseudo == message.sender) {
                             player.avatarName = message.target
-                            lobbyScreen.setToUpdateAvatar(message.sender);
+                            lobbyScreen.setToUpdateAvatar(message.sender)
                         }
                     }
                 }

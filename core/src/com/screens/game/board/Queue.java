@@ -1,17 +1,16 @@
-package com.tiles;
+package com.screens.game.board;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
-import com.menu.BaseActor;
 import com.multiplayer.messages.tile.AskPlaceTile;
 import com.multiplayer.messages.tile.AskTakeTile;
 import com.multiplayer.messages.tile.MovingTile;
 import com.multiplayer.messages.tile.RotateTile;
+import com.screens.game.BaseActor;
 import com.utils.Functions;
-import com.utils.GameScreens;
 import com.utils.Multiplayer;
 
 import java.io.Serializable;
@@ -19,20 +18,19 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 import static com.utils.Functions.findCase;
-import static com.utils.GameScreens.mainScreen;
-import static com.utils.MainConstants.batch;
+import static com.screens.GameScreens.mainScreen;
 import static com.utils.TileAndCases.*;
 
 public class Queue implements Serializable {
     // Structure classique pour une pile
     private Queue tail;
-    public Tile head;
-    public int numberTilesLeft;
+    Tile head;
+    private int numberTilesLeft;
     public String textTileLeft;
     private void updateText() {
         if (numberTilesLeft < 0) textTileLeft = "Tuiles restantes: " + numberTilesLeft;
         try {
-            mainScreen.gameInterface.setText(textTileLeft);
+            mainScreen.getInterface().setText(textTileLeft);
         } catch (NullPointerException e) {
         }
     }
@@ -50,7 +48,7 @@ public class Queue implements Serializable {
 
     // Booléens pour savoir si on est en train de placer la tuile, et si la liste est vide
     private boolean isMovable = false;
-    public boolean isEmpty = false;
+    boolean isEmpty = false;
 
     // Booléen pour savoir si la prochaine carte est visible ou non
     private boolean isHidden = true;
@@ -58,6 +56,7 @@ public class Queue implements Serializable {
 
     private int numberRevealsDown = 0;
     public void setNumberRevealsDown(int i) {
+        // Utilisé pour du déboguage par le passé
         numberRevealsDown = i;
     }
 
@@ -68,7 +67,7 @@ public class Queue implements Serializable {
     }
 
 
-    public void setCoordinates(float x, float y) {
+    void setCoordinates(float x, float y) {
         this.x = x;
         this.y = y;
         //updateCoordinates();
@@ -95,7 +94,7 @@ public class Queue implements Serializable {
         head = toAdd;
     }
 
-    public void remove() {
+    void remove() {
         toRemove = false;
         numberTilesLeft -=1;
         // On enlève la tête, on devient la queue
@@ -164,14 +163,10 @@ public class Queue implements Serializable {
         else return head.number + " " + tail.serialize();
     }
 
-    public void load() { // Serialization
-        hidden = new BaseActor();
-        hidden.setTexture(new Texture("tuiles/hiddenOrange.png"));
+    void load() { // Serialization
+        hidden = new BaseActor(new Texture("tuiles/hiddenOrange.png"));
         hidden.setOrigin(size/2,size/2);
         mainScreen.getUiStage().addActor(hidden);
-        shown = new BaseActor();
-        shown.setOrigin(size/2,size/2);
-        mainScreen.getUiStage().addActor(shown);
         loadSprite();
         updateSpriteSize();
         updateCoordinates();
@@ -182,17 +177,14 @@ public class Queue implements Serializable {
         head.load();
         sprite = head.getSprite();
         sprite.setVisible(false);
-        shown.setTexture(sprite.region.getTexture());
+        shown = new BaseActor(sprite.getTexture());
+        shown.setOrigin(size/2,size/2);
+        mainScreen.getUiStage().addActor(shown);
         if (isHidden) shown.setVisible(false);
         shown.setRotation(0);
     }
 
-    public void draw() {
-        if (isHidden) hidden.draw(batch, 1);
-        else sprite.draw(batch, 1);
-    }
-
-    public void place(Vector2 mousePosition) {
+    private void place(Vector2 mousePosition) {
         sprite.toBack();
         head.place();
         tileList.add(head); // On pose la tuile
@@ -204,7 +196,7 @@ public class Queue implements Serializable {
     }
     public boolean toRemove = false;
 
-    public void hide() {
+    void hide() {
         isHidden = true;
         hidden.setVisible(true);
         shown.setVisible(false);
@@ -214,7 +206,7 @@ public class Queue implements Serializable {
         }
     }
 
-    public void reveal() {
+    void reveal() {
         System.out.println("Revealing Queue");
         if (!isHidden) {
             numberRevealsDown ++;
@@ -223,6 +215,8 @@ public class Queue implements Serializable {
         hidden.setVisible(false);
         shown.setVisible(true);
     }
+
+    // De manière assez amusante, seule la pile appelle hide, alors que reveal est appellé ailleurs
 
     public void makingMovable() {
         // Le genre de méthode qu'on doit créer pour gérer le multijoueur plus facilement
@@ -285,11 +279,22 @@ public class Queue implements Serializable {
     private int count = 2;
     public void handleInput() {
         // Uh, this is going to be fun
+        // Edit genre trois (3) mois après avoir écrit ce code ? Sans doute beaucoup plus
+        // Hum C'était beaucoup, beaucoup plus simple que ce qui te restait à faire, jeune Hadrien
+        // Et ouais, le placement des tuiles c'était drôle, mais faire le multijoueur, ça l'était encore plus
         Vector2 mousePositionStatic = Functions.mouseInput((OrthographicCamera) shown.getStage().getCamera());
         Vector2 mousePosition = Functions.mouseInput();
         // Je le sauvegarde parce qu'on va le modifier
+        // Et forcément il faut deux vecteurs différents, parce qu'il nous faut les coordonées
+        // dans le référentiel du HUD et dans le reférentiel du plateau
         if (!isEmpty) { // On fait rien si elle est vide
-            if (isMovable) { // Truc classique pour avoir deux comportements sur un seul objet
+            if (isMovable) {
+                // Truc classique pour avoir deux comportements sur un seul objet
+                // Edit: j'ai écrit ce code peu après avoir démarré LibGDX
+                // Et en fait c'est pas du tout un truc classique, enfin je disais ça parce que
+                // c'était une solution simple à laquelle on peut facilement penser
+                // Cependant, j'ai pas trouvé de meilleur solution depuis, et s'il y en a une, je ne sais pas
+                // Si elle vaut le coup de remplacer celle là
                 mousePosition.sub(tileSize / 2, tileSize / 2); // Pour que le sprite soit centré sur la souris
                 setSpritePosition(mousePosition.x,mousePosition.y); // On suit la souris
                 if (count == 2) {

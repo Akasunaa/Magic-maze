@@ -1,4 +1,4 @@
-package com.tiles;
+package com.screens.game.hud;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -9,6 +9,11 @@ import com.badlogic.gdx.math.Vector3;
 import static com.utils.Functions.mouseInput;
 import static com.utils.MainConstants.camera;
 public class MouseWheelChecker implements InputProcessor {
+
+    /*
+    Cette classe est uniquement là pour que l'on puisse déplacer le plateau en cliquant
+    et glissant avec la molette du milieu, et pour pouvoir zoomer
+     */
 
     public MouseWheelChecker() {}
 
@@ -31,7 +36,6 @@ public class MouseWheelChecker implements InputProcessor {
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
         if (Gdx.input.isButtonPressed(Input.Buttons.MIDDLE)) {
             middleLastClick = new Vector3(mouseInput(),0);
-            cameraLastPosition = camera.position.cpy();
             System.out.println(middleLastClick);
         }
         return false;
@@ -43,14 +47,13 @@ public class MouseWheelChecker implements InputProcessor {
     }
 
     Vector3 middleLastClick;
-    Vector3 cameraLastPosition;
 
     @Override
     public boolean touchDragged(int screenX, int screenY, int pointer) {
         if (Gdx.input.isButtonPressed(Input.Buttons.MIDDLE)) {
             Vector3 delta = new Vector3(mouseInput(),0).sub(middleLastClick);
             camera.position.sub(delta);
-            System.out.println(camera.position);
+//            System.out.println(camera.position);
 
         }
         return false;

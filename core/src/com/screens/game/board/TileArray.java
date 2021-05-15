@@ -1,4 +1,4 @@
-package com.tiles;
+package com.screens.game.board;
 import static com.utils.CaseCorrespondance.*;
 import static com.utils.Colors.*;
 

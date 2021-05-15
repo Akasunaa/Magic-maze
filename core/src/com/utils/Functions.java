@@ -7,9 +7,9 @@ import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.multiplayer.messages.TextMessage;
-import com.tiles.Case;
-import com.tiles.Pawn;
-import com.tiles.Tile;
+import com.screens.game.board.Case;
+import com.screens.game.board.Pawn;
+import com.screens.game.board.Tile;
 
 import static com.utils.Colors.getColor;
 import static com.utils.MainConstants.camera;
@@ -97,7 +97,7 @@ public class Functions {
                 try {
                     return tile.getCase(Functions.mouseInput());
                 } catch (ArrayIndexOutOfBoundsException e) {
-                    System.out.println("Clicked border of Tile n°" + tile.number + " in Pawn.findCase");
+                    System.out.println("Clicked border of Tile in Pawn.findCase");
                 }
             }
         }
@@ -111,7 +111,7 @@ public class Functions {
                 try {
                     return tile.getCase(coordinates);
                 } catch (ArrayIndexOutOfBoundsException e) {
-                    System.out.println("Clicked border of Tile n°" + tile.number + " in Pawn.findCase");
+                    System.out.println("Clicked border of Tile in Pawn.findCase");
                 }
             }
         }

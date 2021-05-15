@@ -3,7 +3,7 @@ package com.utils;
 import com.multiplayer.*;
 import com.multiplayer.messages.Courrier;
 import com.multiplayer.messages.Decryptor;
-import com.tiles.Player;
+import com.screens.game.board.Player;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.net.InetAddress;
 import java.net.UnknownHostException;

@@ -2,7 +2,7 @@ package com.multiplayer.messages.pawn;
 
 import com.badlogic.gdx.math.Vector2;
 import com.multiplayer.messages.Message;
-import com.tiles.Pawn;
+import com.screens.game.board.Pawn;
 import com.utils.Colors;
 
 public class MovingPawn extends Message {

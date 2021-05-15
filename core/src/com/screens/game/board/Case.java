@@ -1,8 +1,8 @@
-package com.tiles;
+package com.screens.game.board;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
-import com.menu.BaseActor;
+import com.screens.game.BaseActor;
 import com.utils.TileAndCases;
 
 import java.io.Serializable;
@@ -10,7 +10,7 @@ import java.io.Serializable;
 import static com.utils.CaseCorrespondance.*;
 import static com.utils.Directions.*;
 import static com.utils.Functions.modulo;
-import static com.utils.GameScreens.mainScreen;
+import static com.screens.GameScreens.mainScreen;
 import static com.utils.MainConstants.batch;
 import static com.utils.TileAndCases.caseSize;
 import static com.utils.TileAndCases.offset;
@@ -18,23 +18,24 @@ import static com.utils.TileAndCases.offset;
 public class Case implements Serializable {
     public transient Case[] caseList = new Case[4];
 
-    public int x;
-    public int y;
+    int x;
+    int y;
 
-    public boolean isAccessible; // Je suis même pas sûr qu'on l'utilise ça
-    public boolean hasPortal;
-    public boolean hasHourglass;
-    public boolean isExit;
-    public boolean isEntrance;
-    public boolean hasWeapon;
-    public boolean isFinalExit;
+    boolean isAccessible; // Je suis même pas sûr qu'on l'utilise ça
+    boolean hasPortal;
+    boolean hasHourglass;
+    boolean isExit;
+    boolean isEntrance;
+    boolean hasWeapon;
+    boolean isFinalExit;
     public Pawn pawn = null;
 
-    public boolean isValid = false; // Utiler pour le déplacement du pion
+
+    boolean isValid = false; // Utile pour le déplacement du pion
     private boolean isShowed = false;
-    public transient Case shortcut;
-    public transient Case elevator;
-    public int color;
+    private transient Case shortcut;
+    private transient Case elevator;
+    int color;
     private transient Tile tile; // Il faut éviter de faire un StackOverFlowError lors de la conversion en Json ou de la serialization
 
     private transient BaseActor greenDot;
@@ -52,7 +53,7 @@ public class Case implements Serializable {
         isFinalExit = number / 10 == finalExit / 10;
     }
 
-    public void getNeighbours(int[][] horizontalWalls, int[][] verticalWalls) {
+    void getNeighbours(int[][] horizontalWalls, int[][] verticalWalls) {
         x = tile.getCaseCoordinates(this)[0];
         y = tile.getCaseCoordinates(this)[1];
         // Voisin en haut
@@ -69,25 +70,23 @@ public class Case implements Serializable {
         else caseList[3] = tile.caseList[y][x - 1];
     }
 
-    public void load(Tile tile, Case[] caseList) {// Comme d'habitude, obligatoire pour la sérialization
+    void load(Tile tile, Case[] caseList) {// Comme d'habitude, obligatoire pour la sérialisation
         this.tile = tile;
         this.caseList = caseList;
-        greenDot = new BaseActor();
-        greenDot.setTexture(new Texture("tuiles/greenDot.png"));
+        greenDot = new BaseActor(new Texture("tuiles/greenDot.png"));
         greenDot.setVisible(false);
-        redDot = new BaseActor();
-        redDot.setTexture(new Texture("tuiles/redDot.png"));
+        redDot = new BaseActor(new Texture("tuiles/redDot.png"));
         redDot.setVisible(false);
         setSpriteCoordinates();
         mainScreen.getMainStage().addActor(greenDot);
         mainScreen.getMainStage().addActor(redDot);
     }
 
-    public float getX(int x) {
+    float getX(int x) {
         return tile.x + offset + (x * caseSize);
     }
 
-    public float getY(int y) {
+    float getY(int y) {
         return tile.y + offset + (y * caseSize);
     }
 
@@ -100,12 +99,12 @@ public class Case implements Serializable {
         redDot.setY(tempY);
     }
 
-    public void setSize(float size) {
+    void setSize(float size) {
         greenDot.setSize(size, size);
         redDot.setSize(size, size);
     }
 
-    public void updateCoordinates() {
+    void updateCoordinates() {
         int[] xy = tile.getCaseCoordinates(this);
         if (tile.rotation == 0) {
             x = xy[0];
@@ -126,14 +125,14 @@ public class Case implements Serializable {
         setSpriteCoordinates();
     }
 
-    public void show() {
+    void show() {
         isShowed = true;
         isValid = true;
         redDot.setVisible(isShowed);
         greenDot.setVisible(false);
     }
 
-    public void hide() {
+    void hide() {
         isShowed = false;
         isValid = false;
         redDot.setVisible(isShowed);
@@ -141,17 +140,17 @@ public class Case implements Serializable {
 
     }
 
-    public void explored() {
+    void explored() {
         isValid = true;
         greenDot.setVisible(!isShowed);
     }
 
-    public void unexplored() {
+    void unexplored() {
         isValid = false;
         greenDot.setVisible(isValid);
     }
 
-    public void used(){
+    void used(){
         Texture t = new Texture(Gdx.files.internal("tuiles/used.png"));
         BaseActor cross = new BaseActor(t);
         cross.setOrigin((int) (cross.getWidth()/2));
@@ -159,14 +158,14 @@ public class Case implements Serializable {
         mainScreen.getMainStage().addActor(cross);
     }
 
-    public void draw() {
+    void draw() {
         if (isShowed) redDot.draw(batch, 1);
         else if (isValid) greenDot.draw(batch, 1);
     }
 
     private boolean seen = false;
 
-    public void explore(Player player) {
+    void explore(Player player) {
         int index; // On utilise index pour éviter de devoir réécrire les modulos trop de fois
         Player tempPlayer = player.rotate(tile.rotation);
         if (!seen && isAccessible && (player.pawn == pawn || pawn == null)) {
@@ -219,7 +218,7 @@ public class Case implements Serializable {
         }
     }
 
-    public void revert(Player player) {
+    void revert(Player player) {
         int index; // On utilise index pour éviter de devoir réécrire les modulos trop de fois
         Player tempPlayer = player.rotate(tile.rotation);
         if (seen) {
@@ -280,17 +279,17 @@ public class Case implements Serializable {
     }
 
     // Je les fait en statique parce que c'est plus pratique
-    public static void makeElevator(Case case1, Case case2) {
+    static void makeElevator(Case case1, Case case2) {
         case1.elevator = case2;
         case2.elevator = case1;
     }
 
-    public static void makeShortcut(Case case1, Case case2) {
+    static void makeShortcut(Case case1, Case case2) {
         case1.shortcut = case2;
         case2.shortcut = case1;
     }
 
-    public static void link(Case case1, Case case2, int direction) {
+    static void link(Case case1, Case case2, int direction) {
         // Direction indique la direction de la case 2 par rapport à la case 1
         // Exemple: la case 2 est au nord de la case 1
         // alors direction = 2
@@ -304,7 +303,7 @@ public class Case implements Serializable {
             case2.pawn.unlock();
     }
 
-    public void dispose() {
+    void dispose() {
         redDot.remove();
         greenDot.remove();
     }

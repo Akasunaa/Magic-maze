@@ -1,4 +1,4 @@
-package com.menu;
+package com.screens.menu;
 
 import com.badlogic.gdx.Gdx;
 //import com.badlogic.gdx.ai.btree.Task;
@@ -15,20 +15,23 @@ import com.badlogic.gdx.utils.Timer;
 
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
+import com.screens.BaseScreen;
+import com.screens.MagicGame;
 import com.multiplayer.Client;
 import com.multiplayer.messages.Courrier;
 import com.multiplayer.ServerMaker;
 import com.multiplayer.ServerNotReachedException;
 import com.multiplayer.messages.PayloadQueue;
-import com.tiles.MainScreen;
-import com.tiles.Player;
-import com.tiles.Queue;
+import com.screens.game.board.GameScreen;
+import com.screens.game.board.Player;
+import com.screens.game.board.Queue;
+import com.screens.game.BaseActor;
 import com.utils.Functions;
 import com.utils.Multiplayer;
 
 import java.util.ArrayList;
 
-import static com.utils.GameScreens.mainScreen;
+import static com.screens.GameScreens.mainScreen;
 import static com.utils.Multiplayer.playerList;
 import static com.utils.TileAndCases.queue;
 
@@ -52,7 +55,7 @@ public class LobbyScreen extends BaseScreen {
     public boolean hasPassedScreen = false;
 
     public void passToGameScreen() {
-        mainScreen = new MainScreen(game);
+        mainScreen = new GameScreen(game);
         mainScreen.load(audioVolume);
         game.setScreen( mainScreen );
         Multiplayer.serverMaker.quitLobby();
@@ -62,12 +65,10 @@ public class LobbyScreen extends BaseScreen {
         // pour le son
 
 
-        final BaseActor background = new BaseActor();
-        background.setTexture(new Texture(Gdx.files.internal("MenuAssets/BlurryMallBackground.jpg")));
+        final BaseActor background = new BaseActor(new Texture(Gdx.files.internal("MenuAssets/BlurryMallBackground.jpg")));
         uiStage.addActor(background);
 
-        final BaseActor transparentForeground = new BaseActor();
-        transparentForeground.setTexture(new Texture(Gdx.files.internal("MenuAssets/Black.gif")));
+        final BaseActor transparentForeground = new BaseActor(new Texture(Gdx.files.internal("MenuAssets/Black.gif")));
         transparentForeground.setSize(1920, 1080);
         transparentForeground.setColor(0, 0, 0, 0);
         transparentForeground.setTouchable(Touchable.disabled);
