@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 import com.menu.BaseActor;
 import com.utils.Functions;
+import com.utils.GameScreens;
 import com.utils.Multiplayer;
 
 import java.io.Serializable;
@@ -25,7 +26,12 @@ public class Queue implements Serializable {
     public int numberTilesLeft;
     public String textTileLeft;
     private void updateText() {
-        textTileLeft = "Tuiles restantes: " + numberTilesLeft;
+        if (numberTilesLeft < 0) textTileLeft = "Tuiles restantes: " + numberTilesLeft;
+        try {
+            mainScreen.gameInterface.setText(textTileLeft);
+        } catch (NullPointerException e) {
+
+        }
     }
 
     // Le sprite sera celui de la tuile en haut de la pile
@@ -88,23 +94,27 @@ public class Queue implements Serializable {
 
     public void remove() {
         toRemove = false;
+        numberTilesLeft -=1;
         // On enlève la tête, on devient la queue
         if (numberTilesLeft > 0) {
             this.head = tail.head;
             this.tail = tail.tail;
-            numberTilesLeft -=1;
             updateText();
             // Et on recharge le sprite
             loadSprite();
+            updateSpriteSize();
+            updateCoordinates();
         } else { // S'il n'y a pas de queue, c'est qu'elle est vide
             System.out.println("File vide !");
-            sprite = new BaseActor();
-            sprite.setTexture(new Texture("tuiles/blueDot.png"));
+            hidden.setTexture(new Texture("tuiles/blueDot.png"));
+            hidden.setVisible(false);
+            shown.setVisible(false);
             isEmpty = true; // On fait plus rien pour le futur
             isHidden = false;
+            textTileLeft = "stop";
         }
-        updateSpriteSize();
-        updateCoordinates();
+//        updateSpriteSize();
+//        updateCoordinates();
     }
 
     private Queue copy() {

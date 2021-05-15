@@ -398,9 +398,12 @@ public class GameInterface extends BaseScreen {
 
     }
 
-    public void update(float dt) {
-        textTilesLeft.setText(queue.textTileLeft);
+    public void setText(String text) {
+        if (text.equals("stop")) textTilesLeft.remove();
+        else textTilesLeft.setText(text);
+    }
 
+    public void update(float dt) {
         Clock.clock.update(game);
     }
 }
