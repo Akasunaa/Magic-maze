@@ -8,7 +8,7 @@ import com.menu.MagicGame;
 public class Clock extends Label {
     public static Clock clock;
     float time;
-    float baseTime = 90f;
+    float baseTime = 900f;
 
     @Override
     public void act(float delta) {

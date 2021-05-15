@@ -43,12 +43,13 @@ public class MainScreen extends BaseScreen {
     Label coordMouse;
     Label numberCase;
 
-    // Le pion
-    Pawn greenPawn;
-    boolean pawnTime = false;
-
-
     GameInterface gameInterface;
+
+    private ArrayList<Pawn> pawnToRemove = new ArrayList<>();
+    public void removePawn(Pawn pawn) {
+        pawnToRemove.add(pawn);
+    }
+
 
     public String stringMousePosition(OrthographicCamera camera) {
         return "x = " + (int) mouseInput(camera).x + "; y = " + (int) mouseInput(camera).y;
@@ -148,38 +149,33 @@ public class MainScreen extends BaseScreen {
             if (pawn.hasTarget) pawn.interpolate(0.3f, Interpolation.bounce);
             pawn.handleInput(Multiplayer.me);
         }
+        for (Pawn pawn : pawnToRemove) {
+            pawnList.remove(pawn);
+        }
         if (queue.toRemove) queue.remove();
         batch.end();
 
         if (!isInPhaseB) {
-            // Si on est encore en phase A
-            int numberOfPawnReady = 0;
-            for (Pawn pawn : pawnList) {
-                if (pawn.hasWeapon) {
-                    numberOfPawnReady += 1;
-                }
-            }
-            // On check le nombre de pions qui ont leur armes
-
-            if (numberOfPawnReady == 4) {
+            // Avant il y avait des choses différentes ici, d'où le double if
+            // Je le garde pour le else
+            if (numberWeaponsRetrieved == 4) {
                 gameInterface.instrumental.dispose();
                 instrumental = Gdx.audio.newMusic(Gdx.files.internal("Music&Sound/Musique_jeu_principal_phase_B.mp3"));
                 instrumental.setLooping(true);
+                instrumental.setVolume(audioVolume);
                 instrumental.play();
                 isInPhaseB = true;
+                // S'ils ont tous leurs armes, on commence la phase B
+                for (Pawn pawn : pawnList) {
+                    pawn.unlock();
+                    // Parce que les pions se bloquent lorsqu'ils récupérent leur arme
+                }
             }
-            // S'ils ont tous leurs armes, on commence la phase B
         }
         else {
             // Si on est en phase B
-            int numberOfPawnOnExit = 0;
-            for (Pawn pawn: pawnList) {
-                if (pawn.onExit) {
-                    numberOfPawnOnExit ++;
-                }
-            }
-            // On check si les personnages sont sur la sortie finale
-            if (numberOfPawnOnExit == 4) {
+            // Once again, je pourrais faire ça de manière plus propre mais meh
+            if (numberPawnsOut == 4) {
                 //TODO Le Jeu est gagné
             }
         }

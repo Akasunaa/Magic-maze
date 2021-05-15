@@ -27,6 +27,8 @@ public class TileAndCases {
     public static Case lastExploredCase;
 
     public static boolean isInPhaseB = false;
+    public static int numberWeaponsRetrieved = 0;
+    public static int numberPawnsOut = 0;
 
     public static Matrix3 newBase = new Matrix3(new float[]{tileSize, -caseSize, 0f, caseSize, tileSize, 0f, 0f, 0f, 1f});
     public static Matrix3 newBaseInvert = new Matrix3(newBase).inv();

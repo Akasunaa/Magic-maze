@@ -6,10 +6,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.Vector2;
 import com.menu.BaseActor;
-import com.utils.Clock;
-import com.utils.Colors;
-import com.utils.Functions;
-import com.utils.Multiplayer;
+import com.utils.*;
 
 import java.io.Serializable;
 
@@ -22,10 +19,10 @@ public class Pawn implements Serializable {
     private final int color; // La couleur du pion
     public Player player = null;
 
-    public boolean hasWeapon = false;
-    //Booléen qui indique si le pion a récupéré son arme
-    public boolean onExit = false;
-    //Booléen qui indique si le pion est sur la sortie
+//    public boolean hasWeapon = false;
+//    //Booléen qui indique si le pion a récupéré son arme
+//    public boolean onExit = false;
+//    //Booléen qui indique si le pion est sur la sortie
 
     public int getColor() {
         return color;
@@ -63,9 +60,18 @@ public class Pawn implements Serializable {
             setCase.used();
         }
 
-        hasWeapon = setCase.hasWeapon && setCase.color == color;
-        onExit = setCase.isFinalExit;
-        // Si on fait plus de scénarii, il faudra rajouter le fait qu'il faut que ce soit de la bonne couleur
+        if (setCase.hasWeapon && setCase.color == color) {
+            numberWeaponsRetrieved ++;
+            isLocked = true;
+        }
+
+        if (setCase.isFinalExit) {        // Si on fait plus de scénarii, il faudra rajouter le fait qu'il faut que ce soit de la bonne couleur
+            numberPawnsOut ++;
+            pawnList.remove(this);
+            setCase.pawn = null;
+            dispose();
+        }
+
     }
 
     public void setFirstCase() {
@@ -154,7 +160,8 @@ public class Pawn implements Serializable {
     public boolean canPlaceHere(Vector2 coordinates, Player player) {
         try {
             Case nextCase = findCase(coordinates); // Est-on sur une case ?
-            if (!(nextCase == null) && nextCase.isValid && checkServerForPlaceable()) {// Si elle existe et est non nulle
+            if ((!(nextCase == null) && nextCase.isValid && checkServerForPlaceable()) // Si elle existe et est non nulle, et qu'on peut la placer
+                || nextCase.equals(player.pawn.setCase)) { // Pour checker le cas où on veut la replacer là où elle était de base i guess
                 setCase.revert(player); // On annule le pathfinding... avec un autre pathfinding
                 setCase.hide(); // On cache la case de départ
                 hasExplored = false; // On réinitialise les variables booléennes

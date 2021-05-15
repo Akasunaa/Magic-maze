@@ -22,10 +22,10 @@ public class Queue implements Serializable {
     // Structure classique pour une pile
     private Queue tail;
     public Tile head;
-    public int length;
+    public int numberTilesLeft;
     public String textTileLeft;
     private void updateText() {
-        textTileLeft = "Tuiles restantes: " + length;
+        textTileLeft = "Tuiles restantes: " + numberTilesLeft;
     }
 
     // Le sprite sera celui de la tuile en haut de la pile
@@ -89,14 +89,14 @@ public class Queue implements Serializable {
     public void remove() {
         toRemove = false;
         // On enlève la tête, on devient la queue
-        try {
+        if (numberTilesLeft > 0) {
             this.head = tail.head;
             this.tail = tail.tail;
-            length -=1;
+            numberTilesLeft -=1;
             updateText();
             // Et on recharge le sprite
             loadSprite();
-        } catch (NullPointerException e) { // S'il n'y a pas de queue, c'est qu'elle est vide
+        } else { // S'il n'y a pas de queue, c'est qu'elle est vide
             System.out.println("File vide !");
             sprite = new BaseActor();
             sprite.setTexture(new Texture("tuiles/blueDot.png"));
@@ -116,9 +116,9 @@ public class Queue implements Serializable {
         this.head = head;
         this.tail = tail;
         if (tail == null) {
-            length = 1;
+            numberTilesLeft = 0;
         }
-        else length = 1 + tail.length;
+        else numberTilesLeft = 1 + tail.numberTilesLeft;
         updateText();
     }
 
@@ -130,7 +130,7 @@ public class Queue implements Serializable {
         tail = null; // Utile ?
         for (Tile tile : tempList) add(tile);
         //add(new Tile(1)); // On commence toujours par la case numéro 1 I guess
-        length = number-1;
+        numberTilesLeft = number-1;
         updateText();
     }
 
@@ -140,7 +140,7 @@ public class Queue implements Serializable {
         for (int i = args.length-1; i >=0; i--) {
             add(new Tile(Integer.parseInt(args[i])));
         }
-        length = args.length;
+        numberTilesLeft = args.length;
         updateText();
     }
 
