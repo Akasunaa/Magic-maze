@@ -6,6 +6,10 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 import com.menu.BaseActor;
+import com.multiplayer.messages.tile.AskPlaceTile;
+import com.multiplayer.messages.tile.AskTakeTile;
+import com.multiplayer.messages.tile.MovingTile;
+import com.multiplayer.messages.tile.RotateTile;
 import com.utils.Functions;
 import com.utils.GameScreens;
 import com.utils.Multiplayer;
@@ -30,7 +34,6 @@ public class Queue implements Serializable {
         try {
             mainScreen.gameInterface.setText(textTileLeft);
         } catch (NullPointerException e) {
-
         }
     }
 
@@ -258,7 +261,7 @@ public class Queue implements Serializable {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        Multiplayer.courrier.sendMessage("wantToPlaceTile none");
+        Multiplayer.courrier.sendMessage(new AskPlaceTile());
         try {
             Multiplayer.cyclicBarrier.await();
             // Pour synchroniser les threads
@@ -269,7 +272,7 @@ public class Queue implements Serializable {
     }
 
     private boolean checkServerForClickable() {
-        Multiplayer.courrier.sendMessage("wantToTakeTile none");
+        Multiplayer.courrier.sendMessage(new AskTakeTile());
         try {
             Multiplayer.cyclicBarrier.await();
             // Pour synchroniser les threads
@@ -290,18 +293,18 @@ public class Queue implements Serializable {
                 mousePosition.sub(tileSize / 2, tileSize / 2); // Pour que le sprite soit centré sur la souris
                 setSpritePosition(mousePosition.x,mousePosition.y); // On suit la souris
                 if (count == 2) {
-                    Multiplayer.courrier.sendMessage("movingTile " + mousePosition.x + " " + mousePosition.y);
+                    Multiplayer.courrier.sendMessage(new MovingTile(mousePosition));
                     count = 0;
                 }
                 count ++;
                 // Gestion de la rotation
                 if (Gdx.input.isKeyJustPressed(Input.Keys.E)) {
                     rotate(1);
-                    Multiplayer.courrier.sendMessage("rotateTile 1");
+                    Multiplayer.courrier.sendMessage(new RotateTile(1));
                 }
                 if (Gdx.input.isKeyJustPressed(Input.Keys.A)) {
                     rotate(-1);
-                    Multiplayer.courrier.sendMessage("rotateTile -1");
+                    Multiplayer.courrier.sendMessage(new RotateTile(-1));
                 }
                 if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT) && checkServerForPlacable()) {// si on sélectionne un endroit
                     placeHandleAll(mousePosition);

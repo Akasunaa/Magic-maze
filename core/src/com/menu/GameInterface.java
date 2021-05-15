@@ -19,6 +19,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.multiplayer.ServerNotReachedException;
+import com.multiplayer.messages.Ping;
 import com.tiles.Pawn;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.Array;
@@ -159,7 +160,7 @@ public class GameInterface extends BaseScreen {
                     avatars[temp].addAction(Actions.sequence(
                             Actions.color(new Color(1,0,0,1),(float)0.20),
                             Actions.color(new Color(1,1,1,1),(float)0.20)));
-                    courrier.sendMessage("ping " + Multiplayer.playerList.get(temp).pseudo);
+                    courrier.sendMessage(new Ping(Multiplayer.playerList.get(temp).pseudo));
                     // What
                     // the
                     // fuck

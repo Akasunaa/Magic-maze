@@ -9,6 +9,8 @@ import com.badlogic.gdx.net.SocketHints;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.menu.BaseScreen;
 import com.menu.MainMenu;
+import com.multiplayer.messages.PayloadPlayer;
+import com.multiplayer.messages.TextMessage;
 import com.tiles.Player;
 import com.utils.Multiplayer;
 
@@ -60,6 +62,8 @@ public class ServerMaker {
             public void run() {
                 while (!isSetAndGo) {
                     catchMessage();
+                    clientList.addBackup();
+                    clientList.removeBackup();
 //                    int sleepTime = 30;
 //                    try {
 //                        Thread.sleep(sleepTime);
@@ -75,7 +79,7 @@ public class ServerMaker {
                 // Parce que certains messages se retrouvent envoyés après ceux qui devraient l'être avant...
 
                 for (Client tempClient : clientList.clientList) {
-                    tempClient.sendMessage("beginGame nothing");
+                    tempClient.sendMessage(new TextMessage("beginGame"));
                     System.out.println("Server: sent beginGame to "+ tempClient.getId());
                 }
                 // On signal que le serveur est prêt et que normalement les clients ont tout reçu
@@ -152,7 +156,7 @@ public class ServerMaker {
                         client.receiveSocket(socket);
                         // Maintenant on récupère les pseudos des joueurs et d'autres infos I guess
                         // En soit cette partie sert plus vraiment mais l'enlever serait chiant
-                        client.sendMessage("send Player");
+                        client.sendMessage(new TextMessage("send Player"));
                         socket = client.getSendingSocket(); // On prends la socket du client
                         inputStream = socket.getInputStream(); // On prends l'inputStream
                         try {
@@ -165,7 +169,7 @@ public class ServerMaker {
                         }
                         // Maintenant on sélectionne un avatar pour le joueur, et on lui fait savoir
                         client.player.avatarName = findFreeAvatar();
-                        client.sendMessage("setAvatar " + client.player.avatarName);
+                        client.sendMessage(new TextMessage("setAvatar",client.player.avatarName));
 
                         // Maintenant on renvois le joueur à tout le monde
                         // Et également on envois tout le monde au joueur
@@ -177,28 +181,21 @@ public class ServerMaker {
                         for (Client tempClient : Multiplayer.clientList.clientList) {
                             if (!tempClient.getId().equals(client.getId())) {
                                 sleep();
-                                tempClient.sendClearMessage(client.getId() + " sending Player");
+                                tempClient.sendMessage(new PayloadPlayer(client.player));
                                 sleep();
-                                tempClient.sendClearMessage(tempString);
                                 System.out.println("Server: Redistributing the Player of " + client.getId() + " to " + tempClient.getId());
                                 sleep();
-                                client.sendClearMessage(tempClient.getId() + " sending Player");
+                                client.sendMessage(new PayloadPlayer(tempClient.player));
                                 sleep();
-                                try {
-                                    client.sendClearMessage(Multiplayer.mapper.writeValueAsString(tempClient.player));
-                                } catch (JsonProcessingException e) {
-                                    e.printStackTrace();
-                                }
-                                // Très chiant ces try catch partout mais bon
                                 System.out.println("Server: Redistributing the Player of " + tempClient.getId() + " to " + client.getId());
                                 sleep();
                             }
                         }
                         // Et on lui dit que c'est bon de notre coté
-                        client.sendMessage("setAndGo");
+                        client.sendMessage(new TextMessage("setAndGo"));
                     }
                     else {
-                        client.sendMessage("rejected you");
+                        client.sendMessage(new TextMessage("rejected"));
                     }
                 }
             }
@@ -228,7 +225,7 @@ public class ServerMaker {
         isRunning = false;
 //        thread.stop();
         for (Client client: clientList.clientList) {
-            client.sendMessage("stopping game");
+            client.sendMessage(new TextMessage("stopping"));
         }
         serverSocket.dispose();
     }

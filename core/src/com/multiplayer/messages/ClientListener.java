@@ -1,4 +1,4 @@
-package com.multiplayer;
+package com.multiplayer.messages;
 
 import com.badlogic.gdx.net.Socket;
 
@@ -6,8 +6,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-
-import static com.utils.Multiplayer.key;
 
 public class ClientListener {
     public Thread thread;
@@ -29,7 +27,7 @@ public class ClientListener {
                             // On lit la data depuis la socket dans un buffer
                             buffer = new BufferedReader(new InputStreamReader(inputStream));
                             //Et on la décrypte
-                            key.decryptMessage(buffer.readLine(), true);
+                            key.decryptMessage(buffer.readLine(), false);
                         }
                     } catch (IOException e) {
                         e.printStackTrace();

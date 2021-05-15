@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import com.multiplayer.messages.TextMessage;
 import com.tiles.Case;
 import com.tiles.Pawn;
 import com.tiles.Tile;
@@ -32,7 +33,7 @@ public class Functions {
     }
 
     public static void quit() {
-        Multiplayer.courrier.sendMessage("quitting game");
+        Multiplayer.courrier.sendMessage(new TextMessage("quitting"));
         Multiplayer.courrier.killThread();
         if (Multiplayer.isServer) Multiplayer.serverMaker.killThread();
         Gdx.app.exit();

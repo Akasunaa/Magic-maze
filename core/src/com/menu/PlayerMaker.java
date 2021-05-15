@@ -7,6 +7,7 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.multiplayer.messages.TextMessage;
 import com.tiles.Player;
 import com.utils.Multiplayer;
 
@@ -38,6 +39,7 @@ public class PlayerMaker {
         }
         textField.addListener(new ChangeListener() {
             public void changed(ChangeEvent event, Actor actor) {
+                Multiplayer.courrier.sendMessage(new TextMessage("changePseudo", textField.getText()));
                 player.pseudo = textField.getText();
                 //TODO Envoyer un message au server pour dire qu'on a changé de nom
             }
@@ -60,7 +62,7 @@ public class PlayerMaker {
     }
 
     public void updateAvatar() {
-        player.avatar.setTexture(new Texture(player.avatarName));
+        player.avatar.setTexture(new Texture(Gdx.files.internal("Avatars/" + player.avatarName + ".png")));
     }
 
 
@@ -89,7 +91,7 @@ public class PlayerMaker {
                         public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
                             avatarNum = modulo(avatarNum - 1, 10);
                             player.avatarName = BaseScreen.animalNames[avatarNum];
-                            Multiplayer.courrier.sendMessage("changeAvatar " + player.avatarName);
+                            Multiplayer.courrier.sendMessage(new TextMessage("changeAvatar",player.avatarName));
                             player.avatar.setTexture(new Texture(Gdx.files.internal("Avatars/" + player.avatarName + ".png")));
                             //avatar.setSize(150, 150);
                         }
@@ -116,7 +118,7 @@ public class PlayerMaker {
                         public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
                             avatarNum = modulo(avatarNum + 1, 10);
                             player.avatarName = BaseScreen.animalNames[avatarNum];
-                            Multiplayer.courrier.sendMessage("changeAvatar " + player.avatarName);
+                            Multiplayer.courrier.sendMessage(new TextMessage("changeAvatar",player.avatarName));
                             player.avatar.setTexture(new Texture(Gdx.files.internal("Avatars/" + player.avatarName + ".png")));
                             //avatar.setSize(150, 150);
 

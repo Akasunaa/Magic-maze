@@ -1,0 +1,14 @@
+package com.multiplayer.messages.pawn;
+
+import com.badlogic.gdx.math.Vector2;
+import com.multiplayer.messages.Message;
+import com.tiles.Pawn;
+import com.utils.Colors;
+
+public class MovingPawn extends Message {
+    public MovingPawn(Pawn pawn, Vector2 coordinates) {
+        action = "movingPawn";
+        target = Colors.getColor(pawn.getColor());
+        payload = coordinates.x + " " + coordinates.y;
+    }
+}

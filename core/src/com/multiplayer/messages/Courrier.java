@@ -1,9 +1,10 @@
-package com.multiplayer;
+package com.multiplayer.messages;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Net;
 import com.badlogic.gdx.net.Socket;
 import com.badlogic.gdx.net.SocketHints;
+import com.multiplayer.ServerNotReachedException;
 import com.tiles.Player;
 import com.utils.Multiplayer;
 
@@ -41,7 +42,7 @@ public class Courrier {
         socketHints.receiveBufferSize = 1024;
         try {
             sendingSocket = Gdx.net.newClientSocket(Net.Protocol.TCP, ip, port, socketHints);
-            sendMessage("connected " + ip);
+            sendingSocket.getOutputStream().write((id + " connected " + ip + "\n").getBytes());
         } catch (Exception e) {
             throw new ServerNotReachedException("Server not found");
         }
@@ -63,24 +64,20 @@ public class Courrier {
 
     }
 
-    public void sendMessage(String message) {
+    public void sendMessage(Message message) {
         try {
             //println("Client: Sending $message")
-            sendingSocket.getOutputStream().write((id + " " + message + "\n").getBytes());
+            sendingSocket.getOutputStream().write(message.serialize().getBytes());
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
 
-    public void sendObject(Player toSend) {
-        sendMessage("sending Player");
+    public void sendObject(Player player) {
+        sendMessage(new PayloadPlayer(player));
         //ObjectOutputStream(sendingSocket.outputStream).write(toSend.serialize().toByteArray())
-        try {
-            sendingSocket.getOutputStream().write(((Multiplayer.mapper.writeValueAsString(toSend) + " \n").getBytes()));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+
     }
 
     public void killThread() {

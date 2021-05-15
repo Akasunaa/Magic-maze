@@ -16,9 +16,10 @@ import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.multiplayer.Client;
-import com.multiplayer.Courrier;
+import com.multiplayer.messages.Courrier;
 import com.multiplayer.ServerMaker;
 import com.multiplayer.ServerNotReachedException;
+import com.multiplayer.messages.PayloadQueue;
 import com.tiles.MainScreen;
 import com.tiles.Player;
 import com.tiles.Queue;
@@ -220,8 +221,7 @@ public class LobbyScreen extends BaseScreen {
         if (Multiplayer.isServer) {
             queue = new Queue(9); // J'ai fait les cases uniquement jusqu'à la 9
             for (Client client : Multiplayer.clientList.clientList) {
-                client.sendMessage("sending Queue");
-                client.sendClearMessage(queue.serialize());
+                client.sendMessage(new PayloadQueue(queue));
             }
         }
         try {
@@ -281,6 +281,7 @@ public class LobbyScreen extends BaseScreen {
         if (hasPlayerToAdd) {
             uiTable.clear();
             for (Player playerToAdd : playersToAdd) {
+                playerToAdd.load();
                 playerMakerList.add(new PlayerMaker(playerToAdd, uiSkin, false));
             }
             makeUiTable();
@@ -289,13 +290,16 @@ public class LobbyScreen extends BaseScreen {
         }
         if (hasPlayerToRemove) {
             uiTable.clear();
-            PlayerMaker toFind = null;
             for (String playerToRemove : playersToRemove) {
                 for (PlayerMaker playerMaker : playerMakerList) {
                     if (playerMaker.getPseudo().equals(playerToRemove)) {
-                        toFind = playerMaker;
-//                        System.out.println("Found it" + toFind.getPseudo());
-                        playerMakerList.remove(toFind);
+                        playerMakerList.remove(playerMaker);
+                        break;
+                    }
+                }
+                for (Player player : playerList) {
+                    if (player.pseudo.equals(playerToRemove)) {
+                        playerList.remove(player);
                         break;
                     }
                 }
@@ -308,10 +312,11 @@ public class LobbyScreen extends BaseScreen {
             updateNames();
             hasChangedPseudo = false;
         }
-        if (toUpdate.size() > 0) {
+        if (hasPlayerToUpdate) {
             for (PlayerMaker playerMaker : toUpdate) {
                 playerMaker.updateAvatar();
             }
+            hasPlayerToUpdate = false;
         }
     }
 
@@ -360,8 +365,10 @@ public class LobbyScreen extends BaseScreen {
         }
     }
 
+    private boolean hasPlayerToUpdate = false;
     private ArrayList<PlayerMaker> toUpdate = new ArrayList<>();
     public void setToUpdateAvatar(String pseudo) {
+        hasPlayerToUpdate = true;
         for (PlayerMaker playerMaker : playerMakerList) {
             if (playerMaker.getPseudo().equals(pseudo)) {
                 toUpdate.add(playerMaker);

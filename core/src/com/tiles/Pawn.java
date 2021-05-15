@@ -6,6 +6,9 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.Vector2;
 import com.menu.BaseActor;
+import com.multiplayer.messages.pawn.AskPlacePawn;
+import com.multiplayer.messages.pawn.AskTakePawn;
+import com.multiplayer.messages.pawn.MovingPawn;
 import com.utils.*;
 
 import java.io.Serializable;
@@ -198,7 +201,7 @@ public class Pawn implements Serializable {
                 // Ca causait des problèmes que je ne comprends pas, où le thread de render restait bloqué
                 // J'ai aucune idée de pourquoi, mais bon en mettant 1 ça fonctionne
                 // ça rends aussi totalement inutile mon code d'interpolation mais bon
-                Multiplayer.courrier.sendMessage("movingPawn " + Colors.getColor(color) + " " + x + " " + y);
+                Multiplayer.courrier.sendMessage(new MovingPawn(this, new Vector2(x,y)));
                 count = 0;
             }
             count++;
@@ -224,7 +227,7 @@ public class Pawn implements Serializable {
     }
 
     private boolean checkServerForClickable() {
-        Multiplayer.courrier.sendMessage("wantToTakePawn " + Colors.getColor(color));
+        Multiplayer.courrier.sendMessage(new AskTakePawn(this));
         try {
             System.out.println("Blocking in pawn check click");
             Multiplayer.cyclicBarrier.await();
@@ -238,7 +241,7 @@ public class Pawn implements Serializable {
     }
 
     private boolean checkServerForPlaceable() {
-        Multiplayer.courrier.sendMessage("wantToPlacePawn " + Colors.getColor(color));
+        Multiplayer.courrier.sendMessage(new AskPlacePawn(this));
         System.out.println("Client: checked for placeable");
         try {
             System.out.println("Blocking in pawn check place");

@@ -4,6 +4,7 @@ import com.utils.GameScreens;
 import com.utils.Multiplayer;
 
 import java.util.ArrayList;
+import java.util.ConcurrentModificationException;
 import java.util.List;
 
 public class ClientList {
@@ -14,11 +15,36 @@ public class ClientList {
         clientList = new ArrayList<>();
     }
 
-
+    private Client clientToAdd;
+    private boolean hasClientToAdd;
     public void add(Client client) {
-        clientList.add(client);
-        numberClient++;
+        clientToAdd = client;
+        hasClientToAdd = true;
     }
+    public void addBackup() {
+        if (hasClientToAdd) {
+            clientList.add(clientToAdd);
+            numberClient ++;
+            clientToAdd = null;
+            hasClientToAdd = false;
+        }
+    }
+
+    private Client clientToRemove;
+    private boolean hasClientToRemove;
+    public void remove (Client client) {
+        clientToRemove = client;
+        hasClientToRemove = true;
+    }
+    public void removeBackup() {
+        if (hasClientToRemove) {
+            clientList.remove(clientToRemove);
+            numberClient --;
+            clientToRemove = null;
+            hasClientToRemove = false;
+        }
+    }
+
 
     public boolean isIn(Client client) {
         for (Client comparator : clientList) {

@@ -1,6 +1,7 @@
 package com.multiplayer
 
 import com.badlogic.gdx.net.Socket
+import com.multiplayer.messages.Message
 import com.tiles.Player
 import java.io.BufferedReader
 import java.io.InputStreamReader
@@ -19,11 +20,7 @@ class Client(var ip: String, val sendingSocket: Socket, var id: String) {
 
     lateinit var player: Player
 
-    fun sendMessage(message: String) {
-        receivingSocket.outputStream.write("server $message \n".toByteArray())
-    }
-
-    fun sendClearMessage(message: String) {
-        receivingSocket.outputStream.write("$message \n".toByteArray())
+    fun sendMessage(message: Message) {
+        receivingSocket.outputStream.write(message.serialize().toByteArray())
     }
 }
