@@ -11,13 +11,14 @@ import static com.utils.Directions.numberDirections;
 import static com.utils.Functions.modulo;
 
 public class Player implements Serializable {
-    boolean north;
-    boolean south;
-    boolean east;
-    boolean west;
-    boolean shortcutTaker;
-    boolean escalatorTaker;
-    boolean portalTaker;
+    public boolean north;
+    public boolean south;
+    public boolean east;
+    public boolean west;
+    public boolean shortcutTaker;
+    public boolean escalatorTaker;
+    public boolean portalTaker;
+    public boolean cardChooser;
 
     public String pseudo = "Pseudo";
     public transient BaseActor avatar;
@@ -42,7 +43,7 @@ public class Player implements Serializable {
     private Player(boolean north, boolean south,
             boolean east, boolean west,
             boolean shortcutTaker, boolean escalatorTaker, boolean portalTaker,
-            Pawn pawn) {
+            boolean cardChooser, Pawn pawn) {
         this.north = north;
         this.south = south;
         this.east = east;
@@ -50,12 +51,13 @@ public class Player implements Serializable {
         this.shortcutTaker = shortcutTaker;
         this.escalatorTaker = escalatorTaker;
         this.portalTaker = portalTaker;
+        this.cardChooser = cardChooser;
         this.pawn = pawn;
     }
     Player(boolean north, boolean south,
                   boolean east, boolean west,
-                  boolean shortcutTaker, boolean escalatorTaker, boolean portalTaker
-                  ) {
+                  boolean shortcutTaker, boolean escalatorTaker, boolean portalTaker,
+                  boolean cardChooser) {
         this.north = north;
         this.south = south;
         this.east = east;
@@ -63,6 +65,7 @@ public class Player implements Serializable {
         this.shortcutTaker = shortcutTaker;
         this.escalatorTaker = escalatorTaker;
         this.portalTaker = portalTaker;
+        this.cardChooser = cardChooser;
     }
     // Quel enfer
 
@@ -78,7 +81,7 @@ public class Player implements Serializable {
 
     Player rotate(int i) {
         if (i==0) return this;
-        else return (new Player(south,north,west,east,shortcutTaker,escalatorTaker,portalTaker,pawn)).rotate(modulo(i-1,numberDirections));
+        else return (new Player(south,north,west,east,shortcutTaker,escalatorTaker,portalTaker, cardChooser,pawn)).rotate(modulo(i-1,numberDirections));
     }
     public void takesPawn(Pawn pawn) {
         this.pawn = pawn;

@@ -26,7 +26,7 @@ import static com.utils.Multiplayer.courrier;
 import static com.utils.TileAndCases.*;
 
 public class GameInterface extends BaseScreen {
-    private BaseActor[] avatars;
+    private PlayerOnHUD[] avatars;
 
     //compteur de plaques restantes à placer
     private Label textTilesLeft;
@@ -76,9 +76,7 @@ public class GameInterface extends BaseScreen {
         restart.addListener(
                 new InputListener() {
                     public boolean touchDown(InputEvent ev, float x, float y, int pointer, int button) {
-                        BaseActor wantToRestart = new BaseActor(new Texture(Gdx.files.internal("interface/restart-button.png")));
-                        wantToRestart.setPosition(avatars[0].getX() - 15, avatars[0].getY() + avatars[0].getHeight()*1.5f / 2);
-                        uiStage.addActor(wantToRestart);
+                        avatars[0].wantsToRestart();
                         courrier.sendMessage(new TextMessage("wantsToRestart"));
                         return true;
                     }
@@ -119,99 +117,38 @@ public class GameInterface extends BaseScreen {
         cross.setVisible(false);
         uiStage.addActor(cross);
 
-        //la c'est les avatars des joueurs, faudra changer les sprites, c'est par joueur avec en dessous l'indication de son pouvoir
-        avatars = new BaseActor[4];
-
-        // On créé cette liste ici pour mettre des placeholders qu'on remplace ensuite par des vrais noms.
-        String[] pseudoList = new String[]{"Joueur 1", "Joueur 2", "Joueur 3", "Joueur 4"};
+        //Liste des joueurs, du moins leur affichage sur le HUD
+        avatars = new PlayerOnHUD[Multiplayer.playerList.size()];
 
         for (int i = 0; i < Multiplayer.playerList.size(); i++) {
-            avatars[i] = Multiplayer.playerList.get(i).avatar;
-            avatars[i].setSize(90, 90);
+            avatars[i] = new PlayerOnHUD(Multiplayer.playerList.get(i));
             avatars[i].setPosition(viewWidth - avatars[i].getWidth() - 45, viewHeight - avatars[i].getHeight() - 225 - 135 * i);
-            uiStage.addActor(avatars[i]);
-            final int temp = i;
-            avatars[i].addListener(new InputListener() {
-                public boolean touchDown(InputEvent ev, float x, float y, int pointer, int button) {
-                    avatars[temp].addAction(Actions.sequence(
-                            Actions.color(new Color(1,0,0,1),(float)0.20),
-                            Actions.color(new Color(1,1,1,1),(float)0.20)));
-                    courrier.sendMessage(new Ping(Multiplayer.playerList.get(temp).pseudo));
-                    // What
-                    // the
-                    // fuck
-                    // LibGDX c'est cool jusqu'à ce que tu soit obligé de faire des trucs comme ça
-                    // Pour l'expliquer simplement: plutôt que de créer l'action en final en dehors de toute ça,
-                    // Il faut la créer nous même à chaque fois que l'inputListener est appellé
-                    // Désolé d'avoir craché sur les InputListener de LibGDX, ils sont très bien.
-                    return true;
-                }
-            });
-            pseudoList[i] = Multiplayer.playerList.get(i).pseudo;
+            avatars[i].addToStage(uiStage);
         }
-        for (int i = Multiplayer.playerList.size(); i < 4; i++) {
-            avatars[i] = new BaseActor(new Texture(Gdx.files.internal("interface/kuro" + i + ".png")));
-            avatars[i].setSize(90, 90);
-            avatars[i].setPosition(viewWidth - avatars[i].getWidth() - 45, viewHeight - avatars[i].getHeight() - 225 - 135 * i);
-            uiStage.addActor(avatars[i]);
-            final int temp = i;
-            avatars[i].addListener(new InputListener() {
-                public boolean touchDown(InputEvent ev, float x, float y, int pointer, int button) {
-                    avatars[temp].addAction(Actions.sequence(
-                            Actions.color(new Color(1,0,0,1),(float)0.20),
-                            Actions.color(new Color(1,1,1,1),(float)0.20)));
-                    // What
-                    // the
-                    // fuck
-                    // LibGDX c'est cool jusqu'à ce que tu soit obligé de faire des trucs comme ça
-                    // Pour l'expliquer simplement: plutôt que de créer l'action en final en dehors de toute ça,
-                    // Il faut la créer nous même à chaque fois que l'inputListener est appellé
-                    // Désolé d'avoir craché sur les InputListener de LibGDX, ils sont très bien.
-                    return true;
-                }
-            });
-        }
-
-        //affichage des pseudos des joueurs
-        BitmapFont pseudoFont = getFontSize(18*2);
-        LabelStyle pseudoStyle = new LabelStyle(pseudoFont, Color.WHITE);
-        //Les pseudos en tant que label
-        Label[] pseudoLabelList = new Label[4];
-        for (int i = 0; i <=3; i ++) {
-            pseudoLabelList[i] = new Label(pseudoList[i], pseudoStyle);
-            pseudoLabelList[i].setFontScale(0.5f);
-            pseudoLabelList[i].setPosition(avatars[i].getX(), avatars[i].getY()-30);
-            uiStage.addActor(pseudoLabelList[i]);
-        }
-
-        // Les pouvoirs (il doit y avoir un moyen de faire ça plus propre)
-        BaseActor up = new BaseActor(new Texture(Gdx.files.internal("interface/flechehaut.png")));
-        up.setPosition(viewWidth - avatars[0].getWidth() - 50, viewHeight - avatars[0].getHeight() - 219);
-        uiStage.addActor(up);
-
-        BaseActor left = new BaseActor(new Texture(Gdx.files.internal("interface/gauche.png")));
-        left.setPosition(avatars[1].getX() - 9, avatars[1].getY() + 30);
-        uiStage.addActor(left);
-
-        BaseActor portal = new BaseActor(new Texture(Gdx.files.internal("interface/teleport.png")));
-        portal.setPosition(avatars[1].getX() - 12, avatars[1].getY());
-        uiStage.addActor(portal);
-
-        BaseActor down = new BaseActor(new Texture(Gdx.files.internal("interface/bas.png")));
-        down.setPosition(avatars[2].getX() - 9, avatars[2].getY() + 30);
-        uiStage.addActor(down);
-
-        BaseActor magnifier = new BaseActor(new Texture(Gdx.files.internal("interface/loupa.png")));
-        magnifier.setPosition(avatars[2].getX() - 12, avatars[2].getY());
-        uiStage.addActor(magnifier);
-
-        BaseActor right = new BaseActor(new Texture(Gdx.files.internal("interface/droite.png")));
-        right.setPosition(avatars[3].getX() - 9, avatars[3].getY() + 30);
-        uiStage.addActor(right);
-
-        BaseActor elevator = new BaseActor(new Texture(Gdx.files.internal("interface/escalator.png")));
-        elevator.setPosition(avatars[3].getX() - 12, avatars[3].getY());
-        uiStage.addActor(elevator);
+        // Vestige de l'époque où les joueurs sur les HUD étaient gérés à la main
+        // ça c'était pour les placeholders
+//        for (int i = Multiplayer.playerList.size(); i < 4; i++) {
+//            avatars[i] = new BaseActor(new Texture(Gdx.files.internal("interface/kuro" + i + ".png")));
+//            avatars[i].setSize(90, 90);
+//            avatars[i].setPosition(viewWidth - avatars[i].getWidth() - 45, viewHeight - avatars[i].getHeight() - 225 - 135 * i);
+//            uiStage.addActor(avatars[i]);
+//            final int temp = i;
+//            avatars[i].addListener(new InputListener() {
+//                public boolean touchDown(InputEvent ev, float x, float y, int pointer, int button) {
+//                    avatars[temp].addAction(Actions.sequence(
+//                            Actions.color(new Color(1,0,0,1),(float)0.20),
+//                            Actions.color(new Color(1,1,1,1),(float)0.20)));
+//                    // What
+//                    // the
+//                    // fuck
+//                    // LibGDX c'est cool jusqu'à ce que tu soit obligé de faire des trucs comme ça
+//                    // Pour l'expliquer simplement: plutôt que de créer l'action en final en dehors de toute ça,
+//                    // Il faut la créer nous même à chaque fois que l'inputListener est appellé
+//                    // Désolé d'avoir craché sur les InputListener de LibGDX, ils sont très bien.
+//                    return true;
+//                }
+//            });
+//        }
 
         //la c'est le compteur de plaques restantes en bas a droite
 
