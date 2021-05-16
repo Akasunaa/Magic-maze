@@ -160,10 +160,7 @@ public class GameInterface extends BaseScreen {
         textTilesLeft.setPosition(viewWidth - tileSize/2 - textTilesLeft.getWidth()/2 - 40, 0);
         uiStage.addActor(textTilesLeft);
 
-//        for (Actor actor: uiStage.getActors()) {
-//            actor.scaleBy(.5f);
-//            // Parce qu'on est plus en 1280 mais en 1920 oupsy doopsy déso chloé
-//        }
+        // Vestige de l'époque où on devait charger les pions à la main
 
 //        loadPawnButton = new TextButton("Afficher le pion "+ getColor(currentColor), game.skin, "uiTextButtonStyle");
 //        loadPawnButton.addListener(new InputListener() {
@@ -189,6 +186,7 @@ public class GameInterface extends BaseScreen {
 
         //Ici c'est le bordel rajouté par Nathan
         // Pour l'instant on touche pas à ça!!!!
+        // ça fait des mois que c'est là, il faudrait songer à en faire quelque chose lol
 //        Animatedhourglass = new AnimatedActor();
 //        TextureRegion[] hourglassFrames = new TextureRegion[118];
 //        for (int m = 1; m < 119; m++) {
@@ -204,7 +202,7 @@ public class GameInterface extends BaseScreen {
 //        Animatedhourglass.setPosition(200, 600);
 //        mainStage.addActor(Animatedhourglass);
 
-        // Temps restant
+        // Gestion de l'horloge
         font = MainConstants.getFontSize(40);
         style = new LabelStyle(font, Color.NAVY);
         Clock.clock = new Clock(style);

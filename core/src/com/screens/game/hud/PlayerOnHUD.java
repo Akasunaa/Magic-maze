@@ -11,19 +11,28 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.utils.Align;
 import com.multiplayer.messages.Ping;
 import com.screens.game.BaseActor;
-import com.screens.game.board.Case;
 import com.screens.game.board.Player;
-import com.utils.Multiplayer;
-import com.utils.TileAndCases;
 
 import java.util.ArrayList;
 
-import static com.screens.GameScreens.gameScreen;
-import static com.utils.Directions.*;
-import static com.utils.Directions.numberDirections;
-import static com.utils.Functions.modulo;
 import static com.utils.MainConstants.getFontSize;
 import static com.utils.Multiplayer.courrier;
+
+/*
+L'idée de cette classe, c'est de centraliser la gestion de l'affichage des avatars,
+des pouvoirs, et des pseudos des joueurs, afin que ce soit plus simple
+Ç'aurait dû être fait il y a longtemps, mais bon, à la base l'affichage des avatars n'était même
+pas fait dans une boucle, c'était fait à la main, avec des avatar1, avatar2, avatar3, avatar4, etc.,
+donc créer toute une classe pour gérer ça était peut être un peu... beaucoup...
+Voilà donc cette classe, créée un peu in extremis quelques jours avant le 18, pour essayer
+de remédier à la lourdeur du code dans GameInterface.java (et encore, il reste pas mal de truc
+à nettoyer, cela peut notamment se voir avec les gros blocs de code commentés qu'il serait bien de retirer,
+étant donné qu'ils sont pour la plupart obsolètes...)
+Bref, tout ça pour dire que cette classe est essentiellement un sucre syntactique, elle n'est essentiel
+qu'à la beauté du code et à ma santé mentale.
+Elle n'est pas trop dure à comprendre, mais dans le doute, hésitez pas à me demander
+Hadrien.
+ */
 
 public class PlayerOnHUD {
     private final BaseActor avatar;
