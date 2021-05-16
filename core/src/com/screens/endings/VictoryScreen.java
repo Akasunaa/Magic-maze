@@ -19,7 +19,7 @@ public class VictoryScreen extends BaseScreen {
     @Override
     public void create() {
 
-        instrumental = Gdx.audio.newMusic(Gdx.files.internal("Music&Sound/VictoryMusic.wav"));
+        instrumental = Gdx.audio.newMusic(Gdx.files.internal("Music&Sound/Victory.wav"));
         instrumental.setLooping(true);
         instrumental.play();
 

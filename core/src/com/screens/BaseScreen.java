@@ -28,7 +28,6 @@ public abstract class BaseScreen implements Screen {
 
     protected Table uiTable;
 
-    public float audioVolume;
     public Music instrumental;
 
     public Sound buttonHover;
@@ -62,13 +61,14 @@ public abstract class BaseScreen implements Screen {
         buttonHover = Gdx.audio.newSound(Gdx.files.internal("Music&Sound/buttonHover.mp3"));
 
         audioSlider = new Slider(0, 1, 0.005f, false, game.skin, "uiSliderStyle" );
+        audioSlider.setValue(game.audioVolume);
         audioSlider.addListener(
                 new ChangeListener()
                 {
                     public void changed(ChangeEvent event, Actor actor)
                     {
-                        audioVolume = audioSlider.getValue();
-                        instrumental.setVolume(audioVolume);
+                        game.audioVolume = audioSlider.getValue();
+                        instrumental.setVolume(game.audioVolume);
                     }
                 });
 

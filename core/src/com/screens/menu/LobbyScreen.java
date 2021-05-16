@@ -47,18 +47,16 @@ public class LobbyScreen extends BaseScreen {
     private TextButton quitButton;
     private TextButton optionButton;
 
-    private BaseActor ping;
 
-    public LobbyScreen(MagicGame g, float audioVolume) {
+    public LobbyScreen(MagicGame g) {
         super(g);
-
     }
 
     public boolean hasPassedScreen = false;
 
     public void passToGameScreen() {
         gameScreen = new GameScreen(game);
-        gameScreen.load(audioVolume);
+        gameScreen.load();
         game.setScreen(gameScreen);
         Multiplayer.serverMaker.quitLobby();
         hasPassedScreen = true;
@@ -72,12 +70,9 @@ public class LobbyScreen extends BaseScreen {
 
         final BaseActor transparentForeground = new BaseActor(new Texture(Gdx.files.internal("MenuAssets/Black.gif")));
         transparentForeground.setSize(1920, 1080);
-        //transparentForeground.setColor(0, 0, 0, 0);
+        transparentForeground.setColor(0, 0, 0, 0);
         transparentForeground.setTouchable(Touchable.disabled);
         uiStage.addActor(transparentForeground);
-
-        ping = new BaseActor(new Texture(Gdx.files.internal("GameUIAssets/fond transparent.png")));
-        uiStage.addActor(ping);
 
         background.toBack();
 
@@ -177,11 +172,11 @@ public class LobbyScreen extends BaseScreen {
         });
 
         final Slider audioSlider = new Slider(0, 1, 0.005f, false, game.skin, "uiSliderStyle");
-        audioSlider.setValue(audioVolume);
+        audioSlider.setValue(game.audioVolume);
         audioSlider.addListener(new ChangeListener() {
             public void changed(ChangeEvent event, Actor actor) {
-                audioVolume = audioSlider.getValue();
-                instrumental.setVolume(audioVolume);
+                game.audioVolume = audioSlider.getValue();
+                instrumental.setVolume(game.audioVolume);
             }
         });
 
@@ -290,11 +285,6 @@ public class LobbyScreen extends BaseScreen {
                         uiStage.removeListener(this);
                     }
                 }
-                if (keycode == Input.Keys.U) {
-                    ping.addAction(Actions.sequence(
-                            Actions.color(new Color(1, 0, 0, 1), (float) 0.20),
-                            Actions.color(new Color(1, 1, 1, 1), (float) 0.20)));
-                }
                 return true;
             }
         });
@@ -302,10 +292,10 @@ public class LobbyScreen extends BaseScreen {
 
     public void load() {
         // On charge les ressources importantes, classique
-        audioSlider.setValue(audioVolume);
-        instrumental = Gdx.audio.newMusic(Gdx.files.internal("Music&Sound/DonDokodokoDon.mp3"));
+        audioSlider.setValue(game.audioVolume);
+        instrumental = Gdx.audio.newMusic(Gdx.files.internal("Music&Sound/Lobby.mp3"));
         instrumental.setLooping(true);
-        instrumental.setVolume(audioVolume);
+        instrumental.setVolume(game.audioVolume);
         instrumental.play();
     }
     private boolean hasPlayerToAdd = false;

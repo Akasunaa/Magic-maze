@@ -65,7 +65,7 @@ public class GameScreen extends BaseScreen {
             if (player.pawn != null) player.dropsPawn(player.pawn);
         }
         gameScreen = new GameScreen(game);
-        gameScreen.load(audioVolume);
+        gameScreen.load();
         game.setScreen(gameScreen);
     }
     BaseActor background;
@@ -100,11 +100,11 @@ public class GameScreen extends BaseScreen {
 
     }
 
-    public void load(float audioVolume) {
+    public void load() {
         for (Tile tile : tileList) {
             tile.load();
         }
-        gameInterface = new GameInterface(game, audioVolume);
+        gameInterface = new GameInterface(game);
         gameInterface.hasBackground = false;
         queue.setCoordinates(1920 - tileSize / 2 - 20, 20);
         queue.load();
@@ -170,9 +170,9 @@ public class GameScreen extends BaseScreen {
             // Je le garde pour le else
             if (numberWeaponsRetrieved == 4) {
                 gameInterface.instrumental.dispose();
-                instrumental = Gdx.audio.newMusic(Gdx.files.internal("Music&Sound/Musique_jeu_principal_phase_B.mp3"));
+                instrumental = Gdx.audio.newMusic(Gdx.files.internal("Music&Sound/PhaseB.mp3"));
                 instrumental.setLooping(true);
-                instrumental.setVolume(audioVolume);
+                instrumental.setVolume(game.audioVolume);
                 instrumental.play();
                 isInPhaseB = true;
                 // S'ils ont tous leurs armes, on commence la phase B

@@ -3,11 +3,13 @@ package com.screens.game.hud;
 //ça c'est réellement l'interface que j'ai fait
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
+import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
@@ -40,12 +42,22 @@ public class GameInterface extends BaseScreen {
     // Pour le "menu" de "pause" (en vrai à voir si c'est nécessaire et comment c'est géré avec le multi
     private Table pauseOverlay;
 
-    //constructeur
-    public GameInterface(MagicGame g, float audioVolume){
-        super(g);
+    private BaseActor ping;
+    private Sound pingSound;
+    public boolean needsToPing = false;
 
-        instrumental.setVolume(audioVolume);
-        audioSlider.setValue(audioVolume);
+    private void ping() {
+        ping.toFront();
+        ping.addAction(Actions.sequence(
+                Actions.color(new Color(1, 0, 0, 1), 0.20f),
+                Actions.color(new Color(1, 0, 0, 0), 0.20f)));
+        pingSound.play();
+        needsToPing = false;
+    }
+
+    //constructeur
+    public GameInterface(MagicGame g){
+        super(g);
     }
 
     public void create() {
@@ -72,7 +84,6 @@ public class GameInterface extends BaseScreen {
         BaseActor restart = new BaseActor(new Texture(Gdx.files.internal("interface/restart-button.png")));
         restart.setSize(150, 50);
         restart.setPosition(0, 0);
-        uiStage.addActor(restart);
         restart.addListener(
                 new InputListener() {
                     public boolean touchDown(InputEvent ev, float x, float y, int pointer, int button) {
@@ -82,6 +93,7 @@ public class GameInterface extends BaseScreen {
                     }
                 }
         );
+        uiStage.addActor(restart);
 
         //le log c'est juste un rectangle transparent ^^'
         BaseActor log = new BaseActor(new Texture(Gdx.files.internal("interface/log.png")));
@@ -125,6 +137,13 @@ public class GameInterface extends BaseScreen {
             avatars[i].setPosition(viewWidth - avatars[i].getWidth() - 45, viewHeight - avatars[i].getHeight() - 225 - 135 * i);
             avatars[i].addToStage(uiStage);
         }
+
+        // L'acteur qui va faire les pings
+        ping = new BaseActor(new Texture(Gdx.files.internal("GameUIAssets/pingTransparentOverlay.png")));
+        ping.setColor(1,1,1,0);
+        ping.setTouchable(Touchable.disabled);
+        uiStage.addActor(ping);
+        pingSound = Gdx.audio.newSound(Gdx.files.internal("Music&Sound/Ping.mp3"));
         // Vestige de l'époque où les joueurs sur les HUD étaient gérés à la main
         // ça c'était pour les placeholders
 //        for (int i = Multiplayer.playerList.size(); i < 4; i++) {
@@ -210,7 +229,7 @@ public class GameInterface extends BaseScreen {
         Clock.clock.setPosition(960, 1000);
         uiStage.addActor(Clock.clock);
 
-        instrumental = Gdx.audio.newMusic(Gdx.files.internal("Music&Sound/The Path of the Goblin King.mp3"));
+        instrumental = Gdx.audio.newMusic(Gdx.files.internal("Music&Sound/PhaseA.mp3"));
         instrumental.setLooping(true);
         instrumental.play();
 
@@ -306,6 +325,9 @@ public class GameInterface extends BaseScreen {
 
     public void update(float dt) {
         Clock.clock.update(game);
+        if (needsToPing) {
+            ping();
+        }
     }
 }
 

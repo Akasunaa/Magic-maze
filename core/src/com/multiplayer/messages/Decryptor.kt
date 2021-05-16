@@ -79,6 +79,7 @@ class Decryptor {
                             Actions.color(Color(1f, 1f, 1f, 1f), 0.20f)
                         )
                     )
+                    gameScreen.getInterface().needsToPing = true
                 }
             }
             "wantToTakePawn" -> {

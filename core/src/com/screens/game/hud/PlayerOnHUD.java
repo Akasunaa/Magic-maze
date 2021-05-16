@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.utils.Align;
@@ -54,8 +55,8 @@ public class PlayerOnHUD {
         avatar.addListener(new InputListener() {
             public boolean touchDown(InputEvent ev, float x, float y, int pointer, int button) {
                 avatar.addAction(Actions.sequence(
-                        Actions.color(new Color(1,0,0,1),(float)0.20),
-                        Actions.color(new Color(1,1,1,1),(float)0.20)));
+                        Actions.color(new Color(1,0,0,1),0.20f),
+                        Actions.color(new Color(1,1,1,1),0.20f)));
                 courrier.sendMessage(new Ping(player.pseudo));
                 return true;
             }
@@ -93,6 +94,7 @@ public class PlayerOnHUD {
         // Et maintenant on ajuste la taille
         for (BaseActor power : powers) {
             power.setSize(30,30);
+            power.setTouchable(Touchable.disabled);
         }
     }
 

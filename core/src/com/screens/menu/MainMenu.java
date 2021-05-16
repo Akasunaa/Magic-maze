@@ -64,10 +64,9 @@ public class MainMenu extends BaseScreen {
         Multiplayer.me.avatarName = animalNames[currentAvatarNumber];
 
         // passer audio volume en variable globale de MagicGame.java
-        instrumental = Gdx.audio.newMusic(Gdx.files.internal("Music&Sound/Musique_menu.mp3"));
-        audioVolume = 0.60f;
+        instrumental = Gdx.audio.newMusic(Gdx.files.internal("Music&Sound/Menu.mp3"));
         instrumental.setLooping(true);
-        instrumental.setVolume(audioVolume);
+        instrumental.setVolume(game.audioVolume);
         instrumental.play();
 
         BaseActor background = new BaseActor(new Texture(Gdx.files.internal("MenuAssets/BlurryMallBackground.jpg")));
@@ -104,7 +103,7 @@ public class MainMenu extends BaseScreen {
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
                 if (pseudoValid) {
                     Multiplayer.startServer();
-                    lobbyScreen = new LobbyScreen(game, audioVolume);
+                    lobbyScreen = new LobbyScreen(game);
                     try {
                         lobbyScreen.multiplayerShenanigans();
                         lobbyScreen.load();
@@ -158,7 +157,7 @@ public class MainMenu extends BaseScreen {
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
                 if (pseudoValid) {
                     Multiplayer.stopServer();
-                    lobbyScreen = new LobbyScreen(game, audioVolume);
+                    lobbyScreen = new LobbyScreen(game);
                     try {
                         lobbyScreen.multiplayerShenanigans();
                         lobbyScreen.load();
@@ -286,16 +285,6 @@ public class MainMenu extends BaseScreen {
         Label helpLabel1 = new Label("zoomer : ", game.skin, "uiLabelStyle");
         Label helpLabel2 = new Label("dezoomer :", game.skin, "uiLabelStyle");
         Label helpLabel3 = new Label("poser une tuile/déplacer un pion :", game.skin, "uiLabelStyle");
-
-
-        final Slider audioSlider = new Slider(0, 1, 0.005f, false, game.skin, "uiSliderStyle");
-        audioSlider.setValue(audioVolume);
-        audioSlider.addListener(new ChangeListener() {
-            public void changed(ChangeEvent event, Actor actor) {
-                audioVolume = audioSlider.getValue();
-                instrumental.setVolume(audioVolume);
-            }
-        });
 
         optionOverlay = new Table();
         optionOverlay.setFillParent(true);
