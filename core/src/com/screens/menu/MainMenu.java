@@ -64,8 +64,8 @@ public class MainMenu extends BaseScreen {
         Multiplayer.me.avatarName = animalNames[currentAvatarNumber];
 
         // passer audio volume en variable globale de MagicGame.java
-        instrumental = Gdx.audio.newMusic(Gdx.files.internal("Music&Sound/MusicMenu.wav"));
-        audioVolume = 0.00f;
+        instrumental = Gdx.audio.newMusic(Gdx.files.internal("Music&Sound/Musique_menu.mp3"));
+        audioVolume = 0.60f;
         instrumental.setLooping(true);
         instrumental.setVolume(audioVolume);
         instrumental.play();
@@ -117,7 +117,6 @@ public class MainMenu extends BaseScreen {
                 else {
                     float delay = 0.02f; // seconds
                     warningLabel.setPosition(730,665);
-                    System.out.println(",ik");
                     Timer.schedule(new Timer.Task() {
                         @Override
                         public void run() {
