@@ -17,8 +17,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 
-import static com.utils.Functions.findCase;
-import static com.screens.GameScreens.mainScreen;
+import static com.screens.GameScreens.gameScreen;
 import static com.utils.TileAndCases.*;
 
 public class Queue implements Serializable {
@@ -30,7 +29,7 @@ public class Queue implements Serializable {
     private void updateText() {
         if (numberTilesLeft < 0) textTileLeft = "Tuiles restantes: " + numberTilesLeft;
         try {
-            mainScreen.getInterface().setText(textTileLeft);
+            gameScreen.getInterface().setText(textTileLeft);
         } catch (NullPointerException e) {
         }
     }
@@ -166,7 +165,7 @@ public class Queue implements Serializable {
     void load() { // Serialization
         hidden = new BaseActor(new Texture("tuiles/hiddenOrange.png"));
         hidden.setOrigin(size/2,size/2);
-        mainScreen.getUiStage().addActor(hidden);
+        gameScreen.getUiStage().addActor(hidden);
         loadSprite();
         updateSpriteSize();
         updateCoordinates();
@@ -179,7 +178,7 @@ public class Queue implements Serializable {
         sprite.setVisible(false);
         shown = new BaseActor(sprite.getTexture());
         shown.setOrigin(size/2,size/2);
-        mainScreen.getUiStage().addActor(shown);
+        gameScreen.getUiStage().addActor(shown);
         if (isHidden) shown.setVisible(false);
         shown.setRotation(0);
     }

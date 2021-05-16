@@ -31,7 +31,7 @@ import com.utils.Multiplayer;
 
 import java.util.ArrayList;
 
-import static com.screens.GameScreens.mainScreen;
+import static com.screens.GameScreens.gameScreen;
 import static com.utils.Multiplayer.playerList;
 import static com.utils.TileAndCases.queue;
 
@@ -55,9 +55,9 @@ public class LobbyScreen extends BaseScreen {
     public boolean hasPassedScreen = false;
 
     public void passToGameScreen() {
-        mainScreen = new GameScreen(game);
-        mainScreen.load(audioVolume);
-        game.setScreen( mainScreen );
+        gameScreen = new GameScreen(game);
+        gameScreen.load(audioVolume);
+        game.setScreen(gameScreen);
         Multiplayer.serverMaker.quitLobby();
         hasPassedScreen = true;
     }

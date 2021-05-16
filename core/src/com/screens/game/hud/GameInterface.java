@@ -14,6 +14,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.multiplayer.messages.Ping;
+import com.multiplayer.messages.TextMessage;
 import com.screens.BaseScreen;
 import com.screens.GameScreens;
 import com.screens.MagicGame;
@@ -48,8 +49,8 @@ public class GameInterface extends BaseScreen {
     }
 
     public void create() {
-        uiStage = GameScreens.mainScreen.getUiStage();
-        mainStage = GameScreens.mainScreen.getMainStage();
+        uiStage = GameScreens.gameScreen.getUiStage();
+        mainStage = GameScreens.gameScreen.getMainStage();
 
         //il faut créer tous les éléments de l'interface
 
@@ -78,6 +79,7 @@ public class GameInterface extends BaseScreen {
                         BaseActor wantToRestart = new BaseActor(new Texture(Gdx.files.internal("interface/restart-button.png")));
                         wantToRestart.setPosition(avatars[0].getX() - 15, avatars[0].getY() + avatars[0].getHeight()*1.5f / 2);
                         uiStage.addActor(wantToRestart);
+                        courrier.sendMessage(new TextMessage("wantsToRestart"));
                         return true;
                     }
                 }

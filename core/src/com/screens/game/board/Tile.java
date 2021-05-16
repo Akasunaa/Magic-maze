@@ -16,7 +16,7 @@ import static com.screens.game.board.Case.link;
 import static com.utils.Colors.getColor;
 import static com.utils.Directions.numberDirections;
 import static com.utils.Functions.modulo;
-import static com.screens.GameScreens.mainScreen;
+import static com.screens.GameScreens.gameScreen;
 import static com.utils.TileAndCases.*;
 
 public class Tile implements Serializable {
@@ -171,7 +171,7 @@ public class Tile implements Serializable {
     void load() { // Obligatoire pour la serialization
         sprite = new BaseActor(new Texture(path)); // On se charge soit même
         sprite.setOrigin(tileSize / 2, tileSize / 2);
-        mainScreen.getMainStage().addActor(sprite);
+        gameScreen.getMainStage().addActor(sprite);
         for (int i = 0; i <= 3; i++) {
             for (int j = 0; j <= 3; j++)
                 caseList[j][i].load(this, caseListofCases[j][i]); // et on charge toutes les cases

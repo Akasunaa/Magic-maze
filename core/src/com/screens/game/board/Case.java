@@ -10,7 +10,7 @@ import java.io.Serializable;
 import static com.utils.CaseCorrespondance.*;
 import static com.utils.Directions.*;
 import static com.utils.Functions.modulo;
-import static com.screens.GameScreens.mainScreen;
+import static com.screens.GameScreens.gameScreen;
 import static com.utils.MainConstants.batch;
 import static com.utils.TileAndCases.caseSize;
 import static com.utils.TileAndCases.offset;
@@ -78,8 +78,8 @@ public class Case implements Serializable {
         redDot = new BaseActor(new Texture("tuiles/redDot.png"));
         redDot.setVisible(false);
         setSpriteCoordinates();
-        mainScreen.getMainStage().addActor(greenDot);
-        mainScreen.getMainStage().addActor(redDot);
+        gameScreen.getMainStage().addActor(greenDot);
+        gameScreen.getMainStage().addActor(redDot);
     }
 
     float getX(int x) {
@@ -155,7 +155,7 @@ public class Case implements Serializable {
         BaseActor cross = new BaseActor(t);
         cross.setOrigin((int) (cross.getWidth()/2));
         cross.setPosition(getX(x),getY(y));
-        mainScreen.getMainStage().addActor(cross);
+        gameScreen.getMainStage().addActor(cross);
     }
 
     void draw() {

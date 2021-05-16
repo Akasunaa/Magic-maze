@@ -21,8 +21,10 @@ import com.utils.Multiplayer;
 
 import java.util.ArrayList;
 
+import static com.screens.GameScreens.gameScreen;
 import static com.utils.Functions.mouseInput;
 import static com.utils.MainConstants.*;
+import static com.utils.Multiplayer.playerList;
 import static com.utils.TileAndCases.*;
 
 // btw, le fait que MainScreen soit dans le dossier multi c'est un peu chelou niveau orga non?
@@ -49,10 +51,23 @@ public class GameScreen extends BaseScreen {
 
     public GameScreen(MagicGame g) {
         super(g);
-
-
     }
 
+    private boolean restart = false;
+    public void setToRestart() {
+        restart = true;
+    }
+
+    private void restart() {
+        tileList.clear();
+        pawnList.clear();
+        for (Player player : playerList) {
+            if (player.pawn != null) player.dropsPawn(player.pawn);
+        }
+        gameScreen = new GameScreen(game);
+        gameScreen.load(audioVolume);
+        game.setScreen(gameScreen);
+    }
     BaseActor background;
 
     public void create(){
@@ -118,6 +133,10 @@ public class GameScreen extends BaseScreen {
 
     @Override
     public void render(float delta) {
+        if (restart) {
+            restart();
+            return;
+        }
         //Gdx.gl.glClearColor(125f / 255, 125f / 255, 125f / 255, 1f);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         // Couleur d'arrière plan, et on clear tout

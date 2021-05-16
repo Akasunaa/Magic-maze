@@ -23,6 +23,8 @@ public class Multiplayer {
     // L'ip de mon PC fixe
     public static String ip;
 
+    public static int numberPeopleWantRestart = 0;
+
     public static CyclicBarrier cyclicBarrier = new CyclicBarrier(2);
 
     // Pour la sérialisation

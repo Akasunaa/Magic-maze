@@ -15,7 +15,7 @@ import com.utils.*;
 import java.io.Serializable;
 
 import static com.utils.Functions.findCase;
-import static com.screens.GameScreens.mainScreen;
+import static com.screens.GameScreens.gameScreen;
 import static com.utils.TileAndCases.*;
 
 
@@ -71,7 +71,7 @@ public class Pawn implements Serializable {
 
         if (setCase.isFinalExit) {        // Si on fait plus de scénarii, il faudra rajouter le fait qu'il faut que ce soit de la bonne couleur
             numberPawnsOut ++;
-            mainScreen.removePawn(this);
+            gameScreen.removePawn(this);
             setCase.pawn = null;
             dispose();
         }
@@ -113,7 +113,7 @@ public class Pawn implements Serializable {
 
     void load() { // Pour la sérialization
         sprite = new BaseActor(new Texture("pions/" + Colors.getColor(color) + ".png"));
-        mainScreen.getMainStage().addActor(sprite);
+        gameScreen.getMainStage().addActor(sprite);
         setSize();
         updateCoordinates();
     }

@@ -7,7 +7,7 @@ import com.screens.game.board.GameScreen;
 
 public class GameScreens {
     public static MainMenu mainMenu;
-    public static GameScreen mainScreen;
+    public static GameScreen gameScreen;
     public static LobbyScreen lobbyScreen;
     public static DefeatScreen defeatScreen;
     public static VictoryScreen victoryScreen;
