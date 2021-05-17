@@ -32,6 +32,8 @@ import static com.utils.MainConstants.getFontSize;
 import static com.utils.Multiplayer.courrier;
 import static com.utils.TileAndCases.*;
 
+import com.badlogic.gdx.scenes.scene2d.ui.TextArea;
+
 public class GameInterface extends BaseScreen {
     private BaseActor[] avatars;
 
@@ -53,6 +55,8 @@ public class GameInterface extends BaseScreen {
 
     float remainingTime;
     Label timeLabel;
+
+    public static TextArea TF;
 
     //constructeur
     public GameInterface(MagicGame g, float audioVolume){
@@ -105,9 +109,18 @@ public class GameInterface extends BaseScreen {
         //le log c'est juste un rectangle transparent ^^'
         BaseActor log = new BaseActor();
         log.setTexture(new Texture(Gdx.files.internal("interface/log.png")));
-        log.setSize(150,300);
+        log.setSize(300,500);
         log.setPosition(0, restart.getHeight());
         uiStage.addActor(log);
+
+        Skin uiSkin = new Skin(Gdx.files.internal("GameUIAssets/uiskin.json"));
+        TF = new TextArea("", uiSkin);
+
+        TF.setWidth(300);
+        TF.setHeight(500);
+        TF.setPosition(0,restart.getHeight());
+        TF.setText("Debut de la partie!");
+        uiStage.addActor(TF);
 
         //la c'est juste des faux bouton
         BaseActor hourglass = new BaseActor();

@@ -5,6 +5,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.ui.TextArea;
 import com.menu.BaseActor;
 import com.utils.Colors;
 import com.utils.Functions;
@@ -16,15 +17,21 @@ import static com.utils.Functions.findCase;
 import static com.utils.GameScreens.mainScreen;
 import static com.utils.TileAndCases.*;
 
+import com.menu.GameInterface;
+
 
 public class Pawn implements Serializable {
     private final int color; // La couleur du pion
     public Player player = null;
 
+    public Player lastHandeler;
+
     public boolean hasWeapon = false;
     //Booléen qui indique si le pion a récupéré son arme
     public boolean onExit = false;
     //Booléen qui indique si le pion est sur la sortie
+
+    private final TextArea TF = GameInterface.TF;
 
     public int getColor() {
         return color;
@@ -55,6 +62,9 @@ public class Pawn implements Serializable {
         if (setCase.isExit && setCase.color == color) {
             queue.reveal();
             isLocked = !queue.isEmpty;
+        }
+        if (lastHandeler != null){
+            TF.appendText("\n" + lastHandeler.pseudo + " a déplacé le pion " + Colors.getColor(color));
         }
 
         hasWeapon = setCase.hasWeapon && setCase.color == color;

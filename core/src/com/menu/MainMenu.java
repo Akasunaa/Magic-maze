@@ -142,7 +142,6 @@ public class MainMenu extends BaseScreen {
                 else {
                     float delay = 0.02f; // seconds
                     warningLabel.setPosition(730,665);
-                    System.out.println(",ik");
                     Timer.schedule(new Timer.Task() {
                         @Override
                         public void run() {
@@ -428,5 +427,6 @@ public class MainMenu extends BaseScreen {
                 }
             }, delay);
         }
+        else pseudoValid = true;
     }
 }
