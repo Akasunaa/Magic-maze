@@ -17,11 +17,13 @@ import java.io.Serializable;
 import static com.utils.Functions.findCase;
 import static com.screens.GameScreens.gameScreen;
 import static com.utils.TileAndCases.*;
+import com.screens.game.hud.GameInterface;
 
 
 public class Pawn implements Serializable {
     private final int color; // La couleur du pion
     public Player player = null;
+    public Player lastHandeler;
 
 //    public boolean hasWeapon = false;
 //    //Booléen qui indique si le pion a récupéré son arme
@@ -64,9 +66,11 @@ public class Pawn implements Serializable {
             setCase.used();
         }
 
-        if (setCase.hasWeapon && setCase.color == color) {
+        if (!isInPhaseB){
+            if (setCase.hasWeapon && setCase.color == color) {
             numberWeaponsRetrieved ++;
             isLocked = true;
+            }
         }
 
         if (setCase.isFinalExit && isInPhaseB) {        // Si on fait plus de scénarii, il faudra rajouter le fait qu'il faut que ce soit de la bonne couleur
@@ -75,6 +79,11 @@ public class Pawn implements Serializable {
             setCase.pawn = null;
             dispose();
         }
+        if (lastHandeler != null) {
+            GameInterface.logs.newMessage(lastHandeler.pseudo + " a déplacé le pion " + Colors.getColor(color));
+            System.out.println(lastHandeler.pseudo);
+        }
+
     }
 
     private void setFirstCase() {
