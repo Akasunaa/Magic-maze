@@ -64,7 +64,7 @@ class Decryptor {
             }
             "beginGame" -> {
 //                cyclicBarrier.await()
-                if (!Multiplayer.isServer) lobbyScreen.passToGameScreen()
+                if (!Multiplayer.isServer) lobbyScreen.setToPassToGameScreen()
             }
             "ping" -> {
                 if (isServer) {

@@ -32,6 +32,7 @@ import com.utils.Multiplayer;
 import java.util.ArrayList;
 
 import static com.screens.GameScreens.gameScreen;
+import static com.utils.Multiplayer.isServer;
 import static com.utils.Multiplayer.playerList;
 import static com.utils.TileAndCases.queue;
 
@@ -52,19 +53,21 @@ public class LobbyScreen extends BaseScreen {
         super(g);
     }
 
-    public boolean hasPassedScreen = false;
+    public boolean shouldPassScreen = false;
 
-    public void passToGameScreen() {
+    public void setToPassToGameScreen() {
+        shouldPassScreen = true;
+    }
+
+    private void passToGameScreen() {
         gameScreen = new GameScreen(game);
         gameScreen.load();
         game.setScreen(gameScreen);
         Multiplayer.serverMaker.quitLobby();
-        hasPassedScreen = true;
+        shouldPassScreen = false;
     }
     public void create() {
         // pour le son
-
-
         final BaseActor background = new BaseActor(new Texture(Gdx.files.internal("MenuAssets/BlurryMallBackground.jpg")));
         uiStage.addActor(background);
 
@@ -106,7 +109,7 @@ public class LobbyScreen extends BaseScreen {
                 Timer.schedule(new Timer.Task() {
                     @Override
                     public void run() {
-                        passToGameScreen();
+                        setToPassToGameScreen();
                     }
                 }, delay);
             }
@@ -132,6 +135,7 @@ public class LobbyScreen extends BaseScreen {
             }
         });
         startButton.getLabel().setTouchable(Touchable.disabled);
+        startButton.setVisible(isServer);
 
         quitButton = new TextButton("Quit", game.skin, "uiTextButtonStyle");
         quitButton.addListener(new InputListener() {
@@ -344,6 +348,7 @@ public class LobbyScreen extends BaseScreen {
             }
             hasPlayerToUpdate = false;
         }
+        if (shouldPassScreen) passToGameScreen();
     }
 
     public boolean hasChangedPseudo = false;
