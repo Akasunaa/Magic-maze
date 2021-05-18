@@ -38,6 +38,7 @@ public class GameInterface extends BaseScreen {
 
     //TextButton loadPawnButton;
 
+    public Logs logs;
 
     // Pour le "menu" de "pause" (en vrai à voir si c'est nécessaire et comment c'est géré avec le multi
     private Table pauseOverlay;
@@ -95,11 +96,8 @@ public class GameInterface extends BaseScreen {
         );
         uiStage.addActor(restart);
 
-        //le log c'est juste un rectangle transparent ^^'
-        BaseActor log = new BaseActor(new Texture(Gdx.files.internal("interface/log.png")));
-        log.setSize(150,300);
-        log.setPosition(0, restart.getHeight());
-        uiStage.addActor(log);
+        logs = new Logs(300, 500, 0, (int)restart.getHeight());
+        uiStage.addActor(logs);
 
         //la c'est juste des faux bouton
         BaseActor hourglass = new BaseActor(new Texture(Gdx.files.internal("interface/sablier.jpg")));

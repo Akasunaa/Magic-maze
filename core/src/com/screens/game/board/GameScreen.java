@@ -21,7 +21,7 @@ import com.utils.Multiplayer;
 
 import java.util.ArrayList;
 
-import static com.screens.GameScreens.gameScreen;
+import static com.screens.GameScreens.*;
 import static com.utils.Functions.mouseInput;
 import static com.utils.MainConstants.*;
 import static com.utils.Multiplayer.playerList;
@@ -186,6 +186,7 @@ public class GameScreen extends BaseScreen {
             // Si on est en phase B
             // Once again, je pourrais faire ça de manière plus propre mais meh
             if (numberPawnsOut == 4) {
+                game.setScreen(victoryScreen);
                 //TODO Le Jeu est gagné
             }
         }

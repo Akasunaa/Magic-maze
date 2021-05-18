@@ -38,6 +38,11 @@ public class MainMenu extends BaseScreen {
     private Label warningLabel;
     private boolean pseudoValid;
 
+    private TextButton returnButton2;
+    private TextButton returnButton1;
+    private TextButton optionButton;
+    private TextButton ruleButton;
+
     public MainMenu(MagicGame g) {
         super(g);
         GameScreens.mainMenu = this;
@@ -93,7 +98,7 @@ public class MainMenu extends BaseScreen {
 
         Label ipLabel = new Label("Rentrez ici l'adresse ip du host de la partie :", game.skin, "uiLabelStyle");
 
-        TextButton startButton = new TextButton("Créer une partie", game.skin, "uiTextButtonStyle");
+        final TextButton startButton = new TextButton("Créer une partie", game.skin, "uiTextButtonStyle");
         startButton.addListener(new InputListener() {
             public boolean touchDown(InputEvent event, float x, float y, int pointer,
                                      int button) {
@@ -146,7 +151,7 @@ public class MainMenu extends BaseScreen {
         });
         startButton.getLabel().setTouchable(Touchable.disabled);
 
-        TextButton joinButton = new TextButton("Rejoindre une partie", game.skin, "uiTextButtonStyle");
+        final TextButton joinButton = new TextButton("Rejoindre une partie", game.skin, "uiTextButtonStyle");
         joinButton.getLabel().setTouchable(Touchable.disabled);
         joinButton.addListener(new InputListener() {
             public boolean touchDown(InputEvent event, float x, float y, int pointer,
@@ -200,7 +205,7 @@ public class MainMenu extends BaseScreen {
             }
         });
 
-        TextButton quitButton = new TextButton("Quit", game.skin, "uiTextButtonStyle");
+        final TextButton quitButton = new TextButton("Quit", game.skin, "uiTextButtonStyle");
         quitButton.addListener(new InputListener() {
             public boolean touchDown(InputEvent event, float x, float y, int pointer,
                                      int button) {
@@ -212,7 +217,19 @@ public class MainMenu extends BaseScreen {
             }
         });
 
-        TextButton returnButton1 = new TextButton("Return", game.skin, "uiTextButtonStyle");
+        ruleButton = new TextButton("Règles du jeu", game.skin, "uiTextButtonStyle");
+        ruleButton.addListener(new InputListener() {
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) { return true; }
+
+            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+                togglePaused();
+                ruleTable.setVisible(true);
+                quitButton.setTouchable(Touchable.disabled);
+
+            }
+        });
+
+        returnButton1 = new TextButton("Return", game.skin, "uiTextButtonStyle");
         returnButton1.addListener(new InputListener() {
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 return true;
@@ -221,10 +238,15 @@ public class MainMenu extends BaseScreen {
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
                 togglePaused();
                 optionOverlay.setVisible(false);
+                startButton.setTouchable(Touchable.enabled);
+                joinButton.setTouchable(Touchable.enabled);
+                ruleButton.setTouchable(Touchable.enabled);
+                quitButton.setTouchable(Touchable.enabled);
+                optionButton.setTouchable(Touchable.enabled);
             }
         });
 
-        TextButton returnButton2 = new TextButton("Return", game.skin, "uiTextButtonStyle");
+        returnButton2 = new TextButton("Return", game.skin, "uiTextButtonStyle");
         returnButton2.addListener(new InputListener() {
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 return true;
@@ -233,16 +255,26 @@ public class MainMenu extends BaseScreen {
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
                 togglePaused();
                 ruleTable.setVisible(false);
+                quitButton.setTouchable(Touchable.enabled);
+
             }
         });
 
-        TextButton ruleButton = new TextButton("Règles du jeu", game.skin, "uiTextButtonStyle");
-        ruleButton.addListener(new InputListener() {
-            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) { return true; }
+        optionButton = new TextButton("Options et commandes", game.skin, "uiTextButtonStyle");
+        optionButton.addListener(new InputListener() {
+            public boolean touchDown(InputEvent event, float x, float y, int pointer,
+                                     int button) {
+                return true;
+            }
 
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
                 togglePaused();
-                ruleTable.setVisible(true);
+                optionOverlay.setVisible(true);
+                startButton.setTouchable(Touchable.disabled);
+                joinButton.setTouchable(Touchable.disabled);
+                ruleButton.setTouchable(Touchable.disabled);
+                quitButton.setTouchable(Touchable.disabled);
+                optionButton.setTouchable(Touchable.disabled);
             }
         });
 
@@ -265,19 +297,6 @@ public class MainMenu extends BaseScreen {
         ruleTable.add(returnButton2).padTop(25);
         ruleTable.row();
         ruleTable.add(scroller).padTop(25); //.expand(); //.fill()
-
-        TextButton optionButton = new TextButton("Options et commandes", game.skin, "uiTextButtonStyle");
-        optionButton.addListener(new InputListener() {
-            public boolean touchDown(InputEvent event, float x, float y, int pointer,
-                                     int button) {
-                return true;
-            }
-
-            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-                togglePaused();
-                optionOverlay.setVisible(true);
-            }
-        });
 
         Label optionLabel = new Label("Options et aide :", game.skin, "uiLabelStyle");
         Label volumeLabel = new Label("Volume", game.skin, "uiLabelStyle");
@@ -391,6 +410,6 @@ public class MainMenu extends BaseScreen {
                 }
             }, delay);
         }
-        pseudoValid = true;
+        //pseudoValid = true;
     }
 }

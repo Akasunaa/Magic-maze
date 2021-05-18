@@ -12,6 +12,10 @@ public class BaseActor extends Actor {
     TextureRegion region;
     Rectangle boundary;
 
+    public BaseActor() {
+
+    }
+
     public Texture getTexture() {
         return region.getTexture();
     }
