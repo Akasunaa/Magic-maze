@@ -1,5 +1,6 @@
 package com.multiplayer.messages;
 
+import com.badlogic.gdx.math.Vector2;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.utils.Multiplayer;
@@ -37,6 +38,9 @@ public class Message implements Serializable {
     public String getPayload() {
         return payload;
     }
+
+    protected float[] coordinates;
+    public float[] getCoordinates() {return coordinates;}
 
     public Message(String sender) {
         this.sender = sender;

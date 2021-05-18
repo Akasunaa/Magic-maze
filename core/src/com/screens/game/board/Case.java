@@ -3,6 +3,7 @@ package com.screens.game.board;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.screens.game.BaseActor;
+import com.utils.Colors;
 import com.utils.TileAndCases;
 
 import java.io.Serializable;
@@ -12,8 +13,7 @@ import static com.utils.Directions.*;
 import static com.utils.Functions.modulo;
 import static com.screens.GameScreens.gameScreen;
 import static com.utils.MainConstants.batch;
-import static com.utils.TileAndCases.caseSize;
-import static com.utils.TileAndCases.offset;
+import static com.utils.TileAndCases.*;
 
 public class Case implements Serializable {
     public transient Case[] caseList = new Case[4];
@@ -204,13 +204,13 @@ public class Case implements Serializable {
                 }
             }
 
-            if (player.shortcutTaker) {
+            if (player.pawn.getColor() == Colors.orange) {
                 if (shortcut != null) {
                     shortcut.explore(player);
                 }
             }
 
-            if (player.portalTaker){
+            if (player.portalTaker && !isInPhaseB){
                 for (Case tempCase : TileAndCases.portalList[player.pawn.getColor()]){
                     tempCase.explore(player);
                 }
@@ -262,14 +262,14 @@ public class Case implements Serializable {
                 }
             }
 
-            if (tempPlayer.shortcutTaker) {
+            if (player.pawn.getColor() == Colors.orange) {
                 if (shortcut != null) {
                     shortcut.unexplored();
                     shortcut.revert(player);
                 }
             }
 
-            if (player.portalTaker){
+            if (player.portalTaker && !isInPhaseB){
                 for (Case tempCase : TileAndCases.portalList[player.pawn.getColor()]){
                     tempCase.unexplored();
                     tempCase.revert(player);

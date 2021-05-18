@@ -10,11 +10,15 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.multiplayer.ServerNotReachedException;
+import com.screens.GameScreens;
+import com.screens.endings.VictoryScreen;
 import com.screens.game.BaseActor;
 import com.screens.game.hud.GameInterface;
 import com.screens.game.hud.MouseWheelChecker;
 import com.screens.BaseScreen;
 import com.screens.MagicGame;
+import com.screens.menu.LobbyScreen;
 import com.utils.Colors;
 import com.utils.Functions;
 import com.utils.Multiplayer;
@@ -22,8 +26,10 @@ import com.utils.Multiplayer;
 import java.util.ArrayList;
 
 import static com.screens.GameScreens.*;
+import static com.screens.GameScreens.lobbyScreen;
 import static com.utils.Functions.mouseInput;
 import static com.utils.MainConstants.*;
+import static com.utils.Multiplayer.cyclicBarrier;
 import static com.utils.Multiplayer.playerList;
 import static com.utils.TileAndCases.*;
 
@@ -85,7 +91,7 @@ public class GameScreen extends BaseScreen {
 
         tileList = new ArrayList<Tile>();
 
-        Multiplayer.me.setPlayer(new Player(true, true, true, true, true, true,true, true));
+        Multiplayer.me.setPlayer(new Player(true, true, true, true, true,true, true));
 
         // Bon là c'est le batch et les trucs pour écrire, rien d'important
         batch = new SpriteBatch();
@@ -104,6 +110,14 @@ public class GameScreen extends BaseScreen {
         for (Tile tile : tileList) {
             tile.load();
         }
+
+        try {
+            cyclicBarrier.await();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        // On attends d'avoir la queue
+
         gameInterface = new GameInterface(game);
         gameInterface.hasBackground = false;
         queue.setCoordinates(1920 - tileSize / 2 - 20, 20);
@@ -175,6 +189,7 @@ public class GameScreen extends BaseScreen {
                 instrumental.setVolume(game.audioVolume);
                 instrumental.play();
                 isInPhaseB = true;
+                //numberPawnsOut = 0;
                 // S'ils ont tous leurs armes, on commence la phase B
                 for (Pawn pawn : pawnList) {
                     pawn.unlock();
@@ -186,8 +201,10 @@ public class GameScreen extends BaseScreen {
             // Si on est en phase B
             // Once again, je pourrais faire ça de manière plus propre mais meh
             if (numberPawnsOut == 4) {
+                victoryScreen = new VictoryScreen(game);
+                GameScreens.game.dispose();
                 game.setScreen(victoryScreen);
-                //TODO Le Jeu est gagné
+
             }
         }
 

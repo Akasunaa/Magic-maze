@@ -230,14 +230,14 @@ public class Queue implements Serializable {
         shown.rotateBy(90 * i);
     }
 
-    public void placeHandleAll(Vector2 mousePosition) {
+    public void placeHandleAll(Vector2 mousePosition, boolean fromServer) {
         if (isFirst) {
             // Relique de l'époque où on devait placer cette tuile à la main, sorry
             isFirst = false;
             origin.add(mousePosition);// Si c'est la première, on stock ses coordonées
             place(mousePosition); // On pose la tuile
             hide();
-        } else if (head.canPlaceThere()) { // techniquement pas besoin mais bon
+        } else if (head.canPlaceThere() || fromServer) { // techniquement pas besoin mais bon
             Functions.snap(mousePosition); // Tu alignes les coordonées sur la "grille"
             place(mousePosition);
             hide();
@@ -311,7 +311,7 @@ public class Queue implements Serializable {
                     Multiplayer.courrier.sendMessage(new RotateTile(-1));
                 }
                 if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT) && checkServerForPlacable()) {// si on sélectionne un endroit
-                    placeHandleAll(mousePosition);
+                    placeHandleAll(mousePosition, false);
                     isMovable = false;
                 }
             }

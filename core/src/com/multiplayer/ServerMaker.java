@@ -7,10 +7,12 @@ import com.badlogic.gdx.net.ServerSocketHints;
 import com.badlogic.gdx.net.Socket;
 import com.badlogic.gdx.net.SocketHints;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.multiplayer.messages.PayloadQueue;
 import com.screens.BaseScreen;
 import com.multiplayer.messages.PayloadPlayer;
 import com.multiplayer.messages.TextMessage;
 import com.screens.game.board.Player;
+import com.screens.game.board.Queue;
 import com.utils.Multiplayer;
 
 import java.io.BufferedReader;
@@ -85,6 +87,16 @@ public class ServerMaker {
                     System.out.println("Server: sent beginGame to "+ tempClient.getId());
                 }
                 // On signal que le serveur est prêt et que normalement les clients ont tout reçu
+                PayloadQueue temp = new PayloadQueue(new Queue(9));
+                for (Client tempClient : clientList.clientList) {
+                    tempClient.sendMessage(temp);
+                    System.out.println("Server: sent Queue to "+ tempClient.getId());
+                }
+
+                for (Client tempClient : clientList.clientList) {
+                    tempClient.sendMessage(new TextMessage("setAndGo"));
+                    System.out.println("Server: sent setAndGo to "+ tempClient.getId());
+                }
 
                 System.out.println("Server: Beginning last loop");
                 while (isRunning) {
@@ -138,9 +150,9 @@ public class ServerMaker {
 
                 // On créé la socket serveur en utilisant le protocol TCP, et en écoutant le port donné
                 serverSocket = Gdx.net.newServerSocket(Net.Protocol.TCP, port, serverSocketHint);
-                System.out.println("Created serverSocket");
+                System.out.println("Server : Created serverSocket");
                 while (isInLobby) {
-                    System.out.println("looking for players");
+                    System.out.println("Server : looking for players");
                     socket = serverSocket.accept(null); // On récupère une socket qui demande une connection
                     if (!isInLobby) break;
                     // Petite ligne qui me permet de quitter automatiquement une fois que tout ça est fini.
@@ -150,7 +162,7 @@ public class ServerMaker {
                         System.out.println("Server: Client added: " + client.getIp() + " as " + client.getId());
                         // On lui demande de renvoyer une nouvelle socket
                         try {
-                            client.getSendingSocket().getOutputStream().write(("Server send ReceivingSocket \n").getBytes());
+                            client.getSendingSocket().getOutputStream().write(("Server send ReceivingSocket\n").getBytes());
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
@@ -178,7 +190,7 @@ public class ServerMaker {
                         // Maintenant on renvois le joueur à tout le monde
                         // Et également on envois tout le monde au joueur
                         try {
-                            tempString = Multiplayer.mapper.writeValueAsString(client.player);
+                            tempString = mapper.writeValueAsString(client.player);
                         } catch (JsonProcessingException e) {
                             e.printStackTrace();
                         }
@@ -199,7 +211,12 @@ public class ServerMaker {
                         client.sendMessage(new TextMessage("setAndGo"));
                     }
                     else {
-                        client.sendMessage(new TextMessage("rejected"));
+                        System.out.println("Server : rejected incoming request");
+                        try {
+                            socket.getOutputStream().write("server rejected you\n".getBytes());
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
             }
