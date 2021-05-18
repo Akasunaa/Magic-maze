@@ -10,18 +10,23 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.multiplayer.ServerNotReachedException;
+import com.screens.GameScreens;
+import com.screens.endings.VictoryScreen;
 import com.screens.game.BaseActor;
 import com.screens.game.hud.GameInterface;
 import com.screens.game.hud.MouseWheelChecker;
 import com.screens.BaseScreen;
 import com.screens.MagicGame;
+import com.screens.menu.LobbyScreen;
 import com.utils.Colors;
 import com.utils.Functions;
 import com.utils.Multiplayer;
 
 import java.util.ArrayList;
 
-import static com.screens.GameScreens.gameScreen;
+import static com.screens.GameScreens.*;
+import static com.screens.GameScreens.lobbyScreen;
 import static com.utils.Functions.mouseInput;
 import static com.utils.MainConstants.*;
 import static com.utils.Multiplayer.cyclicBarrier;
@@ -196,7 +201,10 @@ public class GameScreen extends BaseScreen {
             // Si on est en phase B
             // Once again, je pourrais faire ça de manière plus propre mais meh
             if (numberPawnsOut == 4) {
-                //TODO Le Jeu est gagné
+                victoryScreen = new VictoryScreen(game);
+                GameScreens.game.dispose();
+                game.setScreen(victoryScreen);
+
             }
         }
 
