@@ -230,6 +230,7 @@ public class GameInterface extends BaseScreen {
 
         instrumental = Gdx.audio.newMusic(Gdx.files.internal("Music&Sound/PhaseA.mp3"));
         instrumental.setLooping(true);
+        instrumental.setVolume(game.audioVolume);
         instrumental.play();
 
         Texture pauseTexture = new Texture(Gdx.files.internal("GameUIAssets/barsHorizontal.png"));
