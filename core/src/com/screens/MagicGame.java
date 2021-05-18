@@ -23,7 +23,7 @@ public class MagicGame extends Game {
         // initialize resources common to multiple screens and store to skin database
         skin = new Skin();
         // Police d'écriture
-        BitmapFont uiFont = new BitmapFont(Gdx.files.internal("GameUIAssets/fontTest.fnt"));
+        BitmapFont uiFont = new BitmapFont(Gdx.files.internal("GameUIAssets/font.fnt"));
         uiFont.getRegion().getTexture().setFilter(TextureFilter.Linear,
                 TextureFilter.Linear);
         skin.add("uiFont", uiFont);

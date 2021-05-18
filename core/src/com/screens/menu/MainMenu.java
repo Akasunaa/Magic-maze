@@ -91,7 +91,7 @@ public class MainMenu extends BaseScreen {
 
         final Sound buttonHover = Gdx.audio.newSound(Gdx.files.internal("Music&Sound/buttonHover.mp3"));
 
-        Label ipLabel = new Label("Rentrez ici l'adresse ip du host de la partie :", game.skin, "uiLabelStyle");
+        Label ipLabel = new Label("Rentrez ici l'adresse IP de l'host de la partie :", game.skin, "uiLabelStyle");
 
         TextButton startButton = new TextButton("Créer une partie", game.skin, "uiTextButtonStyle");
         startButton.addListener(new InputListener() {
@@ -354,6 +354,7 @@ public class MainMenu extends BaseScreen {
         padTable.add(ipLabel);
         padTable.row();
         padTable.add(ipAddress).expandX().padTop(25).minWidth(200); //.fill(1,0.1f)
+        padTable.debugCell();
 
         uiTable.pad(20);
         uiTable.add(quitButton).right().colspan(4).expandX().padRight(200);
@@ -372,7 +373,7 @@ public class MainMenu extends BaseScreen {
         uiTable.row();
         uiTable.add(genintImage).left().colspan(4).padTop(50).padLeft(200);
 
-        //uiTable.debugCell();
+        uiTable.debugCell();
 
 
     }
