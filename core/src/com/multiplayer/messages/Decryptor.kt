@@ -2,7 +2,9 @@ package com.multiplayer.messages
 
 
 import com.badlogic.gdx.graphics.Color
+import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.scenes.scene2d.actions.Actions
+import com.multiplayer.messages.pawn.MovingPawn
 import com.screens.menu.MainMenu
 import com.multiplayer.messages.pawn.PlacePawn
 import com.multiplayer.messages.tile.GonnaMoveTile
@@ -11,7 +13,6 @@ import com.screens.game.board.Player
 import com.screens.game.board.Queue
 import com.utils.Functions
 import com.screens.GameScreens.*
-import com.utils.Multiplayer
 import com.utils.Multiplayer.*
 import com.utils.TileAndCases
 import java.util.Objects.isNull
@@ -53,18 +54,18 @@ class Decryptor {
                 }
             }
             "setAndGo" -> {
-                if (!Multiplayer.isServer) {
-                    // Boh on est plus à un mysticisme prêt
-                    println("Blocking in Decryptor setAndGo")
-                    cyclicBarrier.await()
-                    println("Unblocking in Decryptor setAndGo")
-                }
+//                if (!Multiplayer.isServer) {
+//                    // Boh on est plus à un mysticisme prêt
+//                    println("Blocking in Decryptor setAndGo")
+//                    cyclicBarrier.await()
+//                    println("Unblocking in Decryptor setAndGo")
+//                }
                 // En fait ça servait à rien de mettre une barrière ici étant donné que la
                 // Création du courrier se fait de manière linéaire dans le thread principal
             }
             "beginGame" -> {
 //                cyclicBarrier.await()
-                if (!Multiplayer.isServer) lobbyScreen.passToGameScreen()
+                lobbyScreen.setToPassToGameScreen()
             }
             "ping" -> {
                 if (isServer) {
@@ -101,9 +102,7 @@ class Decryptor {
                     }
                 }
                 else {
-                    val x = message.payload.split(' ')[3].toFloat()
-                    val y = message.payload.split(' ')[4].toFloat()
-                    tempPawn.setTarget(x, y)
+                    tempPawn.setTarget(message.coordinates[0], message.coordinates[1])
 //                    try {
 //                        // Try and do a bit of interpolation here
 //                        // Edit: it's mostly done i think
@@ -122,11 +121,12 @@ class Decryptor {
             }
             "wantToPlacePawn" -> {
                 val tempPawn = Functions.getPawn(message.target)
-                val tempCase = Functions.findCase(tempPawn.position)
-                if (tempCase?.pawn == null) {
+                val tempCase = Functions.findCase(Vector2(message.coordinates[0],message.coordinates[1]))
+                if (tempCase?.pawn == null || tempCase.pawn == tempPawn) {
                     clientList.getClient(message.sender).sendMessage(Answer(true))
                     for (tempClient in clientList.clientList) {
                         if (tempClient.id != message.sender) {
+                            tempClient.sendMessage(MovingPawn(tempPawn,Vector2(message.coordinates[0],message.coordinates[1])))
                             tempClient.sendMessage(PlacePawn(message.target))
                         }
                     }
@@ -157,12 +157,7 @@ class Decryptor {
                     }
                 }
                 try {
-                    val x = message.payload.split(' ')[2].toFloat()
-                    val y = message.payload.split(' ')[3].toFloat()
-                    // There's no need for a specification of what tile we're sending
-                    // Try and do a bit of interpolation here
-                    // Edit: it's mostly done i think
-                    TileAndCases.queue.setSpritePosition(x,y)
+                    TileAndCases.queue.setSpritePosition(message.coordinates[0],message.coordinates[1])
                 } catch (e: Exception) {
                     println("Wrong Numbers Sent")
                 }

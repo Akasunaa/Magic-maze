@@ -15,7 +15,6 @@ public class Player implements Serializable {
     public boolean south;
     public boolean east;
     public boolean west;
-    public boolean shortcutTaker;
     public boolean escalatorTaker;
     public boolean portalTaker;
     public boolean cardChooser;
@@ -42,13 +41,12 @@ public class Player implements Serializable {
 
     private Player(boolean north, boolean south,
             boolean east, boolean west,
-            boolean shortcutTaker, boolean escalatorTaker, boolean portalTaker,
+            boolean escalatorTaker, boolean portalTaker,
             boolean cardChooser, Pawn pawn) {
         this.north = north;
         this.south = south;
         this.east = east;
         this.west = west;
-        this.shortcutTaker = shortcutTaker;
         this.escalatorTaker = escalatorTaker;
         this.portalTaker = portalTaker;
         this.cardChooser = cardChooser;
@@ -56,13 +54,12 @@ public class Player implements Serializable {
     }
     Player(boolean north, boolean south,
                   boolean east, boolean west,
-                  boolean shortcutTaker, boolean escalatorTaker, boolean portalTaker,
+                  boolean escalatorTaker, boolean portalTaker,
                   boolean cardChooser) {
         this.north = north;
         this.south = south;
         this.east = east;
         this.west = west;
-        this.shortcutTaker = shortcutTaker;
         this.escalatorTaker = escalatorTaker;
         this.portalTaker = portalTaker;
         this.cardChooser = cardChooser;
@@ -75,13 +72,12 @@ public class Player implements Serializable {
         west = player.west;
         east = player.east;
         escalatorTaker = player.escalatorTaker;
-        shortcutTaker = player.shortcutTaker;
         portalTaker = player.portalTaker;
     }
 
     Player rotate(int i) {
         if (i==0) return this;
-        else return (new Player(south,north,west,east,shortcutTaker,escalatorTaker,portalTaker, cardChooser,pawn)).rotate(modulo(i-1,numberDirections));
+        else return (new Player(south,north,west,east,escalatorTaker,portalTaker, cardChooser,pawn)).rotate(modulo(i-1,numberDirections));
     }
     public void takesPawn(Pawn pawn) {
         this.pawn = pawn;

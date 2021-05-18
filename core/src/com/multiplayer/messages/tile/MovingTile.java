@@ -6,6 +6,6 @@ import com.multiplayer.messages.Message;
 public class MovingTile extends Message {
     public MovingTile(Vector2 coordinates) {
         action = "movingTile";
-        payload = coordinates.x + " "+ coordinates.y;
+        this.coordinates = new float[] {coordinates.x,coordinates.y};
     }
 }

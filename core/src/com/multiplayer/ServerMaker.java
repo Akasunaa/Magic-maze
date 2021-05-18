@@ -7,10 +7,12 @@ import com.badlogic.gdx.net.ServerSocketHints;
 import com.badlogic.gdx.net.Socket;
 import com.badlogic.gdx.net.SocketHints;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.multiplayer.messages.PayloadQueue;
 import com.screens.BaseScreen;
 import com.multiplayer.messages.PayloadPlayer;
 import com.multiplayer.messages.TextMessage;
 import com.screens.game.board.Player;
+import com.screens.game.board.Queue;
 import com.utils.Multiplayer;
 
 import java.io.BufferedReader;
@@ -85,6 +87,16 @@ public class ServerMaker {
                     System.out.println("Server: sent beginGame to "+ tempClient.getId());
                 }
                 // On signal que le serveur est prêt et que normalement les clients ont tout reçu
+
+                for (Client tempClient : clientList.clientList) {
+                    tempClient.sendMessage(new PayloadQueue(new Queue(9)));
+                    System.out.println("Server: sent Queue to "+ tempClient.getId());
+                }
+
+                for (Client tempClient : clientList.clientList) {
+                    tempClient.sendMessage(new TextMessage("setAndGo"));
+                    System.out.println("Server: sent setAndGo to "+ tempClient.getId());
+                }
 
                 System.out.println("Server: Beginning last loop");
                 while (isRunning) {

@@ -378,6 +378,7 @@ public class MainMenu extends BaseScreen {
     }
 
     public void update(float dt) {
+        pseudoValid = true;
         if (usernameTextField.getText().contains(" ")){
             pseudoValid = false;
             warningLabel.setVisible(true);

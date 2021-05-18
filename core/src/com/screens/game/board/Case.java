@@ -3,6 +3,7 @@ package com.screens.game.board;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.screens.game.BaseActor;
+import com.utils.Colors;
 import com.sun.tools.javac.comp.Todo;
 import com.utils.TileAndCases;
 
@@ -205,7 +206,7 @@ public class Case implements Serializable {
                 }
             }
 
-            if (player.shortcutTaker) {
+            if (pawn.getColor() == Colors.orange) {
                 if (shortcut != null) {
                     shortcut.explore(player);
                 }
@@ -214,7 +215,6 @@ public class Case implements Serializable {
             if (player.portalTaker && !isInPhaseB){
                 for (Case tempCase : TileAndCases.portalList[player.pawn.getColor()]){
                     tempCase.explore(player);
-                    //TODO: enlever pour la deuxième phase
                 }
             }
         }
@@ -264,7 +264,7 @@ public class Case implements Serializable {
                 }
             }
 
-            if (tempPlayer.shortcutTaker) {
+            if (pawn.getColor() == Colors.orange) {
                 if (shortcut != null) {
                     shortcut.unexplored();
                     shortcut.revert(player);

@@ -17,14 +17,11 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.screens.BaseScreen;
 import com.screens.MagicGame;
-import com.multiplayer.Client;
 import com.multiplayer.messages.Courrier;
 import com.multiplayer.ServerMaker;
 import com.multiplayer.ServerNotReachedException;
-import com.multiplayer.messages.PayloadQueue;
 import com.screens.game.board.GameScreen;
 import com.screens.game.board.Player;
-import com.screens.game.board.Queue;
 import com.screens.game.BaseActor;
 import com.utils.Functions;
 import com.utils.Multiplayer;
@@ -32,8 +29,7 @@ import com.utils.Multiplayer;
 import java.util.ArrayList;
 
 import static com.screens.GameScreens.gameScreen;
-import static com.utils.Multiplayer.playerList;
-import static com.utils.TileAndCases.queue;
+import static com.utils.Multiplayer.*;
 
 public class LobbyScreen extends BaseScreen {
 
@@ -52,27 +48,60 @@ public class LobbyScreen extends BaseScreen {
         super(g);
     }
 
-    public boolean hasPassedScreen = false;
+    public boolean shouldPassScreen = false;
 
-    public void passToGameScreen() {
-        gameScreen = new GameScreen(game);
-        gameScreen.load();
-        game.setScreen(gameScreen);
-        Multiplayer.serverMaker.quitLobby();
-        hasPassedScreen = true;
+    public void setToPassToGameScreen() {
+        shouldPassScreen = true;
     }
-    public void create() {
-        // pour le son
 
-
-        final BaseActor background = new BaseActor(new Texture(Gdx.files.internal("MenuAssets/BlurryMallBackground.jpg")));
-        uiStage.addActor(background);
-
+    private void passToGameScreen() {
+        // Là on va mettre en place le fading
         final BaseActor transparentForeground = new BaseActor(new Texture(Gdx.files.internal("MenuAssets/Black.gif")));
         transparentForeground.setSize(1920, 1080);
         transparentForeground.setColor(0, 0, 0, 0);
         transparentForeground.setTouchable(Touchable.disabled);
+        transparentForeground.toFront();
         uiStage.addActor(transparentForeground);
+        // Je met ça là, car il y a un cyclicBarrier.await() dans gameScreen
+        // Comme ça on est à peu près sur que tout le monde lance en même temps
+
+        gameScreen = new GameScreen(game);
+        gameScreen.load();
+
+
+        transparentForeground.setTouchable(Touchable.enabled);
+
+        Action fadeToBlack = Actions.sequence(
+                //Actions.alpha(1f), // set transparency value
+                Actions.show(), // set visible to true
+                Actions.forever(
+                        Actions.sequence(
+                                // Fondu de transition
+                                Actions.color(new Color(0, 0, 0, 1), 2)
+
+                        )
+                )
+        );
+        transparentForeground.addAction(fadeToBlack);
+
+
+        float delay = 2; // seconds
+
+        Timer.schedule(new Timer.Task() {
+            @Override
+            public void run() {
+                setToPassToGameScreen();
+            }
+        }, delay);
+        game.setScreen(gameScreen);
+        shouldPassScreen = false;
+    }
+    public void create() {
+        // pour le son
+        final BaseActor background = new BaseActor(new Texture(Gdx.files.internal("MenuAssets/BlurryMallBackground.jpg")));
+        uiStage.addActor(background);
+
+
 
         background.toBack();
 
@@ -85,30 +114,7 @@ public class LobbyScreen extends BaseScreen {
             }
 
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-                transparentForeground.setTouchable(Touchable.enabled);
-
-                Action fadeToBlack = Actions.sequence(
-                        //Actions.alpha(1f), // set transparency value
-                        Actions.show(), // set visible to true
-                        Actions.forever(
-                                Actions.sequence(
-                                        // Fondu de transition
-                                        Actions.color(new Color(0, 0, 0, 1), 2)
-
-                                )
-                        )
-                );
-                transparentForeground.addAction(fadeToBlack);
-
-
-                float delay = 2; // seconds
-
-                Timer.schedule(new Timer.Task() {
-                    @Override
-                    public void run() {
-                        passToGameScreen();
-                    }
-                }, delay);
+                serverMaker.quitLobby();
             }
         });
 
@@ -132,6 +138,7 @@ public class LobbyScreen extends BaseScreen {
             }
         });
         startButton.getLabel().setTouchable(Touchable.disabled);
+        startButton.setVisible(isServer);
 
         quitButton = new TextButton("Quit", game.skin, "uiTextButtonStyle");
         quitButton.addListener(new InputListener() {
@@ -209,16 +216,6 @@ public class LobbyScreen extends BaseScreen {
 
         makeUiTable();
 
-        transparentForeground.toFront();
-        transparentForeground.addListener(new InputListener() {
-            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                transparentForeground.addAction(Actions.sequence(
-                        Actions.color(new Color(1, 0, 0, 1), (float) 0.20),
-                        Actions.color(new Color(1, 1, 1, 1), (float) 0.20)));
-                return true;
-            }
-        });
-
 
 
 
@@ -243,20 +240,6 @@ public class LobbyScreen extends BaseScreen {
             Multiplayer.serverMaker.enterLobby();
         }
         Multiplayer.courrier = new Courrier(Multiplayer.me.pseudo, Multiplayer.port, Multiplayer.serverIP);
-
-        if (Multiplayer.isServer) {
-            queue = new Queue(9); // J'ai fait les cases uniquement jusqu'à la 9
-            for (Client client : Multiplayer.clientList.clientList) {
-                client.sendMessage(new PayloadQueue(queue));
-            }
-        }
-        try {
-            System.out.println("Blocking in lobbyScreen");
-            Multiplayer.cyclicBarrier.await();
-            System.out.println("Unlocking in lobbyScreen");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
         System.out.println("Client: Launching Lobby");
 
         // On met ça ici parce que sinon problèmes lors de l'appel
@@ -344,6 +327,7 @@ public class LobbyScreen extends BaseScreen {
             }
             hasPlayerToUpdate = false;
         }
+        if (shouldPassScreen) passToGameScreen();
     }
 
     public boolean hasChangedPseudo = false;

@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import static com.screens.GameScreens.gameScreen;
 import static com.utils.Functions.mouseInput;
 import static com.utils.MainConstants.*;
+import static com.utils.Multiplayer.cyclicBarrier;
 import static com.utils.Multiplayer.playerList;
 import static com.utils.TileAndCases.*;
 
@@ -85,7 +86,7 @@ public class GameScreen extends BaseScreen {
 
         tileList = new ArrayList<Tile>();
 
-        Multiplayer.me.setPlayer(new Player(true, true, true, true, true, true,true, true));
+        Multiplayer.me.setPlayer(new Player(true, true, true, true, true,true, true));
 
         // Bon là c'est le batch et les trucs pour écrire, rien d'important
         batch = new SpriteBatch();
@@ -104,6 +105,14 @@ public class GameScreen extends BaseScreen {
         for (Tile tile : tileList) {
             tile.load();
         }
+
+        try {
+            cyclicBarrier.await();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        // On attends d'avoir la queue
+
         gameInterface = new GameInterface(game);
         gameInterface.hasBackground = false;
         queue.setCoordinates(1920 - tileSize / 2 - 20, 20);
