@@ -20,10 +20,12 @@ import com.utils.Functions;
 import com.utils.Multiplayer;
 
 import java.util.ArrayList;
+import java.util.concurrent.BrokenBarrierException;
 
 import static com.screens.GameScreens.gameScreen;
 import static com.utils.Functions.mouseInput;
 import static com.utils.MainConstants.*;
+import static com.utils.Multiplayer.cyclicBarrier;
 import static com.utils.Multiplayer.playerList;
 import static com.utils.TileAndCases.*;
 
@@ -104,6 +106,14 @@ public class GameScreen extends BaseScreen {
         for (Tile tile : tileList) {
             tile.load();
         }
+
+        try {
+            cyclicBarrier.await();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        // On attends d'avoir la queue
+
         gameInterface = new GameInterface(game);
         gameInterface.hasBackground = false;
         queue.setCoordinates(1920 - tileSize / 2 - 20, 20);

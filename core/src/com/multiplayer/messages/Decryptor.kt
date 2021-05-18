@@ -53,18 +53,18 @@ class Decryptor {
                 }
             }
             "setAndGo" -> {
-                if (!Multiplayer.isServer) {
-                    // Boh on est plus à un mysticisme prêt
-                    println("Blocking in Decryptor setAndGo")
-                    cyclicBarrier.await()
-                    println("Unblocking in Decryptor setAndGo")
-                }
+//                if (!Multiplayer.isServer) {
+//                    // Boh on est plus à un mysticisme prêt
+//                    println("Blocking in Decryptor setAndGo")
+//                    cyclicBarrier.await()
+//                    println("Unblocking in Decryptor setAndGo")
+//                }
                 // En fait ça servait à rien de mettre une barrière ici étant donné que la
                 // Création du courrier se fait de manière linéaire dans le thread principal
             }
             "beginGame" -> {
 //                cyclicBarrier.await()
-                if (!Multiplayer.isServer) lobbyScreen.setToPassToGameScreen()
+                lobbyScreen.setToPassToGameScreen()
             }
             "ping" -> {
                 if (isServer) {
