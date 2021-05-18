@@ -124,6 +124,7 @@ class Decryptor {
                 val tempCase = Functions.findCase(Vector2(message.coordinates[0],message.coordinates[1]))
                 if (tempCase?.pawn == null || tempCase.pawn == tempPawn) {
                     clientList.getClient(message.sender).sendMessage(Answer(true))
+                    clientList.getClient(message.sender).player.dropsPawn(tempPawn)
                     for (tempClient in clientList.clientList) {
                         if (tempClient.id != message.sender) {
                             tempClient.sendMessage(MovingPawn(tempPawn,Vector2(message.coordinates[0],message.coordinates[1])))
