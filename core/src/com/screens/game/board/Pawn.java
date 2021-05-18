@@ -64,9 +64,11 @@ public class Pawn implements Serializable {
             setCase.used();
         }
 
-        if (setCase.hasWeapon && setCase.color == color) {
+        if (!isInPhaseB){
+            if (setCase.hasWeapon && setCase.color == color) {
             numberWeaponsRetrieved ++;
             isLocked = true;
+            }
         }
 
         if (setCase.isFinalExit && isInPhaseB) {        // Si on fait plus de scénarii, il faudra rajouter le fait qu'il faut que ce soit de la bonne couleur
