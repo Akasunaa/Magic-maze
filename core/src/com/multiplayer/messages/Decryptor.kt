@@ -25,7 +25,7 @@ class Decryptor {
         when (message.action) {
             "answer" -> {
                 courrier.answer = message.target.toBoolean()
-                cyclicBarrier.await() // Pour synchroniser les threads
+                if (cyclicBarrier.parties >= 1) cyclicBarrier.await() // Pour synchroniser les threads
                 println("$suffix: Processed Answer " + message.target)
 
             }

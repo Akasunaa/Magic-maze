@@ -14,17 +14,19 @@ import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.multiplayer.messages.TextMessage;
 import com.screens.BaseScreen;
 import com.screens.GameScreens;
 import com.screens.MagicGame;
 import com.screens.game.BaseActor;
-import com.utils.*;
+import com.utils.Functions;
+import com.utils.MainConstants;
+import com.utils.Multiplayer;
 
 import static com.utils.MainConstants.getFontSize;
 import static com.utils.Multiplayer.courrier;
-import static com.utils.TileAndCases.*;
+import static com.utils.TileAndCases.queue;
+import static com.utils.TileAndCases.tileSize;
 
 public class GameInterface extends BaseScreen {
     private PlayerOnHUD[] avatars;
@@ -95,7 +97,7 @@ public class GameInterface extends BaseScreen {
         );
         uiStage.addActor(restart);
 
-        logs = new Logs(new Skin(Gdx.files.internal("GameUIAssets/uiskin.json")),new Texture(Gdx.files.internal("interface/log.png")));
+        logs = new Logs(game.skin,new Texture(Gdx.files.internal("interface/log.png")));
         logs.setPosition(0, 50);
         logs.setSize(300,500);
         uiStage.addActor(logs.logArea);

@@ -10,23 +10,21 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.multiplayer.ServerNotReachedException;
+import com.screens.BaseScreen;
 import com.screens.GameScreens;
+import com.screens.MagicGame;
 import com.screens.endings.VictoryScreen;
 import com.screens.game.BaseActor;
 import com.screens.game.hud.GameInterface;
 import com.screens.game.hud.MouseWheelChecker;
-import com.screens.BaseScreen;
-import com.screens.MagicGame;
-import com.screens.menu.LobbyScreen;
 import com.utils.Colors;
 import com.utils.Functions;
 import com.utils.Multiplayer;
 
 import java.util.ArrayList;
 
-import static com.screens.GameScreens.*;
-import static com.screens.GameScreens.lobbyScreen;
+import static com.screens.GameScreens.gameScreen;
+import static com.screens.GameScreens.victoryScreen;
 import static com.utils.Functions.mouseInput;
 import static com.utils.MainConstants.*;
 import static com.utils.Multiplayer.cyclicBarrier;
@@ -99,6 +97,7 @@ public class GameScreen extends BaseScreen {
         Label.LabelStyle style = new Label.LabelStyle(font, Color.BLACK);
         coordMouse = new Label(" ", style);
         coordMouse.setPosition(200, 50);
+        coordMouse.setVisible(false);
         numberCase = new Label(" ", style);
         numberCase.setPosition(200,100);
         uiStage.addActor(coordMouse);
@@ -166,7 +165,7 @@ public class GameScreen extends BaseScreen {
         gameInterface.render(delta);
 
         batch.begin();
-        coordMouse.setText(stringMousePosition(camera) + "\n" + stringMousePosition((OrthographicCamera) uiStage.getCamera())); // On écrit les coordonées
+        //coordMouse.setText(stringMousePosition(camera) + "\n" + stringMousePosition((OrthographicCamera) uiStage.getCamera())); // On écrit les coordonées
         queue.handleInput();
 
         for (Pawn pawn : pawnList) {

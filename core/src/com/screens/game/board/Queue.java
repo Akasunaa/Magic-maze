@@ -16,6 +16,7 @@ import com.utils.Multiplayer;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.concurrent.TimeUnit;
 
 import static com.screens.GameScreens.gameScreen;
 import static com.utils.TileAndCases.*;
@@ -255,9 +256,11 @@ public class Queue implements Serializable {
             e.printStackTrace();
         }
         Multiplayer.courrier.sendMessage(new AskPlaceTile());
+        Multiplayer.courrier.setAnswer();
         try {
-            Multiplayer.cyclicBarrier.await();
-            // Pour synchroniser les threads
+            System.out.println("Blocking in Queue Place");
+            Multiplayer.cyclicBarrier.await(500, TimeUnit.MILLISECONDS);            // Pour synchroniser les threads
+            System.out.println("Unblocking in Queue Place");
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -266,9 +269,11 @@ public class Queue implements Serializable {
 
     private boolean checkServerForClickable() {
         Multiplayer.courrier.sendMessage(new AskTakeTile());
+        Multiplayer.courrier.setAnswer();
         try {
-            Multiplayer.cyclicBarrier.await();
-            // Pour synchroniser les threads
+            System.out.println("Blocking in Queue Click");
+            Multiplayer.cyclicBarrier.await(500, TimeUnit.MILLISECONDS);            // Pour synchroniser les threads
+            System.out.println("Unblocking in Queue Click");
         } catch (Exception e) {
             e.printStackTrace();
         }

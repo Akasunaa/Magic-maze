@@ -13,6 +13,8 @@ import com.multiplayer.messages.pawn.MovingPawn;
 import com.utils.*;
 
 import java.io.Serializable;
+import java.util.concurrent.BrokenBarrierException;
+import java.util.concurrent.TimeUnit;
 
 import static com.utils.Functions.findCase;
 import static com.screens.GameScreens.gameScreen;
@@ -238,9 +240,10 @@ public class Pawn implements Serializable {
 
     private boolean checkServerForClickable() {
         Multiplayer.courrier.sendMessage(new AskTakePawn(this));
+        Multiplayer.courrier.setAnswer();
         try {
             System.out.println("Blocking in pawn check click");
-            Multiplayer.cyclicBarrier.await();
+            Multiplayer.cyclicBarrier.await(500, TimeUnit.MILLISECONDS);
             System.out.println("Unlocking in pawn check click");
             // Pour synchroniser les threads
         } catch (Exception e) {
@@ -252,18 +255,15 @@ public class Pawn implements Serializable {
 
     private boolean checkServerForPlaceable(Vector2 coordinates) {
         Multiplayer.courrier.sendMessage(new AskPlacePawn(this, coordinates));
+        Multiplayer.courrier.setAnswer();
         System.out.println("Client: checked for placeable");
         try {
             System.out.println("Blocking in pawn check place");
-            Multiplayer.cyclicBarrier.await();
+            Multiplayer.cyclicBarrier.await(500, TimeUnit.MILLISECONDS);
             System.out.println("Unlocking in pawn check place");
             // Pour synchroniser les threads
         } catch (Exception e) {
-            e.printStackTrace();
         }
-        System.out.println(Multiplayer.courrier.getAnswer());
         return Multiplayer.courrier.getAnswer();
     }
-
-
 }

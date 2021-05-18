@@ -1,9 +1,6 @@
 package com.screens.game.hud;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextArea;
 import com.screens.game.BaseActor;
@@ -16,9 +13,13 @@ public class Logs extends BaseActor{
 
     public Logs(Skin skin, Texture texture){
         super(texture);
-        logArea = new TextArea("", skin);
         logBackground = new BaseActor(texture);
-        logArea.setText("Debut de la partie!");
+        logBackground.setVisible(false);
+        logArea = new TextArea("", skin, "logStyle");
+        logArea.setVisible(true);
+        // Les textArea on déjà un background
+//        logBackground.setColor(new Color(1,1,1,1f));
+        logArea.setText("Début de la partie!");
     }
 
     public void setSize(int a, int b) {

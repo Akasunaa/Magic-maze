@@ -3,17 +3,15 @@ package com.screens;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.Texture.TextureFilter;
-import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
-
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.NinePatch;
-
+import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Slider.SliderStyle;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
+import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.screens.menu.MainMenu;
 
 public class MagicGame extends Game {
@@ -21,12 +19,10 @@ public class MagicGame extends Game {
     public float audioVolume = 0.60f;
     public void create() {
         // initialize resources common to multiple screens and store to skin database
-        skin = new Skin();
+        skin = new Skin(Gdx.files.internal("GameUIAssets/uiskin.json"));
+
         // Police d'écriture
-        BitmapFont uiFont = new BitmapFont(Gdx.files.internal("GameUIAssets/font.fnt"));
-        uiFont.getRegion().getTexture().setFilter(TextureFilter.Linear,
-                TextureFilter.Linear);
-        skin.add("uiFont", uiFont);
+        BitmapFont uiFont = skin.getFont("default-font");
         LabelStyle uiLabelStyle = new LabelStyle(uiFont, Color.BLUE);
         skin.add("uiLabelStyle", uiLabelStyle);
 
@@ -34,18 +30,18 @@ public class MagicGame extends Game {
         TextButtonStyle uiTextButtonStyle = new TextButtonStyle();
         uiTextButtonStyle.font = uiFont;
         uiTextButtonStyle.fontColor = Color.NAVY;
-        Texture upTex = new Texture(Gdx.files.internal("GameUIAssets/ninepatch-1.png"));
+        Texture upTex = new Texture(Gdx.files.internal("GameUIAssets/Button/Idle.png"));
         skin.add("buttonUp", new NinePatch(upTex, 26,26,16,20));
         uiTextButtonStyle.up = skin.getDrawable("buttonUp");
 
         //Texture bouton quand survolé
-        Texture overTex = new Texture(Gdx.files.internal("GameUIAssets/ninepatch-2.png"));
+        Texture overTex = new Texture(Gdx.files.internal("GameUIAssets/Button/Clicked.png"));
         skin.add("buttonOver", new NinePatch(overTex, 26,26,16,20) );
         uiTextButtonStyle.over = skin.getDrawable("buttonOver");
         uiTextButtonStyle.overFontColor = Color.BLUE;
 
         //Texture bouton quand appuyé
-        Texture downTex = new Texture(Gdx.files.internal("GameUIAssets/ninepatch-3.png"));
+        Texture downTex = new Texture(Gdx.files.internal("GameUIAssets/Button/Released.png"));
         skin.add("buttonDown", new NinePatch(downTex, 26,26,16,20) );
         uiTextButtonStyle.down = skin.getDrawable("buttonDown");
         uiTextButtonStyle.downFontColor = Color.BLUE;
@@ -62,6 +58,14 @@ public class MagicGame extends Game {
         uiSliderStyle.knobAfter = skin.getDrawable("sliderAfter");
         uiSliderStyle.knobBefore = skin.getDrawable("sliderBefore");
         skin.add("uiSliderStyle", uiSliderStyle);
+
+        TextField.TextFieldStyle logStyle = new TextField.TextFieldStyle();
+        Texture logBackground = new Texture(Gdx.files.internal("GameUIAssets/logBackground.png"));
+        skin.add("logBackground", new NinePatch(logBackground, 10,10,10,10));
+        logStyle.background = skin.getDrawable("logBackground");
+        logStyle.font = skin.getFont("default-font-small");
+        logStyle.fontColor = skin.getColor("white");
+        skin.add("logStyle", logStyle);
 
         //Toujours à la fin
         MainMenu cm = new MainMenu(this);

@@ -5,20 +5,22 @@ import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.scenes.scene2d.*;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.ui.*;
-
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
+import com.badlogic.gdx.scenes.scene2d.Touchable;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Scaling;
 import com.badlogic.gdx.utils.Timer;
-import com.screens.MagicGame;
 import com.multiplayer.ServerNotReachedException;
-import com.screens.game.BaseActor;
 import com.screens.BaseScreen;
 import com.screens.GameScreens;
+import com.screens.MagicGame;
+import com.screens.game.BaseActor;
 import com.utils.Multiplayer;
 
 import static com.screens.GameScreens.lobbyScreen;
@@ -346,11 +348,11 @@ public class MainMenu extends BaseScreen {
 //        System.out.println(warningLabel.getColor());
 
 
-        Skin uiSkin = new Skin(Gdx.files.internal("GameUIAssets/uiskin.json"));
 
         pseudoValid = true;
-        usernameTextField = new TextField("Pseudo", uiSkin);
-        usernameTextField.setMaxLength(13);
+        usernameTextField = new TextField("Pseudo", game.skin);
+        usernameTextField.setMaxLength(15);
+        usernameTextField.setAlignment(Align.center);
 
         usernameTextField.addListener(new ChangeListener() {
             public void changed(ChangeEvent event, Actor actor) {
@@ -359,8 +361,9 @@ public class MainMenu extends BaseScreen {
         });
         Multiplayer.me.pseudo = usernameTextField.getText();
 
-        ipAddress = new TextField(Multiplayer.ip, uiSkin);
+        ipAddress = new TextField(Multiplayer.ip, game.skin);
         ipAddress.setMaxLength(15);
+        ipAddress.setAlignment(Align.center);
         ipAddress.addListener(new ChangeListener() {
             public void changed(ChangeEvent event, Actor actor) {
                 Multiplayer.serverIP = ipAddress.getText();
@@ -372,8 +375,16 @@ public class MainMenu extends BaseScreen {
         padTable.row();
         padTable.add(ipLabel);
         padTable.row();
-        padTable.add(ipAddress).expandX().padTop(25).minWidth(200); //.fill(1,0.1f)
-        padTable.debugCell();
+        padTable.add(ipAddress).padTop(25).minWidth(400); //.fill(1,0.1f)
+        //padTable.debugCell();
+
+        Table buttonTable = new Table();
+        buttonTable.add(optionButton).padTop(20).right().padRight(40).fillX();
+        buttonTable.add(ruleButton).padTop(20).left().padLeft(0).fillX();
+        buttonTable.row();
+        buttonTable.add(startButton).padTop(20).right().padRight(40).fillX();
+        buttonTable.add(joinButton).padTop(20).left().padLeft(0).fillX();
+        //buttonTable.debugCell();
 
         uiTable.pad(20);
         uiTable.add(quitButton).right().colspan(4).expandX().padRight(200);
@@ -384,15 +395,11 @@ public class MainMenu extends BaseScreen {
         uiTable.add(padTable).colspan(2); //.fill()
         uiTable.add(groupImage2).left().padLeft(25); //.right() .maxWidth(400)
         uiTable.row();
-        uiTable.add(optionButton).padTop(20).colspan(2).right().padRight(40);
-        uiTable.add(ruleButton).padTop(20).colspan(2).left().padLeft(0).minSize(419,5);
-        uiTable.row();
-        uiTable.add(startButton).padTop(20).colspan(2).right().padRight(40).minSize(475,5);
-        uiTable.add(joinButton).padTop(20).colspan(2).left().padLeft(0);
+        uiTable.add(buttonTable).center().colspan(5);
         uiTable.row();
         uiTable.add(genintImage).left().colspan(4).padTop(50).padLeft(200);
 
-        uiTable.debugCell();
+        //uiTable.debugCell();
 
 
     }

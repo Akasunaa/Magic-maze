@@ -18,6 +18,9 @@ public class Courrier {
     public boolean getAnswer() {
         return answer;
     }
+    public void setAnswer() {
+        answer = false;
+    }
 
     public Socket getReceivingSocket() {
         return receivingSocket;
