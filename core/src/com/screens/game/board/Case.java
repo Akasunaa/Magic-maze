@@ -205,7 +205,7 @@ public class Case implements Serializable {
                 }
             }
 
-            if (pawn.getColor() == Colors.orange) {
+            if (player.pawn.getColor() == Colors.orange) {
                 if (shortcut != null) {
                     shortcut.explore(player);
                 }
@@ -263,7 +263,7 @@ public class Case implements Serializable {
                 }
             }
 
-            if (pawn.getColor() == Colors.orange) {
+            if (player.pawn.getColor() == Colors.orange) {
                 if (shortcut != null) {
                     shortcut.unexplored();
                     shortcut.revert(player);
