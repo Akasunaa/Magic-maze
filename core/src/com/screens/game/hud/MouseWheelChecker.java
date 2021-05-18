@@ -3,7 +3,6 @@ package com.screens.game.hud;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
-import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.Vector3;
 
 import static com.utils.Functions.mouseInput;

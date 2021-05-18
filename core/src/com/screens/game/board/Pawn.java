@@ -75,7 +75,6 @@ public class Pawn implements Serializable {
             setCase.pawn = null;
             dispose();
         }
-
     }
 
     private void setFirstCase() {
@@ -130,19 +129,19 @@ public class Pawn implements Serializable {
     public boolean hasTarget= false;
     public float speed = 0;
     public void setTarget(float x, float y) {
-        // Anciennement pour de l'interpolation,
-        // A cause d'un problème non résolu, on ne fait en soit plus tellement de l'interpolation maintenant
         target.x = x;
         target.y = y;
         hasTarget = true;
     }
     public void interpolate(float alpha, Interpolation interpolation) {
-        Vector2 temp = position.interpolate(target, alpha, interpolation);
-        setSpritePosition(temp);
+        //Vector2 temp = position.interpolate(target, alpha, interpolation);
+        // J'ai supprimé l'interpolation, ça causait des problèmes
+        setSpritePosition(target);
+        hasTarget = false;
     }
     private boolean firstTime = true;
     public void sendToTarget() {
-        if (firstTime) {firstTime = false; return;}
+//        if (firstTime) {firstTime = false; return;}
         setSpritePosition(target);
         hasTarget = false;
     }
@@ -162,7 +161,7 @@ public class Pawn implements Serializable {
     private boolean canPlaceHere(Vector2 coordinates, Player player) {
         try {
             Case nextCase = findCase(coordinates); // Est-on sur une case ?
-            if ((!(nextCase == null) && nextCase.isValid && checkServerForPlaceable()) // Si elle existe et est non nulle, et qu'on peut la placer
+            if ((!(nextCase == null) && nextCase.isValid && checkServerForPlaceable(coordinates)) // Si elle existe et est non nulle, et qu'on peut la placer
                 || nextCase.equals(player.pawn.setCase)) { // Pour checker le cas où on veut la replacer là où elle était de base i guess
                 setCase.revert(player); // On annule le pathfinding... avec un autre pathfinding
                 setCase.hide(); // On cache la case de départ
@@ -177,7 +176,7 @@ public class Pawn implements Serializable {
         }
         return false;
     }
-    private int count = 2;
+    private int count = 1;
 
     public void place(Vector2 coordinates) {
         try {
@@ -204,6 +203,7 @@ public class Pawn implements Serializable {
                 // J'ai aucune idée de pourquoi, mais bon en mettant 1 ça fonctionne
                 // ça rends aussi totalement inutile mon code d'interpolation mais bon
                 Multiplayer.courrier.sendMessage(new MovingPawn(this, new Vector2(x,y)));
+                //System.out.println("Sending coordinates");
                 count = 0;
             }
             count++;
@@ -241,13 +241,13 @@ public class Pawn implements Serializable {
         return Multiplayer.courrier.getAnswer();
     }
 
-    private boolean checkServerForPlaceable() {
-        Multiplayer.courrier.sendMessage(new AskPlacePawn(this));
+    private boolean checkServerForPlaceable(Vector2 coordinates) {
+        Multiplayer.courrier.sendMessage(new AskPlacePawn(this, coordinates));
         System.out.println("Client: checked for placeable");
         try {
             System.out.println("Blocking in pawn check place");
             Multiplayer.cyclicBarrier.await();
-            System.out.println("Unlocking in pawn check palce");
+            System.out.println("Unlocking in pawn check place");
             // Pour synchroniser les threads
         } catch (Exception e) {
             e.printStackTrace();

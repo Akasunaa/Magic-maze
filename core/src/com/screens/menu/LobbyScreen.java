@@ -15,17 +15,13 @@ import com.badlogic.gdx.utils.Timer;
 
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
-import com.multiplayer.messages.TextMessage;
 import com.screens.BaseScreen;
 import com.screens.MagicGame;
-import com.multiplayer.Client;
 import com.multiplayer.messages.Courrier;
 import com.multiplayer.ServerMaker;
 import com.multiplayer.ServerNotReachedException;
-import com.multiplayer.messages.PayloadQueue;
 import com.screens.game.board.GameScreen;
 import com.screens.game.board.Player;
-import com.screens.game.board.Queue;
 import com.screens.game.BaseActor;
 import com.utils.Functions;
 import com.utils.Multiplayer;
@@ -34,7 +30,6 @@ import java.util.ArrayList;
 
 import static com.screens.GameScreens.gameScreen;
 import static com.utils.Multiplayer.*;
-import static com.utils.TileAndCases.queue;
 
 public class LobbyScreen extends BaseScreen {
 

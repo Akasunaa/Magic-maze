@@ -20,7 +20,6 @@ import com.utils.Functions;
 import com.utils.Multiplayer;
 
 import java.util.ArrayList;
-import java.util.concurrent.BrokenBarrierException;
 
 import static com.screens.GameScreens.gameScreen;
 import static com.utils.Functions.mouseInput;
