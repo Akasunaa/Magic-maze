@@ -83,10 +83,6 @@ public class PlayerOnHUD {
             powers.add(new BaseActor(new Texture(Gdx.files.internal("Powers/escalator.png"))));
         }
 
-        if (player.shortcutTaker) {
-            powers.add(new BaseActor(new Texture(Gdx.files.internal("Powers/shortcut.png"))));
-        }
-
         if (player.portalTaker){
             powers.add(new BaseActor(new Texture(Gdx.files.internal("Powers/portal.png"))));
         }
