@@ -150,9 +150,9 @@ public class ServerMaker {
 
                 // On créé la socket serveur en utilisant le protocol TCP, et en écoutant le port donné
                 serverSocket = Gdx.net.newServerSocket(Net.Protocol.TCP, port, serverSocketHint);
-                System.out.println("Created serverSocket");
+                System.out.println("Server : Created serverSocket");
                 while (isInLobby) {
-                    System.out.println("looking for players");
+                    System.out.println("Server : looking for players");
                     socket = serverSocket.accept(null); // On récupère une socket qui demande une connection
                     if (!isInLobby) break;
                     // Petite ligne qui me permet de quitter automatiquement une fois que tout ça est fini.
@@ -162,7 +162,7 @@ public class ServerMaker {
                         System.out.println("Server: Client added: " + client.getIp() + " as " + client.getId());
                         // On lui demande de renvoyer une nouvelle socket
                         try {
-                            client.getSendingSocket().getOutputStream().write(("Server send ReceivingSocket \n").getBytes());
+                            client.getSendingSocket().getOutputStream().write(("Server send ReceivingSocket\n").getBytes());
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
@@ -190,7 +190,7 @@ public class ServerMaker {
                         // Maintenant on renvois le joueur à tout le monde
                         // Et également on envois tout le monde au joueur
                         try {
-                            tempString = Multiplayer.mapper.writeValueAsString(client.player);
+                            tempString = mapper.writeValueAsString(client.player);
                         } catch (JsonProcessingException e) {
                             e.printStackTrace();
                         }
@@ -211,7 +211,12 @@ public class ServerMaker {
                         client.sendMessage(new TextMessage("setAndGo"));
                     }
                     else {
-                        client.sendMessage(new TextMessage("rejected"));
+                        System.out.println("Server : rejected incoming request");
+                        try {
+                            socket.getOutputStream().write("server rejected you\n".getBytes());
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
             }

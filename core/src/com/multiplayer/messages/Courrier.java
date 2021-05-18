@@ -46,8 +46,9 @@ public class Courrier {
         }
         try {
             String waitForIt = (new BufferedReader(new InputStreamReader(sendingSocket.getInputStream()))).readLine();
-            if (waitForIt.equals("server rejected you"))
+            if (waitForIt.equals("server rejected you")) {
                 throw new ServerNotReachedException("Username is already taken");
+            }
             receivingSocket = Gdx.net.newClientSocket(Net.Protocol.TCP, ip, port, socketHints);
             waitForIt = (new BufferedReader(new InputStreamReader(receivingSocket.getInputStream()))).readLine();
         } catch (IOException e) {
