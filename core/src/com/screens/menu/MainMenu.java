@@ -391,5 +391,6 @@ public class MainMenu extends BaseScreen {
                 }
             }, delay);
         }
+        pseudoValid = true;
     }
 }
