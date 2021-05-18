@@ -87,9 +87,9 @@ public class ServerMaker {
                     System.out.println("Server: sent beginGame to "+ tempClient.getId());
                 }
                 // On signal que le serveur est prêt et que normalement les clients ont tout reçu
-
+                PayloadQueue temp = new PayloadQueue(new Queue(9));
                 for (Client tempClient : clientList.clientList) {
-                    tempClient.sendMessage(new PayloadQueue(new Queue(9)));
+                    tempClient.sendMessage(temp);
                     System.out.println("Server: sent Queue to "+ tempClient.getId());
                 }
 
