@@ -4,11 +4,9 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.screens.game.BaseActor;
 import com.utils.Colors;
-import com.sun.tools.javac.comp.Todo;
 import com.utils.TileAndCases;
 
 import java.io.Serializable;
-import java.util.function.ToDoubleBiFunction;
 
 import static com.utils.CaseCorrespondance.*;
 import static com.utils.Directions.*;
@@ -271,7 +269,7 @@ public class Case implements Serializable {
                 }
             }
 
-            if (player.portalTaker){
+            if (player.portalTaker && !isInPhaseB){
                 for (Case tempCase : TileAndCases.portalList[player.pawn.getColor()]){
                     tempCase.unexplored();
                     tempCase.revert(player);

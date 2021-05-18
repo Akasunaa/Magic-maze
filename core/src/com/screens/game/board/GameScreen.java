@@ -193,7 +193,7 @@ public class GameScreen extends BaseScreen {
             }
         }
         else {
-
+            // Si on est en phase B
             // Once again, je pourrais faire ça de manière plus propre mais meh
             if (numberPawnsOut == 4) {
                 //TODO Le Jeu est gagné
