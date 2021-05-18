@@ -78,7 +78,8 @@ public class Pawn implements Serializable {
             dispose();
         }
         if (lastHandeler != null) {
-            logs.newMessage(lastHandeler.pseudo + " a déplacé le pion " + Colors.getColor(color));
+            GameInterface.logs.newMessage(lastHandeler.pseudo + " a déplacé le pion " + Colors.getColor(color));
+            System.out.println(lastHandeler.pseudo);
         }
 
     }
