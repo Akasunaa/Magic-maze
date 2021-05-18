@@ -17,11 +17,13 @@ import java.io.Serializable;
 import static com.utils.Functions.findCase;
 import static com.screens.GameScreens.gameScreen;
 import static com.utils.TileAndCases.*;
+import com.screens.game.hud.GameInterface;
 
 
 public class Pawn implements Serializable {
     private final int color; // La couleur du pion
     public Player player = null;
+    public Player lastHandeler;
 
 //    public boolean hasWeapon = false;
 //    //Booléen qui indique si le pion a récupéré son arme
@@ -74,6 +76,9 @@ public class Pawn implements Serializable {
             gameScreen.removePawn(this);
             setCase.pawn = null;
             dispose();
+        }
+        if (lastHandeler != null) {
+            logs.newMessage(lastHandeler.pseudo + " a déplacé le pion " + Colors.getColor(color));
         }
 
     }

@@ -86,6 +86,7 @@ public class Player implements Serializable {
     public void takesPawn(Pawn pawn) {
         this.pawn = pawn;
         pawn.player = this;
+        pawn.lastHandeler = this;
     }
     public void dropsPawn(Pawn pawn) {
         this.pawn = null;
