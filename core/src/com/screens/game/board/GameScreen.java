@@ -184,6 +184,7 @@ public class GameScreen extends BaseScreen {
                 instrumental.setVolume(game.audioVolume);
                 instrumental.play();
                 isInPhaseB = true;
+                //numberPawnsOut = 0;
                 // S'ils ont tous leurs armes, on commence la phase B
                 for (Pawn pawn : pawnList) {
                     pawn.unlock();
@@ -192,7 +193,7 @@ public class GameScreen extends BaseScreen {
             }
         }
         else {
-            // Si on est en phase B
+
             // Once again, je pourrais faire ça de manière plus propre mais meh
             if (numberPawnsOut == 4) {
                 //TODO Le Jeu est gagné

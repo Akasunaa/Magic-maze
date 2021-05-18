@@ -69,7 +69,7 @@ public class Pawn implements Serializable {
             isLocked = true;
         }
 
-        if (setCase.isFinalExit) {        // Si on fait plus de scénarii, il faudra rajouter le fait qu'il faut que ce soit de la bonne couleur
+        if (setCase.isFinalExit && isInPhaseB) {        // Si on fait plus de scénarii, il faudra rajouter le fait qu'il faut que ce soit de la bonne couleur
             numberPawnsOut ++;
             gameScreen.removePawn(this);
             setCase.pawn = null;
