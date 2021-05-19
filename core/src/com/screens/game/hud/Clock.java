@@ -1,8 +1,10 @@
 package com.screens.game.hud;
 
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.screens.endings.DefeatScreen;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.utils.Align;
 import com.screens.MagicGame;
+import com.screens.endings.DefeatScreen;
 
 public class Clock extends Label {
     public static Clock clock;
@@ -28,10 +30,13 @@ public class Clock extends Label {
         }
     }
 
-    public Clock(LabelStyle style) {
-        super(" ", style);
+    public Clock(Skin skin) {
+        super(" ", skin, "clockStyle");
         time = baseTime;
         super.setText(""+time);
+        setAlignment(Align.center);
+        setOrigin(getWidth()/2f, getHeight()/2f);
+        setPosition(1920/2f, 1080-getHeight()-50);
         // sans doute pas la meilleure manière de convertir un float en text mais bon
     }
 

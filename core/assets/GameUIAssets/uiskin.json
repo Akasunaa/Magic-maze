@@ -4,7 +4,10 @@
       file: "Font/font40.fnt"
     },
     default-font-small: {
-      file: "Font/font32.fnt"
+      file: "Font/font30.fnt"
+    },
+    default-font-big: {
+      file : "Font/font100.fnt",
     }
   },
   Color: {

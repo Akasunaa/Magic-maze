@@ -67,6 +67,10 @@ public class MagicGame extends Game {
         logStyle.fontColor = skin.getColor("white");
         skin.add("logStyle", logStyle);
 
+        BitmapFont clockFont = skin.getFont("default-font-big");
+        LabelStyle clockFontStyle = new LabelStyle(clockFont, Color.NAVY);
+        skin.add("clockStyle", clockFontStyle);
+
         //Toujours à la fin
         MainMenu cm = new MainMenu(this);
         GameScreens.game = this;

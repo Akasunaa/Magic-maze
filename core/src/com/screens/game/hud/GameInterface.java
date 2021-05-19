@@ -20,7 +20,6 @@ import com.screens.GameScreens;
 import com.screens.MagicGame;
 import com.screens.game.BaseActor;
 import com.utils.Functions;
-import com.utils.MainConstants;
 import com.utils.Multiplayer;
 
 import static com.utils.MainConstants.getFontSize;
@@ -97,11 +96,10 @@ public class GameInterface extends BaseScreen {
         );
         uiStage.addActor(restart);
 
-        logs = new Logs(game.skin,new Texture(Gdx.files.internal("interface/log.png")));
+        logs = new Logs(game.skin);
         logs.setPosition(0, 50);
         logs.setSize(300,500);
-        uiStage.addActor(logs.logArea);
-        uiStage.addActor(logs.logBackground);
+        uiStage.addActor(logs);
 
         //la c'est juste des faux bouton
         BaseActor hourglass = new BaseActor(new Texture(Gdx.files.internal("interface/sablier.jpg")));
@@ -224,11 +222,7 @@ public class GameInterface extends BaseScreen {
 //        mainStage.addActor(Animatedhourglass);
 
         // Gestion de l'horloge
-        font = MainConstants.getFontSize(40);
-        style = new LabelStyle(font, Color.NAVY);
-        Clock.clock = new Clock(style);
-        Clock.clock.setFontScale(1.5f);
-        Clock.clock.setPosition(960, 1000);
+        Clock.clock = new Clock(game.skin);
         uiStage.addActor(Clock.clock);
 
         instrumental = Gdx.audio.newMusic(Gdx.files.internal("Music&Sound/PhaseA.mp3"));
