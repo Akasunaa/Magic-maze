@@ -52,7 +52,7 @@ public class Player implements Serializable {
         this.cardChooser = cardChooser;
         this.pawn = pawn;
     }
-    Player(boolean north, boolean south,
+    public Player(boolean north, boolean south,
                   boolean east, boolean west,
                   boolean escalatorTaker, boolean portalTaker,
                   boolean cardChooser) {
@@ -66,7 +66,7 @@ public class Player implements Serializable {
     }
     // Quel enfer
 
-    void setPlayer(Player player) {
+    public void setPlayer(Player player) {
         north = player.north;
         south = player.south;
         west = player.west;

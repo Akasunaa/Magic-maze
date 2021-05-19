@@ -51,6 +51,24 @@ public class LobbyScreen extends BaseScreen {
     }
 
     private void passToGameScreen() {
+
+        System.out.println(playerList.get(0));
+        if (playerList.size() == 1){
+            playerList.get(0).setPlayer(new Player(true, true, false, false, true, true, false));
+            System.out.println(playerList.get(0).west);
+        }
+        if (playerList.size() == 2){
+            playerList.get(0).setPlayer(new Player(true, true, false, false, true, true, false));
+            playerList.get(1).setPlayer(new Player(false, false, true, true, false, false, true));
+        }
+        if (playerList.size() == 3){
+
+        }
+        if (playerList.size() == 4){
+
+        }
+
+
         // Là on va mettre en place le fading
         final BaseActor transparentForeground = new BaseActor(new Texture(Gdx.files.internal("Menu/Black.gif")));
         transparentForeground.setSize(1920, 1080);

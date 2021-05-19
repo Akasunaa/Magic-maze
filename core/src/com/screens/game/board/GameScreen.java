@@ -89,7 +89,7 @@ public class GameScreen extends BaseScreen {
 
         tileList = new ArrayList<Tile>();
 
-        Multiplayer.me.setPlayer(new Player(true, true, true, true, true,true, true));
+        //Multiplayer.me.setPlayer(new Player(true, true, true, true, true,true, true));
 
         // Bon là c'est le batch et les trucs pour écrire, rien d'important
         batch = new SpriteBatch();
