@@ -387,17 +387,18 @@ public class MainMenu extends BaseScreen {
         //buttonTable.debugCell();
 
         uiTable.pad(20);
-        uiTable.add(quitButton).right().colspan(4).expandX().padRight(200);
+        uiTable.add(quitButton).right().colspan(3).expandX().padTop(13);
+        // Le pad c'est pour l'aligner avec celui de l'écran suivant
         uiTable.row();
-        uiTable.add(titleImage).center().height(250).colspan(4);
+        uiTable.add(titleImage).center().height(250).colspan(3);
         uiTable.row();
         uiTable.add(groupImage1).right().padRight(25); //.left() .maxWidth(400)
-        uiTable.add(padTable).colspan(2); //.fill()
+        uiTable.add(padTable); //.fill()
         uiTable.add(groupImage2).left().padLeft(25); //.right() .maxWidth(400)
         uiTable.row();
-        uiTable.add(buttonTable).center().colspan(5);
+        uiTable.add(buttonTable).center().colspan(3);
         uiTable.row();
-        uiTable.add(genintImage).left().colspan(4).padTop(50).padLeft(200);
+        uiTable.add(genintImage).left().colspan(3).padTop(50);
 
         //uiTable.debugCell();
 

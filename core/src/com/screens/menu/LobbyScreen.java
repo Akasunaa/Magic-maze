@@ -1,28 +1,24 @@
 package com.screens.menu;
 
 import com.badlogic.gdx.Gdx;
-//import com.badlogic.gdx.ai.btree.Task;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.*;
-import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
-import com.badlogic.gdx.utils.Timer;
-
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
-import com.screens.BaseScreen;
-import com.screens.MagicGame;
-import com.multiplayer.messages.Courrier;
+import com.badlogic.gdx.utils.Timer;
 import com.multiplayer.ServerMaker;
 import com.multiplayer.ServerNotReachedException;
+import com.multiplayer.messages.Courrier;
+import com.screens.BaseScreen;
+import com.screens.MagicGame;
+import com.screens.game.BaseActor;
 import com.screens.game.board.GameScreen;
 import com.screens.game.board.Player;
-import com.screens.game.BaseActor;
 import com.utils.Functions;
 import com.utils.Multiplayer;
 
@@ -355,18 +351,25 @@ public class LobbyScreen extends BaseScreen {
         //uiTable.reset();
         int numberOfColumns = 24;
         uiTable.pad(20);
-        uiTable.add(quitButton).colspan(numberOfColumns).right().expandX();
+        uiTable.add(quitButton).right().expandX();
         uiTable.row();
-        for (PlayerMaker temp : playerMakerList) temp.addTextField(uiTable, numberOfColumns/playerMakerList.size(), playerMakerList.size());
-        uiTable.row();
+
+        Table playerTable = new Table();
+        for (PlayerMaker temp : playerMakerList) temp.addTextField(playerTable);
+        playerTable.row();
         for (PlayerMaker temp : playerMakerList) {
-            temp.load(uiSkin, uiTable, playerMakerList.size(), numberOfColumns);
+            temp.load(uiSkin, playerTable);
         }
+        // On fait ça pour se faciliter la tache, sinon ça devient trop mystique
+
+        uiTable.add(playerTable).center().padTop(150).padBottom(100);
         uiTable.row();
-        uiTable.add(optionButton).center().colspan(numberOfColumns).padTop(150);
+        uiTable.add(optionButton).center().padTop(50).padBottom(50);
         uiTable.row();
-        uiTable.add(startButton).center().colspan(numberOfColumns).padTop(100);
+        uiTable.add(startButton).center().padBottom(50);
         uiTable.row();
+        uiTable.debugCell();
+        //playerTable.debugCell();
     }
 
     public void updateNames() {

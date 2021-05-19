@@ -49,10 +49,9 @@ public class PlayerMaker {
         });
     }
 
-    public void addTextField(Table uiTable, int colspan, int numberOfPlayer) {
-        uiTable.add(textField).center().padTop(200).colspan(colspan);
-        uiTable.getCell(textField).fill(0.18f*numberOfPlayer,1f);
-        //uiTable.getCell(textField).width(200);
+    public void addTextField(Table table) {
+        table.add(textField).center().colspan(6);
+        table.getCell(textField).fill(0.70f,1f);
         textField.setMaxLength(13);
     }
 
@@ -85,16 +84,16 @@ public class PlayerMaker {
     }
 
 
-    public void load(Skin skin, final Table uiTable, int numberOfPlayers, int numberOfColumns) {
+    public void load(Skin skin, final Table table) {
         if (isModifiable) {
             textField.setDisabled(false);
         }
         //System.out.println((numberOfColumns-4*numberOfPlayers)/(2*numberOfPlayers));
-        addLeftArrow(skin, uiTable,(numberOfColumns-4*numberOfPlayers)/(2*numberOfPlayers));
-        addAvatar(uiTable,4);
-        addRightArrow(skin, uiTable,(numberOfColumns-4*numberOfPlayers)/(2*numberOfPlayers));
+        addLeftArrow(skin, table);
+        addAvatar(table,4);
+        addRightArrow(skin, table);
     }
-    private void addLeftArrow(Skin skin, final Table uiTable,int colspan) {
+    private void addLeftArrow(Skin skin, final Table uiTable) {
         Texture leftArrowTexture = new Texture(Gdx.files.internal("MenuAssets/arrowSilver_left.png"));
         skin.add("leftArrow", leftArrowTexture );
         Button.ButtonStyle leftArrowStyle = new Button.ButtonStyle();
@@ -103,12 +102,11 @@ public class PlayerMaker {
         if (isModifiable) {
             leftArrow.addListener(arrowsInputListener(-1));
         }
-        uiTable.add(leftArrow).right().pad(20, 0, 20, 0).colspan(colspan);
-        if (colspan == 1) uiTable.getCell(leftArrow).center();
+        uiTable.add(leftArrow).right().pad(20, 0, 20, 0).colspan(1).center();
         leftArrow.setVisible(isModifiable);
 
     }
-    private void addRightArrow(Skin skin, final Table uiTable,int colspan) {
+    private void addRightArrow(Skin skin, final Table uiTable) {
         Texture rightArrowTexture = new Texture(Gdx.files.internal("MenuAssets/arrowSilver_right.png"));
         skin.add("rightArrow", rightArrowTexture);
         Button.ButtonStyle rightArrowStyle = new Button.ButtonStyle();
@@ -117,8 +115,7 @@ public class PlayerMaker {
         if (isModifiable) {
             rightArrow.addListener(arrowsInputListener(+1));
         }
-        uiTable.add(rightArrow).left().pad(20, 0, 20, 0).colspan(colspan);
-        if (colspan == 1) uiTable.getCell(rightArrow).center();
+        uiTable.add(rightArrow).left().pad(20, 0, 20, 0).colspan(1).center();
         rightArrow.setVisible(isModifiable);
     }
 
