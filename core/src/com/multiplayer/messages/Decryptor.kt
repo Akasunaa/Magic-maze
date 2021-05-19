@@ -43,7 +43,8 @@ class Decryptor {
                         if (isServer) {
                             clientList.getClient(tempPlayer.pseudo).player = tempPlayer
                         } else {
-                            playerList.add(tempPlayer)
+                            //playerList.add(tempPlayer)
+                            // On s'en occupe déjà dans lobbyScreen
                             lobbyScreen.addPlayer(tempPlayer)
                         }
                     }
