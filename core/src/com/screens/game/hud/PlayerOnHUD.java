@@ -16,7 +16,7 @@ import com.screens.game.board.Player;
 
 import java.util.ArrayList;
 
-import static com.utils.MainConstants.getFontSize;
+import static com.screens.GameScreens.game;
 import static com.utils.Multiplayer.courrier;
 
 /*
@@ -45,10 +45,12 @@ public class PlayerOnHUD {
     PlayerOnHUD(final Player player) {
         // On charge l'avatar et le panneau qui indique qu'on veut restart
         avatar = player.avatar;
-        avatar.setSize(90,90);
-        pseudoLabel = new Label(player.pseudo, new Label.LabelStyle(getFontSize(18*2), Color.WHITE));
-        pseudoLabel.setFontScale(0.5f);
-        pseudoLabel.setOrigin(Align.center);
+        avatar.setSize(100,100);
+        pseudoLabel = new Label(player.pseudo, game.skin);
+        pseudoLabel.setFontScale(0.8f);
+        pseudoLabel.setAlignment(Align.center);
+//        avatar.debug();
+//        pseudoLabel.debug();
 
         wantsToRestart = new BaseActor(new Texture(Gdx.files.internal("interface/restart-button.png")));
 
@@ -99,7 +101,7 @@ public class PlayerOnHUD {
 
     void setPosition(float x, float y) {
         avatar.setPosition(x,y);
-        pseudoLabel.setPosition(avatar.getX(), avatar.getY()-30);
+        pseudoLabel.setPosition(avatar.getX()+(avatar.getWidth()- pseudoLabel.getWidth())/2, avatar.getY()-30);
         int i = 0;
         for (BaseActor power : powers) {
             power.setPosition(avatar.getX() + i*(avatar.getWidth()-15)/powers.size(), avatar.getY());

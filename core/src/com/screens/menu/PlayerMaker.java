@@ -5,24 +5,25 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
-import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.ui.Button;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.multiplayer.messages.TextMessage;
-import com.screens.game.board.Player;
 import com.screens.BaseScreen;
+import com.screens.game.board.Player;
 import com.utils.Multiplayer;
 
 import static com.utils.Functions.modulo;
 
 public class PlayerMaker {
-    private Button rightArrow;
-    private Button leftArrow;
     private int avatarNum = 0;
     // pour pouvoir accéder facilement à la référence des avatars
     // Pas besoin de flèches pour modifier les avatars des autres, ça n'a aucun sens ?
-    private TextField textField;
-    private boolean isModifiable;
-    private Player player;
+    private final TextField textField;
+    private final boolean isModifiable;
+    private final Player player;
 
     String getPseudo() {
         return player.pseudo;
@@ -33,6 +34,7 @@ public class PlayerMaker {
         this.player = player;
         textField = new TextField(player.pseudo,uiSkin);
         textField.setDisabled(true);
+        player.avatar.setOrigin(player.avatar.getWidth()/2, player.avatar.getHeight()/2);
         for (int i = 0; i < BaseScreen.animalNames.length; i++) {
             if (BaseScreen.animalNames[i].equals(player.avatarName)) {
                 avatarNum = i;
@@ -97,7 +99,7 @@ public class PlayerMaker {
         skin.add("leftArrow", leftArrowTexture );
         Button.ButtonStyle leftArrowStyle = new Button.ButtonStyle();
         leftArrowStyle.up = skin.getDrawable("leftArrow");
-        leftArrow = new Button( leftArrowStyle );
+        Button leftArrow = new Button(leftArrowStyle);
         if (isModifiable) {
             leftArrow.addListener(arrowsInputListener(-1));
         }
@@ -111,7 +113,7 @@ public class PlayerMaker {
         skin.add("rightArrow", rightArrowTexture);
         Button.ButtonStyle rightArrowStyle = new Button.ButtonStyle();
         rightArrowStyle.up = skin.getDrawable("rightArrow");
-        rightArrow = new Button( rightArrowStyle );
+        Button rightArrow = new Button(rightArrowStyle);
         if (isModifiable) {
             rightArrow.addListener(arrowsInputListener(+1));
         }
