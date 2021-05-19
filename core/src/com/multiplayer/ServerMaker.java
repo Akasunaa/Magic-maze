@@ -7,11 +7,8 @@ import com.badlogic.gdx.net.ServerSocketHints;
 import com.badlogic.gdx.net.Socket;
 import com.badlogic.gdx.net.SocketHints;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.multiplayer.messages.Message;
-import com.multiplayer.messages.PayloadQueue;
+import com.multiplayer.messages.*;
 import com.screens.BaseScreen;
-import com.multiplayer.messages.PayloadPlayer;
-import com.multiplayer.messages.TextMessage;
 import com.screens.game.board.Player;
 import com.screens.game.board.Queue;
 import com.utils.Multiplayer;
@@ -20,6 +17,9 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 import static com.utils.Multiplayer.*;
 
@@ -50,6 +50,32 @@ public class ServerMaker {
         //this.key = key;
         this.port = port;
         thread = new Thread(new Runnable() {
+            private Player[] choosePlayer() {
+                // On fait ça rapidement
+                // Mais au moins ça fonctionne
+                Player[] output = new Player[]{new Player(true, true, true, true, true, true, true)};
+                // Sous entendu, s'il y a un seul joueur
+
+                if (playerList.size() == 2) {
+                    output = new Player[]{new Player(true, true, false, false, true, true, false),
+                            new Player(false, false, true, true, false, false, true)};
+                }
+                if (playerList.size() == 3) {
+                    output = new Player[]{new Player(true, true, false, false, false, true, false),
+                            new Player(false, false, true, false, false, false, true),
+                            new Player(false, false, false, true, true, false, false)};
+                }
+                if (playerList.size() == 4) {
+                    output = new Player[]{new Player(false, false, false, true, true, true, false),
+                            new Player(false, false, true, false, true, false, false),
+                            new Player(false, true, false, false, true, false, true),
+                            new Player(true, false, true, false, false, false, false)};
+                }
+                List<Player> temp = Arrays.asList(output);
+                Collections.shuffle(temp);
+                return (Player[]) temp.toArray();
+            }
+
             private void catchMessage() {
                 // Une fonction qui choppe tous les messages de tout le monde
                 for (Client tempClient : clientList.clientList) {
@@ -92,6 +118,14 @@ public class ServerMaker {
                 for (Client tempClient : clientList.clientList) {
                     tempClient.sendMessage(temp);
                     System.out.println("Server: sent Queue to "+ tempClient.getId());
+                }
+
+                Player[] newPlayerList = choosePlayer();
+                for (int i = 0; i < playerList.size(); i++) {
+                    AssignPlayer message = new AssignPlayer(newPlayerList[i], playerList.get(i).pseudo);
+                    for (Client tempClient : clientList.clientList) {
+                        tempClient.sendMessage(message);
+                    }
                 }
 
                 for (Client tempClient : clientList.clientList) {

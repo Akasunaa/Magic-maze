@@ -74,6 +74,14 @@ class Decryptor {
 //                cyclicBarrier.await()
                 lobbyScreen.setToPassToGameScreen()
             }
+            "assign" -> {
+                val tempPlayer = mapper.readValue(message.payload, Player::class.java)
+                for (player in playerList) {
+                    if (player.pseudo == message.target) {
+                        player.setPlayer(tempPlayer)
+                    }
+                }
+            }
             "ping" -> {
                 if (isServer) {
                     for (client in clientList.clientList) {
