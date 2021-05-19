@@ -78,7 +78,7 @@ public class GameScreen extends BaseScreen {
         InputMultiplexer inputMultiplexer = new InputMultiplexer(uiStage, mainStage, new MouseWheelChecker());
         Gdx.input.setInputProcessor(inputMultiplexer);
 
-        background = new BaseActor(new Texture("GameUIAssets/floorboard.png"));
+        background = new BaseActor(new Texture("UserInterface/backgroundGame.png"));
 
         //camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         camera = (OrthographicCamera) mainStage.getCamera();

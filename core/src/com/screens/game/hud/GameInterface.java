@@ -107,25 +107,15 @@ public class GameInterface extends BaseScreen {
         hourglass.setPosition(viewWidth - hourglass.getWidth(), viewHeight - phaseA.getHeight() - hourglass.getHeight());
         uiStage.addActor(hourglass);
 
-        BaseActor zoomMoins = new BaseActor(new Texture(Gdx.files.internal("interface/zoommoins.jpg")));
-        zoomMoins.setSize(60,45);
-        zoomMoins.setPosition(viewWidth - hourglass.getWidth() - zoomMoins.getWidth(), viewHeight - phaseA.getHeight() - zoomMoins.getHeight());
-        uiStage.addActor(zoomMoins);
-
-        BaseActor zoomPlus = new BaseActor(new Texture(Gdx.files.internal("interface/zoomplus.jpg")));
-        zoomPlus.setSize(60,45);
-        zoomPlus.setPosition(viewWidth - hourglass.getWidth() - zoomMoins.getWidth() - zoomPlus.getWidth(), viewHeight - phaseA.getHeight() - zoomPlus.getHeight());
-        uiStage.addActor(zoomPlus);
-
         BaseActor volume = new BaseActor(new Texture(Gdx.files.internal("interface/haut-parleur.png")));
         volume.setSize(45,45);
-        volume.setPosition(viewWidth - hourglass.getWidth() - zoomMoins.getWidth() - zoomPlus.getWidth() - volume.getWidth(), viewHeight - phaseA.getHeight() - volume.getHeight());
+        volume.setPosition(viewWidth - hourglass.getWidth() - volume.getWidth(), viewHeight - phaseA.getHeight() - volume.getHeight());
         voiceOn = true;
         uiStage.addActor(volume);
 
         BaseActor cross = new BaseActor(new Texture(Gdx.files.internal("interface/croix.png")));
         cross.setSize(45,45);
-        cross.setPosition(viewWidth - hourglass.getWidth() - zoomMoins.getWidth() - zoomPlus.getWidth() - volume.getWidth(), viewHeight - phaseA.getHeight() - volume.getHeight());
+        cross.setPosition(viewWidth - hourglass.getWidth() - volume.getWidth(), viewHeight - phaseA.getHeight() - volume.getHeight());
         cross.setVisible(false);
         uiStage.addActor(cross);
 
@@ -139,7 +129,7 @@ public class GameInterface extends BaseScreen {
         }
 
         // L'acteur qui va faire les pings
-        ping = new BaseActor(new Texture(Gdx.files.internal("GameUIAssets/pingTransparentOverlay.png")));
+        ping = new BaseActor(new Texture(Gdx.files.internal("UserInterface/pingTransparentOverlay.png")));
         ping.setColor(1,1,1,0);
         ping.setTouchable(Touchable.disabled);
         uiStage.addActor(ping);
@@ -230,7 +220,7 @@ public class GameInterface extends BaseScreen {
         instrumental.setVolume(game.audioVolume);
         instrumental.play();
 
-        Texture pauseTexture = new Texture(Gdx.files.internal("GameUIAssets/barsHorizontal.png"));
+        Texture pauseTexture = new Texture(Gdx.files.internal("UserInterface/barsHorizontal.png"));
         game.skin.add("pauseImage", pauseTexture);
         Button.ButtonStyle pauseStyle = new Button.ButtonStyle();
         pauseStyle.up = game.skin.getDrawable("pauseImage");
@@ -256,7 +246,7 @@ public class GameInterface extends BaseScreen {
         stacker.add(uiTable);
         stacker.add(pauseOverlay);
 
-        game.skin.add("white", new Texture(Gdx.files.internal("GameUIAssets/white4px.png")));
+        game.skin.add("white", new Texture(Gdx.files.internal("UserInterface/backgroundBlack.png")));
         Drawable pauseBackground = game.skin.newDrawable("white", new Color(0, 0, 0, 0.8f));
 
         Label pauseLabel = new Label("Paused", game.skin, "uiLabelStyle");

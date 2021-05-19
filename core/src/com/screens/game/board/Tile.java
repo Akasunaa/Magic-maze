@@ -12,11 +12,11 @@ import com.utils.TileAndCases;
 
 import java.io.Serializable;
 
+import static com.screens.GameScreens.gameScreen;
 import static com.screens.game.board.Case.link;
 import static com.utils.Colors.getColor;
 import static com.utils.Directions.numberDirections;
 import static com.utils.Functions.modulo;
-import static com.screens.GameScreens.gameScreen;
 import static com.utils.TileAndCases.*;
 
 public class Tile implements Serializable {
@@ -123,7 +123,7 @@ public class Tile implements Serializable {
     Tile(int number) {
         this.number = number;
         // Bon on stock le path quelque part quand même
-        path = "tuiles/tile" + number + ".png";
+        path = "Game/Tiles/tile" + number + ".png";
         caseList = new Case[4][4];
         caseListofCases = new Case[4][4][4];
 

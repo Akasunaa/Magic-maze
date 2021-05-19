@@ -121,7 +121,7 @@ public class Pawn implements Serializable {
     private boolean isMovable = false; // Même principe que pour la Queue
 
     void load() { // Pour la sérialization
-        sprite = new BaseActor(new Texture("pions/" + Colors.getColor(color) + ".png"));
+        sprite = new BaseActor(new Texture("Game/Pawns/" + Colors.getColor(color) + ".png"));
         gameScreen.getMainStage().addActor(sprite);
         setSize();
         updateCoordinates();

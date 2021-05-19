@@ -8,10 +8,10 @@ import com.utils.TileAndCases;
 
 import java.io.Serializable;
 
+import static com.screens.GameScreens.gameScreen;
 import static com.utils.CaseCorrespondance.*;
 import static com.utils.Directions.*;
 import static com.utils.Functions.modulo;
-import static com.screens.GameScreens.gameScreen;
 import static com.utils.MainConstants.batch;
 import static com.utils.TileAndCases.*;
 
@@ -73,9 +73,9 @@ public class Case implements Serializable {
     void load(Tile tile, Case[] caseList) {// Comme d'habitude, obligatoire pour la sérialisation
         this.tile = tile;
         this.caseList = caseList;
-        greenDot = new BaseActor(new Texture("tuiles/greenDot.png"));
+        greenDot = new BaseActor(new Texture("Game/Tiles/greenDot.png"));
         greenDot.setVisible(false);
-        redDot = new BaseActor(new Texture("tuiles/redDot.png"));
+        redDot = new BaseActor(new Texture("Game/Tiles/redDot.png"));
         redDot.setVisible(false);
         setSpriteCoordinates();
         gameScreen.getMainStage().addActor(greenDot);
@@ -151,7 +151,7 @@ public class Case implements Serializable {
     }
 
     void used(){
-        Texture t = new Texture(Gdx.files.internal("tuiles/used.png"));
+        Texture t = new Texture(Gdx.files.internal("Game/Tiles/used.png"));
         BaseActor cross = new BaseActor(t);
         cross.setOrigin((int) (cross.getWidth()/2));
         cross.setPosition(getX(x),getY(y));

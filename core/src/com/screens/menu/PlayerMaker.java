@@ -64,7 +64,7 @@ public class PlayerMaker {
     }
 
     public void updateAvatar() {
-        player.avatar.setTexture(new Texture(Gdx.files.internal("Avatars/" + player.avatarName + ".png")));
+        player.avatar.setTexture(new Texture(Gdx.files.internal("Game/Avatars/" + player.avatarName + ".png")));
     }
 
     private InputListener arrowsInputListener(final int i) {
@@ -94,7 +94,7 @@ public class PlayerMaker {
         addRightArrow(skin, table);
     }
     private void addLeftArrow(Skin skin, final Table uiTable) {
-        Texture leftArrowTexture = new Texture(Gdx.files.internal("MenuAssets/arrowSilver_left.png"));
+        Texture leftArrowTexture = new Texture(Gdx.files.internal("Menu/ArrowLeft.png"));
         skin.add("leftArrow", leftArrowTexture );
         Button.ButtonStyle leftArrowStyle = new Button.ButtonStyle();
         leftArrowStyle.up = skin.getDrawable("leftArrow");
@@ -107,7 +107,7 @@ public class PlayerMaker {
 
     }
     private void addRightArrow(Skin skin, final Table uiTable) {
-        Texture rightArrowTexture = new Texture(Gdx.files.internal("MenuAssets/arrowSilver_right.png"));
+        Texture rightArrowTexture = new Texture(Gdx.files.internal("Menu/ArrowRight.png"));
         skin.add("rightArrow", rightArrowTexture);
         Button.ButtonStyle rightArrowStyle = new Button.ButtonStyle();
         rightArrowStyle.up = skin.getDrawable("rightArrow");

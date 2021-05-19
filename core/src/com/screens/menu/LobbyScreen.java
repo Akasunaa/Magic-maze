@@ -52,7 +52,7 @@ public class LobbyScreen extends BaseScreen {
 
     private void passToGameScreen() {
         // Là on va mettre en place le fading
-        final BaseActor transparentForeground = new BaseActor(new Texture(Gdx.files.internal("MenuAssets/Black.gif")));
+        final BaseActor transparentForeground = new BaseActor(new Texture(Gdx.files.internal("Menu/Black.gif")));
         transparentForeground.setSize(1920, 1080);
         transparentForeground.setColor(0, 0, 0, 0);
         transparentForeground.setTouchable(Touchable.disabled);
@@ -94,7 +94,7 @@ public class LobbyScreen extends BaseScreen {
     }
     public void create() {
         // pour le son
-        final BaseActor background = new BaseActor(new Texture(Gdx.files.internal("MenuAssets/BlurryMallBackground.jpg")));
+        final BaseActor background = new BaseActor(new Texture(Gdx.files.internal("Menu/BlurryMallBackground.jpg")));
         uiStage.addActor(background);
 
 
@@ -200,12 +200,12 @@ public class LobbyScreen extends BaseScreen {
         stacker.add(uiTable);
         stacker.add(optionOverlay);
 
-        game.skin.add("white", new Texture(Gdx.files.internal("GameUIAssets/white4px.png")));
+        game.skin.add("white", new Texture(Gdx.files.internal("UserInterface/backgroundBlack.png")));
         Drawable optionBackground = game.skin.newDrawable("white", new Color(0, 0, 0, 0.8f));
 
         optionOverlay.setBackground(optionBackground);
 
-        uiSkin = new Skin(Gdx.files.internal("GameUIAssets/uiskin.json"));
+        uiSkin = new Skin(Gdx.files.internal("UserInterface/uiskin.json"));
         playerMakerList = new ArrayList<PlayerMaker>();
         playerMakerList.add(new PlayerMaker(Multiplayer.me, uiSkin, true));
 

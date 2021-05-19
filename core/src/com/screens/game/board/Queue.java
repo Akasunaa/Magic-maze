@@ -164,7 +164,7 @@ public class Queue implements Serializable {
     }
 
     void load() { // Serialization
-        hidden = new BaseActor(new Texture("tuiles/hiddenOrange.png"));
+        hidden = new BaseActor(new Texture("Game/Tiles/hiddenOrange.png"));
         hidden.setOrigin(size/2,size/2);
         gameScreen.getUiStage().addActor(hidden);
         loadSprite();

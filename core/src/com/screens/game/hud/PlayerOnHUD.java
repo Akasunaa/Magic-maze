@@ -67,26 +67,26 @@ public class PlayerOnHUD {
 
         // Et maintenant il faut regarder chacun des booléens pour savoir quel pouvoir notre joueur possède
         if (player.north) {
-            powers.add(new BaseActor(new Texture(Gdx.files.internal("Powers/upArrow.png"))));
+            powers.add(new BaseActor(new Texture(Gdx.files.internal("Game/Powers/upArrow.png"))));
         }
 
         if (player.west) {
-            powers.add(new BaseActor(new Texture(Gdx.files.internal("Powers/leftArrow.png"))));
+            powers.add(new BaseActor(new Texture(Gdx.files.internal("Game/Powers/leftArrow.png"))));
         }
 
         if (player.south) {
-            powers.add(new BaseActor(new Texture(Gdx.files.internal("Powers/downArrow.png"))));
+            powers.add(new BaseActor(new Texture(Gdx.files.internal("Game/Powers/downArrow.png"))));
         }
 
         if (player.east) {
-            powers.add(new BaseActor(new Texture(Gdx.files.internal("Powers/rightArrow.png"))));
+            powers.add(new BaseActor(new Texture(Gdx.files.internal("Game/Powers/rightArrow.png"))));
         }
         if (player.escalatorTaker) {
-            powers.add(new BaseActor(new Texture(Gdx.files.internal("Powers/escalator.png"))));
+            powers.add(new BaseActor(new Texture(Gdx.files.internal("Game/Powers/escalator.png"))));
         }
 
         if (player.portalTaker){
-            powers.add(new BaseActor(new Texture(Gdx.files.internal("Powers/portal.png"))));
+            powers.add(new BaseActor(new Texture(Gdx.files.internal("Game/Powers/portal.png"))));
         }
 
         // Et maintenant on ajuste la taille

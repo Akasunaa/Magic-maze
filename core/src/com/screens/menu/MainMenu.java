@@ -61,7 +61,7 @@ public class MainMenu extends BaseScreen {
         final String[] animalNames = new String[]{"elephant", "giraffe", "hippo", "monkey", "panda", "parrot", "penguin", "pig", "rabbit", "snake"};
         avatarImages = new BaseActor[animalNames.length];
         for (int i = 0; i < animalNames.length; i++) {
-            tempAvatar = new Texture(Gdx.files.internal("Avatars/" + animalNames[i] + ".png"));
+            tempAvatar = new Texture(Gdx.files.internal("Game/Avatars/" + animalNames[i] + ".png"));
             tempAvatar.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
             avatarImages[i] = new BaseActor(tempAvatar);
         }
@@ -76,20 +76,20 @@ public class MainMenu extends BaseScreen {
         instrumental.setVolume(game.audioVolume);
         instrumental.play();
 
-        BaseActor background = new BaseActor(new Texture(Gdx.files.internal("MenuAssets/BlurryMallBackground.jpg")));
+        BaseActor background = new BaseActor(new Texture(Gdx.files.internal("Menu/BlurryMallBackground.jpg")));
         uiStage.addActor(background);
 
-        Texture titleText = new Texture(Gdx.files.internal("MenuAssets/MagicLogo.png"));
+        Texture titleText = new Texture(Gdx.files.internal("Menu/MagicLogo.png"));
         titleText.setFilter(TextureFilter.Linear, TextureFilter.Linear);
         Image titleImage = new Image(titleText);
         titleImage.setScaling(Scaling.fit);
 
-        Texture genint = new Texture(Gdx.files.internal("MenuAssets/genintLogo.png"));
+        Texture genint = new Texture(Gdx.files.internal("Menu/genintLogo.png"));
         genint.setFilter(TextureFilter.Linear, TextureFilter.Linear);
         Image genintImage = new Image(genint);
         genintImage.setScaling(Scaling.fit);
 
-        Texture group = new Texture(Gdx.files.internal("MenuAssets/MagicGroup.png"));
+        Texture group = new Texture(Gdx.files.internal("Menu/MagicGroup.png"));
         group.setFilter(TextureFilter.Linear, TextureFilter.Linear);
         Image groupImage1 = new Image(group);
         groupImage1.setScaling(Scaling.fit);
@@ -177,7 +177,6 @@ public class MainMenu extends BaseScreen {
                 else {
                     float delay = 0.02f; // seconds
                     warningLabel.setPosition(730,665);
-                    System.out.println(",ik");
                     Timer.schedule(new Timer.Task() {
                         @Override
                         public void run() {
@@ -283,7 +282,7 @@ public class MainMenu extends BaseScreen {
         final Table scrollTable = new Table();
         Image[] ruleBook = new Image[5];
         for (int i = 0; i < 5; i ++) {
-            Texture temp = new Texture(Gdx.files.internal("MenuAssets/regle_page-000"+(i+1)+".jpg"));
+            Texture temp = new Texture(Gdx.files.internal("Menu/RuleBook/Page"+i+".jpg"));
             temp.setFilter(TextureFilter.Linear, TextureFilter.Linear);
             ruleBook[i] = new Image(temp);
             ruleBook[i].setScaling(Scaling.fit);
@@ -332,7 +331,7 @@ public class MainMenu extends BaseScreen {
         stacker.add(optionOverlay);
         stacker.add(ruleTable);
 
-        game.skin.add("white", new Texture(Gdx.files.internal("GameUIAssets/white4px.png")));
+        game.skin.add("white", new Texture(Gdx.files.internal("UserInterface/backgroundBlack.png")));
         Drawable blackBackground = game.skin.newDrawable("white", new Color(0, 0, 0, 0.8f));
 
         optionOverlay.setBackground(blackBackground);

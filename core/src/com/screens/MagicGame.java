@@ -19,7 +19,7 @@ public class MagicGame extends Game {
     public float audioVolume = 0.0f;
     public void create() {
         // initialize resources common to multiple screens and store to skin database
-        skin = new Skin(Gdx.files.internal("GameUIAssets/uiskin.json"));
+        skin = new Skin(Gdx.files.internal("UserInterface/uiskin.json"));
 
         // Police d'écriture
         BitmapFont uiFont = skin.getFont("default-font");
@@ -30,18 +30,18 @@ public class MagicGame extends Game {
         TextButtonStyle uiTextButtonStyle = new TextButtonStyle();
         uiTextButtonStyle.font = uiFont;
         uiTextButtonStyle.fontColor = Color.NAVY;
-        Texture upTex = new Texture(Gdx.files.internal("GameUIAssets/Button/Idle.png"));
+        Texture upTex = new Texture(Gdx.files.internal("UserInterface/Button/Idle.png"));
         skin.add("buttonUp", new NinePatch(upTex, 26,26,16,20));
         uiTextButtonStyle.up = skin.getDrawable("buttonUp");
 
         //Texture bouton quand survolé
-        Texture overTex = new Texture(Gdx.files.internal("GameUIAssets/Button/Clicked.png"));
+        Texture overTex = new Texture(Gdx.files.internal("UserInterface/Button/Clicked.png"));
         skin.add("buttonOver", new NinePatch(overTex, 26,26,16,20) );
         uiTextButtonStyle.over = skin.getDrawable("buttonOver");
         uiTextButtonStyle.overFontColor = Color.BLUE;
 
         //Texture bouton quand appuyé
-        Texture downTex = new Texture(Gdx.files.internal("GameUIAssets/Button/Released.png"));
+        Texture downTex = new Texture(Gdx.files.internal("UserInterface/Button/Released.png"));
         skin.add("buttonDown", new NinePatch(downTex, 26,26,16,20) );
         uiTextButtonStyle.down = skin.getDrawable("buttonDown");
         uiTextButtonStyle.downFontColor = Color.BLUE;
@@ -49,10 +49,10 @@ public class MagicGame extends Game {
 
         // Texture du slider audio
         SliderStyle uiSliderStyle = new SliderStyle();
-        skin.add("sliderBack", new Texture(Gdx.files.internal("GameUIAssets/grey_sliderHorizontal.png")) );
-        skin.add("sliderKnob", new Texture(Gdx.files.internal("GameUIAssets/red_sliderDown.png")) );
-        skin.add("sliderBefore", new Texture(Gdx.files.internal("GameUIAssets/red_sliderHorizontal.png")) );
-        skin.add("sliderAfter", new Texture(Gdx.files.internal("GameUIAssets/grey_sliderHorizontal.png")) );
+        skin.add("sliderBack", new Texture(Gdx.files.internal("UserInterface/SoundSlider/background.png")) );
+        skin.add("sliderKnob", new Texture(Gdx.files.internal("UserInterface/SoundSlider/cursor.png")) );
+        skin.add("sliderBefore", new Texture(Gdx.files.internal("UserInterface/SoundSlider/completionBar.png")) );
+        skin.add("sliderAfter", new Texture(Gdx.files.internal("UserInterface/SoundSlider/background.png")) );
         uiSliderStyle.background = skin.getDrawable("sliderBack");
         uiSliderStyle.knob = skin.getDrawable("sliderKnob");
         uiSliderStyle.knobAfter = skin.getDrawable("sliderAfter");
@@ -60,7 +60,7 @@ public class MagicGame extends Game {
         skin.add("uiSliderStyle", uiSliderStyle);
 
         TextField.TextFieldStyle logStyle = new TextField.TextFieldStyle();
-        Texture logBackground = new Texture(Gdx.files.internal("GameUIAssets/logBackground.png"));
+        Texture logBackground = new Texture(Gdx.files.internal("UserInterface/logBackground.png"));
         skin.add("logBackground", new NinePatch(logBackground, 10,10,10,10));
         logStyle.background = skin.getDrawable("logBackground");
         logStyle.font = skin.getFont("default-font-small");
