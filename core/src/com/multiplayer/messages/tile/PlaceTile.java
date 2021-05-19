@@ -7,5 +7,6 @@ public class PlaceTile extends Message {
         super(sender);
         action = "placeTile";
         this.target = target;
+        logMessage = getSender() + " a posé une tuile";
     }
 }

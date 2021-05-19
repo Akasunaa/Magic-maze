@@ -5,27 +5,27 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.Vector2;
-import com.screens.game.BaseActor;
-import com.screens.game.hud.Clock;
 import com.multiplayer.messages.pawn.AskPlacePawn;
 import com.multiplayer.messages.pawn.AskTakePawn;
 import com.multiplayer.messages.pawn.MovingPawn;
-import com.utils.*;
+import com.screens.game.BaseActor;
+import com.screens.game.hud.Clock;
+import com.screens.game.hud.GameInterface;
+import com.utils.Colors;
+import com.utils.Functions;
+import com.utils.Multiplayer;
 
 import java.io.Serializable;
-import java.util.concurrent.BrokenBarrierException;
 import java.util.concurrent.TimeUnit;
 
-import static com.utils.Functions.findCase;
 import static com.screens.GameScreens.gameScreen;
+import static com.utils.Functions.findCase;
 import static com.utils.TileAndCases.*;
-import com.screens.game.hud.GameInterface;
 
 
 public class Pawn implements Serializable {
     private final int color; // La couleur du pion
     public Player player = null;
-    public Player lastHandeler;
 
 //    public boolean hasWeapon = false;
 //    //Booléen qui indique si le pion a récupéré son arme
@@ -66,24 +66,23 @@ public class Pawn implements Serializable {
             Clock.clock.reset();
             setCase.hasHourglass=false;
             setCase.used();
+            GameInterface.logs.newMessage("\n" + player.pseudo + " a réinitialisé le compteur");
         }
 
         if (!isInPhaseB){
             if (setCase.hasWeapon && setCase.color == color) {
             numberWeaponsRetrieved ++;
             isLocked = true;
+            GameInterface.logs.newMessage("\n" + player.pseudo + " a récupéré l'arme " + Colors.getColor(color));
             }
         }
 
         if (setCase.isFinalExit && isInPhaseB) {        // Si on fait plus de scénarii, il faudra rajouter le fait qu'il faut que ce soit de la bonne couleur
             numberPawnsOut ++;
+            GameInterface.logs.newMessage("\n" + player.pseudo + " a sorti le pion " + Colors.getColor(color));
             gameScreen.removePawn(this);
             setCase.pawn = null;
             dispose();
-        }
-        if (lastHandeler != null) {
-            GameInterface.logs.newMessage(lastHandeler.pseudo + " a déplacé le pion " + Colors.getColor(color));
-            System.out.println(lastHandeler.pseudo);
         }
 
     }
@@ -177,7 +176,6 @@ public class Pawn implements Serializable {
                 setCase.revert(player); // On annule le pathfinding... avec un autre pathfinding
                 setCase.hide(); // On cache la case de départ
                 isMovable = false;
-                player.dropsPawn(this);
                 return true;
             }
         } catch (NullPointerException e) {

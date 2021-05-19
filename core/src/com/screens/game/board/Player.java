@@ -80,11 +80,12 @@ public class Player implements Serializable {
         else return (new Player(south,north,west,east,escalatorTaker,portalTaker, cardChooser,pawn)).rotate(modulo(i-1,numberDirections));
     }
     public void takesPawn(Pawn pawn) {
+        System.out.println("takesPawn");
         this.pawn = pawn;
         pawn.player = this;
-        pawn.lastHandeler = this;
     }
     public void dropsPawn(Pawn pawn) {
+        System.out.println("dropspawn");
         this.pawn = null;
         pawn.player = null;
     }

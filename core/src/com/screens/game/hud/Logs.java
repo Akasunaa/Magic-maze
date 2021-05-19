@@ -11,7 +11,15 @@ public class Logs extends TextArea{
     }
 
     public void newMessage(String message){
-        appendText("\n" + message);
+        appendText(message);
+        /*
+        Fun fact sur ici
+        avant il y avait appendText("\n" + message);
+        parce qu'il faut revenir à la ligne.
+        Sauf que quand j'ai résolu mon problème d'accent, avec le convertissage en UTF8
+        Ou un truc du genre, tbh c'était très mystique
+        Eh ben maintenant il faut supprimer ce retour à la ligne sinon il en met trop
+        C'est très, très mystique
+         */
     }
-
 }

@@ -188,6 +188,8 @@ public class GameScreen extends BaseScreen {
                 instrumental.setVolume(game.audioVolume);
                 instrumental.play();
                 isInPhaseB = true;
+                GameInterface.logs.clear();
+                GameInterface.logs.newMessage("PASSAGE A LA PHASE B");
                 //numberPawnsOut = 0;
                 // S'ils ont tous leurs armes, on commence la phase B
                 for (Pawn pawn : pawnList) {

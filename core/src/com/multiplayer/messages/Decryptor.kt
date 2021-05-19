@@ -5,14 +5,14 @@ import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.scenes.scene2d.actions.Actions
 import com.multiplayer.messages.pawn.MovingPawn
-import com.screens.menu.MainMenu
 import com.multiplayer.messages.pawn.PlacePawn
 import com.multiplayer.messages.tile.GonnaMoveTile
 import com.multiplayer.messages.tile.PlaceTile
+import com.screens.GameScreens.*
 import com.screens.game.board.Player
 import com.screens.game.board.Queue
+import com.screens.menu.MainMenu
 import com.utils.Functions
-import com.screens.GameScreens.*
 import com.utils.Multiplayer.*
 import com.utils.TileAndCases
 import java.util.Objects.isNull
@@ -22,6 +22,12 @@ class Decryptor {
         val suffix = if (isServer) "Server" else "Client"
         val message = mapper.readValue(tempMessage, Message::class.java)
         println(suffix + " : " + message.message)
+        if (!isServer) {
+            message.sendToLog()
+            if (message.sender == me.pseudo) {
+                return
+            }
+        }
         when (message.action) {
             "answer" -> {
                 courrier.answer = message.target.toBoolean()
@@ -124,12 +130,12 @@ class Decryptor {
                 val tempCase = Functions.findCase(Vector2(message.coordinates[0],message.coordinates[1]))
                 if (tempCase?.pawn == null || tempCase.pawn == tempPawn) {
                     clientList.getClient(message.sender).sendMessage(Answer(true))
-                    clientList.getClient(message.sender).player.dropsPawn(tempPawn)
+                    if (message.sender != me.pseudo) clientList.getClient(message.sender).player.dropsPawn(tempPawn)
                     for (tempClient in clientList.clientList) {
-                        if (tempClient.id != message.sender) {
-                            tempClient.sendMessage(MovingPawn(tempPawn,Vector2(message.coordinates[0],message.coordinates[1])))
-                            tempClient.sendMessage(PlacePawn(message.target))
-                        }
+                        tempClient.sendMessage(MovingPawn(message.sender,tempPawn,Vector2(message.coordinates[0],message.coordinates[1])))
+                        Thread.sleep(10)
+                        // Bizarre mais obligatoire
+                        tempClient.sendMessage(PlacePawn(message.sender, message.target))
                     }
                 } else clientList.getClient(message.sender).sendMessage(Answer(false))
             }
@@ -137,9 +143,7 @@ class Decryptor {
                 if (true) {
                     clientList.getClient(message.sender).sendMessage(Answer(true))
                     for (tempClient in clientList.clientList) {
-                        if (tempClient.id != message.sender) {
-                            tempClient.sendMessage(GonnaMoveTile(message.sender))
-                        }
+                        tempClient.sendMessage(GonnaMoveTile(message.sender))
                     }
                 } else {
                     clientList.getClient(message.sender).sendMessage(Answer(false))
@@ -180,9 +184,7 @@ class Decryptor {
                 if (true) { // Je vois pas trop ce qu'il faut demander mais bon
                     clientList.getClient(message.sender).sendMessage(Answer(true))
                     for (tempClient in clientList.clientList) {
-                        if (tempClient.id != message.sender) {
-                            tempClient.sendMessage(PlaceTile(message.sender, message.target))
-                        }
+                        tempClient.sendMessage(PlaceTile(message.sender, message.target))
                     }
                 } else clientList.getClient(message.sender).sendMessage(Answer(false))
             }

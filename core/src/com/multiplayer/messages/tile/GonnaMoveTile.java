@@ -6,5 +6,6 @@ public class GonnaMoveTile extends Message {
     public GonnaMoveTile(String sender) {
         super(sender);
         action = "isGonnaMoveTile";
+        logMessage = getSender() + " a pris une tuile";
     }
 }

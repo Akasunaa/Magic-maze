@@ -11,4 +11,10 @@ public class MovingPawn extends Message {
         target = Colors.getColor(pawn.getColor());
         this.coordinates = new float[] {coordinates.x,coordinates.y};
     }
+    public MovingPawn(String sender,Pawn pawn, Vector2 coordinates) {
+        super(sender);
+        action = "movingPawn";
+        target = Colors.getColor(pawn.getColor());
+        this.coordinates = new float[] {coordinates.x,coordinates.y};
+    }
 }

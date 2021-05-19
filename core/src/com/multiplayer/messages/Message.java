@@ -1,10 +1,12 @@
 package com.multiplayer.messages;
 
-import com.badlogic.gdx.math.Vector2;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.screens.game.hud.GameInterface;
 import com.utils.Multiplayer;
+
 import java.io.Serializable;
+import java.nio.charset.StandardCharsets;
 
 /*
 Le principe des messages, c'est un peu le principe des enveloppes
@@ -19,9 +21,13 @@ Un truc important lorsqu'on utilise des Messages:
 Donc ça ne sert à rien d'ajouter des attributs, ils feront juste bugger la machine
  */
 public class Message implements Serializable {
-    private final String sender;
+    private String sender;
     public String getSender() {
         return sender;
+    }
+    public Message asServer() {
+        sender = "Server";
+        return this;
     }
 
     protected String action;
@@ -47,6 +53,17 @@ public class Message implements Serializable {
     }
     public Message() {
         sender = Multiplayer.me.pseudo;
+    }
+
+    protected String logMessage;
+    public String getLogMessage() {
+        return logMessage;
+    }
+    public void sendToLog() {
+        if (logMessage != null) {
+//            GameInterface.logs.newMessage(logMessage);
+            GameInterface.logs.newMessage(new String(("\n" + logMessage).getBytes(), StandardCharsets.UTF_8));
+        }
     }
 
     @JsonIgnore
