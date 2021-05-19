@@ -52,20 +52,21 @@ public class LobbyScreen extends BaseScreen {
 
     private void passToGameScreen() {
 
-        System.out.println(playerList.get(0));
-        if (playerList.size() == 1){
-            playerList.get(0).setPlayer(new Player(true, true, false, false, true, true, false));
-            System.out.println(playerList.get(0).west);
-        }
+
         if (playerList.size() == 2){
             playerList.get(0).setPlayer(new Player(true, true, false, false, true, true, false));
             playerList.get(1).setPlayer(new Player(false, false, true, true, false, false, true));
         }
         if (playerList.size() == 3){
-
+            playerList.get(0).setPlayer(new Player(true, true, false, false, false, true, false));
+            playerList.get(1).setPlayer(new Player(false, false, true, false, false, false, true));
+            playerList.get(2).setPlayer(new Player(false, false, false, true, true, false, false));
         }
         if (playerList.size() == 4){
-
+            playerList.get(0).setPlayer(new Player(false, false, false, true, true, true, false));
+            playerList.get(1).setPlayer(new Player(false, false, true, false, true, false, false));
+            playerList.get(2).setPlayer(new Player(false, true, false, false, true, false, true));
+            playerList.get(3).setPlayer(new Player(true, false, true, false, false, false, false));
         }
 
 
