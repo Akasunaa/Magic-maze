@@ -165,6 +165,8 @@ public class Tile implements Serializable {
             entrance = 2;
             entranceCase = caseList[3][2];
         }
+
+        complete();
         //System.out.println("Tile number " + number + " has entrance number " + entrance);
         // On récupère la coordonée d'entrée
     }
@@ -178,7 +180,6 @@ public class Tile implements Serializable {
                 caseList[j][i].load(this, caseListofCases[j][i]); // et on charge toutes les cases
         }
         // Et on rajoute les raccourcis et escalators
-        complete();
         updateAll();
     }
 
