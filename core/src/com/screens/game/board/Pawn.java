@@ -16,7 +16,9 @@ import com.utils.Functions;
 import com.utils.Multiplayer;
 
 import java.io.Serializable;
+import java.util.concurrent.BrokenBarrierException;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 import static com.screens.GameScreens.gameScreen;
 import static com.utils.Colors.green;
@@ -190,7 +192,7 @@ public class Pawn implements Serializable {
         }
         return false;
     }
-    private int count = 1;
+    private int count = 4;
 
     public void place(Vector2 coordinates) {
         try {
@@ -211,7 +213,7 @@ public class Pawn implements Serializable {
             float x = Functions.mouseInput().x - sprite.getWidth() / 2;
             float y = Functions.mouseInput().y - sprite.getHeight() / 2;
             setSpritePosition(new Vector2(x,y));
-            if (count == 1) { // On veut pas avoir à le faire trop souvent
+            if (count == 2) { // On veut pas avoir à le faire trop souvent
                 // Edit: ça vient d'un vieux fragment de code où je n'envoyais ma position que toutes les actualisations
                 // Ca causait des problèmes que je ne comprends pas, où le thread de render restait bloqué
                 // J'ai aucune idée de pourquoi, mais bon en mettant 1 ça fonctionne
@@ -247,8 +249,12 @@ public class Pawn implements Serializable {
         try {
             System.out.println("Blocking in pawn check click");
             Multiplayer.cyclicBarrier.await(500, TimeUnit.MILLISECONDS);
+            //Multiplayer.cyclicBarrier.reset();
             System.out.println("Unlocking in pawn check click");
             // Pour synchroniser les threads
+        } catch (TimeoutException e) {
+            Multiplayer.cyclicBarrier.reset();
+            return false;
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -263,9 +269,14 @@ public class Pawn implements Serializable {
         try {
             System.out.println("Blocking in pawn check place");
             Multiplayer.cyclicBarrier.await(500, TimeUnit.MILLISECONDS);
+            //Multiplayer.cyclicBarrier.reset();
             System.out.println("Unlocking in pawn check place");
             // Pour synchroniser les threads
-        } catch (Exception e) {
+        } catch (TimeoutException e) {
+            Multiplayer.cyclicBarrier.reset();
+            return false;
+        } catch (BrokenBarrierException e) {
+        } catch (InterruptedException e) {
         }
         return Multiplayer.courrier.getAnswer();
     }

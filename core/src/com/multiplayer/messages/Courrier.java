@@ -38,7 +38,7 @@ public class Courrier {
     public Courrier(String id, int port, String ip) throws ServerNotReachedException {
         System.out.println(ip);
         SocketHints socketHints = new SocketHints();
-        socketHints.connectTimeout = 0;
+        socketHints.connectTimeout = 500;
         socketHints.sendBufferSize = 1024/2;
         socketHints.receiveBufferSize = 1024/2;
         try {
