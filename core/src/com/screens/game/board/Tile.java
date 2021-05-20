@@ -128,18 +128,19 @@ public class Tile implements Serializable {
         caseListofCases = new Case[4][4][4];
 
         // On commence par créer le tableau de cases avec des Case à l'intérieur
+        int[][] tileArray = TileArray.getArray(number);
         for (int tempX = 0; tempX < 4; tempX++) {
             for (int tempY = 0; tempY < 4; tempY++) {
-                caseList[tempY][tempX] = new Case(TileArray.getArray(number)[tempY][tempX], this);
+                caseList[tempY][tempX] = new Case(tileArray[tempY][tempX], this);
                 caseListofCases[tempY][tempX] = caseList[tempY][tempX].caseList;
             }
         }
         // Puis on créé les liaisons entre les cases
+        int[][] horizontal = TileArray.getArrayWallHorizontal(number);
+        int[][] vertical = TileArray.getArrayWallVertical(number);
         for (Case[] ligne : caseList) {
             for (Case tempCase : ligne) {
-                tempCase.getNeighbours(
-                        TileArray.getArrayWallHorizontal(number),
-                        TileArray.getArrayWallVertical(number));
+                tempCase.getNeighbours(horizontal, vertical);
             }
         }
 
