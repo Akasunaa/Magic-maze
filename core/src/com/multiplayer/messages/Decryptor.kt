@@ -32,6 +32,7 @@ class Decryptor {
             "answer" -> {
                 courrier.answer = message.target.toBoolean()
                 if (cyclicBarrier.parties >= 1) cyclicBarrier.await() // Pour synchroniser les threads
+                else cyclicBarrier.reset()
                 println("$suffix: Processed Answer " + message.target)
 
             }
