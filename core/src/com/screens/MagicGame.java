@@ -14,6 +14,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.screens.menu.MainMenu;
 
+import static com.utils.Functions.quit;
+
 public class MagicGame extends Game {
     public Skin skin;
     public float audioVolume = 0.0f;
@@ -78,6 +80,8 @@ public class MagicGame extends Game {
     }
     public void dispose() {
         skin.dispose();
+        screen.dispose();
+        quit();
     }
     @Override
     public void setScreen (Screen screen) {

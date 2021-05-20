@@ -11,7 +11,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.screens.BaseScreen;
-import com.screens.GameScreens;
 import com.screens.MagicGame;
 import com.screens.endings.VictoryScreen;
 import com.screens.game.BaseActor;
@@ -203,7 +202,6 @@ public class GameScreen extends BaseScreen {
             // Once again, je pourrais faire ça de manière plus propre mais meh
             if (numberPawnsOut == 4) {
                 victoryScreen = new VictoryScreen(game);
-                GameScreens.game.dispose();
                 game.setScreen(victoryScreen);
 
             }

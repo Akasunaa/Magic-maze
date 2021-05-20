@@ -20,6 +20,8 @@ import java.io.InputStreamReader;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.BrokenBarrierException;
+import java.util.concurrent.CyclicBarrier;
 
 import static com.utils.Multiplayer.*;
 
@@ -40,6 +42,7 @@ Mais bon, c'est du multithreading, c'est pas simple à gérer, bref, bon courage
  */
 
 public class ServerMaker {
+    CyclicBarrier barrier;
     Thread thread;
     ServerSocket serverSocket;
     private boolean isSetAndGo = false;
@@ -189,7 +192,16 @@ public class ServerMaker {
                 while (isInLobby) {
                     System.out.println("Server : looking for players");
                     socket = serverSocket.accept(null); // On récupère une socket qui demande une connection
-                    if (!isInLobby) break;
+                    if (!isInLobby) {
+                        try {
+                            barrier.await();
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        } catch (BrokenBarrierException e) {
+                            e.printStackTrace();
+                        }
+                        return;
+                    }
                     // Petite ligne qui me permet de quitter automatiquement une fois que tout ça est fini.
                     client = new Client(socket);
                     if (!clientList.isIn(client)) {
@@ -276,13 +288,27 @@ public class ServerMaker {
     }
 
     public void killThread() {
+        barrier = new CyclicBarrier(2);
         System.out.println("Server: Killing Server");
-        isInLobby = false;
-        isRunning = false;
 //        thread.stop();
         for (Client client: clientList.clientList) {
             client.sendMessage(new TextMessage("stopping").asServer());
         }
+        isRunning = false;
+        if (isInLobby) {
+            isInLobby = false;
+            Socket temp = Gdx.net.newClientSocket(Net.Protocol.TCP, "127.0.0.1", port, new SocketHints());
+            try {
+                barrier.await();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (BrokenBarrierException e) {
+                e.printStackTrace();
+            }
+            temp.dispose();
+        }
+
+
         serverSocket.dispose();
     }
 }

@@ -51,11 +51,6 @@ public class LobbyScreen extends BaseScreen {
     }
 
     private void passToGameScreen() {
-
-
-
-
-
         // Là on va mettre en place le fading
         final BaseActor transparentForeground = new BaseActor(new Texture(Gdx.files.internal("Menu/Black.gif")));
         transparentForeground.setSize(1920, 1080);
@@ -91,10 +86,10 @@ public class LobbyScreen extends BaseScreen {
         Timer.schedule(new Timer.Task() {
             @Override
             public void run() {
-                setToPassToGameScreen();
+                game.setScreen(gameScreen);
             }
         }, delay);
-        game.setScreen(gameScreen);
+
         shouldPassScreen = false;
     }
     public void create() {

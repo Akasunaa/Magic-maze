@@ -36,7 +36,7 @@ public class Functions {
         Multiplayer.courrier.sendMessage(new TextMessage("quitting"));
         Multiplayer.courrier.killThread();
         if (Multiplayer.isServer) Multiplayer.serverMaker.killThread();
-        Gdx.app.exit();
+        System.exit(0);
     }
 
     public static void snap(Vector2 mousePosition) {
