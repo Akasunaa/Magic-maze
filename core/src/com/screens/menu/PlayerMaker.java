@@ -77,7 +77,7 @@ public class PlayerMaker {
                 avatarNum = modulo(avatarNum + i, 10);
                 player.avatarName = BaseScreen.animalNames[avatarNum];
                 Multiplayer.courrier.sendMessage(new TextMessage("changeAvatar",player.avatarName));
-                player.avatar.setTexture(new Texture(Gdx.files.internal("Avatars/" + player.avatarName + ".png")));
+                player.avatar.setTexture(new Texture(Gdx.files.internal("Game/Avatars/" + player.avatarName + ".png")));
                 //avatar.setSize(150, 150);
             }
         };
