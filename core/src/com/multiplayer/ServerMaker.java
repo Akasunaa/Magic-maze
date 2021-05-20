@@ -6,7 +6,6 @@ import com.badlogic.gdx.net.ServerSocket;
 import com.badlogic.gdx.net.ServerSocketHints;
 import com.badlogic.gdx.net.Socket;
 import com.badlogic.gdx.net.SocketHints;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.multiplayer.messages.*;
 import com.screens.BaseScreen;
 import com.screens.game.board.Player;
@@ -236,11 +235,6 @@ public class ServerMaker {
 
                         // Maintenant on renvois le joueur à tout le monde
                         // Et également on envois tout le monde au joueur
-                        try {
-                            tempString = mapper.writeValueAsString(client.player);
-                        } catch (JsonProcessingException e) {
-                            e.printStackTrace();
-                        }
                         for (Client tempClient : Multiplayer.clientList.clientList) {
                             if (!tempClient.getId().equals(client.getId())) {
                                 sleep();
