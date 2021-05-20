@@ -188,7 +188,7 @@ class Decryptor {
                 else TileAndCases.queue.rotate(message.target.toInt())
             }
             "placeTile" -> {
-                TileAndCases.queue.placeHandleAll(TileAndCases.queue.spritePosition, true)
+                TileAndCases.queue.placeHandleAll(TileAndCases.queue.spritePosition)
             }
             "wantToPlaceTile" -> {
                 if (true) { // Je vois pas trop ce qu'il faut demander mais bon
@@ -197,6 +197,13 @@ class Decryptor {
                         tempClient.sendMessage(PlaceTile(message.sender, message.target))
                     }
                 } else clientList.getClient(message.sender).sendMessage(Answer(false))
+            }
+            "droppedTile" -> {
+                if (isServer) {
+                    for (client in clientList.clientList) {
+                        client.sendMessage(message)
+                    }
+                } else TileAndCases.queue.reset()
             }
             "quitting" -> {
                 if (isServer) {

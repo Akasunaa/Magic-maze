@@ -5,6 +5,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
+import com.multiplayer.messages.TextMessage;
 import com.multiplayer.messages.tile.AskPlaceTile;
 import com.multiplayer.messages.tile.AskTakeTile;
 import com.multiplayer.messages.tile.MovingTile;
@@ -17,9 +18,11 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 import static com.screens.GameScreens.gameScreen;
-import static com.utils.TileAndCases.*;
+import static com.utils.TileAndCases.tileList;
+import static com.utils.TileAndCases.tileSize;
 
 public class Queue implements Serializable {
     // Structure classique pour une pile
@@ -123,7 +126,7 @@ public class Queue implements Serializable {
         return new Queue(head, tail);
     } // Self explanatory
 
-    Queue(Tile head, Queue tail) {
+    private Queue(Tile head, Queue tail) {
         // Création d'une file à partir de sa tête et de sa queue
         this.head = head;
         this.tail = tail;
@@ -231,22 +234,10 @@ public class Queue implements Serializable {
         shown.rotateBy(90 * i);
     }
 
-    public void placeHandleAll(Vector2 mousePosition, boolean fromServer) {
-        if (isFirst) {
-            // Relique de l'époque où on devait placer cette tuile à la main, sorry
-            isFirst = false;
-            origin.add(mousePosition);// Si c'est la première, on stock ses coordonées
-            place(mousePosition); // On pose la tuile
-            hide();
-        } else if (head.canPlaceThere() || fromServer) { // techniquement pas besoin mais bon
-            Functions.snap(mousePosition); // Tu alignes les coordonées sur la "grille"
-            place(mousePosition);
-            hide();
-        }
-        else {
-            shown.setVisible(true);
-            sprite.setVisible(false);
-        }
+    public void placeHandleAll(Vector2 mousePosition) {
+        Functions.snap(mousePosition); // Tu alignes les coordonées sur la "grille"
+        place(mousePosition);
+        hide();
     }
 
     private boolean checkServerForPlacable() {
@@ -261,7 +252,10 @@ public class Queue implements Serializable {
             System.out.println("Blocking in Queue Place");
             Multiplayer.cyclicBarrier.await(500, TimeUnit.MILLISECONDS);            // Pour synchroniser les threads
             System.out.println("Unblocking in Queue Place");
-        } catch (Exception e) {
+        } catch (TimeoutException e) {
+            Multiplayer.cyclicBarrier.reset();
+            return false;
+        }catch (Exception e) {
             e.printStackTrace();
         }
         return Multiplayer.courrier.getAnswer();
@@ -274,12 +268,20 @@ public class Queue implements Serializable {
             System.out.println("Blocking in Queue Click");
             Multiplayer.cyclicBarrier.await(500, TimeUnit.MILLISECONDS);            // Pour synchroniser les threads
             System.out.println("Unblocking in Queue Click");
+        } catch (TimeoutException e) {
+            Multiplayer.cyclicBarrier.reset();
+            return false;
         } catch (Exception e) {
             e.printStackTrace();
         }
         return Multiplayer.courrier.getAnswer();
     }
 
+    public void reset() {
+        isMovable = false;
+        shown.setVisible(true);
+        sprite.setVisible(false);
+    }
     private int count = 2;
     public void handleInput() {
         // Uh, this is going to be fun
@@ -315,12 +317,17 @@ public class Queue implements Serializable {
                     rotate(-1);
                     Multiplayer.courrier.sendMessage(new RotateTile(-1));
                 }
-                if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT) && checkServerForPlacable()) {// si on sélectionne un endroit
-                    placeHandleAll(mousePosition, false);
-                    isMovable = false;
+                if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
+                    if (head.canPlaceThere() && checkServerForPlacable()) {// si on sélectionne un endroit
+                        placeHandleAll(mousePosition);
+                        isMovable = false;
+                    } else {
+                        reset();
+                        Multiplayer.courrier.sendMessage(new TextMessage("droppedTile"));
+                    }
                 }
             }
-            else {// Beaaucoup de Booléen donc je vais préciser
+            else {// Beaucoup de Booléen donc je vais préciser
                 if (!isHidden && // Si elle n'est pas bougeable, révélée
                         Gdx.input.isButtonJustPressed(Input.Buttons.LEFT) && // Qu'on clique droit
                         (x < mousePositionStatic.x) && (mousePositionStatic.x < x + size) && // Qu'on est dessus
