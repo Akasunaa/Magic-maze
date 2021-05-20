@@ -19,6 +19,7 @@ import java.io.Serializable;
 import java.util.concurrent.TimeUnit;
 
 import static com.screens.GameScreens.gameScreen;
+import static com.utils.Colors.green;
 import static com.utils.Functions.findCase;
 import static com.utils.TileAndCases.*;
 
@@ -59,11 +60,15 @@ public class Pawn implements Serializable {
         setCase = tempCase;
         setCase.pawn = this;
         if (setCase.isExit && setCase.color == color) {
+            if (color == green) {
+                gameScreen.getInterface().unmute();
+            }
             queue.reveal();
             isLocked = !queue.isEmpty;
         }
         if (setCase.hasHourglass){
             Clock.clock.reset();
+            Clock.clock.pause();
             setCase.hasHourglass=false;
             setCase.used();
             GameInterface.logs.newMessage("\n" + player.pseudo + " a réinitialisé le compteur");

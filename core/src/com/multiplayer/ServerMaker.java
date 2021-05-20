@@ -276,8 +276,16 @@ public class ServerMaker {
     }
 
     public void quitLobby() {
+        barrier = new CyclicBarrier(2);
         isInLobby = false;
         Socket temp = Gdx.net.newClientSocket(Net.Protocol.TCP, "127.0.0.1", port, new SocketHints());
+        try {
+            barrier.await();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (BrokenBarrierException e) {
+            e.printStackTrace();
+        }
         temp.dispose();
         // C'est pas propre mais ça fonctionne, pour déconnecter proprement on est obligé de faire ça
         isSetAndGo = true;

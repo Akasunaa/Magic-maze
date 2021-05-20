@@ -46,6 +46,7 @@ public class GameInterface extends BaseScreen {
     private BaseActor ping;
     private Sound pingSound;
     public boolean needsToPing = false;
+    private BaseActor redCross;
 
     private void ping() {
         ping.toFront();
@@ -54,6 +55,13 @@ public class GameInterface extends BaseScreen {
                 Actions.color(new Color(1, 0, 0, 0), 0.20f)));
         pingSound.play();
         needsToPing = false;
+    }
+
+    public void mute() {
+        redCross.setVisible(true);
+    }
+    public void unmute() {
+        redCross.setVisible(false);
     }
 
     //constructeur
@@ -113,11 +121,11 @@ public class GameInterface extends BaseScreen {
         voiceOn = true;
         uiStage.addActor(volume);
 
-        BaseActor cross = new BaseActor(new Texture(Gdx.files.internal("interface/croix.png")));
-        cross.setSize(45,45);
-        cross.setPosition(viewWidth - hourglass.getWidth() - volume.getWidth(), viewHeight - phaseA.getHeight() - volume.getHeight());
-        cross.setVisible(false);
-        uiStage.addActor(cross);
+        redCross = new BaseActor(new Texture(Gdx.files.internal("interface/croix.png")));
+        redCross.setSize(45,45);
+        redCross.setPosition(viewWidth - hourglass.getWidth() - volume.getWidth(), viewHeight - phaseA.getHeight() - volume.getHeight());
+        redCross.setVisible(false);
+        uiStage.addActor(redCross);
 
         //Liste des joueurs, du moins leur affichage sur le HUD
         avatars = new PlayerOnHUD[Multiplayer.playerList.size()];

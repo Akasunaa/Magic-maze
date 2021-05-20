@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.screens.game.BaseActor;
+import com.screens.game.hud.Clock;
 
 import java.io.Serializable;
 
@@ -80,12 +81,11 @@ public class Player implements Serializable {
         else return (new Player(south,north,west,east,escalatorTaker,portalTaker, cardChooser,pawn)).rotate(modulo(i-1,numberDirections));
     }
     public void takesPawn(Pawn pawn) {
-        System.out.println("takesPawn");
+        Clock.clock.unpause();
         this.pawn = pawn;
         pawn.player = this;
     }
     public void dropsPawn(Pawn pawn) {
-        System.out.println("dropspawn");
         this.pawn = null;
         pawn.player = null;
     }
