@@ -1,4 +1,4 @@
-package com.utils;
+package com.screens.game.board;
 
 public class CaseCorrespondance {
     public static int unnacessible = 4;

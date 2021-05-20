@@ -1,5 +1,5 @@
 package com.screens.game.board;
-import static com.utils.CaseCorrespondance.*;
+import static com.screens.game.board.CaseCorrespondance.*;
 import static com.utils.Colors.*;
 
 public class TileArray {
@@ -41,7 +41,7 @@ public class TileArray {
         Un tableau de 3x4 pour ceux verticaux
         Un tableau de 4x3 pour ceux horizontaux
         Pour le mur: 1 = un mur, 0 = pas de mur
-        */
+    */
 
     private static int[][] getArrayTemp(int number) {
         if (number == 0) {

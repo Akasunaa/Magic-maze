@@ -9,7 +9,7 @@ import com.utils.TileAndCases;
 import java.io.Serializable;
 
 import static com.screens.GameScreens.gameScreen;
-import static com.utils.CaseCorrespondance.*;
+import static com.screens.game.board.CaseCorrespondance.*;
 import static com.utils.Directions.*;
 import static com.utils.Functions.modulo;
 import static com.utils.MainConstants.batch;
