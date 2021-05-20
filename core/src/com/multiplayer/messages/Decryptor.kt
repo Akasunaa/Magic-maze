@@ -188,7 +188,7 @@ class Decryptor {
                 else TileAndCases.queue.rotate(message.target.toInt())
             }
             "placeTile" -> {
-                TileAndCases.queue.placeHandleAll(TileAndCases.queue.spritePosition)
+                TileAndCases.queue.place(TileAndCases.queue.spritePosition)
             }
             "wantToPlaceTile" -> {
                 if (true) { // Je vois pas trop ce qu'il faut demander mais bon

@@ -187,16 +187,6 @@ public class Queue implements Serializable {
         shown.setRotation(0);
     }
 
-    private void place(Vector2 mousePosition) {
-        sprite.toBack();
-        head.place();
-        tileList.add(head); // On pose la tuile
-        head.x = mousePosition.x; //Bon c'est classique ça
-        head.y = mousePosition.y;
-        head.updateAll(); // Mise à jour
-        head.startCooldown(); // On veut pas le blinking
-        toRemove = true; // Et on enlève la tête
-    }
     public boolean toRemove = false;
 
     void hide() {
@@ -234,9 +224,16 @@ public class Queue implements Serializable {
         shown.rotateBy(90 * i);
     }
 
-    public void placeHandleAll(Vector2 mousePosition) {
+    public void place(Vector2 mousePosition) {
         Functions.snap(mousePosition); // Tu alignes les coordonées sur la "grille"
-        place(mousePosition);
+        sprite.toBack();
+        head.place();
+        tileList.add(head); // On pose la tuile
+        head.x = mousePosition.x; //Bon c'est classique ça
+        head.y = mousePosition.y;
+        head.updateAll(); // Mise à jour
+        head.startCooldown(); // On veut pas le blinking
+        toRemove = true; // Et on enlève la tête
         hide();
     }
 
@@ -319,7 +316,7 @@ public class Queue implements Serializable {
                 }
                 if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
                     if (head.canPlaceThere() && checkServerForPlacable()) {// si on sélectionne un endroit
-                        placeHandleAll(mousePosition);
+                        place(mousePosition);
                         isMovable = false;
                     } else {
                         reset();
