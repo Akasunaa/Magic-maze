@@ -31,7 +31,7 @@ public class Queue implements Serializable {
     private int numberTilesLeft;
     public String textTileLeft;
     private void updateText() {
-        if (numberTilesLeft < 0) textTileLeft = "Tuiles restantes: " + numberTilesLeft;
+        if (numberTilesLeft > 0) textTileLeft = "Tuiles restantes: " + numberTilesLeft;
         try {
             gameScreen.getInterface().setText(textTileLeft);
         } catch (NullPointerException e) {
@@ -134,7 +134,6 @@ public class Queue implements Serializable {
             numberTilesLeft = 0;
         }
         else numberTilesLeft = 1 + tail.numberTilesLeft;
-        updateText();
     }
 
     public Queue(int number) {

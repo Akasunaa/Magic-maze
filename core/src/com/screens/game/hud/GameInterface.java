@@ -6,13 +6,11 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
-import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.multiplayer.messages.TextMessage;
 import com.screens.BaseScreen;
@@ -22,7 +20,6 @@ import com.screens.game.BaseActor;
 import com.utils.Functions;
 import com.utils.Multiplayer;
 
-import static com.utils.MainConstants.getFontSize;
 import static com.utils.Multiplayer.courrier;
 import static com.utils.TileAndCases.queue;
 import static com.utils.TileAndCases.tileSize;
@@ -169,12 +166,9 @@ public class GameInterface extends BaseScreen {
 
         //la c'est le compteur de plaques restantes en bas a droite
 
-        BitmapFont font = getFontSize(48*2);
-        LabelStyle style = new LabelStyle(font, Color.BLACK);
-
-        textTilesLeft = new Label(queue.textTileLeft, style);
-        textTilesLeft.setFontScale(0.5f);
-        textTilesLeft.setPosition(viewWidth - tileSize/2 - textTilesLeft.getWidth()/2 - 40, 0);
+        textTilesLeft = new Label(queue.textTileLeft, game.skin, "clockStyle");
+//        textTilesLeft.setFontScale(0.8f);
+        textTilesLeft.setPosition(viewWidth - tileSize - textTilesLeft.getWidth()/2 - 60, 0);
         uiStage.addActor(textTilesLeft);
 
         // Vestige de l'époque où on devait charger les pions à la main
