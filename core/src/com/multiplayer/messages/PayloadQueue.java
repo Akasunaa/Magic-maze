@@ -8,5 +8,4 @@ public class PayloadQueue extends Message{
         target = "Queue";
         payload = queue.serialize();
     }
-
 }
