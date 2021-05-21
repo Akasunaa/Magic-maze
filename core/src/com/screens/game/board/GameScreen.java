@@ -169,7 +169,7 @@ public class GameScreen extends BaseScreen {
         queue.handleInput(Multiplayer.me);
 
         for (Pawn pawn : pawnList) {
-            if (pawn.hasTarget) pawn.interpolate(0.3f, Interpolation.bounce);
+            if (pawn.hasTarget) pawn.interpolate(0.4f, Interpolation.bounce);
             pawn.handleInput(Multiplayer.me);
         }
         for (Pawn pawn : pawnToRemove) {

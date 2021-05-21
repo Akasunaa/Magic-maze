@@ -151,9 +151,9 @@ public class Pawn implements Serializable {
         hasTarget = true;
     }
     public void interpolate(float alpha, Interpolation interpolation) {
-        //Vector2 temp = position.interpolate(target, alpha, interpolation);
+        Vector2 temp = position.interpolate(target, alpha, interpolation);
         // J'ai supprimé l'interpolation, ça causait des problèmes
-        setSpritePosition(target);
+        setSpritePosition(temp);
         hasTarget = false;
     }
     private boolean firstTime = true;
@@ -163,8 +163,10 @@ public class Pawn implements Serializable {
         hasTarget = false;
     }
     public void updateCoordinates() {
-        sprite.setX(setCase.getX(setCase.x) + (caseSize - sprite.getWidth()) / 2);
-        sprite.setY(setCase.getY(setCase.y) + caseSize / 10);
+        setSpritePosition(new Vector2(setCase.getX(setCase.x) + (caseSize - sprite.getWidth()) / 2,
+                setCase.getY(setCase.y) + caseSize / 10));
+//        sprite.setX(setCase.getX(setCase.x) + (caseSize - sprite.getWidth()) / 2);
+//        sprite.setY(setCase.getY(setCase.y) + caseSize / 10);
     }
 
     public void dispose() {
@@ -192,7 +194,7 @@ public class Pawn implements Serializable {
         }
         return false;
     }
-    private int count = 4;
+    private int count = 3;
 
     public void place(Vector2 coordinates) {
         try {
@@ -213,7 +215,7 @@ public class Pawn implements Serializable {
             float x = Functions.mouseInput().x - sprite.getWidth() / 2;
             float y = Functions.mouseInput().y - sprite.getHeight() / 2;
             setSpritePosition(new Vector2(x,y));
-            if (count == 2) { // On veut pas avoir à le faire trop souvent
+            if (count == 3) { // On veut pas avoir à le faire trop souvent
                 // Edit: ça vient d'un vieux fragment de code où je n'envoyais ma position que toutes les actualisations
                 // Ca causait des problèmes que je ne comprends pas, où le thread de render restait bloqué
                 // J'ai aucune idée de pourquoi, mais bon en mettant 1 ça fonctionne
