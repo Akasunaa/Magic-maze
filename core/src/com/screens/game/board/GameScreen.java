@@ -58,7 +58,7 @@ public class GameScreen extends BaseScreen {
 
     private boolean restart = false;
     public void setToRestart() {
-        restart = true;
+        //restart = true;
     }
 
     private void restart() {
@@ -111,7 +111,10 @@ public class GameScreen extends BaseScreen {
         }
 
         try {
+            System.out.println("Client: Blocking in gameScreen.load()");
             cyclicBarrier.await();
+            System.out.println("Client: Unblocking in gameScreen.load()");
+
         } catch (Exception e) {
             e.printStackTrace();
         }
