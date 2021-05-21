@@ -61,12 +61,6 @@ public class LobbyScreen extends BaseScreen {
         // Je met ça là, car il y a un cyclicBarrier.await() dans gameScreen
         // Comme ça on est à peu près sur que tout le monde lance en même temps
 
-        gameScreen = new GameScreen(game);
-        gameScreen.load();
-
-
-        transparentForeground.setTouchable(Touchable.enabled);
-
         Action fadeToBlack = Actions.sequence(
                 //Actions.alpha(1f), // set transparency value
                 Actions.show(), // set visible to true
@@ -74,21 +68,19 @@ public class LobbyScreen extends BaseScreen {
                         Actions.sequence(
                                 // Fondu de transition
                                 Actions.color(new Color(0, 0, 0, 1), 2)
-
                         )
                 )
         );
         transparentForeground.addAction(fadeToBlack);
 
-
-        float delay = 2; // seconds
-
+        gameScreen = new GameScreen(game);
         Timer.schedule(new Timer.Task() {
             @Override
             public void run() {
+                gameScreen.load();
                 game.setScreen(gameScreen);
             }
-        }, delay);
+        }, 2);
 
         shouldPassScreen = false;
     }
