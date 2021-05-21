@@ -104,14 +104,13 @@ public class Queue implements Serializable {
         if (numberTilesLeft > 0) {
             this.head = tail.head;
             this.tail = tail.tail;
-            System.out.println("Client: Removed a Tile, new Tile is number " + head.number);
             updateText();
             // Et on recharge le sprite
             loadSprite();
             updateSpriteSize();
             updateCoordinates();
         } else { // S'il n'y a pas de queue, c'est qu'elle est vide
-            System.out.println("Client: File vide !");
+            System.out.println("File vide !");
             hidden.setTexture(new Texture("tuiles/blueDot.png"));
             hidden.setVisible(false);
             shown.setVisible(false);
@@ -200,7 +199,7 @@ public class Queue implements Serializable {
     }
 
     void reveal() {
-        System.out.println("Client: Revealing Queue");
+        System.out.println("Revealing Queue");
         if (!isHidden) {
             numberRevealsDown ++;
         }
