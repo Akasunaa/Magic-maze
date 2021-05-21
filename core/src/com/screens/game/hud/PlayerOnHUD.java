@@ -10,11 +10,9 @@ import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.utils.Align;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.multiplayer.messages.Ping;
 import com.screens.game.BaseActor;
 import com.screens.game.board.Player;
-import com.utils.Multiplayer;
 
 import java.util.ArrayList;
 
@@ -67,11 +65,6 @@ public class PlayerOnHUD {
 
         // Et maintenant il faut regarder chacun des booléens pour savoir quel pouvoir notre joueur possède
 
-        try {
-            System.out.println(Multiplayer.mapper.writeValueAsString(player));
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        }
         if (player.north) {
             powers.add(new BaseActor(new Texture(Gdx.files.internal("Game/Powers/upArrow.png"))));
         }
