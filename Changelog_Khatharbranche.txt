@@ -1,0 +1,33 @@
+Fonctionnalités (différentes des versions des autres):
+- multijoueur implémenté à 90%
+- lobby adaptatif
+- choix du pseudo dés le menu principal (comme dans Amogus, c'était ce qu'on avait avant mais ça a été retiré lorsqu'on a construit le lobby)
+
+Contrôles:
+- Rien de nouveau inGame
+- Pour charger de nouveaux "joueurs" dans le lobby, appuyer sur Espace (attention, le lobby est révu pour 4 joueurs, ça casse au delà)
+
+Multijoueur:
+- Comme je l'ai dit, implémenté à 90%
+- Je ne sort pas ce chiffre de n'importe où, vous pouvez vérifier vous même ce qu'il me reste à faire avec les TODO
+- Déplacement des tuiles, transmission de pseudos et avatars, déplacement du pion, bref tout cet aspect là est fait
+- Ce qu'il reste à faire: c'est le reste du jeu en fait, gestion des sabliers, etc
+- Il reste cependant quelques trucs à faire dans le lobby (gestion de la modification du pseudo, mais ça va pas prendre plus de dix lignes)
+- Pour jouer, il faut un serveur et un client:
+    - Le serveur clique sur "Créer une partie", et il faut avoir mis le bon nombre de personnes attendues dans Multiplayer.numberofPlayer
+    - Les autres sur "Rejoindre une partie", en ayant pris le soin de mettre la bonne adresse ip dans le champ prévu à cet effet
+    - Il faut qu'ils n'aient pas le même pseudal sinon le serveur rejette le dernier à essayer de se connecter
+    - Et voilà, c'est tout bon !
+- Pour jouer en solo (aka test) il ne faut rien faire, l'adresse IP du serveur est déjà 127.0.0.1, et de base c'est déjà une seule personne
+
+Musiques:
+- Désolé mais j'ai passé pas mal de temps sur le lobby
+- Nathan peut confirmer que le lobby ça te fait devienne zouave
+- Donc j'avais besoin de me détendre
+- Don doko doko don doko doko
+- Flemme de l'enlever
+
+Ajouts et précisions
+- J'ai refait l'agencement du menu principal afin que les images soient pas déformées
+- Le lobby a été codé à la base par Nathan, je l'ai juste retouché pour qu'on ne puisse pas modifier les infos des joueurs externes, et j'ai gérer la modulabilité également
+- Franchement gros remerciements à Nathan qui a fait un code semi clair à partir d'un truc aussi opaque et mystique que les tables de LibGDX

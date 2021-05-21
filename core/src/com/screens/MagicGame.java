@@ -18,7 +18,7 @@ import static com.utils.Functions.quit;
 
 public class MagicGame extends Game {
     public Skin skin;
-    public float audioVolume = 0.70f;
+    public float audioVolume = 0.0f;
     public void create() {
         // initialize resources common to multiple screens and store to skin database
         skin = new Skin(Gdx.files.internal("UserInterface/uiskin.json"));
