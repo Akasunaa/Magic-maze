@@ -67,11 +67,11 @@ public class PlayerOnHUD {
 
         // Et maintenant il faut regarder chacun des booléens pour savoir quel pouvoir notre joueur possède
 
-        try {
-            System.out.println(Multiplayer.mapper.writeValueAsString(player));
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            System.out.println(Multiplayer.mapper.writeValueAsString(player));
+//        } catch (JsonProcessingException e) {
+//            e.printStackTrace();
+//        }
         if (player.north) {
             powers.add(new BaseActor(new Texture(Gdx.files.internal("Game/Powers/upArrow.png"))));
         }
