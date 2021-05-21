@@ -12,7 +12,7 @@ import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
-import com.multiplayer.messages.TextMessage;
+import com.multiplayer.messages.WantsToRestart;
 import com.screens.BaseScreen;
 import com.screens.GameScreens;
 import com.screens.MagicGame;
@@ -52,6 +52,14 @@ public class GameInterface extends BaseScreen {
                 Actions.color(new Color(1, 0, 0, 0), 0.20f)));
         pingSound.play();
         needsToPing = false;
+    }
+    public void wantsToRestart(String pseudo) {
+        for (PlayerOnHUD player : avatars) {
+            if (player.getPseudo().equals(pseudo)) {
+                player.wantsToRestart();
+                return;
+            }
+        }
     }
 
     public void mute() {
@@ -95,7 +103,7 @@ public class GameInterface extends BaseScreen {
                 new InputListener() {
                     public boolean touchDown(InputEvent ev, float x, float y, int pointer, int button) {
                         avatars[0].wantsToRestart();
-                        courrier.sendMessage(new TextMessage("wantsToRestart"));
+                        courrier.sendMessage(new WantsToRestart());
                         return true;
                     }
                 }

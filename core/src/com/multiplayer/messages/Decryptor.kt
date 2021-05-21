@@ -269,12 +269,18 @@ class Decryptor {
                 lobbyScreen.setToUpdateAvatar(me.pseudo)
             }
             "wantsToRestart" -> {
-                numberPeopleWantRestart++
-                if (numberPeopleWantRestart == 3) {
+                if (isServer) {
+                    numberPeopleWantRestart++
                     for (client in clientList.clientList) {
-                        client.sendMessage(TextMessage("restart"))
+                        client.sendMessage(message)
+                    }
+                    if (numberPeopleWantRestart == 3) {
+                        for (client in clientList.clientList) {
+                            client.sendMessage(TextMessage("restart"))
+                        }
                     }
                 }
+                else gameScreen.`interface`.wantsToRestart(message.sender);
             }
             "restart" -> gameScreen.setToRestart()
             else -> println("$suffix: Action not recognized")

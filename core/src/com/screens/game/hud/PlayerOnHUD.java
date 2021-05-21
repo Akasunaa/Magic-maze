@@ -52,6 +52,7 @@ public class PlayerOnHUD {
 //        pseudoLabel.debug();
 
         wantsToRestart = new BaseActor(new Texture(Gdx.files.internal("interface/restart-button.png")));
+        wantsToRestart.setSize(size, wantsToRestart.getHeight() * size / wantsToRestart.getWidth());
 
         avatar.addListener(new InputListener() {
             public boolean touchDown(InputEvent ev, float x, float y, int pointer, int button) {
@@ -135,6 +136,10 @@ public class PlayerOnHUD {
     }
     void wantsToRestart() {
         wantsToRestart.setVisible(true);
+    }
+
+    String getPseudo() {
+        return pseudoLabel.getText().toString();
     }
 
 }
