@@ -10,7 +10,7 @@ public class DesktopLauncher {
         config.height = 1080;
         config.width = 1920;
         config.forceExit = true;
-        config.fullscreen = true;
+        config.fullscreen = false;
         LwjglApplication launcher = new LwjglApplication( new MagicGame() , config);
     }
 }

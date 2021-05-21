@@ -80,6 +80,7 @@ class Decryptor {
                 for (player in playerList) {
                     if (player.pseudo == message.target) {
                         player.setPlayer(tempPlayer)
+                        return
                     }
                 }
             }

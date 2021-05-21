@@ -19,13 +19,11 @@ public class ClientListener {
         thread = new Thread(new Runnable() {
             @Override
             public void run() {
-                BufferedReader buffer;
+                BufferedReader buffer = new BufferedReader(new InputStreamReader(socket.getInputStream()));
                 InputStream inputStream = socket.getInputStream();
                 while (isRunning) {
                     try {
-                        if (inputStream.available() != 0) {
-                            // On lit la data depuis la socket dans un buffer
-                            buffer = new BufferedReader(new InputStreamReader(inputStream));
+                        if (inputStream.available() != 0) { // On vérifie qu'il y a des trucs à lire
                             //Et on la décrypte
                             key.decryptMessage(buffer.readLine(), false);
                         }

@@ -87,8 +87,9 @@ public class ServerMaker {
                         if (inputStream.available() != 0) {
                             // On lit la data depuis la socket dans un buffer
                             BufferedReader buffer = new BufferedReader(new InputStreamReader(inputStream));
-                            //Et on la décrypte
+                            //Et on décrypte tout ce qu'il y a dans le buffer
                             key.decryptMessage(buffer.readLine(), true);
+
                         }
                     } catch (IOException e) { //Standard Procedure for dealing with Sockets
                         e.printStackTrace();
@@ -125,7 +126,14 @@ public class ServerMaker {
                 Player[] newPlayerList = choosePlayer();
                 for (int i = 0; i < playerList.size(); i++) {
                     AssignPlayer message = new AssignPlayer(newPlayerList[i], playerList.get(i).pseudo);
+                    try {
+                        Thread.sleep(50);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    // I am once again asking you not to overload the client
                     for (Client tempClient : clientList.clientList) {
+                        System.out.println("Server: Sent Assigned " + message.getTarget() + " to " + tempClient.getPlayer().pseudo);
                         tempClient.sendMessage(message);
                     }
                 }
