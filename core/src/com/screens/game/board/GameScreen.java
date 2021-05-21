@@ -114,7 +114,7 @@ public class GameScreen extends BaseScreen {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        // On attends d'avoir la queue
+        // On attends d'avoir recu la queue et les assignements
 
         gameInterface = new GameInterface(game);
         gameInterface.hasBackground = false;

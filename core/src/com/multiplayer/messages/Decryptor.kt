@@ -53,21 +53,20 @@ class Decryptor {
                         println("$suffix: Getting a Queue")
                         if (TileAndCases.queue==null) TileAndCases.queue =
                             Queue(message.payload)
-                        println("Blocking in Decryptor Queue")
-                        cyclicBarrier.await()
-                        println("Unblocking in Decryptor Queue")
+//                        println("Blocking in Decryptor Queue")
+//                        cyclicBarrier.await()
+//                        println("Unblocking in Decryptor Queue")
+                        courrier.sendMessage(Confirm())
                     }
                     "else" -> {
                     }
                 }
             }
             "setAndGo" -> {
-//                if (!Multiplayer.isServer) {
-//                    // Boh on est plus à un mysticisme prêt
-//                    println("Blocking in Decryptor setAndGo")
-//                    cyclicBarrier.await()
-//                    println("Unblocking in Decryptor setAndGo")
-//                }
+                // Boh on est plus à un mysticisme prêt
+                println("Blocking in Decryptor setAndGo")
+                cyclicBarrier.await()
+                println("Unblocking in Decryptor setAndGo")
                 // En fait ça servait à rien de mettre une barrière ici étant donné que la
                 // Création du courrier se fait de manière linéaire dans le thread principal
             }
@@ -80,6 +79,7 @@ class Decryptor {
                 for (player in playerList) {
                     if (player.pseudo == message.target) {
                         player.setPlayer(tempPlayer)
+                        courrier.sendMessage(Confirm())
                         return
                     }
                 }
