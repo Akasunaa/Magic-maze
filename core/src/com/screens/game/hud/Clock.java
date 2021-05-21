@@ -11,7 +11,7 @@ import static com.screens.GameScreens.gameScreen;
 public class Clock extends Label {
     public static Clock clock;
     float time;
-    float baseTime = 900f;
+    float baseTime = 120f;
 
     @Override
     public void act(float delta) {
