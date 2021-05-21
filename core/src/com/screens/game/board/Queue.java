@@ -279,7 +279,7 @@ public class Queue implements Serializable {
         sprite.setVisible(false);
     }
     private int count = 2;
-    public void handleInput() {
+    public void handleInput(Player player) {
         // Uh, this is going to be fun
         // Edit genre trois (3) mois après avoir écrit ce code ? Sans doute beaucoup plus
         // Hum C'était beaucoup, beaucoup plus simple que ce qui te restait à faire, jeune Hadrien
@@ -328,6 +328,7 @@ public class Queue implements Serializable {
                         Gdx.input.isButtonJustPressed(Input.Buttons.LEFT) && // Qu'on clique droit
                         (x < mousePositionStatic.x) && (mousePositionStatic.x < x + size) && // Qu'on est dessus
                         (y < mousePositionStatic.y) && (mousePositionStatic.y < y + size) &&
+                        player.cardChooser &&
                         checkServerForClickable()) { // Et qu'on a le droit
                     makingMovable(); // Alors c'est bon
                     setSpritePosition(Functions.mouseInput().x - tileSize/2,Functions.mouseInput().y - tileSize/2);

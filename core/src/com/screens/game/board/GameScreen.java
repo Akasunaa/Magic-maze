@@ -165,7 +165,7 @@ public class GameScreen extends BaseScreen {
 
         batch.begin();
         //coordMouse.setText(stringMousePosition(camera) + "\n" + stringMousePosition((OrthographicCamera) uiStage.getCamera())); // On écrit les coordonées
-        queue.handleInput();
+        queue.handleInput(Multiplayer.me);
 
         for (Pawn pawn : pawnList) {
             if (pawn.hasTarget) pawn.interpolate(0.3f, Interpolation.bounce);
