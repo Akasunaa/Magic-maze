@@ -15,6 +15,7 @@ import com.screens.menu.MainMenu
 import com.utils.Functions
 import com.utils.Multiplayer.*
 import com.utils.TileAndCases
+import java.lang.Integer.max
 import java.util.Objects.isNull
 
 class Decryptor {
@@ -274,7 +275,7 @@ class Decryptor {
                     for (client in clientList.clientList) {
                         client.sendMessage(message)
                     }
-                    if (numberPeopleWantRestart == 3) {
+                    if (numberPeopleWantRestart == max((clientList.clientList.size - 1),2)) {
                         for (client in clientList.clientList) {
                             client.sendMessage(TextMessage("restart"))
                         }
