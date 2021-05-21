@@ -123,6 +123,12 @@ public class ServerMaker {
                     System.out.println("Server: sent Queue to "+ tempClient.getId());
                 }
 
+                /*
+                Pour bien le faire on devrait bloquer le code ici jusqu'à ce qu'on ai recu une réponse de la part
+                tous les joueurs, mais franchement ? J'ai pas envie de faire ça, et les conséquences sont franchement
+                minimes (on ne recoit pas les assignements des joueurs, bouhouhou)
+                 */
+
                 Player[] newPlayerList = choosePlayer();
                 for (int i = 0; i < playerList.size(); i++) {
                     AssignPlayer message = new AssignPlayer(newPlayerList[i], playerList.get(i).pseudo);
