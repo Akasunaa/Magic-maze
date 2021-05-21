@@ -258,7 +258,6 @@ public class Pawn implements Serializable {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        System.out.println(Multiplayer.courrier.getAnswer());
         return Multiplayer.courrier.getAnswer();
     }
 
