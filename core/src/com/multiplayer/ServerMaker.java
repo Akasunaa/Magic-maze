@@ -296,12 +296,15 @@ public class ServerMaker {
                             if (!tempClient.getId().equals(client.getId())) {
                                 sleep();
                                 tempClient.sendMessage(new PayloadPlayer(client.player).asServer());
-                                askForConfirm(tempClient);
+//                                askForConfirm(tempClient);
+                                sleep();
                                 System.out.println("Server: Redistributing the Player of " + client.getId() + " to " + tempClient.getId());
                                 client.sendMessage(new PayloadPlayer(tempClient.player).asServer());
-                                askForConfirm(client);
+//                                askForConfirm(client);
+                                sleep();
                                 System.out.println("Server: Redistributing the Player of " + tempClient.getId() + " to " + client.getId());
                             }
+                            // On ne peut pas utiliser les askForConfirm parce qu'il y a le thread a coté qui vole les messages
                         }
                         // Et on lui dit que c'est bon de notre coté
                         client.sendMessage(new TextMessage("setAndGo").asServer());
