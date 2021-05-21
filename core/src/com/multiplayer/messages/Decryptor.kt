@@ -21,7 +21,7 @@ class Decryptor {
     fun decryptMessage(tempMessage: String, isServer: Boolean) {
         val suffix = if (isServer) "Server" else "Client"
         val message = mapper.readValue(tempMessage, Message::class.java)
-        println((if (message.action=="movingPawn") "    " else "") + suffix + " : " + message.message)
+        println((if (message.action=="movingPawn" || message.action=="movingTile") "    " else "") + suffix + " : " + message.message)
         if (!isServer) {
             message.sendToLog()
             if (message.sender == me.pseudo) {
