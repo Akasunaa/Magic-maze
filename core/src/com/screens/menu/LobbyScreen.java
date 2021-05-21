@@ -236,6 +236,10 @@ public class LobbyScreen extends BaseScreen {
             Multiplayer.serverMaker.enterLobby();
         }
         Multiplayer.courrier = new Courrier(Multiplayer.me.pseudo, Multiplayer.port, Multiplayer.serverIP);
+        try {
+            cyclicBarrier.await();
+        } catch (Exception e) {
+        }
         System.out.println("Client: Launching Lobby");
 
         // On met ça ici parce que sinon problèmes lors de l'appel

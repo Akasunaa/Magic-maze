@@ -52,6 +52,14 @@ public class ServerMaker {
         //this.key = key;
         this.port = port;
         thread = new Thread(new Runnable() {
+            private void sleep() {
+                int sleepTime = 10;
+                try {
+                    Thread.sleep(sleepTime);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
             private Player[] choosePlayer() {
                 // On fait ça rapidement
                 // Mais au moins ça fonctionne
@@ -59,16 +67,19 @@ public class ServerMaker {
                 // Sous entendu, s'il y a un seul joueur
 
                 if (playerList.size() == 2) {
-                    output = new Player[]{new Player(true, true, false, false, true, true, false),
+                    output = new Player[]{
+                            new Player(true, true, false, false, true, true, false),
                             new Player(false, false, true, true, false, false, true)};
                 }
                 if (playerList.size() == 3) {
-                    output = new Player[]{new Player(true, true, false, false, false, true, false),
+                    output = new Player[]{
+                            new Player(true, true, false, false, false, true, false),
                             new Player(false, false, true, false, false, false, true),
                             new Player(false, false, false, true, true, false, false)};
                 }
                 if (playerList.size() == 4) {
-                    output = new Player[]{new Player(false, false, false, true, true, true, false),
+                    output = new Player[]{
+                            new Player(false, false, false, true, true, true, false),
                             new Player(false, false, true, false, true, false, false),
                             new Player(false, true, false, false, true, false, true),
                             new Player(true, false, true, false, false, false, false)};
@@ -121,6 +132,20 @@ public class ServerMaker {
                 for (Client tempClient : clientList.clientList) {
                     tempClient.sendMessage(temp);
                     System.out.println("Server: sent Queue to "+ tempClient.getId());
+                    sleep();
+                    BufferedReader buffer = new BufferedReader(new InputStreamReader(tempClient.getSendingSocket().getInputStream()));
+                    try {
+                        String line = buffer.readLine();
+                        if (mapper.readValue(line, Message.class).getAction().equals("confirmQueue")) {
+                            System.out.println("Server: " + tempClient.getId() + " confirmed reception");
+                        }
+                        else {
+                            System.out.println(line);
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    // En gros là on dit au serveur d'attendre que tous les clients aient bien recu la Queue pour continuer
                 }
 
                 /*
@@ -132,15 +157,23 @@ public class ServerMaker {
                 Player[] newPlayerList = choosePlayer();
                 for (int i = 0; i < playerList.size(); i++) {
                     AssignPlayer message = new AssignPlayer(newPlayerList[i], playerList.get(i).pseudo);
-                    try {
-                        Thread.sleep(50);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
                     // I am once again asking you not to overload the client
                     for (Client tempClient : clientList.clientList) {
                         System.out.println("Server: Sent Assigned " + message.getTarget() + " to " + tempClient.getPlayer().pseudo);
                         tempClient.sendMessage(message);
+                        sleep();
+                        BufferedReader buffer = new BufferedReader(new InputStreamReader(tempClient.getSendingSocket().getInputStream()));
+                        try {
+                            String line = buffer.readLine();
+                            if (mapper.readValue(line, Message.class).getAction().equals("confirmAssign")) {
+                                System.out.println("Server: " + tempClient.getId() + " confirmed reception");
+                            }
+                            else {
+                                System.out.println(line);
+                            }
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
 
