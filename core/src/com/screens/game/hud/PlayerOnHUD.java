@@ -46,9 +46,6 @@ public class PlayerOnHUD {
         // On charge l'avatar et le panneau qui indique qu'on veut restart
         avatar = player.avatar;
         avatar.setSize(100,100);
-        pseudoLabel = new Label(player.pseudo, game.skin);
-        pseudoLabel.setFontScale(0.8f);
-        pseudoLabel.setAlignment(Align.center);
 //        avatar.debug();
 //        pseudoLabel.debug();
 
@@ -66,7 +63,7 @@ public class PlayerOnHUD {
         // C'est juste le code pour envoyer des pings
 
         // Et maintenant il faut regarder chacun des booléens pour savoir quel pouvoir notre joueur possède
-        if (player.north) {
+        if (player.south) {
             powers.add(new BaseActor(new Texture(Gdx.files.internal("Game/Powers/upArrow.png"))));
         }
 
@@ -74,7 +71,7 @@ public class PlayerOnHUD {
             powers.add(new BaseActor(new Texture(Gdx.files.internal("Game/Powers/leftArrow.png"))));
         }
 
-        if (player.south) {
+        if (player.north) {
             powers.add(new BaseActor(new Texture(Gdx.files.internal("Game/Powers/downArrow.png"))));
         }
 
@@ -89,11 +86,20 @@ public class PlayerOnHUD {
             powers.add(new BaseActor(new Texture(Gdx.files.internal("Game/Powers/portal.png"))));
         }
 
+        if (player.cardChooser){
+            powers.add(new BaseActor(new Texture(Gdx.files.internal("Game/Powers/magnifier.png"))));
+        }
+
         // Et maintenant on ajuste la taille
         for (BaseActor power : powers) {
             power.setSize(30,30);
+            power.setOrigin(15,15);
             power.setTouchable(Touchable.disabled);
         }
+
+        pseudoLabel = new Label(player.pseudo, game.skin);
+//        pseudoLabel.setFontScale(0.8f);
+        pseudoLabel.setAlignment(Align.center);
     }
 
     float getWidth() {return avatar.getWidth();}

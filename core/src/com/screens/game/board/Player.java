@@ -74,6 +74,7 @@ public class Player implements Serializable {
         east = player.east;
         escalatorTaker = player.escalatorTaker;
         portalTaker = player.portalTaker;
+        cardChooser = player.cardChooser;
     }
 
     Player rotate(int i) {
