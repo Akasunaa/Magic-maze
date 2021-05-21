@@ -58,7 +58,8 @@ public class GameScreen extends BaseScreen {
 
     private boolean restart = false;
     public void setToRestart() {
-        restart = true;
+//        restart = true;
+        // Le restart n'est pas encore proprement implémenté
     }
 
     private void restart() {
