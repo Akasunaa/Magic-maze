@@ -47,6 +47,7 @@ class Decryptor {
                             //playerList.add(tempPlayer)
                             // On s'en occupe déjà dans lobbyScreen
                             lobbyScreen.addPlayer(tempPlayer)
+                            courrier.sendMessage(Confirm())
                         }
                     }
                     "Queue" -> {

@@ -192,6 +192,24 @@ public class ServerMaker {
             InputStream inputStream;
             String tempString=null;
 
+            private void askForConfirm(Client client) {
+                sleep();
+                BufferedReader buffer = new BufferedReader(new InputStreamReader(client.getSendingSocket().getInputStream()));
+                try {
+                    String line = buffer.readLine();
+                    if (mapper.readValue(line, Message.class).getAction().equals("confirm")) {
+                        System.out.println("Server: " + client.getId() + " confirmed reception");
+                        return;
+                    }
+                    else {
+                        System.out.println("Serveur: Erreur de confirmation");
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                // En gros là on dit au serveur d'attendre que tous les clients aient bien recu la Queue pour continuer
+            }
+
             private void sleep() {
                 int sleepTime = 30;
                 try {
@@ -278,13 +296,11 @@ public class ServerMaker {
                             if (!tempClient.getId().equals(client.getId())) {
                                 sleep();
                                 tempClient.sendMessage(new PayloadPlayer(client.player).asServer());
-                                sleep();
+                                askForConfirm(tempClient);
                                 System.out.println("Server: Redistributing the Player of " + client.getId() + " to " + tempClient.getId());
-                                sleep();
                                 client.sendMessage(new PayloadPlayer(tempClient.player).asServer());
-                                sleep();
+                                askForConfirm(client);
                                 System.out.println("Server: Redistributing the Player of " + tempClient.getId() + " to " + client.getId());
-                                sleep();
                             }
                         }
                         // Et on lui dit que c'est bon de notre coté
