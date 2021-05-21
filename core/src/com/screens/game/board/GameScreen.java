@@ -118,7 +118,7 @@ public class GameScreen extends BaseScreen {
 
         gameInterface = new GameInterface(game);
         gameInterface.hasBackground = false;
-        queue.setCoordinates(1920 - tileSize / 2 - 20, 20);
+        queue.setCoordinates(1920 - tileSize / 2 - 10, 10);
         queue.load();
         placeFirstTile();
     }

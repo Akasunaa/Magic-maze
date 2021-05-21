@@ -10,9 +10,11 @@ import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.utils.Align;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.multiplayer.messages.Ping;
 import com.screens.game.BaseActor;
 import com.screens.game.board.Player;
+import com.utils.Multiplayer;
 
 import java.util.ArrayList;
 
@@ -42,10 +44,10 @@ public class PlayerOnHUD {
 
     private final BaseActor wantsToRestart;
 
-    PlayerOnHUD(final Player player) {
+    PlayerOnHUD(final Player player, float size) {
         // On charge l'avatar et le panneau qui indique qu'on veut restart
         avatar = player.avatar;
-        avatar.setSize(100,100);
+        avatar.setSize(size,size);
 //        avatar.debug();
 //        pseudoLabel.debug();
 
@@ -63,7 +65,13 @@ public class PlayerOnHUD {
         // C'est juste le code pour envoyer des pings
 
         // Et maintenant il faut regarder chacun des booléens pour savoir quel pouvoir notre joueur possède
-        if (player.south) {
+
+        try {
+            System.out.println(Multiplayer.mapper.writeValueAsString(player));
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+        if (player.north) {
             powers.add(new BaseActor(new Texture(Gdx.files.internal("Game/Powers/upArrow.png"))));
         }
 
@@ -71,7 +79,7 @@ public class PlayerOnHUD {
             powers.add(new BaseActor(new Texture(Gdx.files.internal("Game/Powers/leftArrow.png"))));
         }
 
-        if (player.north) {
+        if (player.south) {
             powers.add(new BaseActor(new Texture(Gdx.files.internal("Game/Powers/downArrow.png"))));
         }
 
@@ -107,21 +115,21 @@ public class PlayerOnHUD {
 
     void setPosition(float x, float y) {
         avatar.setPosition(x,y);
-        pseudoLabel.setPosition(avatar.getX()+(avatar.getWidth()- pseudoLabel.getWidth())/2, avatar.getY()-30);
         int i = 0;
         for (BaseActor power : powers) {
-            power.setPosition(avatar.getX() + i*(avatar.getWidth()-15)/powers.size(), avatar.getY());
+            power.setPosition(avatar.getX() + (i+1)*(avatar.getWidth())/(powers.size()+2), avatar.getY());
             i++;
         }
+        pseudoLabel.setPosition(avatar.getX()+(avatar.getWidth()- pseudoLabel.getWidth())/2, avatar.getY()-30);
         wantsToRestart.setPosition(avatar.getX() - 15, avatar.getY() + avatar.getHeight()*1.5f / 2);
     }
 
     void addToStage(Stage stage) {
         stage.addActor(avatar);
-        stage.addActor(pseudoLabel);
         for (BaseActor power : powers) {
             stage.addActor(power);
         }
+        stage.addActor(pseudoLabel);
         stage.addActor(wantsToRestart);
         wantsToRestart.setVisible(false);
     }
