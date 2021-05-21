@@ -6,8 +6,14 @@
     default-font-small: {
       file: "Font/font30.fnt"
     },
-    default-font-big: {
+    default-font-huge: {
       file : "Font/font100.fnt",
+    },
+    default-font-medium: {
+      file : "Font/font50.fnt",
+    },
+    default-font-big: {
+      file : "Font/font80.fnt",
     }
   },
   Color: {

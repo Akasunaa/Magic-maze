@@ -75,7 +75,7 @@ public class GameInterface extends BaseScreen {
         //d'abord les 2 indicateurs de phase en haut à droite qu'on a scanné (un seul est visible à la fois)
         // pour indiquer la phase
         BaseActor phaseA = new BaseActor(new Texture(Gdx.files.internal("interface/phaseA.jpg")));
-        phaseA.setSize(3 * 60 + 45, 150);
+        phaseA.setSize(250,phaseA.getHeight()*250/ phaseA.getWidth());
         phaseA.setPosition(viewWidth - phaseA.getWidth(), viewHeight - phaseA.getHeight());
         isPhaseA = true;
         uiStage.addActor(phaseA);
@@ -88,8 +88,8 @@ public class GameInterface extends BaseScreen {
 
         //le bouton restart que j'ai pris sur internet, va falloir en refaire un
         BaseActor restart = new BaseActor(new Texture(Gdx.files.internal("interface/restart-button.png")));
-        restart.setSize(150, 50);
-        restart.setPosition(0, 0);
+        restart.setSize(100*restart.getWidth()/restart.getHeight(), 100);
+        restart.setPosition(10,10);
         restart.addListener(
                 new InputListener() {
                     public boolean touchDown(InputEvent ev, float x, float y, int pointer, int button) {
@@ -102,8 +102,8 @@ public class GameInterface extends BaseScreen {
         uiStage.addActor(restart);
 
         logs = new Logs(game.skin);
-        logs.setPosition(0, 50);
-        logs.setSize(300,500);
+        logs.setSize(restart.getWidth(),600);
+        logs.setPosition(10, restart.getHeight()+20);
         uiStage.addActor(logs);
 
         //la c'est juste des faux bouton
@@ -129,7 +129,7 @@ public class GameInterface extends BaseScreen {
 
         for (int i = 0; i < Multiplayer.playerList.size(); i++) {
             avatars[i] = new PlayerOnHUD(Multiplayer.playerList.get(i));
-            avatars[i].setPosition(viewWidth - avatars[i].getWidth() - 45, viewHeight - avatars[i].getHeight() - 225 - 135 * i);
+            avatars[i].setPosition(viewWidth - avatars[i].getWidth() - 45, viewHeight - avatars[i].getHeight() - phaseA.getHeight() - volume.getHeight() - 10 - 135 * i);
             avatars[i].addToStage(uiStage);
         }
 
@@ -166,9 +166,9 @@ public class GameInterface extends BaseScreen {
 
         //la c'est le compteur de plaques restantes en bas a droite
 
-        textTilesLeft = new Label(queue.textTileLeft, game.skin, "clockStyle");
+        textTilesLeft = new Label(queue.textTileLeft, game.skin, "tilesLeftStyle");
 //        textTilesLeft.setFontScale(0.8f);
-        textTilesLeft.setPosition(viewWidth - tileSize - textTilesLeft.getWidth()/2 - 60, 0);
+        textTilesLeft.setPosition(viewWidth - tileSize - textTilesLeft.getWidth()/2 - 50, 5);
         uiStage.addActor(textTilesLeft);
 
         // Vestige de l'époque où on devait charger les pions à la main
@@ -235,8 +235,8 @@ public class GameInterface extends BaseScreen {
                         return true;
                     }
                 });
-        pauseButton.setSize(pauseButton.getWidth() * 2, pauseButton.getHeight() * 2);
-        pauseButton.setPosition(1920 * 4.6f / 6, 1080 - pauseButton.getHeight() - 10);
+        pauseButton.setSize(pauseButton.getWidth()*phaseA.getHeight()/pauseButton.getHeight(), phaseA.getHeight());
+        pauseButton.setPosition(phaseA.getX()-pauseButton.getWidth() - 10, 1080 - pauseButton.getHeight());
         uiStage.addActor(pauseButton);
 
         pauseOverlay = new Table();
