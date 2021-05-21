@@ -229,7 +229,10 @@ public class LobbyScreen extends BaseScreen {
         }
         Multiplayer.courrier = new Courrier(Multiplayer.me.pseudo, Multiplayer.port, Multiplayer.serverIP);
         try {
+            System.out.println("Client: Blocking in lobbyScreen");
             cyclicBarrier.await();
+            System.out.println("Client: Unblocking in lobbyScreen");
+
         } catch (Exception e) {
         }
         System.out.println("Client: Launching Lobby");
