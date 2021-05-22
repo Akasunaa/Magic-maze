@@ -67,6 +67,10 @@ public class Player implements Serializable {
     }
     // Quel enfer
 
+    /**
+     * copy player stats into this player
+     * @param player the player whose stats will be copied
+     */
     public void setPlayer(Player player) {
         north = player.north;
         south = player.south;

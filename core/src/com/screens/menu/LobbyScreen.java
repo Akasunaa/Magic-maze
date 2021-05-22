@@ -367,7 +367,7 @@ public class LobbyScreen extends BaseScreen {
         uiTable.row();
         uiTable.add(startButton).center().padBottom(50);
         uiTable.row();
-        uiTable.debugCell();
+        //uiTable.debugCell();
         //playerTable.debugCell();
     }
 
