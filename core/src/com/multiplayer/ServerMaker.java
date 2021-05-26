@@ -21,6 +21,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.BrokenBarrierException;
 import java.util.concurrent.CyclicBarrier;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 import static com.utils.Multiplayer.*;
 
@@ -102,6 +104,15 @@ public class ServerMaker {
                             new Player(true, false, true, false, false, false, false)};
                 }
                 List<Player> temp = Arrays.asList(output);
+                Collections.shuffle(temp);
+                Collections.shuffle(temp);
+                Collections.shuffle(temp);
+                Collections.shuffle(temp);
+                Collections.shuffle(temp);
+                Collections.shuffle(temp);
+                Collections.shuffle(temp);
+                Collections.shuffle(temp);
+                Collections.shuffle(temp);
                 Collections.shuffle(temp);
                 return (Player[]) temp.toArray();
             }
@@ -249,6 +260,7 @@ public class ServerMaker {
                     System.out.println("Server : looking for players");
                     socket = serverSocket.accept(null); // On récupère une socket qui demande une connection
                     if (!isInLobby) {
+                        System.out.println("Not in lobby anymore");
                         try {
                             barrier.await();
                         } catch (InterruptedException e) {
@@ -341,6 +353,7 @@ public class ServerMaker {
         } catch (BrokenBarrierException e) {
             e.printStackTrace();
         }
+        System.out.println("Server: quitting lobby successful");
         temp.dispose();
         // C'est pas propre mais ça fonctionne, pour déconnecter proprement on est obligé de faire ça
         isSetAndGo = true;
@@ -355,6 +368,7 @@ public class ServerMaker {
         System.out.println("Server: Killing Server");
 //        thread.stop();
         for (Client client: clientList.clientList) {
+            if (!client.getIp().equals("127.0.0.1"))
             client.sendMessage(new TextMessage("stopping").asServer());
         }
         isRunning = false;
@@ -362,11 +376,11 @@ public class ServerMaker {
             isInLobby = false;
             Socket temp = Gdx.net.newClientSocket(Net.Protocol.TCP, "127.0.0.1", port, new SocketHints());
             try {
-                barrier.await();
-            } catch (InterruptedException e) {
+                barrier.await(100, TimeUnit.MILLISECONDS);
+            } catch (InterruptedException | BrokenBarrierException e) {
                 e.printStackTrace();
-            } catch (BrokenBarrierException e) {
-                e.printStackTrace();
+            } catch (TimeoutException e) {
+                thread.stop();
             }
             temp.dispose();
         }
