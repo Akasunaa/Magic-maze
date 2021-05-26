@@ -44,6 +44,7 @@ Mais bon, c'est du multithreading, c'est pas simple à gérer, bref, bon courage
 
 public class ServerMaker {
     CyclicBarrier barrier;
+    CyclicBarrier barrierTwo;
     Thread thread;
     ServerSocket serverSocket;
     private boolean isSetAndGo = false;
@@ -188,6 +189,13 @@ public class ServerMaker {
                 System.out.println("Server: Beginning last loop");
                 while (isRunning) {
                     catchMessage();
+                }
+                try {
+                    barrierTwo.await();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                } catch (BrokenBarrierException e) {
+                    e.printStackTrace();
                 }
                 // Boucle qui tourne quand on est en jeu
             }
@@ -365,6 +373,7 @@ public class ServerMaker {
 
     public void killThread() {
         barrier = new CyclicBarrier(2);
+        barrierTwo = new CyclicBarrier(2);
         System.out.println("Server: Killing Server");
 //        thread.stop();
         for (Client client: clientList.clientList) {
@@ -376,16 +385,19 @@ public class ServerMaker {
             isInLobby = false;
             Socket temp = Gdx.net.newClientSocket(Net.Protocol.TCP, "127.0.0.1", port, new SocketHints());
             try {
-                barrier.await(100, TimeUnit.MILLISECONDS);
+                barrier.await();
             } catch (InterruptedException | BrokenBarrierException e) {
                 e.printStackTrace();
-            } catch (TimeoutException e) {
-                thread.stop();
             }
             temp.dispose();
         }
-
-
+        try {
+            barrierTwo.await(100, TimeUnit.MILLISECONDS);
+        } catch (InterruptedException | BrokenBarrierException e) {
+            e.printStackTrace();
+        } catch (TimeoutException e) {
+            thread.stop();
+        }
         serverSocket.dispose();
     }
 }
