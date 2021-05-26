@@ -112,7 +112,6 @@ public class Queue implements Serializable {
             updateCoordinates();
         } else { // S'il n'y a pas de queue, c'est qu'elle est vide
             System.out.println("Client : File vide !");
-            hidden.setTexture(new Texture("tuiles/blueDot.png"));
             hidden.setVisible(false);
             shown.setVisible(false);
             isEmpty = true; // On fait plus rien pour le futur

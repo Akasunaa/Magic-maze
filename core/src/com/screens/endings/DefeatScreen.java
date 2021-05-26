@@ -6,9 +6,9 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.screens.BaseScreen;
 import com.screens.MagicGame;
 import com.screens.game.BaseActor;
-import com.screens.BaseScreen;
 
 public class DefeatScreen extends BaseScreen {
 
@@ -26,7 +26,7 @@ public class DefeatScreen extends BaseScreen {
 
         Label defeatLabel = new Label( "Defaite...", game.skin, "uiLabelStyle" );
 
-        BaseActor background = new BaseActor(new Texture(Gdx.files.internal("GameAssets/DefeatImage.jpg")));
+        BaseActor background = new BaseActor(new Texture(Gdx.files.internal("Game/DefeatImage.jpg")));
         uiStage.addActor( background );
 
         background.toBack();

@@ -6,9 +6,9 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.screens.BaseScreen;
 import com.screens.MagicGame;
 import com.screens.game.BaseActor;
-import com.screens.BaseScreen;
 
 public class VictoryScreen extends BaseScreen {
 
@@ -25,7 +25,7 @@ public class VictoryScreen extends BaseScreen {
 
         Label victoryLabel = new Label( "Victoire !!!!", game.skin, "uiLabelStyle" );
 
-        BaseActor background = new BaseActor(new Texture(Gdx.files.internal("GameAssets/VictoryImage.jpg")));
+        BaseActor background = new BaseActor(new Texture(Gdx.files.internal("Game/VictoryImage.jpg")));
         uiStage.addActor( background );
 
         background.toBack();
