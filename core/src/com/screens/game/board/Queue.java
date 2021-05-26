@@ -104,7 +104,7 @@ public class Queue implements Serializable {
         if (numberTilesLeft > 0) {
             this.head = tail.head;
             this.tail = tail.tail;
-            System.out.println("Client: Removed a Tile, new Tile is number " + head.number);
+            System.out.println("Client : Removed a Tile, new Tile is number " + head.number);
             updateText();
             // Et on recharge le sprite
             loadSprite();

@@ -319,7 +319,10 @@ public class ServerMaker {
                             // On ne peut pas utiliser les askForConfirm parce qu'il y a le thread a coté qui vole les messages
                         }
                         // Et on lui dit que c'est bon de notre coté
+                        sleep();
+                        sleep();
                         client.sendMessage(new TextMessage("setAndGo").asServer());
+                        System.out.println("Server: sent setAndGo to " + client.getId());
                     }
                     else {
                         System.out.println("Server : rejected incoming request");

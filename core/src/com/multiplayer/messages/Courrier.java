@@ -36,11 +36,11 @@ public class Courrier {
     private ClientListener clientListener;
 
     public Courrier(String id, int port, String ip) throws ServerNotReachedException {
-        System.out.println(ip);
+        System.out.println("Client : Trying to connect to " + ip + " on port " + port);
         SocketHints socketHints = new SocketHints();
         socketHints.connectTimeout = 500;
-        socketHints.sendBufferSize = 1024/2;
-        socketHints.receiveBufferSize = 1024/2;
+        socketHints.sendBufferSize = 1024*4;
+        socketHints.receiveBufferSize = 1024*4;
         try {
             sendingSocket = Gdx.net.newClientSocket(Net.Protocol.TCP, ip, port, socketHints);
             sendingSocket.getOutputStream().write((id + " connected " + ip + "\n").getBytes());

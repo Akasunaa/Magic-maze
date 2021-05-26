@@ -112,7 +112,10 @@ public class GameScreen extends BaseScreen {
         }
 
         try {
+            System.out.println("Client: Blocking in gameScreen.load()");
             cyclicBarrier.await();
+            System.out.println("Client: Unblocking in gameScreen.load()");
+
         } catch (Exception e) {
             e.printStackTrace();
         }
