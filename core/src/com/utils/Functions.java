@@ -33,9 +33,13 @@ public class Functions {
     }
 
     public static void quit() {
-        Multiplayer.courrier.sendMessage(new TextMessage("quitting"));
+        if (Multiplayer.isServer) {
+            Multiplayer.serverMaker.killThread();
+        }
+        else {
+            Multiplayer.courrier.sendMessage(new TextMessage("quitting"));
+        }
         Multiplayer.courrier.killThread();
-        if (Multiplayer.isServer) Multiplayer.serverMaker.killThread();
         System.exit(0);
     }
 

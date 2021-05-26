@@ -8,11 +8,12 @@ import com.multiplayer.messages.pawn.MovingPawn
 import com.multiplayer.messages.pawn.PlacePawn
 import com.multiplayer.messages.tile.GonnaMoveTile
 import com.multiplayer.messages.tile.PlaceTile
-import com.screens.GameScreens.*
+import com.screens.GameScreens.gameScreen
+import com.screens.GameScreens.lobbyScreen
 import com.screens.game.board.Player
 import com.screens.game.board.Queue
-import com.screens.menu.MainMenu
 import com.utils.Functions
+import com.utils.Functions.quit
 import com.utils.Multiplayer.*
 import com.utils.TileAndCases
 import java.lang.Integer.max
@@ -222,11 +223,12 @@ class Decryptor {
                 }
             }
             "stopping" -> {
-                game.setScreen(MainMenu(game))
+//                game.setScreen(MainMenu(game))
                 // Je suis mort de rire
                 // IntelliJ pense que c'est équivalent à game.screen = MainMenu(game)
                 // BWAHAHAHAHAHA
-                courrier.killThread()
+                quit()
+//                courrier.killThread()
             }
             "changePseudo" -> {
                 if (isServer) {
