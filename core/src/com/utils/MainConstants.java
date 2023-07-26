@@ -12,8 +12,9 @@ public class MainConstants {
     public static OrthographicCamera camera;
     public static SpriteBatch batch;
 
-    static FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("UserInterface/arial.ttf"));
-    static FreeTypeFontParameter parameter = new FreeTypeFontParameter();
+    final static FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("UserInterface/arial.ttf"));
+    final static FreeTypeFontParameter parameter = new FreeTypeFontParameter();
+
     public static BitmapFont getFontSize(int size) {
         parameter.size = size;
         return generator.generateFont(parameter);

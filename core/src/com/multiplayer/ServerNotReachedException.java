@@ -1,7 +1,7 @@
 package com.multiplayer;
 
 public class ServerNotReachedException extends Exception{
-    String  errorMessage;
+    final String errorMessage;
     public ServerNotReachedException(String errorMessage) {
         super();
         this.errorMessage = "Could not connect to server: " + errorMessage;

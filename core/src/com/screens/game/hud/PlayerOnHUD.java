@@ -46,8 +46,6 @@ public class PlayerOnHUD {
         // On charge l'avatar et le panneau qui indique qu'on veut restart
         avatar = player.avatar;
         avatar.setSize(size,size);
-//        avatar.debug();
-//        pseudoLabel.debug();
 
         wantsToRestart = new BaseActor(new Texture(Gdx.files.internal("interface/restart-button.png")));
         wantsToRestart.setSize(size, wantsToRestart.getHeight() * size / wantsToRestart.getWidth());

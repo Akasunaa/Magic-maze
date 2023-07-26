@@ -376,7 +376,7 @@ fun getTileArrayWallHorizontal(number: Int): List<BooleanArray> = when (number) 
         booleanArrayOf(true, false, false, true)
     )
 
-    0 -> listOf(
+    1 -> listOf(
         booleanArrayOf(false, false, true, false),
         booleanArrayOf(false, false, false, false),
         booleanArrayOf(false, true, true, true)

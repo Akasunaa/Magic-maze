@@ -8,10 +8,10 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 
 public class ClientListener {
-    public Thread thread;
+    final public Thread thread;
 
     //private Decryptor key;
-    private Socket socket;
+    final private Socket socket;
     public boolean isRunning = true;
     ClientListener(final Decryptor key, final Socket socket) {
         //this.key = key;

@@ -378,7 +378,7 @@ public class LobbyScreen extends BaseScreen {
     }
 
     private boolean hasPlayerToUpdate = false;
-    private ArrayList<PlayerMaker> toUpdate = new ArrayList<>();
+    private final ArrayList<PlayerMaker> toUpdate = new ArrayList<>();
     public void setToUpdateAvatar(String pseudo) {
         hasPlayerToUpdate = true;
         for (PlayerMaker playerMaker : playerMakerList) {

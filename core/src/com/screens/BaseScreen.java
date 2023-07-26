@@ -14,7 +14,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
 public abstract class BaseScreen implements Screen {
-    protected MagicGame game;
+    public final static String[] animalNames = new String[]{"elephant", "giraffe", "hippo", "monkey", "panda", "parrot", "penguin", "pig", "rabbit", "snake"};
     protected Stage mainStage;
     public Stage getMainStage() {return mainStage;}
     protected Stage uiStage;
@@ -24,18 +24,16 @@ public abstract class BaseScreen implements Screen {
     public final int viewHeight = 1080;
 
     private boolean paused;
-
-    protected Table uiTable;
+    final public Sound buttonHover;
 
     public Music instrumental;
-
-    public Sound buttonHover;
-    public Slider audioSlider;
+    final public Slider audioSlider;
+    final protected MagicGame game;
 
     public boolean hasBackground = true;
-    public final static String[] animalNames = new String[] {"elephant","giraffe","hippo","monkey","panda","parrot","penguin","pig","rabbit","snake"};
+    final protected Table uiTable;
 
-    public BaseScreen(MagicGame g){
+    public BaseScreen(MagicGame g) {
         game = g;
         mainStage = new Stage(new FitViewport(viewWidth, viewHeight));
         uiStage = new Stage(new FitViewport(viewWidth, viewHeight));
@@ -51,9 +49,6 @@ public abstract class BaseScreen implements Screen {
         for (String animalName : animalNames) {
             tempAvatar = new Texture(Gdx.files.internal("Game/Avatars/" + animalName + ".png"));
             tempAvatar.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
-//            avatarImages[i] = new BaseActor();
-//            avatarImages[i].setTexture(tempAvatar);
-//            avatarImages[i].scaleBy(0.01f, 0.01f);
         }
 
 

@@ -109,12 +109,12 @@ class Case(number: CaseType, @field:Transient private var tile: Tile) : Serializ
         greenDot!!.isVisible = isValid
     }
 
-    fun explored() {
+    private fun explored() {
         isValid = true
         greenDot!!.isVisible = !isShowed
     }
 
-    fun unexplored() {
+    private fun unexplored() {
         isValid = false
         greenDot!!.isVisible = isValid
     }
@@ -133,7 +133,7 @@ class Case(number: CaseType, @field:Transient private var tile: Tile) : Serializ
 
     private var seen = false
 
-    val accessible: Boolean
+    private val accessible: Boolean
     val hasPortal: Boolean
     val entrance: Boolean
     var hasHourglass: Boolean
@@ -150,9 +150,9 @@ class Case(number: CaseType, @field:Transient private var tile: Tile) : Serializ
         hasPortal = number is CaseType.ColoredCase.Portal
         hasWeapon = number is CaseType.ColoredCase.Weapon
         finalExit = number is CaseType.ColoredCase.FinalExit
-        if (number is CaseType.ColoredCase) {
-            color = number.color
-        } else color = Color.NONE
+        color = if (number is CaseType.ColoredCase) {
+            number.color
+        } else Color.NONE
     }
 
     fun explore(player: Player) {

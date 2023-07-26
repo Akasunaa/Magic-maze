@@ -10,6 +10,8 @@ import com.multiplayer.messages.TextMessage
 import com.screens.game.board.Case
 import com.screens.game.board.Pawn
 import com.screens.game.board.Tile
+import kotlin.math.roundToInt
+import kotlin.system.exitProcess
 
 fun modulo(a: Int, b: Int): Int {
     return (a % b + b) % b
@@ -17,12 +19,12 @@ fun modulo(a: Int, b: Int): Int {
 
 fun mouseInput(): Vector2 {
     val temp: Vector3 =
-        MainConstants.camera.unproject(Vector3(Gdx.input.getX().toFloat(), Gdx.input.getY().toFloat(), 0f))
+        MainConstants.camera.unproject(Vector3(Gdx.input.x.toFloat(), Gdx.input.y.toFloat(), 0f))
     return Vector2(temp.x, temp.y)
 }
 
 fun mouseInput(camera: OrthographicCamera): Vector2 {
-    val temp: Vector3 = camera.unproject(Vector3(Gdx.input.getX().toFloat(), Gdx.input.getY().toFloat(), 0f))
+    val temp: Vector3 = camera.unproject(Vector3(Gdx.input.x.toFloat(), Gdx.input.y.toFloat(), 0f))
     return Vector2(temp.x, temp.y)
 }
 
@@ -33,7 +35,7 @@ fun quit() {
         Multiplayer.courrier.sendMessage(TextMessage("quitting"))
     }
     Multiplayer.courrier.killThread()
-    System.exit(0)
+    exitProcess(0)
 }
 
 fun snap(mousePosition: Vector2) {
@@ -44,8 +46,8 @@ fun snap(mousePosition: Vector2) {
     //System.out.println(mousePosition);
     mousePosition.mul(newBaseInvert)
     //System.out.println(mousePosition);
-    mousePosition.x = Math.round(mousePosition.x).toFloat()
-    mousePosition.y = Math.round(mousePosition.y).toFloat()
+    mousePosition.x = mousePosition.x.roundToInt().toFloat()
+    mousePosition.y = mousePosition.y.roundToInt().toFloat()
     //System.out.println(mousePosition);
     mousePosition.mul(newBase)
     //System.out.println(mousePosition);
@@ -55,7 +57,7 @@ fun snap(mousePosition: Vector2) {
 
 val tile: Tile?
     get() {
-        for (tile in tileList!!) {
+        for (tile in tileList) {
             if (tile.x < mouseInput().x && mouseInput().x < tile.x + tileSize && tile.y < mouseInput().y && mouseInput().y < tile.y + tileSize) {
                 return tile
             }
@@ -64,7 +66,7 @@ val tile: Tile?
     }
 
 fun getTile(mousePosition: Vector2): Tile? {
-    for (tile in tileList!!) {
+    for (tile in tileList) {
         if (tile.x < mousePosition.x && mousePosition.x < tile.x + tileSize && tile.y < mousePosition.y && mousePosition.y < tile.y + tileSize) {
             return tile
         }
@@ -80,7 +82,7 @@ fun updateCamera() {
     if (Gdx.input.isKeyPressed(Input.Keys.Q)) target!!.add(-1f, 0f, 0f)
     if (Gdx.input.isKeyPressed(Input.Keys.S)) target!!.add(0f, -1f, 0f)
     if (Gdx.input.isKeyPressed(Input.Keys.D)) target!!.add(1f, 0f, 0f)
-    if (!target!!.isZero()) {
+    if (!target!!.isZero) {
         target!!.scl(step * MainConstants.camera.zoom)
         target!!.add(MainConstants.camera.position)
         for (loop in 1..50) {
@@ -91,7 +93,7 @@ fun updateCamera() {
 }
 
 fun findCase(): Case? {
-    for (tile in tileList!!) {
+    for (tile in tileList) {
         if (tile.x <= mouseInput().x && mouseInput().x <= tile.x + tile.size && tile.y <= mouseInput().y && mouseInput().y <= tile.y + tile.size) {
             try {
                 return tile.getCase(mouseInput())
@@ -104,7 +106,7 @@ fun findCase(): Case? {
 }
 
 fun findCase(coordinates: Vector2): Case? {
-    for (tile in tileList!!) {
+    for (tile in tileList) {
         if (tile.x <= coordinates.x && coordinates.x <= tile.x + tile.size && tile.y <= coordinates.y && coordinates.y <= tile.y + tile.size) {
             try {
                 return tile.getCase(coordinates)

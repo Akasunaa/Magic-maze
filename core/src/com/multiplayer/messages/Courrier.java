@@ -33,7 +33,7 @@ public class Courrier {
     // sendingSocket: La socket pour envoyer des messages au serveur
     // receivingSocket: La socket pour recevoir des messages du serveur
 
-    private ClientListener clientListener;
+    private final ClientListener clientListener;
 
     public Courrier(String id, int port, String ip) throws ServerNotReachedException {
         System.out.println("Client : Trying to connect to " + ip + " on port " + port);

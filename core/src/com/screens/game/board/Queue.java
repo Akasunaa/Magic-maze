@@ -29,7 +29,7 @@ public class Queue implements Serializable {
     Tile head;
     private int numberTilesLeft;
     public String textTileLeft;
-    private final float size = getTileSize() / 2;
+    private final float size = tileSize / 2;
 
     // Le sprite sera celui de la tuile en haut de la pile
     private transient BaseActor sprite;
@@ -118,8 +118,6 @@ public class Queue implements Serializable {
             isHidden = false;
             textTileLeft = "stop";
         }
-//        updateSpriteSize();
-//        updateCoordinates();
     }
 
     private Queue copy() {
@@ -296,7 +294,7 @@ public class Queue implements Serializable {
                 // c'était une solution simple à laquelle on peut facilement penser
                 // Cependant, j'ai pas trouvé de meilleur solution depuis, et s'il y en a une, je ne sais pas
                 // Si elle vaut le coup de remplacer celle là
-                mousePosition.sub(getTileSize() / 2, getTileSize() / 2); // Pour que le sprite soit centré sur la souris
+                mousePosition.sub(tileSize / 2, tileSize / 2); // Pour que le sprite soit centré sur la souris
                 setSpritePosition(mousePosition.x, mousePosition.y); // On suit la souris
                 if (count == 2) {
                     Multiplayer.courrier.sendMessage(new MovingTile(mousePosition));
@@ -330,7 +328,7 @@ public class Queue implements Serializable {
                         player.cardChooser &&
                         checkServerForClickable()) { // Et qu'on a le droit
                     makingMovable(); // Alors c'est bon
-                    setSpritePosition(mouseInput().x - getTileSize() / 2, mouseInput().y - getTileSize() / 2);
+                    setSpritePosition(mouseInput().x - tileSize / 2, mouseInput().y - tileSize / 2);
                     isMovable = true;
                 }
             }

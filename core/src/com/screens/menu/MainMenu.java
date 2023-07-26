@@ -40,8 +40,6 @@ public class MainMenu extends BaseScreen {
     private Label warningLabel;
     private boolean pseudoValid;
 
-    private TextButton returnButton2;
-    private TextButton returnButton1;
     private TextButton optionButton;
     private TextButton ruleButton;
 
@@ -230,7 +228,7 @@ public class MainMenu extends BaseScreen {
             }
         });
 
-        returnButton1 = new TextButton("Return", game.skin, "uiTextButtonStyle");
+        TextButton returnButton1 = new TextButton("Return", game.skin, "uiTextButtonStyle");
         returnButton1.addListener(new InputListener() {
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 return true;
@@ -247,7 +245,7 @@ public class MainMenu extends BaseScreen {
             }
         });
 
-        returnButton2 = new TextButton("Return", game.skin, "uiTextButtonStyle");
+        TextButton returnButton2 = new TextButton("Return", game.skin, "uiTextButtonStyle");
         returnButton2.addListener(new InputListener() {
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 return true;

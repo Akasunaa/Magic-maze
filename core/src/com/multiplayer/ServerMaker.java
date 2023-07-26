@@ -45,14 +45,12 @@ Mais bon, c'est du multithreading, c'est pas simple à gérer, bref, bon courage
 public class ServerMaker {
     CyclicBarrier barrier;
     CyclicBarrier barrierTwo;
-    Thread thread;
+    final Thread thread;
     ServerSocket serverSocket;
     private boolean isSetAndGo = false;
-    int port;
+    final int port;
 
     public ServerMaker(final int port, final ClientList clientList) {
-        //clientList = cL;
-        //this.key = key;
         this.port = port;
         thread = new Thread(new Runnable() {
             private void sleep() {
@@ -206,7 +204,6 @@ public class ServerMaker {
             Client client;
             final ClientList clientList = Multiplayer.clientList;
             InputStream inputStream;
-            String tempString=null;
 
             private void askForConfirm(Client client) {
                 sleep();
@@ -268,9 +265,7 @@ public class ServerMaker {
                         System.out.println("Not in lobby anymore");
                         try {
                             barrier.await();
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        } catch (BrokenBarrierException e) {
+                        } catch (InterruptedException | BrokenBarrierException e) {
                             e.printStackTrace();
                         }
                         return;
@@ -353,9 +348,7 @@ public class ServerMaker {
         Socket temp = Gdx.net.newClientSocket(Net.Protocol.TCP, "127.0.0.1", port, new SocketHints());
         try {
             barrier.await();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (BrokenBarrierException e) {
+        } catch (InterruptedException | BrokenBarrierException e) {
             e.printStackTrace();
         }
         System.out.println("Server: quitting lobby successful");
@@ -375,7 +368,7 @@ public class ServerMaker {
 //        thread.stop();
         for (Client client: clientList.clientList) {
             if (!client.getIp().equals("127.0.0.1"))
-            client.sendMessage(new TextMessage("stopping").asServer());
+                client.sendMessage(new TextMessage("stopping").asServer());
         }
         isRunning = false;
         if (isInLobby) {

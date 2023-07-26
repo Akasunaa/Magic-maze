@@ -28,6 +28,7 @@ import static com.utils.FunctionsKt.updateCamera;
 import static com.utils.MainConstants.*;
 import static com.utils.Multiplayer.cyclicBarrier;
 import static com.utils.Multiplayer.playerList;
+import static com.utils.TileAndCasesKt.tileSize;
 
 public class GameScreen extends BaseScreen {
     // Trucs de déboguages pour afficher les coordonées de la souris
@@ -55,7 +56,7 @@ public class GameScreen extends BaseScreen {
 
     private boolean restart = false;
     public void setToRestart() {
-        //restart = true;
+        restart = true;
     }
 
     private void restart() {
@@ -117,15 +118,15 @@ public class GameScreen extends BaseScreen {
 
         gameInterface = new GameInterface(game);
         gameInterface.hasBackground = false;
-        TileAndCasesKt.getQueue().setCoordinates(1920 - TileAndCasesKt.getTileSize() / 2 - 10, 10);
+        TileAndCasesKt.getQueue().setCoordinates(1920 - tileSize / 2 - 10, 10);
         TileAndCasesKt.getQueue().load();
         placeFirstTile();
     }
 
     private void placeFirstTile() {
         Tile temp = new Tile(1);
-        temp.setX((1920 - TileAndCasesKt.getTileSize()) / 2f);
-        temp.setY((1080 - TileAndCasesKt.getTileSize()) / 2f);
+        temp.setX((1920 - tileSize) / 2f);
+        temp.setY((1080 - tileSize) / 2f);
         TileAndCasesKt.getOrigin().add(temp.getX(), temp.getY());
         temp.load();
         TileAndCasesKt.getTileList().add(temp);

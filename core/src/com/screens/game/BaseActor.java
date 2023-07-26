@@ -8,8 +8,8 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 
 public class BaseActor extends Actor {
-    TextureRegion region;
-    Rectangle boundary;
+    final TextureRegion region;
+    final Rectangle boundary;
 
     public Texture getTexture() {
         return region.getTexture();

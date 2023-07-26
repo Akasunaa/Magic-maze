@@ -11,7 +11,7 @@ import static com.screens.GameScreens.gameScreen;
 public class Clock extends Label {
     public static Clock clock;
     float time;
-    float baseTime = 120f;
+    final static float baseTime = 120f;
 
     @Override
     public void act(float delta) {
@@ -44,7 +44,7 @@ public class Clock extends Label {
     public Clock(Skin skin) {
         super(" ", skin, "clockStyle");
         time = baseTime;
-        super.setText("" + time);
+        super.setText(String.valueOf(time));
         setAlignment(Align.center);
         setOrigin(getWidth() / 2f, getHeight() / 2f);
         setPosition(1920 / 2f, 1080 - getHeight() - 50);

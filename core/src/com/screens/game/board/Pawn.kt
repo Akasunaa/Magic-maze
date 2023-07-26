@@ -222,8 +222,8 @@ class Pawn(val color: Color) : Serializable {
         } catch (e: TimeoutException) {
             Multiplayer.cyclicBarrier.reset()
             return false
-        } catch (e: BrokenBarrierException) {
-        } catch (e: InterruptedException) {
+        } catch (_: BrokenBarrierException) {
+        } catch (_: InterruptedException) {
         }
         return Multiplayer.courrier.answer
     }

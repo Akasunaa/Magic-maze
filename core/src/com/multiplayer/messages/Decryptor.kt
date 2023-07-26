@@ -53,7 +53,7 @@ class Decryptor {
                     }
                     "Queue" -> {
                         println("$suffix: Getting a Queue")
-                        if (com.utils.queue == null) com.utils.queue = (Queue(message.payload))
+                        if (queue == null) queue = (Queue(message.payload))
 //                        println("Blocking in Decryptor Queue")
 //                        cyclicBarrier.await()
 //                        println("Unblocking in Decryptor Queue")
@@ -159,6 +159,7 @@ class Decryptor {
             }
             "wantToTakeTile" -> {
                 if (true) {
+                    // FIXME C'est pas censé être un if true ici mais je sais plus ce que c'est censé être
                     clientList.getClient(message.sender).sendMessage(Answer(true))
                     for (tempClient in clientList.clientList) {
                         tempClient.sendMessage(GonnaMoveTile(message.sender))
@@ -280,8 +281,7 @@ class Decryptor {
                             client.sendMessage(TextMessage("restart"))
                         }
                     }
-                }
-                else gameScreen.`interface`.wantsToRestart(message.sender);
+                } else gameScreen.`interface`.wantsToRestart(message.sender)
             }
             "restart" -> gameScreen.setToRestart()
             else -> println("$suffix: Action not recognized")

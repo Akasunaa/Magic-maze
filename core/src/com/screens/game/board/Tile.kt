@@ -1,16 +1,14 @@
 package com.screens.game.board
 
-import com.badlogic.gdx.Gdx
-import com.badlogic.gdx.Input
 import com.badlogic.gdx.graphics.Texture
-import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.math.Vector2
-import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.screens.GameScreens
 import com.screens.game.BaseActor
 import com.screens.game.board.Case.Companion.link
 import com.utils.*
 import java.io.Serializable
+import kotlin.math.floor
+import kotlin.math.roundToInt
 
 class Tile internal constructor(val number: Int) : Serializable {
     private val path = "Game/Tiles/tile$number.png"
@@ -40,18 +38,10 @@ class Tile internal constructor(val number: Int) : Serializable {
         updateSize()
     }
 
-    private fun updateCoordinates() {
-        sprite!!.x = x
-        sprite!!.y = y
-        updateAllCases()
-    }
-
     private fun updateSize() {
         sprite!!.setSize(size, size)
         updateAllCases()
     }
-
-    private var exploring = false
 
     init {
         // On commence par créer le tableau de cases avec des Case à l'intérieur
@@ -100,12 +90,6 @@ class Tile internal constructor(val number: Int) : Serializable {
         updateAll()
     }
 
-    fun showAll(batch: Batch?) { // Truc de déboguage
-        for (ligne in caseList) {
-            for (tempCase in ligne) tempCase.show()
-        }
-    }
-
     fun getCaseCoordinates(self: Case): IntArray {
         // C'est juste pour récupérer le x,y d'une case parce que flemme de le faire autrement
         // Sous entendu, x et y valent 0,1,2 ou 3, c'est leur position dans caseList
@@ -123,8 +107,8 @@ class Tile internal constructor(val number: Int) : Serializable {
 
     fun getCase(mouseInput: Vector2): Case {
         // Pour récupérer la case située à une certaine coordonée
-        var tempX = Math.floor(((mouseInput.x - x - offset) / caseSize).toDouble()).toInt()
-        var tempY = Math.floor(((mouseInput.y - y - offset) / caseSize).toDouble()).toInt()
+        var tempX = floor(((mouseInput.x - x - offset) / caseSize).toDouble()).toInt()
+        var tempY = floor(((mouseInput.y - y - offset) / caseSize).toDouble()).toInt()
         var buffer: Int
         if (rotation == 1) {
             buffer = tempX
@@ -192,13 +176,13 @@ class Tile internal constructor(val number: Int) : Serializable {
     }
 
     private val neighbouringTiles: Array<Tile?>
-        private get() {
+        get() {
             val mousePosition = Vector2(sprite!!.x, sprite!!.y)
             mousePosition.sub(origin)
             //        mousePosition.sub(getTileSize( / 2, getTileSize( / 2);
             mousePosition.mul(newBaseInvert)
-            val x = Math.round(mousePosition.x)
-            val y = Math.round(mousePosition.y)
+            val x = mousePosition.x.roundToInt()
+            val y = mousePosition.y.roundToInt()
             return arrayOf( //South
                 getTile(
                     Vector2(x.toFloat(), (y - 1).toFloat()).mul(newBase).add(origin).add(tileSize / 2, tileSize / 2)

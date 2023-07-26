@@ -15,16 +15,16 @@ import java.util.concurrent.CyclicBarrier;
 public class Multiplayer {
     public static Courrier courrier;
     public static ServerMaker serverMaker;
-    public static ClientList clientList = new ClientList();
-    public static Decryptor key = new Decryptor();
+    final public static ClientList clientList = new ClientList();
+    final public static Decryptor key = new Decryptor();
     public static boolean isServer = false;
-    public static int port = 8080;
+    final public static int port = 8080;
     public static String serverIP = "127.0.0.1";
     public static String ip;
 
     public static int numberPeopleWantRestart = 0;
 
-    public static CyclicBarrier cyclicBarrier = new CyclicBarrier(2);
+    final public static CyclicBarrier cyclicBarrier = new CyclicBarrier(2);
 
     // Pour la sérialisation
     public static ObjectMapper mapper = new ObjectMapper();
@@ -39,7 +39,7 @@ public class Multiplayer {
 
     public static final Player me = new Player();
 
-    public static List<Player> playerList = new ArrayList<>(Collections.singletonList(me));
+    final public static List<Player> playerList = new ArrayList<>(Collections.singletonList(me));
     // ça c'est juste pour que la liste me contienne moi de base
 
     public static void startServer() {

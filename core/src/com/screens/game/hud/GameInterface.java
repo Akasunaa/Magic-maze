@@ -22,7 +22,7 @@ import com.utils.Multiplayer;
 import static com.utils.FunctionsKt.quit;
 import static com.utils.Multiplayer.courrier;
 import static com.utils.TileAndCasesKt.getQueue;
-import static com.utils.TileAndCasesKt.getTileSize;
+import static com.utils.TileAndCasesKt.tileSize;
 
 public class GameInterface extends BaseScreen {
     private PlayerOnHUD[] avatars;
@@ -84,7 +84,7 @@ public class GameInterface extends BaseScreen {
         //d'abord les 2 indicateurs de phase en haut à droite qu'on a scanné (un seul est visible à la fois)
         // pour indiquer la phase
         BaseActor phaseA = new BaseActor(new Texture(Gdx.files.internal("interface/phaseA.jpg")));
-        phaseA.setSize(getTileSize() / 2 + 10, phaseA.getHeight() * (getTileSize() / 2 + 10) / phaseA.getWidth());
+        phaseA.setSize(tileSize / 2 + 10, phaseA.getHeight() * (tileSize / 2 + 10) / phaseA.getWidth());
         phaseA.setPosition(viewWidth - phaseA.getWidth(), viewHeight - phaseA.getHeight());
         isPhaseA = true;
         uiStage.addActor(phaseA);
@@ -141,15 +141,15 @@ public class GameInterface extends BaseScreen {
         float originX = viewWidth - playerSize - rightPadding;
         float xStep = (phaseA.getWidth() - rightPadding) / 2;
 
-        float upPadding = (viewHeight - phaseA.getHeight() - volume.getHeight() - getTileSize() / 2 - playerSize * 2) / 4;
+        float upPadding = (viewHeight - phaseA.getHeight() - volume.getHeight() - tileSize / 2 - playerSize * 2) / 4;
         // En fait, c'est un calcul à la louche de l'espace restant
         // Je dit à la louche parce qu'on prends pas en compte la taille des sone de texte par exemple
         float originY = viewHeight - phaseA.getHeight() - volume.getHeight() - playerSize - upPadding;
         float yStep = upPadding + playerSize;
 
         for (int i = 0; i < Multiplayer.playerList.size(); i++) {
-            avatars[i] = new PlayerOnHUD(Multiplayer.playerList.get(i),playerSize);
-            avatars[i].setPosition( originX - xStep * (i / 2), originY - yStep * (i % 2));
+            avatars[i] = new PlayerOnHUD(Multiplayer.playerList.get(i), playerSize);
+            avatars[i].setPosition(originX - xStep * ((float) i / 2), originY - yStep * (i % 2));
             avatars[i].addToStage(uiStage);
         }
 
@@ -161,7 +161,7 @@ public class GameInterface extends BaseScreen {
         pingSound = Gdx.audio.newSound(Gdx.files.internal("Music&Sound/Ping.mp3"));
 
         textTilesLeft = new Label(getQueue().textTileLeft, game.skin, "tilesLeftStyle");
-        textTilesLeft.setPosition(viewWidth - getTileSize() - textTilesLeft.getWidth() / 2 - 50, 5);
+        textTilesLeft.setPosition(viewWidth - tileSize - textTilesLeft.getWidth() / 2 - 50, 5);
         uiStage.addActor(textTilesLeft);
 
         // Gestion de l'horloge
