@@ -9,21 +9,17 @@ sealed interface CaseType {
     }
 
     sealed class ColoredCase(val color: Color) : CaseType {
-        class Exit(color: Color) : ColoredCase(color);
-        class Portal(color: Color) : ColoredCase(color);
-        class Weapon(color: Color) : ColoredCase(color);
-        class FinalExit(color: Color) : ColoredCase(color);
+        class Exit(color: Color) : ColoredCase(color)
+        class Portal(color: Color) : ColoredCase(color)
+        class Weapon(color: Color) : ColoredCase(color)
+        class FinalExit(color: Color) : ColoredCase(color)
 
     }
 }
 
-/* Et maintenant, on construit allégrement la tuile
-    Je vais maintenant expliquer comment on utilise le système de tableau
-    On a un tableau 4x4 pour les cases, et pour les murs...
-    Un tableau de 3x4 pour ceux verticaux
-    Un tableau de 4x3 pour ceux horizontaux
-    Pour le mur: 1 = un mur, 0 = pas de mur
-*/
+
+// On a un table de 4x4 pour indiquer ce que contiennent les cases
+// Puis un tableau de 3x4 pour indiquer les murs verticaux, et un 4x3 pour les murs horizontaux
 fun getTileArray(number: Int): List<List<CaseType>> =
     when (number) {
         0 -> listOf(
@@ -299,30 +295,140 @@ fun getTileArray(number: Int): List<List<CaseType>> =
         else -> throw Exception("This tile number wasn't acceptable: $number")
     }.reversed()
 
-fun getTileArrayWallVertical(number: Int): List<List<Int>> = when (number) {
-    0 -> listOf(listOf(0, 0, 0), listOf(0, 0, 0), listOf(0, 0, 1), listOf(0, 0, 1))
-    1 -> listOf(listOf(1, 0, 0), listOf(1, 0, 1), listOf(0, 0, 1), listOf(0, 0, 1))
-    2 -> listOf(listOf(0, 1, 0), listOf(1, 0, 1), listOf(1, 1, 0), listOf(1, 0, 0))
-    3 -> listOf(listOf(1, 0, 1), listOf(0, 0, 0), listOf(0, 0, 1), listOf(1, 1, 0))
-    4 -> listOf(listOf(1, 1, 0), listOf(0, 0, 1), listOf(1, 0, 0), listOf(1, 1, 1))
-    5 -> listOf(listOf(1, 1, 0), listOf(1, 0, 0), listOf(0, 0, 1), listOf(1, 0, 0))
-    6 -> listOf(listOf(0, 1, 1), listOf(0, 0, 1), listOf(1, 1, 0), listOf(1, 1, 1))
-    7 -> listOf(listOf(0, 1, 1), listOf(0, 0, 0), listOf(1, 0, 1), listOf(1, 1, 1))
-    8 -> listOf(listOf(0, 0, 0), listOf(1, 1, 1), listOf(0, 0, 1), listOf(0, 0, 0))
-    9 -> listOf(listOf(1, 0, 0), listOf(0, 1, 1), listOf(1, 1, 1), listOf(0, 0, 0))
+fun getTileArrayWallVertical(number: Int): List<BooleanArray> = when (number) {
+    0 -> listOf(
+        booleanArrayOf(false, false, false),
+        booleanArrayOf(false, false, false),
+        booleanArrayOf(false, false, true),
+        booleanArrayOf(false, false, true)
+    )
+
+    1 -> listOf(
+        booleanArrayOf(true, false, false),
+        booleanArrayOf(true, false, true),
+        booleanArrayOf(false, false, true),
+        booleanArrayOf(false, false, true)
+    )
+
+    2 -> listOf(
+        booleanArrayOf(false, true, false),
+        booleanArrayOf(true, false, true),
+        booleanArrayOf(true, true, false),
+        booleanArrayOf(true, false, false)
+    )
+
+    3 -> listOf(
+        booleanArrayOf(true, false, true),
+        booleanArrayOf(false, false, false),
+        booleanArrayOf(false, false, true),
+        booleanArrayOf(true, true, false)
+    )
+
+    4 -> listOf(
+        booleanArrayOf(true, true, false),
+        booleanArrayOf(false, false, true),
+        booleanArrayOf(true, false, false),
+        booleanArrayOf(true, true, true)
+    )
+
+    5 -> listOf(
+        booleanArrayOf(true, true, false),
+        booleanArrayOf(true, false, false),
+        booleanArrayOf(false, false, true),
+        booleanArrayOf(true, false, false)
+    )
+
+    6 -> listOf(
+        booleanArrayOf(false, true, true),
+        booleanArrayOf(false, false, true),
+        booleanArrayOf(true, true, false),
+        booleanArrayOf(true, true, true)
+    )
+
+    7 -> listOf(
+        booleanArrayOf(false, true, true),
+        booleanArrayOf(false, false, false),
+        booleanArrayOf(true, false, true),
+        booleanArrayOf(true, true, true)
+    )
+
+    8 -> listOf(
+        booleanArrayOf(false, false, false),
+        booleanArrayOf(true, true, true),
+        booleanArrayOf(false, false, true),
+        booleanArrayOf(false, false, false)
+    )
+
+    9 -> listOf(
+        booleanArrayOf(true, false, false),
+        booleanArrayOf(false, true, true),
+        booleanArrayOf(true, true, true),
+        booleanArrayOf(false, false, false)
+    )
+
     else -> throw Exception("This tile number wasn't acceptable: $number")
 }.reversed()
 
-fun getTileArrayWallHorizontal(number: Int): List<List<Int>> = when (number) {
-    0 -> listOf(listOf(1, 0, 0, 1), listOf(1, 0, 0, 1), listOf(1, 0, 0, 1))
-    1 -> listOf(listOf(0, 0, 1, 0), listOf(0, 0, 0, 0), listOf(0, 1, 1, 1))
-    2 -> listOf(listOf(0, 1, 0, 1), listOf(1, 1, 1, 0), listOf(0, 1, 0, 1))
-    3 -> listOf(listOf(1, 0, 1, 1), listOf(1, 1, 0, 1), listOf(1, 0, 0, 0))
-    4 -> listOf(listOf(1, 0, 1, 0), listOf(1, 0, 1, 1), listOf(0, 0, 1, 0))
-    5 -> listOf(listOf(1, 0, 1, 0), listOf(0, 0, 1, 1), listOf(1, 0, 1, 0))
-    6 -> listOf(listOf(1, 1, 0, 1), listOf(1, 0, 0, 1), listOf(0, 0, 1, 0))
-    7 -> listOf(listOf(1, 1, 0, 1), listOf(0, 1, 1, 0), listOf(1, 0, 0, 0))
-    8 -> listOf(listOf(0, 1, 0, 0), listOf(1, 0, 1, 0), listOf(1, 1, 1, 0))
-    9 -> listOf(listOf(1, 0, 1, 0), listOf(1, 1, 1, 0), listOf(1, 1, 0, 0))
+fun getTileArrayWallHorizontal(number: Int): List<BooleanArray> = when (number) {
+    0 -> listOf(
+        booleanArrayOf(true, false, false, true),
+        booleanArrayOf(true, false, false, true),
+        booleanArrayOf(true, false, false, true)
+    )
+
+    0 -> listOf(
+        booleanArrayOf(false, false, true, false),
+        booleanArrayOf(false, false, false, false),
+        booleanArrayOf(false, true, true, true)
+    )
+
+    2 -> listOf(
+        booleanArrayOf(false, true, false, true),
+        booleanArrayOf(true, true, true, false),
+        booleanArrayOf(false, true, false, true)
+    )
+
+    3 -> listOf(
+        booleanArrayOf(true, false, true, true),
+        booleanArrayOf(true, true, false, true),
+        booleanArrayOf(true, false, false, false)
+    )
+
+    4 -> listOf(
+        booleanArrayOf(true, false, true, false),
+        booleanArrayOf(true, false, true, true),
+        booleanArrayOf(false, false, true, false)
+    )
+
+    5 -> listOf(
+        booleanArrayOf(true, false, true, false),
+        booleanArrayOf(false, false, true, true),
+        booleanArrayOf(true, false, true, false)
+    )
+
+    6 -> listOf(
+        booleanArrayOf(true, true, false, true),
+        booleanArrayOf(true, false, false, true),
+        booleanArrayOf(false, false, true, false)
+    )
+
+    7 -> listOf(
+        booleanArrayOf(true, true, false, true),
+        booleanArrayOf(false, true, true, false),
+        booleanArrayOf(true, false, false, false)
+    )
+
+    8 -> listOf(
+        booleanArrayOf(false, true, false, false),
+        booleanArrayOf(true, false, true, false),
+        booleanArrayOf(true, true, true, false)
+    )
+
+    9 -> listOf(
+        booleanArrayOf(true, false, true, false),
+        booleanArrayOf(true, true, true, false),
+        booleanArrayOf(true, true, false, false)
+    )
+
     else -> throw Exception("This tile number wasn't acceptable: $number")
 }.reversed()

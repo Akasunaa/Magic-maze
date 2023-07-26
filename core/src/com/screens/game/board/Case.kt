@@ -27,17 +27,17 @@ class Case(number: CaseType, @field:Transient private var tile: Tile) : Serializ
 
     @Transient
     private var redDot: BaseActor? = null
-    fun getNeighbours(horizontalWalls: List<List<Int>>, verticalWalls: List<List<Int>>) {
+    fun getNeighbours(horizontalWalls: List<BooleanArray>, verticalWalls: List<BooleanArray>) {
         x = tile.getCaseCoordinates(this)[0]
         y = tile.getCaseCoordinates(this)[1]
         // Voisin en haut
-        if (y == 0 || horizontalWalls[y - 1][x] == 1) caseList[0] = null else caseList[0] = tile.caseList[y - 1][x]
+        if (y == 0 || horizontalWalls[y - 1][x]) caseList[0] = null else caseList[0] = tile.caseList[y - 1][x]
         // Voisin de droite
-        if (x == 3 || verticalWalls[y][x] == 1) caseList[1] = null else caseList[1] = tile.caseList[y][x + 1]
+        if (x == 3 || verticalWalls[y][x]) caseList[1] = null else caseList[1] = tile.caseList[y][x + 1]
         // Voisin du bas
-        if (y == 3 || horizontalWalls[y][x] == 1) caseList[2] = null else caseList[2] = tile.caseList[y + 1][x]
+        if (y == 3 || horizontalWalls[y][x]) caseList[2] = null else caseList[2] = tile.caseList[y + 1][x]
         // Voisin de gauche
-        if (x == 0 || verticalWalls[y][x - 1] == 1) caseList[3] = null else caseList[3] = tile.caseList[y][x - 1]
+        if (x == 0 || verticalWalls[y][x - 1]) caseList[3] = null else caseList[3] = tile.caseList[y][x - 1]
     }
 
     fun load(tile: Tile, caseList: List<Case?>) { // Comme d'habitude, obligatoire pour la sérialisation
