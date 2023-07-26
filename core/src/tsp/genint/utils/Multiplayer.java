@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CyclicBarrier;
-
+import com.fasterxml.jackson.module.kotlin.KotlinModule;
 public class Multiplayer {
     public static Courrier courrier;
     public static ServerMaker serverMaker;
@@ -30,7 +30,7 @@ public class Multiplayer {
     final public static CyclicBarrier cyclicBarrier = new CyclicBarrier(2);
 
     // Pour la sérialisation
-    public static ObjectMapper mapper = new ObjectMapper();
+    public static ObjectMapper mapper = new ObjectMapper().registerModule(new KotlinModule());
 
     static {
         try {
