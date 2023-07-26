@@ -5,9 +5,9 @@ import com.badlogic.gdx.Input
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.math.Interpolation
 import com.badlogic.gdx.math.Vector2
-import tsp.genint.multiplayer.messages.pawn.AskPlacePawn
-import tsp.genint.multiplayer.messages.pawn.AskTakePawn
-import tsp.genint.multiplayer.messages.pawn.MovingPawn
+import tsp.genint.multiplayer.messages.MovingPawn
+import tsp.genint.multiplayer.messages.WantToPlacePawn
+import tsp.genint.multiplayer.messages.WantToTakePawn
 import tsp.genint.screens.GameScreens
 import tsp.genint.screens.game.BaseActor
 import tsp.genint.screens.game.hud.Clock
@@ -70,7 +70,6 @@ class Pawn(val color: Color) : Serializable {
         private set(size) {
             field = size
             sprite!!.setSize(size / 2, size)
-            println("Youhou")
         }
 
     // Fonctions classiques pour gérer la taille
@@ -168,7 +167,7 @@ class Pawn(val color: Color) : Serializable {
                 // Ca causait des problèmes que je ne comprends pas, où le thread de render restait bloqué
                 // J'ai aucune idée de pourquoi, mais bon en mettant 1 ça fonctionne
                 // ça rends aussi totalement inutile mon code d'interpolation mais bon
-                Multiplayer.courrier.sendMessage(MovingPawn(this, Vector2(x, y)))
+                Multiplayer.courrier.sendMessage(MovingPawn(color, x to y))
                 //System.out.println("Sending coordinates");
                 count = 0
             }
@@ -192,7 +191,7 @@ class Pawn(val color: Color) : Serializable {
     }
 
     private fun checkServerForClickable(): Boolean {
-        Multiplayer.courrier.sendMessage(AskTakePawn(this))
+        Multiplayer.courrier.sendMessage(WantToTakePawn(color))
         Multiplayer.courrier.resetAnswer()
         try {
             println("Blocking in pawn check click")
@@ -210,7 +209,7 @@ class Pawn(val color: Color) : Serializable {
     }
 
     private fun checkServerForPlaceable(coordinates: Vector2): Boolean {
-        Multiplayer.courrier.sendMessage(AskPlacePawn(this, coordinates))
+        Multiplayer.courrier.sendMessage(WantToPlacePawn(color, coordinates))
         Multiplayer.courrier.resetAnswer()
         println("Client: checked for placeable")
         try {

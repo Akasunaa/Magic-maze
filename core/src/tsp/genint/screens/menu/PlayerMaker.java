@@ -10,7 +10,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import tsp.genint.multiplayer.messages.TextMessage;
+import tsp.genint.multiplayer.messages.ChangeAvatar;
+import tsp.genint.multiplayer.messages.ChangePseudo;
 import tsp.genint.screens.BaseScreen;
 import tsp.genint.screens.game.board.Player;
 import tsp.genint.utils.FunctionsKt;
@@ -42,7 +43,7 @@ public class PlayerMaker {
         }
         textField.addListener(new ChangeListener() {
             public void changed(ChangeEvent event, Actor actor) {
-                Multiplayer.courrier.sendMessage(new TextMessage("changePseudo", textField.getText()));
+                Multiplayer.courrier.sendMessage(new ChangePseudo(textField.getText()));
                 player.pseudo = textField.getText();
             }
         });
@@ -75,7 +76,7 @@ public class PlayerMaker {
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
                 avatarNum = FunctionsKt.modulo(avatarNum + i, 10);
                 player.avatarName = BaseScreen.animalNames[avatarNum];
-                Multiplayer.courrier.sendMessage(new TextMessage("changeAvatar",player.avatarName));
+                Multiplayer.courrier.sendMessage(new ChangeAvatar(player.avatarName));
                 player.avatar.setTexture(new Texture(Gdx.files.internal("Game/Avatars/" + player.avatarName + ".png")));
                 //avatar.setSize(150, 150);
             }

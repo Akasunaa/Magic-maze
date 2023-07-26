@@ -63,7 +63,7 @@ public class ServerMaker {
                 BufferedReader buffer = new BufferedReader(new InputStreamReader(client.getSocket().getInputStream()));
                 try {
                     String line = buffer.readLine();
-                    if (Multiplayer.mapper.readValue(line, Message.class).getAction().equals("confirm")) {
+                    if (Message.Companion.deserialize(line) instanceof Confirm) {
                         System.out.println("Server: " + client.getId() + " confirmed reception");
                         return;
                     } else {
@@ -142,7 +142,7 @@ public class ServerMaker {
                 System.out.println(clientList);
 
                 for (Client tempClient : clientList) {
-                    tempClient.sendMessage(new TextMessage("beginGame").asServer());
+                    tempClient.sendMessage(new BeginGame().asServer());
                     System.out.println("Server: sent beginGame to "+ tempClient.getId());
                 }
                 // On signale que le serveur est prêt et que normalement les clients ont tout reçu
@@ -165,7 +165,7 @@ public class ServerMaker {
                 }
 
                 for (Client tempClient : clientList) {
-                    tempClient.sendMessage(new TextMessage("setAndGo").asServer());
+                    tempClient.sendMessage(new SetAndGo().asServer());
                     System.out.println("Server: sent setAndGo to "+ tempClient.getId());
                 }
 
@@ -184,7 +184,6 @@ public class ServerMaker {
             Socket socket;
             Client client;
             final List<Client> clientList = Multiplayer.clientList;
-            InputStream inputStream;
 
             private void sleep() {
                 int sleepTime = 30;
@@ -241,7 +240,7 @@ public class ServerMaker {
                         System.out.println("Server: Client added: " + client.getIp() + " as " + client.getId());
                         // Maintenant on récupère les pseudos des joueurs et d'autres infos I guess
                         // En soit cette partie sert plus vraiment mais l'enlever serait embêtant
-                        client.sendMessage(new TextMessage("send Player").asServer());
+                        client.sendMessage(new Answer(true));
                         try {
                             BufferedReader buffer = new BufferedReader(new InputStreamReader(client.getSocket().getInputStream()));
                             Multiplayer.key.decryptMessage(buffer.readLine(), true);
@@ -250,7 +249,7 @@ public class ServerMaker {
                         }
                         // Maintenant on sélectionne un avatar pour le joueur, et on lui fait savoir
                         client.player.avatarName = findFreeAvatar();
-                        client.sendMessage(new TextMessage("setAvatar",client.player.avatarName).asServer());
+                        client.sendMessage(new SetAvatar(client.player.avatarName).asServer());
 
                         // Maintenant on renvois le joueur à tout le monde
                         // Et également on envois tout le monde au joueur
@@ -271,16 +270,12 @@ public class ServerMaker {
                         // Et on lui dit que c'est bon de notre coté
                         sleep();
                         sleep();
-                        client.sendMessage(new TextMessage("setAndGo").asServer());
+                        client.sendMessage(new SetAndGo().asServer());
                         System.out.println("Server: sent setAndGo to " + client.getId());
                     }
                     else {
                         System.out.println("Server : rejected incoming request");
-                        try {
-                            socket.getOutputStream().write("server rejected you\n".getBytes());
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
+                        client.sendMessage(new Answer(false));
                     }
                 }
             }
@@ -309,7 +304,7 @@ public class ServerMaker {
         System.out.println("Server: Killing Server");
         for (Client client: Multiplayer.clientList) {
             if (!client.getIp().equals("127.0.0.1"))
-                client.sendMessage(new TextMessage("stopping").asServer());
+                client.sendMessage(new Stop().asServer());
         }
         isRunning = false;
         if (isInLobby) {

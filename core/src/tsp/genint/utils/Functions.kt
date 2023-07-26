@@ -6,7 +6,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.math.Interpolation
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.math.Vector3
-import tsp.genint.multiplayer.messages.TextMessage
+import tsp.genint.multiplayer.messages.Quit
 import tsp.genint.screens.game.board.Case
 import tsp.genint.screens.game.board.Pawn
 import tsp.genint.screens.game.board.Tile
@@ -32,7 +32,7 @@ fun quit() {
     if (Multiplayer.isServer) {
         Multiplayer.serverMaker.killThread()
     } else {
-        Multiplayer.courrier.sendMessage(TextMessage("quitting"))
+        Multiplayer.courrier.sendMessage(Quit())
     }
     Multiplayer.courrier.killThread()
     exitProcess(0)
@@ -118,11 +118,4 @@ fun findCase(coordinates: Vector2): Case? {
     return null
 }
 
-fun getPawn(color: String): Pawn? {
-    for (pawn in pawnList) {
-        if (pawn.color.toString() == color) {
-            return pawn
-        }
-    }
-    return null
-}
+fun getPawn(color: Color): Pawn = pawnList.first {it.color == color}

@@ -35,14 +35,14 @@ class Courrier(id: String, port: Int, ip: String) {
             throw ServerNotReachedException("Server not found")
         }
         try {
-            val waitForIt = BufferedReader(InputStreamReader(socket.getInputStream())).readLine()
-            if (waitForIt == "server rejected you") {
+            val answer = Message.deserialize(BufferedReader(InputStreamReader(socket.inputStream)).readLine()) as Answer
+            if (!answer.answer) {
                 throw ServerNotReachedException("Username is already taken")
             }
         } catch (e: IOException) {
             e.printStackTrace()
         }
-        sendObject(Multiplayer.me)
+        sendMessage(PayloadPlayer(Multiplayer.me))
         clientListener = ClientListener(Multiplayer.key, socket)
         clientListener.startThread()
     }
@@ -56,7 +56,7 @@ class Courrier(id: String, port: Int, ip: String) {
         }
     }
 
-    fun sendObject(player: Player?) {
+    fun sendObject(player: Player) {
         sendMessage(PayloadPlayer(player))
     }
 

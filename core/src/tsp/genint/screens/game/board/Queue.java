@@ -5,11 +5,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
-import tsp.genint.multiplayer.messages.TextMessage;
-import tsp.genint.multiplayer.messages.tile.AskPlaceTile;
-import tsp.genint.multiplayer.messages.tile.AskTakeTile;
-import tsp.genint.multiplayer.messages.tile.MovingTile;
-import tsp.genint.multiplayer.messages.tile.RotateTile;
+import tsp.genint.multiplayer.messages.*;
 import tsp.genint.screens.game.BaseActor;
 import tsp.genint.utils.FunctionsKt;
 import tsp.genint.utils.Multiplayer;
@@ -239,7 +235,7 @@ public class Queue implements Serializable {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        Multiplayer.courrier.sendMessage(new AskPlaceTile());
+        Multiplayer.courrier.sendMessage(new WantToPlaceTile());
         Multiplayer.courrier.resetAnswer();
         try {
             System.out.println("Blocking in Queue Place");
@@ -255,7 +251,7 @@ public class Queue implements Serializable {
     }
 
     private boolean checkServerForClickable() {
-        Multiplayer.courrier.sendMessage(new AskTakeTile());
+        Multiplayer.courrier.sendMessage(new WantToTakeTile());
         Multiplayer.courrier.resetAnswer();
         try {
             System.out.println("Blocking in Queue Click");
@@ -316,7 +312,7 @@ public class Queue implements Serializable {
                         isMovable = false;
                     } else {
                         reset();
-                        Multiplayer.courrier.sendMessage(new TextMessage("droppedTile"));
+                        Multiplayer.courrier.sendMessage(new DroppedTile());
                     }
                 }
             }
