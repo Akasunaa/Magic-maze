@@ -240,7 +240,7 @@ public class Queue implements Serializable {
             e.printStackTrace();
         }
         Multiplayer.courrier.sendMessage(new AskPlaceTile());
-        Multiplayer.courrier.setAnswer();
+        Multiplayer.courrier.resetAnswer();
         try {
             System.out.println("Blocking in Queue Place");
             Multiplayer.cyclicBarrier.await(500, TimeUnit.MILLISECONDS);            // Pour synchroniser les threads
@@ -256,7 +256,7 @@ public class Queue implements Serializable {
 
     private boolean checkServerForClickable() {
         Multiplayer.courrier.sendMessage(new AskTakeTile());
-        Multiplayer.courrier.setAnswer();
+        Multiplayer.courrier.resetAnswer();
         try {
             System.out.println("Blocking in Queue Click");
             Multiplayer.cyclicBarrier.await(500, TimeUnit.MILLISECONDS);            // Pour synchroniser les threads

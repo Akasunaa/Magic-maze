@@ -1,87 +1,66 @@
-package tsp.genint.multiplayer.messages;
+package tsp.genint.multiplayer.messages
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Net;
-import com.badlogic.gdx.net.Socket;
-import com.badlogic.gdx.net.SocketHints;
-import tsp.genint.multiplayer.ServerNotReachedException;
-import tsp.genint.screens.game.board.Player;
-import tsp.genint.utils.Multiplayer;
+import com.badlogic.gdx.Gdx
+import com.badlogic.gdx.Net
+import com.badlogic.gdx.net.Socket
+import com.badlogic.gdx.net.SocketHints
+import tsp.genint.multiplayer.ServerNotReachedException
+import tsp.genint.screens.game.board.Player
+import tsp.genint.utils.Multiplayer
+import java.io.BufferedReader
+import java.io.IOException
+import java.io.InputStreamReader
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-
-public class Courrier {
-    private final Socket sendingSocket;
-
-    public boolean getAnswer() {
-        return answer;
+class Courrier(id: String, port: Int, ip: String) {
+    private val socket : Socket
+    fun resetAnswer() {
+        answer = false
     }
-    public void setAnswer() {
-        answer = false;
-    }
-
-    public Socket getReceivingSocket() {
-        return receivingSocket;
-    }
-
-    private Socket receivingSocket;
-
-    boolean answer = false; // This will be used to get answers from the server
+    var answer = false // This will be used to get answers from the server
 
     // sendingSocket: La socket pour envoyer des messages au serveur
     // receivingSocket: La socket pour recevoir des messages du serveur
+    private val clientListener: ClientListener
 
-    private final ClientListener clientListener;
-
-    public Courrier(String id, int port, String ip) throws ServerNotReachedException {
-        System.out.println("Client : Trying to connect to " + ip + " on port " + port);
-        SocketHints socketHints = new SocketHints();
-        socketHints.connectTimeout = 500;
-        socketHints.sendBufferSize = 1024*4;
-        socketHints.receiveBufferSize = 1024*4;
+    init {
+        println("Client : Trying to connect to $ip on port $port")
+        val socketHints = SocketHints()
+        socketHints.connectTimeout = 500
+        socketHints.sendBufferSize = 1024 * 4
+        socketHints.receiveBufferSize = 1024 * 4
         try {
-            sendingSocket = Gdx.net.newClientSocket(Net.Protocol.TCP, ip, port, socketHints);
-            sendingSocket.getOutputStream().write((id + " connected " + ip + "\n").getBytes());
-        } catch (Exception e) {
-            throw new ServerNotReachedException("Server not found");
+            socket = Gdx.net.newClientSocket(Net.Protocol.TCP, ip, port, socketHints)
+            socket.outputStream.write("$id connected $ip\n".toByteArray())
+        } catch (e: Exception) {
+            throw ServerNotReachedException("Server not found")
         }
         try {
-            String waitForIt = (new BufferedReader(new InputStreamReader(sendingSocket.getInputStream()))).readLine();
-            if (waitForIt.equals("server rejected you")) {
-                throw new ServerNotReachedException("Username is already taken");
+            val waitForIt = BufferedReader(InputStreamReader(socket.getInputStream())).readLine()
+            if (waitForIt == "server rejected you") {
+                throw ServerNotReachedException("Username is already taken")
             }
-            receivingSocket = Gdx.net.newClientSocket(Net.Protocol.TCP, ip, port, socketHints);
-            waitForIt = (new BufferedReader(new InputStreamReader(receivingSocket.getInputStream()))).readLine();
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (e: IOException) {
+            e.printStackTrace()
         }
-
-        sendObject(Multiplayer.me);
-        clientListener = new ClientListener(Multiplayer.key, receivingSocket);
-        clientListener.startThread();
-
-
+        sendObject(Multiplayer.me)
+        clientListener = ClientListener(Multiplayer.key, socket)
+        clientListener.startThread()
     }
 
-    public void sendMessage(Message message) {
+    fun sendMessage(message: Message) {
         try {
-            //println("Client: Sending $message")
-            sendingSocket.getOutputStream().write(message.serialize().getBytes());
-        } catch (IOException e) {
-            e.printStackTrace();
+            println("Client: Sending $message")
+            socket.outputStream.write(message.serialize().toByteArray())
+        } catch (e: IOException) {
+            e.printStackTrace()
         }
     }
 
-
-    public void sendObject(Player player) {
-        sendMessage(new PayloadPlayer(player));
-        //ObjectOutputStream(sendingSocket.outputStream).write(toSend.serialize().toByteArray())
-
+    fun sendObject(player: Player?) {
+        sendMessage(PayloadPlayer(player))
     }
 
-    public void killThread() {
-        clientListener.killThread();
+    fun killThread() {
+        clientListener.killThread()
     }
 }

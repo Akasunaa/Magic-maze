@@ -1,5 +1,6 @@
 package tsp.genint.utils;
 
+import tsp.genint.multiplayer.Client;
 import tsp.genint.multiplayer.ClientList;
 import tsp.genint.multiplayer.ServerMaker;
 import tsp.genint.multiplayer.messages.Courrier;

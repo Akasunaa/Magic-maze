@@ -13,11 +13,6 @@ public class DesktopLauncher {
     public static void main(String[] args) {
         Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
         config.setWindowedMode(1920, 1080);
-        try {
-            System.setOut(new PrintStream(new FileOutputStream("log.txt")));
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
         Lwjgl3Application launcher = new Lwjgl3Application(new MagicGame(), config);
     }
 }

@@ -193,7 +193,7 @@ class Pawn(val color: Color) : Serializable {
 
     private fun checkServerForClickable(): Boolean {
         Multiplayer.courrier.sendMessage(AskTakePawn(this))
-        Multiplayer.courrier.setAnswer()
+        Multiplayer.courrier.resetAnswer()
         try {
             println("Blocking in pawn check click")
             Multiplayer.cyclicBarrier.await(500, TimeUnit.MILLISECONDS)
@@ -211,7 +211,7 @@ class Pawn(val color: Color) : Serializable {
 
     private fun checkServerForPlaceable(coordinates: Vector2): Boolean {
         Multiplayer.courrier.sendMessage(AskPlacePawn(this, coordinates))
-        Multiplayer.courrier.setAnswer()
+        Multiplayer.courrier.resetAnswer()
         println("Client: checked for placeable")
         try {
             println("Blocking in pawn check place")

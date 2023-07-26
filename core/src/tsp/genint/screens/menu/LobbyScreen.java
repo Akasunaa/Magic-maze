@@ -203,22 +203,6 @@ public class LobbyScreen extends BaseScreen {
 
 
         makeUiTable();
-
-
-
-
-
-        /*for (int i = 0; i < Multiplayer.playerList.size(); i++) {
-            avatars[i] = Multiplayer.playerList.get(i).avatar;
-            avatars[i].setSize(90, 90);
-            avatars[i].setPosition(viewWidth - avatars[i].getWidth() - 45, viewHeight - avatars[i].getHeight() - 225 - 135 * i);
-            uiStage.addActor(avatars[i]);
-            final int temp = i;
-            avatars[i].addListener(new InputListener() {
-                public boolean touchDown(InputEvent ev, float x, float y, int pointer, int button) {
-                    avatars[temp].addAction(Actions.sequence(
-                            Actions.color(new Color(1,0,0,1),(float)0.20),
-                            Actions.color(new Color(1,1,1,1),(float)0.20)));*/
     }
 
     public void multiplayerShenanigans() throws ServerNotReachedException {
@@ -239,33 +223,6 @@ public class LobbyScreen extends BaseScreen {
 
         // On met ça ici parce que sinon problèmes lors de l'appel
         Gdx.input.setInputProcessor(uiStage);
-        uiStage.addListener(new InputListener() {
-            int count = 0;
-            final String[] nameList =  new String[]{"Boris","Naruto","Babar"};
-            // J'étais inspiré pour les noms
-            public boolean keyDown(InputEvent event, int keyCode) {
-                return true;
-            }
-
-            public boolean keyUp(InputEvent event, int keycode) {
-                if (keycode == Input.Keys.SPACE) {
-                    // Exécute l'action quand on appuie sur la touche espace
-                    if (count <= 2) {
-                        final Player temp = new Player();
-                        temp.pseudo = nameList[count];
-                        temp.avatarName = animalNames[count];
-                        temp.load();
-                        addPlayer(temp);
-                        count++;
-                    }
-                    else if (count == 3) {
-                        removePlayer("Babar");
-                        uiStage.removeListener(this);
-                    }
-                }
-                return true;
-            }
-        });
     }
 
     public void load() {

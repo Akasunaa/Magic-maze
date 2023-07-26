@@ -22,6 +22,7 @@ class Decryptor {
     fun decryptMessage(tempMessage: String, isServer: Boolean) {
         val suffix = if (isServer) "Server" else "Client"
         val message = mapper.readValue(tempMessage, Message::class.java)
+        println(message)
         println((if (message.action=="movingPawn" || message.action=="movingTile") "    " else "") + suffix + " : " + message.message)
         if (!isServer) {
             message.sendToLog()
@@ -43,7 +44,7 @@ class Decryptor {
                         println("$suffix: Getting a Player")
                         val tempPlayer = mapper.readValue(message.payload, Player::class.java)
                         if (isServer) {
-                            clientList.getClient(tempPlayer.pseudo).player = tempPlayer
+                            clientList.getClientFromPseudo(tempPlayer.pseudo).player = tempPlayer
                         } else {
                             //playerList.add(tempPlayer)
                             // On s'en occupe déjà dans lobbyScreen
@@ -87,7 +88,7 @@ class Decryptor {
             }
             "ping" -> {
                 if (isServer) {
-                    for (client in clientList.clientList) {
+                    for (client in clientList) {
                         client.sendMessage(message)
                     }
                 } else if (message.target.equals(me.pseudo)) {
@@ -104,16 +105,16 @@ class Decryptor {
             "wantToTakePawn" -> {
                 val tempPawn = getPawn(message.target)
                 if (tempPawn != null && tempPawn.player == null) {
-                    clientList.getClient(message.sender).player.takesPawn(tempPawn)
-                    clientList.getClient(message.sender).sendMessage(Answer(true))
+                    clientList.getClientFromPseudo(message.sender).player.takesPawn(tempPawn)
+                    clientList.getClientFromPseudo(message.sender).sendMessage(Answer(true))
                 } else {
-                    clientList.getClient(message.sender).sendMessage(Answer(false))
+                    clientList.getClientFromPseudo(message.sender).sendMessage(Answer(false))
                 }
             }
             "movingPawn" -> {
                 val tempPawn = getPawn(message.target)
                 if (isServer) {
-                    for (tempClient in clientList.clientList) {
+                    for (tempClient in clientList) {
                         if (tempClient.id != message.sender) {
                             tempClient.sendMessage(message)
                         }
@@ -121,15 +122,6 @@ class Decryptor {
                 }
                 else {
                     tempPawn!!.setTarget(message.coordinates[0], message.coordinates[1])
-//                    try {
-//                        // Try and do a bit of interpolation here
-//                        // Edit: it's mostly done i think
-//                        tempPawn.sendToTarget()
-//                    } catch (e: Exception) {
-//                        println("Wrong Numbers Sent")
-//                    }
-                // Des reliques du vieux code, je les garde au kazoo
-                // j'ai de nouveau besoin de faire de l'interpolation
                 }
             }
             "placePawn" -> {
@@ -141,9 +133,9 @@ class Decryptor {
                 val tempPawn = getPawn(message.target)
                 val tempCase = findCase(Vector2(message.coordinates[0], message.coordinates[1]))
                 if (tempCase?.pawn == null || tempCase.pawn == tempPawn) {
-                    clientList.getClient(message.sender).sendMessage(Answer(true))
-                    if (message.sender != me.pseudo) clientList.getClient(message.sender).player.dropsPawn(tempPawn)
-                    for (tempClient in clientList.clientList) {
+                    clientList.getClientFromPseudo(message.sender).sendMessage(Answer(true))
+                    if (message.sender != me.pseudo) clientList.getClientFromPseudo(message.sender).player.dropsPawn(tempPawn)
+                    for (tempClient in clientList) {
                         tempClient.sendMessage(
                             MovingPawn(
                                 message.sender,
@@ -155,17 +147,17 @@ class Decryptor {
                         // Bizarre mais obligatoire
                         tempClient.sendMessage(PlacePawn(message.sender, message.target))
                     }
-                } else clientList.getClient(message.sender).sendMessage(Answer(false))
+                } else clientList.getClientFromPseudo(message.sender).sendMessage(Answer(false))
             }
             "wantToTakeTile" -> {
                 if (true) {
                     // FIXME C'est pas censé être un if true ici mais je sais plus ce que c'est censé être
-                    clientList.getClient(message.sender).sendMessage(Answer(true))
-                    for (tempClient in clientList.clientList) {
+                    clientList.getClientFromPseudo(message.sender).sendMessage(Answer(true))
+                    for (tempClient in clientList) {
                         tempClient.sendMessage(GonnaMoveTile(message.sender))
                     }
                 } else {
-                    clientList.getClient(message.sender).sendMessage(Answer(false))
+                    clientList.getClientFromPseudo(message.sender).sendMessage(Answer(false))
                     TODO("Vérifier qu'il a le bon rôle quand même, rien d'important pour le moment")
                 }
             }
@@ -174,7 +166,7 @@ class Decryptor {
             }
             "movingTile" -> {
                 if (isServer) {
-                    for (tempClient in clientList.clientList) {
+                    for (tempClient in clientList) {
                         if (tempClient.id != message.sender) {
                             tempClient.sendMessage(message)
                         }
@@ -188,7 +180,7 @@ class Decryptor {
             }
             "rotateTile" -> {
                 if (isServer) {
-                    for (tempClient in clientList.clientList) {
+                    for (tempClient in clientList) {
                         if (tempClient.id != message.sender) {
                             tempClient.sendMessage(message)
                         }
@@ -200,27 +192,27 @@ class Decryptor {
             }
             "wantToPlaceTile" -> {
                 if (true) { // Je vois pas trop ce qu'il faut demander mais bon
-                    clientList.getClient(message.sender).sendMessage(Answer(true))
-                    for (tempClient in clientList.clientList) {
+                    clientList.getClientFromPseudo(message.sender).sendMessage(Answer(true))
+                    for (tempClient in clientList) {
                         tempClient.sendMessage(PlaceTile(message.sender, message.target))
                     }
-                } else clientList.getClient(message.sender).sendMessage(Answer(false))
+                } else clientList.getClientFromPseudo(message.sender).sendMessage(Answer(false))
             }
             "droppedTile" -> {
                 if (isServer) {
-                    for (client in clientList.clientList) {
+                    for (client in clientList) {
                         client.sendMessage(message)
                     }
                 } else queue!!.reset()
             }
             "quitting" -> {
                 if (isServer) {
-                    for (tempClient in clientList.clientList) {
+                    for (tempClient in clientList) {
                         if (tempClient.id != message.sender) {
                             tempClient.sendMessage(TextMessage("quitting",message.sender))
                         }
                     }
-                    clientList.remove(clientList.getClient(message.sender))
+                    clientList.remove(clientList.getClientFromPseudo(message.sender))
                 }
                 else {
                     lobbyScreen.removePlayer(message.target)
@@ -231,9 +223,9 @@ class Decryptor {
             }
             "changePseudo" -> {
                 if (isServer) {
-                    val tempClient = clientList.getClient(message.sender)
+                    val tempClient = clientList.getClientFromPseudo(message.sender)
                     tempClient.id = message.target
-                    for (tempClient in clientList.clientList) {
+                    for (tempClient in clientList) {
                         if (tempClient.id != message.sender) {
                             println(tempClient.id)
                             tempClient.sendMessage(message)
@@ -251,7 +243,7 @@ class Decryptor {
             }
             "changeAvatar" -> {
                 if (isServer) {
-                    for (tempClient in clientList.clientList) {
+                    for (tempClient in clientList) {
                         if (tempClient.id != message.sender) {
                             tempClient.sendMessage(message)
                         }
@@ -273,11 +265,11 @@ class Decryptor {
             "wantsToRestart" -> {
                 if (isServer) {
                     numberPeopleWantRestart++
-                    for (client in clientList.clientList) {
+                    for (client in clientList) {
                         client.sendMessage(message)
                     }
-                    if (numberPeopleWantRestart == kotlin.math.max((clientList.clientList.size - 1), 2)) {
-                        for (client in clientList.clientList) {
+                    if (numberPeopleWantRestart == kotlin.math.max((clientList.size - 1), 2)) {
+                        for (client in clientList) {
                             client.sendMessage(TextMessage("restart"))
                         }
                     }
