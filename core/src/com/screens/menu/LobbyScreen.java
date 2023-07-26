@@ -19,7 +19,7 @@ import com.screens.MagicGame;
 import com.screens.game.BaseActor;
 import com.screens.game.board.GameScreen;
 import com.screens.game.board.Player;
-import com.utils.Functions;
+import com.utils.FunctionsKt;
 import com.utils.Multiplayer;
 
 import java.util.ArrayList;
@@ -135,7 +135,7 @@ public class LobbyScreen extends BaseScreen {
             }
 
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-                Functions.quit();
+                FunctionsKt.quit();
             }
         });
 

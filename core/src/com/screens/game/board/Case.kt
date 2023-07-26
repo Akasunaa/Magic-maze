@@ -1,312 +1,289 @@
-package com.screens.game.board;
+package com.screens.game.board
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Texture;
-import com.screens.game.BaseActor;
-import com.utils.Colors;
-import com.utils.TileAndCases;
+import com.badlogic.gdx.Gdx
+import com.badlogic.gdx.graphics.Texture
+import com.screens.GameScreens
+import com.screens.game.BaseActor
+import com.utils.*
+import java.io.Serializable
 
-import java.io.Serializable;
+class Case(number: CaseType, @field:Transient private var tile: Tile) : Serializable {
+    @Transient
+    var caseList = MutableList<Case?>(4) { null }
+    var x = 0
+    var y = 0
+    var pawn: Pawn? = null
+    var isValid = false
+    private var isShowed = false
 
-import static com.screens.GameScreens.gameScreen;
-import static com.screens.game.board.CaseCorrespondance.*;
-import static com.utils.Directions.*;
-import static com.utils.Functions.modulo;
-import static com.utils.MainConstants.batch;
-import static com.utils.TileAndCases.*;
+    @Transient
+    private var shortcut: Case? = null
 
-public class Case implements Serializable {
-    public transient Case[] caseList = new Case[4];
+    @Transient
+    private var elevator: Case? = null
 
-    int x;
-    int y;
+    @Transient
+    private var greenDot: BaseActor? = null
 
-    boolean isAccessible; // Je suis même pas sûr qu'on l'utilise ça
-    boolean hasPortal;
-    boolean hasHourglass;
-    boolean isExit;
-    boolean isEntrance;
-    boolean hasWeapon;
-    boolean isFinalExit;
-    public Pawn pawn = null;
-
-
-    boolean isValid = false; // Utile pour le déplacement du pion
-    private boolean isShowed = false;
-    private transient Case shortcut;
-    private transient Case elevator;
-    int color;
-    private transient Tile tile; // Il faut éviter de faire un StackOverFlowError lors de la conversion en Json ou de la serialization
-
-    private transient BaseActor greenDot;
-    private transient BaseActor redDot;
-
-    Case(int number, Tile tile) {
-        this.tile = tile;
-        isAccessible = (number != unnacessible);
-        color = number % 10;
-        isEntrance = number == entrance;
-        hasHourglass = number == hourglass;
-        isExit = number / 10 == exit / 10;
-        hasPortal = number / 10 == portal / 10;
-        hasWeapon = number / 10 == weapon / 10;
-        isFinalExit = number / 10 == finalExit / 10;
-    }
-
-    void getNeighbours(int[][] horizontalWalls, int[][] verticalWalls) {
-        x = tile.getCaseCoordinates(this)[0];
-        y = tile.getCaseCoordinates(this)[1];
+    @Transient
+    private var redDot: BaseActor? = null
+    fun getNeighbours(horizontalWalls: List<List<Int>>, verticalWalls: List<List<Int>>) {
+        x = tile.getCaseCoordinates(this)[0]
+        y = tile.getCaseCoordinates(this)[1]
         // Voisin en haut
-        if (y == 0 || horizontalWalls[y - 1][x] == 1) caseList[0] = null;
-        else caseList[0] = tile.caseList[y - 1][x];
+        if (y == 0 || horizontalWalls[y - 1][x] == 1) caseList[0] = null else caseList[0] = tile.caseList[y - 1][x]
         // Voisin de droite
-        if (x == 3 || verticalWalls[y][x] == 1) caseList[1] = null;
-        else caseList[1] = tile.caseList[y][x + 1];
+        if (x == 3 || verticalWalls[y][x] == 1) caseList[1] = null else caseList[1] = tile.caseList[y][x + 1]
         // Voisin du bas
-        if (y == 3 || horizontalWalls[y][x] == 1) caseList[2] = null;
-        else caseList[2] = tile.caseList[y + 1][x];
+        if (y == 3 || horizontalWalls[y][x] == 1) caseList[2] = null else caseList[2] = tile.caseList[y + 1][x]
         // Voisin de gauche
-        if (x == 0 || verticalWalls[y][x - 1] == 1) caseList[3] = null;
-        else caseList[3] = tile.caseList[y][x - 1];
+        if (x == 0 || verticalWalls[y][x - 1] == 1) caseList[3] = null else caseList[3] = tile.caseList[y][x - 1]
     }
 
-    void load(Tile tile, Case[] caseList) {// Comme d'habitude, obligatoire pour la sérialisation
-        this.tile = tile;
-        this.caseList = caseList;
-        greenDot = new BaseActor(new Texture("Game/Tiles/greenDot.png"));
-        greenDot.setVisible(false);
-        redDot = new BaseActor(new Texture("Game/Tiles/redDot.png"));
-        redDot.setVisible(false);
-        setSpriteCoordinates();
-        gameScreen.getMainStage().addActor(greenDot);
-        gameScreen.getMainStage().addActor(redDot);
+    fun load(tile: Tile, caseList: List<Case?>) { // Comme d'habitude, obligatoire pour la sérialisation
+        this.tile = tile
+        this.caseList = caseList.toMutableList()
+        greenDot = BaseActor(Texture("Game/Tiles/greenDot.png"))
+        greenDot!!.isVisible = false
+        redDot = BaseActor(Texture("Game/Tiles/redDot.png"))
+        redDot!!.isVisible = false
+        setSpriteCoordinates()
+        GameScreens.gameScreen.mainStage.addActor(greenDot)
+        GameScreens.gameScreen.mainStage.addActor(redDot)
     }
 
-    float getX(int x) {
-        return tile.x + offset + (x * caseSize);
+    fun getX(x: Int): Float {
+        return tile.x + offset + x * caseSize
     }
 
-    float getY(int y) {
-        return tile.y + offset + (y * caseSize);
+    fun getY(y: Int): Float {
+        return tile.y + offset + y * caseSize
     }
 
-    private void setSpriteCoordinates() { // self explanatory
-        float tempX = getX(x);
-        float tempY = getY(y);
-        greenDot.setX(tempX);
-        greenDot.setY(tempY);
-        redDot.setX(tempX);
-        redDot.setY(tempY);
+    private fun setSpriteCoordinates() {
+        val tempX = getX(x)
+        val tempY = getY(y)
+        greenDot!!.x = tempX
+        greenDot!!.y = tempY
+        redDot!!.x = tempX
+        redDot!!.y = tempY
     }
 
-    void setSize(float size) {
-        greenDot.setSize(size, size);
-        redDot.setSize(size, size);
+    fun setSize(size: Float) {
+        greenDot!!.setSize(size, size)
+        redDot!!.setSize(size, size)
     }
 
-    void updateCoordinates() {
-        int[] xy = tile.getCaseCoordinates(this);
+    fun updateCoordinates() {
+        val xy = tile.getCaseCoordinates(this)
         if (tile.rotation == 0) {
-            x = xy[0];
-            y = xy[1];
+            x = xy[0]
+            y = xy[1]
         }
         if (tile.rotation == 3) {
-            x = xy[1];
-            y = 3 - xy[0];
+            x = xy[1]
+            y = 3 - xy[0]
         }
         if (tile.rotation == 2) {
-            x = 3 - xy[0];
-            y = 3 - xy[1];
+            x = 3 - xy[0]
+            y = 3 - xy[1]
         }
         if (tile.rotation == 1) {
-            x = 3 - xy[1];
-            y = xy[0];
+            x = 3 - xy[1]
+            y = xy[0]
         }
-        setSpriteCoordinates();
+        setSpriteCoordinates()
     }
 
-    void show() {
-        isShowed = true;
-        isValid = true;
-        redDot.setVisible(isShowed);
-        greenDot.setVisible(false);
+    fun show() {
+        isShowed = true
+        isValid = true
+        redDot!!.isVisible = isShowed
+        greenDot!!.isVisible = false
     }
 
-    void hide() {
-        isShowed = false;
-        isValid = false;
-        redDot.setVisible(isShowed);
-        greenDot.setVisible(isValid);
-
+    fun hide() {
+        isShowed = false
+        isValid = false
+        redDot!!.isVisible = isShowed
+        greenDot!!.isVisible = isValid
     }
 
-    void explored() {
-        isValid = true;
-        greenDot.setVisible(!isShowed);
+    fun explored() {
+        isValid = true
+        greenDot!!.isVisible = !isShowed
     }
 
-    void unexplored() {
-        isValid = false;
-        greenDot.setVisible(isValid);
+    fun unexplored() {
+        isValid = false
+        greenDot!!.isVisible = isValid
     }
 
-    void used(){
-        Texture t = new Texture(Gdx.files.internal("Game/Tiles/used.png"));
-        BaseActor cross = new BaseActor(t);
-        cross.setOrigin((int) (cross.getWidth()/2));
-        cross.setPosition(getX(x),getY(y));
-        gameScreen.getMainStage().addActor(cross);
+    fun used() {
+        val t = Texture(Gdx.files.internal("Game/Tiles/used.png"))
+        val cross = BaseActor(t)
+        cross.setOrigin((cross.width / 2).toInt())
+        cross.setPosition(getX(x), getY(y))
+        GameScreens.gameScreen.mainStage.addActor(cross)
     }
 
-    void draw() {
-        if (isShowed) redDot.draw(batch, 1);
-        else if (isValid) greenDot.draw(batch, 1);
+    fun draw() {
+        if (isShowed) redDot!!.draw(MainConstants.batch, 1f) else if (isValid) greenDot!!.draw(MainConstants.batch, 1f)
     }
 
-    private boolean seen = false;
+    private var seen = false
 
-    void explore(Player player) {
-        int index; // On utilise index pour éviter de devoir réécrire les modulos trop de fois
-        Player tempPlayer = player.rotate(tile.rotation);
-        if (!seen && isAccessible && (player.pawn == pawn || pawn == null)) {
-            seen = true; // Parcours de graphe classique pour éviter les StackOverflow
-            explored();
+    val accessible: Boolean
+    val hasPortal: Boolean
+    val entrance: Boolean
+    var hasHourglass: Boolean
+    var exit: Boolean
+    val hasWeapon: Boolean
+    val finalExit: Boolean
+    val color: Color
+
+    init {
+        accessible = number != CaseType.BasicCase.INACCESSIBLE
+        entrance = number == CaseType.BasicCase.ENTRANCE
+        hasHourglass = number == CaseType.BasicCase.HOURGLASS
+        exit = number is CaseType.ColoredCase.Exit
+        hasPortal = number is CaseType.ColoredCase.Portal
+        hasWeapon = number is CaseType.ColoredCase.Weapon
+        finalExit = number is CaseType.ColoredCase.FinalExit
+        if (number is CaseType.ColoredCase) {
+            color = number.color
+        } else color = Color.NONE
+    }
+
+    fun explore(player: Player) {
+        var index: Int // On utilise index pour éviter de devoir réécrire les modulos trop de fois
+        val tempPlayer = player.rotate(tile.rotation)
+        if (!seen && accessible && (player.pawn === pawn || pawn == null)) {
+            seen = true // Parcours de graphe classique pour éviter les StackOverflow
+            explored()
             if (tempPlayer.north) {
-                index = modulo(north + tile.rotation, numberDirections);
+                index = modulo(Directions.NORTH + tile.rotation, Directions.values().size)
                 if (caseList[index] != null) {
-                    caseList[index].explore(player);
+                    caseList[index]!!.explore(player)
                 }
             }
-
             if (tempPlayer.west) {
-                index = modulo(west + tile.rotation, numberDirections);
+                index = modulo(Directions.WEST + tile.rotation, Directions.values().size)
                 if (caseList[index] != null) {
-                    caseList[index].explore(player);
+                    caseList[index]!!.explore(player)
                 }
             }
-
             if (tempPlayer.south) {
-                index = modulo(south + tile.rotation, numberDirections);
+                index = modulo(Directions.SOUTH + tile.rotation, Directions.values().size)
                 if (caseList[index] != null) {
-                    caseList[index].explore(player);
+                    caseList[index]!!.explore(player)
                 }
             }
-
             if (tempPlayer.east) {
-                index = modulo(east + tile.rotation, numberDirections);
+                index = modulo(Directions.EAST + tile.rotation, Directions.values().size)
                 if (caseList[index] != null) {
-                    caseList[index].explore(player);
+                    caseList[index]!!.explore(player)
                 }
             }
             if (player.escalatorTaker) {
                 if (elevator != null) {
-                    elevator.explore(player);
+                    elevator!!.explore(player)
                 }
             }
-
-            if (player.pawn.getColor() == Colors.orange) {
+            if (player.pawn.color === Color.ORANGE) {
                 if (shortcut != null) {
-                    shortcut.explore(player);
+                    shortcut!!.explore(player)
                 }
             }
-
-            if (player.portalTaker && !isInPhaseB){
-                for (Case tempCase : TileAndCases.portalList[player.pawn.getColor()]){
-                    tempCase.explore(player);
+            if (player.portalTaker && !isInPhaseB) {
+                for (tempCase in portalList[player.pawn.color]!!) {
+                    tempCase.explore(player)
                 }
             }
         }
     }
 
-    void revert(Player player) {
-        int index; // On utilise index pour éviter de devoir réécrire les modulos trop de fois
-        Player tempPlayer = player.rotate(tile.rotation);
+    fun revert(player: Player) {
+        var index: Int // On utilise index pour éviter de devoir réécrire les modulos trop de fois
+        val tempPlayer = player.rotate(tile.rotation)
         if (seen) {
-            seen = false;
+            seen = false
             if (tempPlayer.north) {
-                index = modulo(north + tile.rotation, numberDirections);
+                index = modulo(Directions.NORTH + tile.rotation, Directions.values().size)
                 if (caseList[index] != null) {
-                    caseList[index].unexplored();
-                    caseList[index].revert(player);
+                    caseList[index]!!.unexplored()
+                    caseList[index]!!.revert(player)
                 }
             }
-
             if (tempPlayer.west) {
-                index = modulo(west + tile.rotation, numberDirections);
+                index = modulo(Directions.WEST + tile.rotation, Directions.values().size)
                 // Les modulos en Java fonctionnent bizarrement, c'est pour s'assurer d'avoir un truc positif
                 if (caseList[index] != null) {
-                    caseList[index].unexplored();
-                    caseList[index].revert(player);
+                    caseList[index]!!.unexplored()
+                    caseList[index]!!.revert(player)
                 }
             }
-
             if (tempPlayer.south) {
-                index = modulo(south + tile.rotation, numberDirections);
+                index = modulo(Directions.SOUTH + tile.rotation, Directions.values().size)
                 if (caseList[index] != null) {
-                    caseList[index].unexplored();
-                    caseList[index].revert(player);
+                    caseList[index]!!.unexplored()
+                    caseList[index]!!.revert(player)
                 }
             }
-
             if (tempPlayer.east) {
-                index = modulo(east + tile.rotation, numberDirections);
+                index = modulo(Directions.EAST + tile.rotation, Directions.values().size)
                 if (caseList[index] != null) {
-                    caseList[index].unexplored();
-                    caseList[index].revert(player);
+                    caseList[index]!!.unexplored()
+                    caseList[index]!!.revert(player)
                 }
             }
             if (tempPlayer.escalatorTaker) {
                 if (elevator != null) {
-                    elevator.unexplored();
-                    elevator.revert(player);
+                    elevator!!.unexplored()
+                    elevator!!.revert(player)
                 }
             }
-
-            if (player.pawn.getColor() == Colors.orange) {
+            if (player.pawn.color === Color.ORANGE) {
                 if (shortcut != null) {
-                    shortcut.unexplored();
-                    shortcut.revert(player);
+                    shortcut!!.unexplored()
+                    shortcut!!.revert(player)
                 }
             }
-
-            if (player.portalTaker && !isInPhaseB){
-                for (Case tempCase : TileAndCases.portalList[player.pawn.getColor()]){
-                    tempCase.unexplored();
-                    tempCase.revert(player);
+            if (player.portalTaker && !isInPhaseB) {
+                for (tempCase in portalList[player.pawn.color]!!) {
+                    tempCase.unexplored()
+                    tempCase.revert(player)
                 }
             }
         }
     }
 
-    // Je les fait en statique parce que c'est plus pratique
-    static void makeElevator(Case case1, Case case2) {
-        case1.elevator = case2;
-        case2.elevator = case1;
+    fun dispose() {
+        redDot!!.remove()
+        greenDot!!.remove()
     }
 
-    static void makeShortcut(Case case1, Case case2) {
-        case1.shortcut = case2;
-        case2.shortcut = case1;
+    companion object {
+        fun makeElevator(case1: Case, case2: Case) {
+            case1.elevator = case2
+            case2.elevator = case1
+        }
+
+        fun makeShortcut(case1: Case, case2: Case) {
+            case1.shortcut = case2
+            case2.shortcut = case1
+        }
+
+        fun link(case1: Case, case2: Case, direction: Int) {
+            // Direction indique la direction de la case 2 par rapport à la case 1
+            // Exemple: la case 2 est au nord de la case 1
+            // alors direction = 2
+            case1.caseList[modulo(direction - case1.tile.rotation, Directions.values().size)] = case2
+            case2.caseList[modulo(direction + 2 - case2.tile.rotation, Directions.values().size)] = case1
+            case1.exit = false
+            case2.exit = false
+            if (case1.pawn != null) case1.pawn!!.unlock()
+            if (case2.pawn != null) case2.pawn!!.unlock()
+        }
     }
-
-    static void link(Case case1, Case case2, int direction) {
-        // Direction indique la direction de la case 2 par rapport à la case 1
-        // Exemple: la case 2 est au nord de la case 1
-        // alors direction = 2
-        case1.caseList[modulo(direction - case1.tile.rotation, numberDirections)] = case2;
-        case2.caseList[modulo(direction + 2 - case2.tile.rotation, numberDirections)] = case1;
-        case1.isExit = false;
-        case2.isExit = false;
-        if (case1.pawn != null)
-            case1.pawn.unlock();
-        if (case2.pawn != null)
-            case2.pawn.unlock();
-    }
-
-    void dispose() {
-        redDot.remove();
-        greenDot.remove();
-    }
-
-
 }

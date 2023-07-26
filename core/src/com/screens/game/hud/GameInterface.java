@@ -17,12 +17,12 @@ import com.screens.BaseScreen;
 import com.screens.GameScreens;
 import com.screens.MagicGame;
 import com.screens.game.BaseActor;
-import com.utils.Functions;
 import com.utils.Multiplayer;
 
+import static com.utils.FunctionsKt.quit;
 import static com.utils.Multiplayer.courrier;
-import static com.utils.TileAndCases.queue;
-import static com.utils.TileAndCases.tileSize;
+import static com.utils.TileAndCasesKt.getQueue;
+import static com.utils.TileAndCasesKt.getTileSize;
 
 public class GameInterface extends BaseScreen {
     private PlayerOnHUD[] avatars;
@@ -84,7 +84,7 @@ public class GameInterface extends BaseScreen {
         //d'abord les 2 indicateurs de phase en haut à droite qu'on a scanné (un seul est visible à la fois)
         // pour indiquer la phase
         BaseActor phaseA = new BaseActor(new Texture(Gdx.files.internal("interface/phaseA.jpg")));
-        phaseA.setSize(tileSize / 2 + 10, phaseA.getHeight() * (tileSize / 2 + 10) / phaseA.getWidth());
+        phaseA.setSize(getTileSize() / 2 + 10, phaseA.getHeight() * (getTileSize() / 2 + 10) / phaseA.getWidth());
         phaseA.setPosition(viewWidth - phaseA.getWidth(), viewHeight - phaseA.getHeight());
         isPhaseA = true;
         uiStage.addActor(phaseA);
@@ -141,7 +141,7 @@ public class GameInterface extends BaseScreen {
         float originX = viewWidth - playerSize - rightPadding;
         float xStep = (phaseA.getWidth() - rightPadding) / 2;
 
-        float upPadding = (viewHeight - phaseA.getHeight() - volume.getHeight() - tileSize/2 - playerSize*2)/4;
+        float upPadding = (viewHeight - phaseA.getHeight() - volume.getHeight() - getTileSize() / 2 - playerSize * 2) / 4;
         // En fait, c'est un calcul à la louche de l'espace restant
         // Je dit à la louche parce qu'on prends pas en compte la taille des sone de texte par exemple
         float originY = viewHeight - phaseA.getHeight() - volume.getHeight() - playerSize - upPadding;
@@ -159,79 +159,10 @@ public class GameInterface extends BaseScreen {
         ping.setTouchable(Touchable.disabled);
         uiStage.addActor(ping);
         pingSound = Gdx.audio.newSound(Gdx.files.internal("Music&Sound/Ping.mp3"));
-        // Vestige de l'époque où les joueurs sur les HUD étaient gérés à la main
-        // ça c'était pour les placeholders
-//        for (int i = Multiplayer.playerList.size(); i < 4; i++) {
-//            avatars[i] = new BaseActor(new Texture(Gdx.files.internal("interface/kuro" + i + ".png")));
-//            avatars[i].setSize(90, 90);
-//            avatars[i].setPosition(viewWidth - avatars[i].getWidth() - 45, viewHeight - avatars[i].getHeight() - 225 - 135 * i);
-//            uiStage.addActor(avatars[i]);
-//            final int temp = i;
-//            avatars[i].addListener(new InputListener() {
-//                public boolean touchDown(InputEvent ev, float x, float y, int pointer, int button) {
-//                    avatars[temp].addAction(Actions.sequence(
-//                            Actions.color(new Color(1,0,0,1),(float)0.20),
-//                            Actions.color(new Color(1,1,1,1),(float)0.20)));
-//                    // What
-//                    // the
-//                    // fuck
-//                    // LibGDX c'est cool jusqu'à ce que tu soit obligé de faire des trucs comme ça
-//                    // Pour l'expliquer simplement: plutôt que de créer l'action en final en dehors de toute ça,
-//                    // Il faut la créer nous même à chaque fois que l'inputListener est appellé
-//                    // Désolé d'avoir craché sur les InputListener de LibGDX, ils sont très bien.
-//                    return true;
-//                }
-//            });
-//        }
 
-        //la c'est le compteur de plaques restantes en bas a droite
-
-        textTilesLeft = new Label(queue.textTileLeft, game.skin, "tilesLeftStyle");
-//        textTilesLeft.setFontScale(0.8f);
-        textTilesLeft.setPosition(viewWidth - tileSize - textTilesLeft.getWidth() / 2 - 50, 5);
+        textTilesLeft = new Label(getQueue().textTileLeft, game.skin, "tilesLeftStyle");
+        textTilesLeft.setPosition(viewWidth - getTileSize() - textTilesLeft.getWidth() / 2 - 50, 5);
         uiStage.addActor(textTilesLeft);
-
-        // Vestige de l'époque où on devait charger les pions à la main
-
-//        loadPawnButton = new TextButton("Afficher le pion "+ getColor(currentColor), game.skin, "uiTextButtonStyle");
-//        loadPawnButton.addListener(new InputListener() {
-//            public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
-//                return true;
-//            }
-//            public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
-//                if (!tileList.isEmpty()) {
-//                    pawnList.add(new Pawn(currentColor));
-//                    pawnList.get(currentColor).setFirstCase();
-//                    pawnList.get(currentColor).load();
-//                    currentColor ++;
-//                    loadPawnButton.setText("Afficher le pion "+ getColor(currentColor));
-//                    if (currentColor >= 4) {
-//                        loadPawnButton.remove();
-//                    }
-//                }
-//
-//            }
-//        });
-//        uiStage.addActor(loadPawnButton);
-//        loadPawnButton.setPosition(10,1000);
-
-        //Ici c'est le bordel rajouté par Nathan
-        // Pour l'instant on touche pas à ça!!!!
-        // ça fait des mois que c'est là, il faudrait songer à en faire quelque chose lol
-//        Animatedhourglass = new AnimatedActor();
-//        TextureRegion[] hourglassFrames = new TextureRegion[118];
-//        for (int m = 1; m < 119; m++) {
-//            String hourglassFileName = "GameUIAssets/hourglassAssets/frame(" + m +").gif";
-//            Texture hourglassTex = new Texture(Gdx.files.internal(hourglassFileName));
-//            hourglassTex.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
-//            hourglassFrames[m-1] = new TextureRegion(hourglassTex);
-//        }
-//        Array<TextureRegion> hourglassFramesArray = new Array<TextureRegion>(hourglassFrames);
-//        anim = new Animation(0.1f, hourglassFramesArray, Animation.PlayMode.LOOP);
-//        Animatedhourglass.setAnimation(anim);
-//        Animatedhourglass.setOrigin(hourglass.getWidth() / 2, hourglass.getHeight() / 2);
-//        Animatedhourglass.setPosition(200, 600);
-//        mainStage.addActor(Animatedhourglass);
 
         // Gestion de l'horloge
         Clock.clock = new Clock(game.skin);
@@ -296,7 +227,7 @@ public class GameInterface extends BaseScreen {
 
                     public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
                         dispose();
-                        Functions.quit();
+                        quit();
                     }
                 });
         Label volumeLabel = new Label("Volume", game.skin, "uiLabelStyle");
@@ -315,16 +246,6 @@ public class GameInterface extends BaseScreen {
         pauseOverlay.add(audioSlider).width(400);
 
         pauseOverlay.setVisible(false);
-
-        // Overlay
-//        uiTable.pad(10);
-//        uiTable.add(pseudoLabel);
-//        uiTable.add(currentAvatar).padLeft(50);
-//        uiTable.add(pauseButton).expandX();
-//        uiTable.row();
-//        uiTable.add().colspan(3).expandY();
-
-
     }
 
     public void setText(String text) {

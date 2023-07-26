@@ -5,7 +5,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.math.Vector3;
 
-import static com.utils.Functions.mouseInput;
+import static com.utils.FunctionsKt.mouseInput;
 import static com.utils.MainConstants.camera;
 public class MouseWheelChecker implements InputProcessor {
 

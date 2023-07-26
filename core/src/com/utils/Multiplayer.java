@@ -18,9 +18,8 @@ public class Multiplayer {
     public static ClientList clientList = new ClientList();
     public static Decryptor key = new Decryptor();
     public static boolean isServer = false;
-    public static int port = 6969;
-    public static String serverIP = "127.0.0.1"; //; "157.159.41.36"
-    // L'ip de mon PC fixe
+    public static int port = 8080;
+    public static String serverIP = "127.0.0.1";
     public static String ip;
 
     public static int numberPeopleWantRestart = 0;

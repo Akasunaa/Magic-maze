@@ -1,133 +1,126 @@
-package com.utils;
+package com.utils
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
-import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.math.Interpolation;
-import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.math.Vector3;
-import com.multiplayer.messages.TextMessage;
-import com.screens.game.board.Case;
-import com.screens.game.board.Pawn;
-import com.screens.game.board.Tile;
+import com.badlogic.gdx.Gdx
+import com.badlogic.gdx.Input
+import com.badlogic.gdx.graphics.OrthographicCamera
+import com.badlogic.gdx.math.Interpolation
+import com.badlogic.gdx.math.Vector2
+import com.badlogic.gdx.math.Vector3
+import com.multiplayer.messages.TextMessage
+import com.screens.game.board.Case
+import com.screens.game.board.Pawn
+import com.screens.game.board.Tile
 
-import static com.utils.Colors.getColor;
-import static com.utils.MainConstants.camera;
-import static com.utils.TileAndCases.pawnList;
-import static com.utils.TileAndCases.tileList;
+fun modulo(a: Int, b: Int): Int {
+    return (a % b + b) % b
+}
 
-public class Functions {
+fun mouseInput(): Vector2 {
+    val temp: Vector3 =
+        MainConstants.camera.unproject(Vector3(Gdx.input.getX().toFloat(), Gdx.input.getY().toFloat(), 0f))
+    return Vector2(temp.x, temp.y)
+}
 
-    public static int modulo(int a, int b) {
-        return (a % b + b) % b;
+fun mouseInput(camera: OrthographicCamera): Vector2 {
+    val temp: Vector3 = camera.unproject(Vector3(Gdx.input.getX().toFloat(), Gdx.input.getY().toFloat(), 0f))
+    return Vector2(temp.x, temp.y)
+}
+
+fun quit() {
+    if (Multiplayer.isServer) {
+        Multiplayer.serverMaker.killThread()
+    } else {
+        Multiplayer.courrier.sendMessage(TextMessage("quitting"))
     }
+    Multiplayer.courrier.killThread()
+    System.exit(0)
+}
 
-    public static Vector2 mouseInput() {
-        Vector3 temp = camera.unproject(new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0f));
-        return new Vector2(temp.x, temp.y);
-    }
+fun snap(mousePosition: Vector2) {
+    // Beaucoup de debug ici
+    // C'est essentiellement un changement de base, un arrondissement à l'entier, puis on remet la bonne base
+    //System.out.println(mousePosition);
+    mousePosition.sub(origin)
+    //System.out.println(mousePosition);
+    mousePosition.mul(newBaseInvert)
+    //System.out.println(mousePosition);
+    mousePosition.x = Math.round(mousePosition.x).toFloat()
+    mousePosition.y = Math.round(mousePosition.y).toFloat()
+    //System.out.println(mousePosition);
+    mousePosition.mul(newBase)
+    //System.out.println(mousePosition);
+    mousePosition.add(origin)
+    //System.out.println(mousePosition);
+}
 
-    public static Vector2 mouseInput(OrthographicCamera camera) {
-        Vector3 temp = camera.unproject(new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0f));
-        return new Vector2(temp.x, temp.y);
-    }
-
-    public static void quit() {
-        if (Multiplayer.isServer) {
-            Multiplayer.serverMaker.killThread();
-        }
-        else {
-            Multiplayer.courrier.sendMessage(new TextMessage("quitting"));
-        }
-        Multiplayer.courrier.killThread();
-        System.exit(0);
-    }
-
-    public static void snap(Vector2 mousePosition) {
-        // Beaucoup de debug ici
-        // C'est essentiellement un changement de base, un arrondissement à l'entier, puis on remet la bonne base
-        //System.out.println(mousePosition);
-        mousePosition.sub(TileAndCases.origin);
-        //System.out.println(mousePosition);
-        mousePosition.mul(TileAndCases.newBaseInvert);
-        //System.out.println(mousePosition);
-        mousePosition.x = Math.round(mousePosition.x);
-        mousePosition.y = Math.round(mousePosition.y);
-        //System.out.println(mousePosition);
-        mousePosition.mul(TileAndCases.newBase);
-        //System.out.println(mousePosition);
-        mousePosition.add(TileAndCases.origin);
-        //System.out.println(mousePosition);
-    }
-
-    public static Tile getTile() {
-        for (Tile tile : TileAndCases.tileList) {
-            if ((tile.x < mouseInput().x) && (mouseInput().x < tile.x + TileAndCases.tileSize) && (tile.y < mouseInput().y) && (mouseInput().y < tile.y + TileAndCases.tileSize)) {
-                return tile;
+val tile: Tile?
+    get() {
+        for (tile in tileList!!) {
+            if (tile.x < mouseInput().x && mouseInput().x < tile.x + tileSize && tile.y < mouseInput().y && mouseInput().y < tile.y + tileSize) {
+                return tile
             }
         }
-        return null;
+        return null
     }
 
-    public static Tile getTile(Vector2 mousePosition) {
-        for (Tile tile : TileAndCases.tileList) {
-            if ((tile.x < mousePosition.x) && (mousePosition.x < tile.x + TileAndCases.tileSize) && (tile.y < mousePosition.y) && (mousePosition.y < tile.y + TileAndCases.tileSize)) {
-                return tile;
-            }
-        }
-        return null;
-    }
-    static float step = 20;
-    static Vector3 target;
-    public static void updateCamera() {
-        target = new Vector3();
-        if (Gdx.input.isKeyPressed(Input.Keys.Z)) target.add(0f, 1, 0f);
-        if (Gdx.input.isKeyPressed(Input.Keys.Q)) target.add(-1, 0f, 0f);
-        if (Gdx.input.isKeyPressed(Input.Keys.S)) target.add(0f, -1, 0f);
-        if (Gdx.input.isKeyPressed(Input.Keys.D)) target.add(1, 0f, 0f);
-        if (!target.isZero()) {
-            target.scl(step*camera.zoom);
-            target.add(camera.position);
-            for (int loop = 1; loop <= 50; loop++) {
-                camera.position.interpolate(target, 0.1f, Interpolation.smooth);
-                camera.update();
-            }
+fun getTile(mousePosition: Vector2): Tile? {
+    for (tile in tileList!!) {
+        if (tile.x < mousePosition.x && mousePosition.x < tile.x + tileSize && tile.y < mousePosition.y && mousePosition.y < tile.y + tileSize) {
+            return tile
         }
     }
-    public static Case findCase() {
-        for (Tile tile : tileList) {
-            if (tile.x <= Functions.mouseInput().x && Functions.mouseInput().x <= tile.x + tile.getSize() &&
-                    tile.y <= Functions.mouseInput().y && Functions.mouseInput().y <= tile.y + tile.getSize()) {
-                try {
-                    return tile.getCase(Functions.mouseInput());
-                } catch (ArrayIndexOutOfBoundsException e) {
-                    System.out.println("Clicked border of Tile in Pawn.findCase");
-                }
-            }
-        }
-        return null;
-    }
+    return null
+}
 
-    public static Case findCase(Vector2 coordinates) {
-        for (Tile tile : tileList) {
-            if (tile.x <= coordinates.x && coordinates.x <= tile.x + tile.getSize() &&
-                    tile.y <= coordinates.y && coordinates.y <= tile.y + tile.getSize()) {
-                try {
-                    return tile.getCase(coordinates);
-                } catch (ArrayIndexOutOfBoundsException e) {
-                    System.out.println("Clicked border of Tile in Pawn.findCase");
-                }
-            }
+var step = 20f
+var target: Vector3? = null
+fun updateCamera() {
+    target = Vector3()
+    if (Gdx.input.isKeyPressed(Input.Keys.Z)) target!!.add(0f, 1f, 0f)
+    if (Gdx.input.isKeyPressed(Input.Keys.Q)) target!!.add(-1f, 0f, 0f)
+    if (Gdx.input.isKeyPressed(Input.Keys.S)) target!!.add(0f, -1f, 0f)
+    if (Gdx.input.isKeyPressed(Input.Keys.D)) target!!.add(1f, 0f, 0f)
+    if (!target!!.isZero()) {
+        target!!.scl(step * MainConstants.camera.zoom)
+        target!!.add(MainConstants.camera.position)
+        for (loop in 1..50) {
+            MainConstants.camera.position.interpolate(target, 0.1f, Interpolation.smooth)
+            MainConstants.camera.update()
         }
-        return null;
     }
+}
 
-    public static Pawn getPawn(String color) {
-        for (Pawn pawn : pawnList) {
-            if (getColor(pawn.getColor()).equals(color)) {
-                return pawn;
+fun findCase(): Case? {
+    for (tile in tileList!!) {
+        if (tile.x <= mouseInput().x && mouseInput().x <= tile.x + tile.size && tile.y <= mouseInput().y && mouseInput().y <= tile.y + tile.size) {
+            try {
+                return tile.getCase(mouseInput())
+            } catch (e: ArrayIndexOutOfBoundsException) {
+                println("Clicked border of Tile in Pawn.findCase")
             }
         }
-        return null;
     }
+    return null
+}
+
+fun findCase(coordinates: Vector2): Case? {
+    for (tile in tileList!!) {
+        if (tile.x <= coordinates.x && coordinates.x <= tile.x + tile.size && tile.y <= coordinates.y && coordinates.y <= tile.y + tile.size) {
+            try {
+                return tile.getCase(coordinates)
+            } catch (e: ArrayIndexOutOfBoundsException) {
+                println("Clicked border of Tile in Pawn.findCase")
+            }
+        }
+    }
+    return null
+}
+
+fun getPawn(color: String): Pawn? {
+    for (pawn in pawnList) {
+        if (pawn.color.toString() == color) {
+            return pawn
+        }
+    }
+    return null
 }

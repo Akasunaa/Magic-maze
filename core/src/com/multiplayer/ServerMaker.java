@@ -71,8 +71,7 @@ public class ServerMaker {
                     if (mapper.readValue(line, Message.class).getAction().equals("confirm")) {
                         System.out.println("Server: " + client.getId() + " confirmed reception");
                         return;
-                    }
-                    else {
+                    } else {
                         System.out.println("Serveur: Erreur de confirmation");
                     }
                 } catch (IOException e) {
@@ -80,8 +79,8 @@ public class ServerMaker {
                 }
                 // En gros là on dit au serveur d'attendre que tous les clients aient bien recu la Queue pour continuer
             }
-            private Player[] choosePlayer() {
-                // On fait ça rapidement
+
+            private List<Player> choosePlayer() {
                 // Mais au moins ça fonctionne
                 Player[] output = new Player[]{new Player(true, true, true, true, true, true, true)};
                 // Sous entendu, s'il y a un seul joueur
@@ -115,7 +114,7 @@ public class ServerMaker {
                 Collections.shuffle(temp);
                 Collections.shuffle(temp);
                 Collections.shuffle(temp);
-                return (Player[]) temp.toArray();
+                return temp;
             }
 
             private void catchMessage() {
@@ -170,9 +169,9 @@ public class ServerMaker {
                 minimes (on ne recoit pas les assignements des joueurs, bouhouhou)
                  */
 
-                Player[] newPlayerList = choosePlayer();
+                List<Player> newPlayerList = choosePlayer();
                 for (int i = 0; i < playerList.size(); i++) {
-                    AssignPlayer message = new AssignPlayer(newPlayerList[i], playerList.get(i).pseudo);
+                    AssignPlayer message = new AssignPlayer(newPlayerList.get(i), playerList.get(i).pseudo);
                     // I am once again asking you not to overload the client
                     for (Client tempClient : clientList.clientList) {
                         System.out.println("Server: Sent Assigned " + message.getTarget() + " to " + tempClient.getPlayer().pseudo);
@@ -192,9 +191,7 @@ public class ServerMaker {
                 }
                 try {
                     barrierTwo.await();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                } catch (BrokenBarrierException e) {
+                } catch (InterruptedException | BrokenBarrierException e) {
                     e.printStackTrace();
                 }
                 // Boucle qui tourne quand on est en jeu

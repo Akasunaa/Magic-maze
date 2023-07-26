@@ -12,12 +12,11 @@ import com.screens.GameScreens.gameScreen
 import com.screens.GameScreens.lobbyScreen
 import com.screens.game.board.Player
 import com.screens.game.board.Queue
-import com.utils.Functions
-import com.utils.Functions.quit
 import com.utils.Multiplayer.*
-import com.utils.TileAndCases
-import java.lang.Integer.max
-import java.util.Objects.isNull
+import com.utils.findCase
+import com.utils.getPawn
+import com.utils.queue
+import com.utils.quit
 
 class Decryptor {
     fun decryptMessage(tempMessage: String, isServer: Boolean) {
@@ -54,8 +53,7 @@ class Decryptor {
                     }
                     "Queue" -> {
                         println("$suffix: Getting a Queue")
-                        if (TileAndCases.queue==null) TileAndCases.queue =
-                            Queue(message.payload)
+                        if (com.utils.queue == null) com.utils.queue = (Queue(message.payload))
 //                        println("Blocking in Decryptor Queue")
 //                        cyclicBarrier.await()
 //                        println("Unblocking in Decryptor Queue")
@@ -104,8 +102,8 @@ class Decryptor {
                 }
             }
             "wantToTakePawn" -> {
-                val tempPawn = Functions.getPawn(message.target)
-                if (isNull(tempPawn.player)) {
+                val tempPawn = getPawn(message.target)
+                if (tempPawn != null && tempPawn.player == null) {
                     clientList.getClient(message.sender).player.takesPawn(tempPawn)
                     clientList.getClient(message.sender).sendMessage(Answer(true))
                 } else {
@@ -113,7 +111,7 @@ class Decryptor {
                 }
             }
             "movingPawn" -> {
-                val tempPawn = Functions.getPawn(message.target)
+                val tempPawn = getPawn(message.target)
                 if (isServer) {
                     for (tempClient in clientList.clientList) {
                         if (tempClient.id != message.sender) {
@@ -122,7 +120,7 @@ class Decryptor {
                     }
                 }
                 else {
-                    tempPawn.setTarget(message.coordinates[0], message.coordinates[1])
+                    tempPawn!!.setTarget(message.coordinates[0], message.coordinates[1])
 //                    try {
 //                        // Try and do a bit of interpolation here
 //                        // Edit: it's mostly done i think
@@ -135,18 +133,24 @@ class Decryptor {
                 }
             }
             "placePawn" -> {
-                val tempPawn = Functions.getPawn(message.target)
+                val tempPawn = getPawn(message.target)!!
                 tempPawn.sendToTarget()
                 tempPawn.place(tempPawn.position)
             }
             "wantToPlacePawn" -> {
-                val tempPawn = Functions.getPawn(message.target)
-                val tempCase = Functions.findCase(Vector2(message.coordinates[0],message.coordinates[1]))
+                val tempPawn = getPawn(message.target)
+                val tempCase = findCase(Vector2(message.coordinates[0], message.coordinates[1]))
                 if (tempCase?.pawn == null || tempCase.pawn == tempPawn) {
                     clientList.getClient(message.sender).sendMessage(Answer(true))
                     if (message.sender != me.pseudo) clientList.getClient(message.sender).player.dropsPawn(tempPawn)
                     for (tempClient in clientList.clientList) {
-                        tempClient.sendMessage(MovingPawn(message.sender,tempPawn,Vector2(message.coordinates[0],message.coordinates[1])))
+                        tempClient.sendMessage(
+                            MovingPawn(
+                                message.sender,
+                                tempPawn,
+                                Vector2(message.coordinates[0], message.coordinates[1])
+                            )
+                        )
                         Thread.sleep(10)
                         // Bizarre mais obligatoire
                         tempClient.sendMessage(PlacePawn(message.sender, message.target))
@@ -165,7 +169,7 @@ class Decryptor {
                 }
             }
             "isGonnaMoveTile" -> {
-                TileAndCases.queue.makingMovable()
+                queue!!.makingMovable()
             }
             "movingTile" -> {
                 if (isServer) {
@@ -176,7 +180,7 @@ class Decryptor {
                     }
                 }
                 try {
-                    TileAndCases.queue.setSpritePosition(message.coordinates[0],message.coordinates[1])
+                    queue!!.setSpritePosition(message.coordinates[0], message.coordinates[1])
                 } catch (e: Exception) {
                     println("Wrong Numbers Sent")
                 }
@@ -188,11 +192,10 @@ class Decryptor {
                             tempClient.sendMessage(message)
                         }
                     }
-                }
-                else TileAndCases.queue.rotate(message.target.toInt())
+                } else queue!!.rotate(message.target.toInt())
             }
             "placeTile" -> {
-                TileAndCases.queue.place(TileAndCases.queue.spritePosition)
+                queue!!.place(queue!!.spritePosition)
             }
             "wantToPlaceTile" -> {
                 if (true) { // Je vois pas trop ce qu'il faut demander mais bon
@@ -207,7 +210,7 @@ class Decryptor {
                     for (client in clientList.clientList) {
                         client.sendMessage(message)
                     }
-                } else TileAndCases.queue.reset()
+                } else queue!!.reset()
             }
             "quitting" -> {
                 if (isServer) {
@@ -223,12 +226,7 @@ class Decryptor {
                 }
             }
             "stopping" -> {
-//                game.setScreen(MainMenu(game))
-                // Je suis mort de rire
-                // IntelliJ pense que c'est équivalent à game.screen = MainMenu(game)
-                // BWAHAHAHAHAHA
                 quit()
-//                courrier.killThread()
             }
             "changePseudo" -> {
                 if (isServer) {
@@ -277,7 +275,7 @@ class Decryptor {
                     for (client in clientList.clientList) {
                         client.sendMessage(message)
                     }
-                    if (numberPeopleWantRestart == max((clientList.clientList.size - 1),2)) {
+                    if (numberPeopleWantRestart == kotlin.math.max((clientList.clientList.size - 1), 2)) {
                         for (client in clientList.clientList) {
                             client.sendMessage(TextMessage("restart"))
                         }
@@ -289,5 +287,4 @@ class Decryptor {
             else -> println("$suffix: Action not recognized")
         }
     }
-
 }

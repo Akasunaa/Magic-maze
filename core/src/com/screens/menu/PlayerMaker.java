@@ -13,9 +13,8 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.multiplayer.messages.TextMessage;
 import com.screens.BaseScreen;
 import com.screens.game.board.Player;
+import com.utils.FunctionsKt;
 import com.utils.Multiplayer;
-
-import static com.utils.Functions.modulo;
 
 public class PlayerMaker {
     private int avatarNum = 0;
@@ -74,7 +73,7 @@ public class PlayerMaker {
             }
 
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-                avatarNum = modulo(avatarNum + i, 10);
+                avatarNum = FunctionsKt.modulo(avatarNum + i, 10);
                 player.avatarName = BaseScreen.animalNames[avatarNum];
                 Multiplayer.courrier.sendMessage(new TextMessage("changeAvatar",player.avatarName));
                 player.avatar.setTexture(new Texture(Gdx.files.internal("Game/Avatars/" + player.avatarName + ".png")));

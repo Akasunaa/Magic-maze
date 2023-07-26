@@ -5,11 +5,11 @@ import com.badlogic.gdx.graphics.Texture;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.screens.game.BaseActor;
 import com.screens.game.hud.Clock;
+import com.utils.Directions;
 
 import java.io.Serializable;
 
-import static com.utils.Directions.numberDirections;
-import static com.utils.Functions.modulo;
+import static com.utils.FunctionsKt.modulo;
 
 public class Player implements Serializable {
     public boolean north;
@@ -82,16 +82,18 @@ public class Player implements Serializable {
     }
 
     Player rotate(int i) {
-        if (i==0) return this;
-        else return (new Player(south,north,west,east,escalatorTaker,portalTaker, cardChooser,pawn)).rotate(modulo(i-1,numberDirections));
+        if (i == 0) return this;
+        else return
+                (new Player(south, north, west, east, escalatorTaker, portalTaker, cardChooser, pawn))
+                        .rotate(modulo(i - 1, Directions.values().length));
     }
     public void takesPawn(Pawn pawn) {
         Clock.clock.unpause();
         this.pawn = pawn;
-        pawn.player = this;
+        pawn.setPlayer(this);
     }
     public void dropsPawn(Pawn pawn) {
         this.pawn = null;
-        pawn.player = null;
+        pawn.setPlayer(null);
     }
 }

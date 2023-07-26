@@ -11,7 +11,6 @@ import com.multiplayer.messages.tile.AskTakeTile;
 import com.multiplayer.messages.tile.MovingTile;
 import com.multiplayer.messages.tile.RotateTile;
 import com.screens.game.BaseActor;
-import com.utils.Functions;
 import com.utils.Multiplayer;
 
 import java.io.Serializable;
@@ -21,8 +20,8 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
 import static com.screens.GameScreens.gameScreen;
-import static com.utils.TileAndCases.tileList;
-import static com.utils.TileAndCases.tileSize;
+import static com.utils.FunctionsKt.*;
+import static com.utils.TileAndCasesKt.*;
 
 public class Queue implements Serializable {
     // Structure classique pour une pile
@@ -30,13 +29,7 @@ public class Queue implements Serializable {
     Tile head;
     private int numberTilesLeft;
     public String textTileLeft;
-    private void updateText() {
-        if (numberTilesLeft > 0) textTileLeft = "Tuiles restantes: " + numberTilesLeft;
-        try {
-            gameScreen.getInterface().setText(textTileLeft);
-        } catch (NullPointerException e) {
-        }
-    }
+    private final float size = getTileSize() / 2;
 
     // Le sprite sera celui de la tuile en haut de la pile
     private transient BaseActor sprite;
@@ -45,7 +38,14 @@ public class Queue implements Serializable {
     // Coordonées et taille
     private float x;
     private float y;
-    private final float size = tileSize/2;
+
+    private void updateText() {
+        if (numberTilesLeft > 0) textTileLeft = "Tuiles restantes: " + numberTilesLeft;
+        try {
+            gameScreen.getInterface().setText(textTileLeft);
+        } catch (NullPointerException ignored) {
+        }
+    }
     public boolean isFirst = false;
     // Pour placer le premier
 
@@ -104,7 +104,7 @@ public class Queue implements Serializable {
         if (numberTilesLeft > 0) {
             this.head = tail.head;
             this.tail = tail.tail;
-            System.out.println("Client : Removed a Tile, new Tile is number " + head.number);
+            System.out.println("Client : Removed a Tile, new Tile is number " + head.getNumber());
             updateText();
             // Et on recharge le sprite
             loadSprite();
@@ -160,9 +160,8 @@ public class Queue implements Serializable {
 
     public String serialize() {
         if (tail.head == null) {
-            return String.valueOf(head.number);
-        }
-        else return head.number + " " + tail.serialize();
+            return String.valueOf(head.getNumber());
+        } else return head.getNumber() + " " + tail.serialize();
     }
 
     void load() { // Serialization
@@ -224,12 +223,12 @@ public class Queue implements Serializable {
     }
 
     public void place(Vector2 mousePosition) {
-        Functions.snap(mousePosition); // Tu alignes les coordonées sur la "grille"
+        snap(mousePosition); // Tu alignes les coordonées sur la "grille"
         sprite.toBack();
         head.place();
-        tileList.add(head); // On pose la tuile
-        head.x = mousePosition.x; //Bon c'est classique ça
-        head.y = mousePosition.y;
+        getTileList().add(head); // On pose la tuile
+        head.setX(mousePosition.x); //Bon c'est classique ça
+        head.setY(mousePosition.y);
         head.updateAll(); // Mise à jour
         head.startCooldown(); // On veut pas le blinking
         toRemove = true; // Et on enlève la tête
@@ -284,8 +283,8 @@ public class Queue implements Serializable {
         // Edit genre trois (3) mois après avoir écrit ce code ? Sans doute beaucoup plus
         // Hum C'était beaucoup, beaucoup plus simple que ce qui te restait à faire, jeune Hadrien
         // Et ouais, le placement des tuiles c'était drôle, mais faire le multijoueur, ça l'était encore plus
-        Vector2 mousePositionStatic = Functions.mouseInput((OrthographicCamera) shown.getStage().getCamera());
-        Vector2 mousePosition = Functions.mouseInput();
+        Vector2 mousePositionStatic = mouseInput((OrthographicCamera) shown.getStage().getCamera());
+        Vector2 mousePosition = mouseInput();
         // Je le sauvegarde parce qu'on va le modifier
         // Et forcément il faut deux vecteurs différents, parce qu'il nous faut les coordonées
         // dans le référentiel du HUD et dans le reférentiel du plateau
@@ -297,8 +296,8 @@ public class Queue implements Serializable {
                 // c'était une solution simple à laquelle on peut facilement penser
                 // Cependant, j'ai pas trouvé de meilleur solution depuis, et s'il y en a une, je ne sais pas
                 // Si elle vaut le coup de remplacer celle là
-                mousePosition.sub(tileSize / 2, tileSize / 2); // Pour que le sprite soit centré sur la souris
-                setSpritePosition(mousePosition.x,mousePosition.y); // On suit la souris
+                mousePosition.sub(getTileSize() / 2, getTileSize() / 2); // Pour que le sprite soit centré sur la souris
+                setSpritePosition(mousePosition.x, mousePosition.y); // On suit la souris
                 if (count == 2) {
                     Multiplayer.courrier.sendMessage(new MovingTile(mousePosition));
                     count = 0;
@@ -331,7 +330,7 @@ public class Queue implements Serializable {
                         player.cardChooser &&
                         checkServerForClickable()) { // Et qu'on a le droit
                     makingMovable(); // Alors c'est bon
-                    setSpritePosition(Functions.mouseInput().x - tileSize/2,Functions.mouseInput().y - tileSize/2);
+                    setSpritePosition(mouseInput().x - getTileSize() / 2, mouseInput().y - getTileSize() / 2);
                     isMovable = true;
                 }
             }

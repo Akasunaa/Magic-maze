@@ -18,8 +18,4 @@ public class MainConstants {
         parameter.size = size;
         return generator.generateFont(parameter);
     }
-    // This causes a memory leak but it's alright
-    // Plus sérieusement c'est super important qu'on abandonne les BitMap de LibGDX
-    // parce qu'elles sont toutes moches
-    // Et pixellisées là beurk beurk beurk
 }

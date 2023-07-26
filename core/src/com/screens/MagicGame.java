@@ -13,8 +13,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Slider.SliderStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.screens.menu.MainMenu;
-
-import static com.utils.Functions.quit;
+import com.utils.FunctionsKt;
 
 public class MagicGame extends Game {
     public Skin skin;
@@ -85,7 +84,7 @@ public class MagicGame extends Game {
     public void dispose() {
         skin.dispose();
         screen.dispose();
-        quit();
+        FunctionsKt.quit();
     }
     @Override
     public void setScreen (Screen screen) {

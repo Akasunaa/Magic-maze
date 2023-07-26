@@ -2,7 +2,6 @@ package com.screens.game.board;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -16,21 +15,19 @@ import com.screens.endings.VictoryScreen;
 import com.screens.game.BaseActor;
 import com.screens.game.hud.GameInterface;
 import com.screens.game.hud.MouseWheelChecker;
-import com.utils.Colors;
-import com.utils.Functions;
 import com.utils.Multiplayer;
+import com.utils.TileAndCasesKt;
+import com.utils.Color;
 
 import java.util.ArrayList;
 
 import static com.screens.GameScreens.gameScreen;
 import static com.screens.GameScreens.victoryScreen;
-import static com.utils.Functions.mouseInput;
+import static com.utils.FunctionsKt.mouseInput;
+import static com.utils.FunctionsKt.updateCamera;
 import static com.utils.MainConstants.*;
 import static com.utils.Multiplayer.cyclicBarrier;
 import static com.utils.Multiplayer.playerList;
-import static com.utils.TileAndCases.*;
-
-// btw, le fait que MainScreen soit dans le dossier multi c'est un peu chelou niveau orga non?
 
 public class GameScreen extends BaseScreen {
     // Trucs de déboguages pour afficher les coordonées de la souris
@@ -62,8 +59,8 @@ public class GameScreen extends BaseScreen {
     }
 
     private void restart() {
-        tileList.clear();
-        pawnList.clear();
+        TileAndCasesKt.getPawnList().clear();
+        TileAndCasesKt.getTileList().clear();
         for (Player player : playerList) {
             if (player.pawn != null) player.dropsPawn(player.pawn);
         }
@@ -87,14 +84,12 @@ public class GameScreen extends BaseScreen {
         camera.position.set(1920f/2,1080f/2,0f);
         // Cette caméra nous sert à avoir le bon système de coordonées
 
-        tileList = new ArrayList<Tile>();
-
 //        Multiplayer.me.setPlayer(new Player(true, true, true, true, true,true, true));
 
         // Bon là c'est le batch et les trucs pour écrire, rien d'important
         batch = new SpriteBatch();
         BitmapFont font = getFontSize(40);
-        Label.LabelStyle style = new Label.LabelStyle(font, Color.BLACK);
+        Label.LabelStyle style = new Label.LabelStyle(font, com.badlogic.gdx.graphics.Color.BLACK);
         coordMouse = new Label(" ", style);
         coordMouse.setPosition(200, 50);
         coordMouse.setVisible(false);
@@ -106,7 +101,7 @@ public class GameScreen extends BaseScreen {
     }
 
     public void load() {
-        for (Tile tile : tileList) {
+        for (Tile tile : TileAndCasesKt.getTileList()) {
             tile.load();
         }
 
@@ -122,23 +117,25 @@ public class GameScreen extends BaseScreen {
 
         gameInterface = new GameInterface(game);
         gameInterface.hasBackground = false;
-        queue.setCoordinates(1920 - tileSize / 2 - 10, 10);
-        queue.load();
+        TileAndCasesKt.getQueue().setCoordinates(1920 - TileAndCasesKt.getTileSize() / 2 - 10, 10);
+        TileAndCasesKt.getQueue().load();
         placeFirstTile();
     }
 
     private void placeFirstTile() {
         Tile temp = new Tile(1);
-        temp.x = (1920 - tileSize)/2f;
-        temp.y = (1080 - tileSize)/2f;
-        origin.add(temp.x, temp.y);
+        temp.setX((1920 - TileAndCasesKt.getTileSize()) / 2f);
+        temp.setY((1080 - TileAndCasesKt.getTileSize()) / 2f);
+        TileAndCasesKt.getOrigin().add(temp.getX(), temp.getY());
         temp.load();
-        tileList.add(temp);
-        for (int color : Colors.colors) {
+        TileAndCasesKt.getTileList().add(temp);
+        for (Color color : Color.values()) {
+            if (color == Color.NONE) return;
             Pawn tempPawn = new Pawn(color);
-            tempPawn.setCase(temp.caseList[1+(color/2)][1+(color%2)]);
+            Case newCase = temp.getCaseList().get(1 + (color.ordinal() / 2)).get(1 + (color.ordinal() % 2));
+            tempPawn.setCase(newCase);
             tempPawn.load();
-            pawnList.add(tempPawn);
+            TileAndCasesKt.getPawnList().add(tempPawn);
         }
     }
 
@@ -156,7 +153,7 @@ public class GameScreen extends BaseScreen {
         //Gdx.gl.glClearColor(125f / 255, 125f / 255, 125f / 255, 1f);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         // Couleur d'arrière plan, et on clear tout
-        Functions.updateCamera();
+        updateCamera();
         batch.setProjectionMatrix(uiStage.getCamera().combined);
         batch.begin();
         background.draw(batch, 1);
@@ -169,33 +166,33 @@ public class GameScreen extends BaseScreen {
 
         batch.begin();
         //coordMouse.setText(stringMousePosition(camera) + "\n" + stringMousePosition((OrthographicCamera) uiStage.getCamera())); // On écrit les coordonées
-        queue.handleInput(Multiplayer.me);
+        TileAndCasesKt.getQueue().handleInput(Multiplayer.me);
 
-        for (Pawn pawn : pawnList) {
-            if (pawn.hasTarget) pawn.interpolate(0.4f, Interpolation.bounce);
+        for (Pawn pawn : TileAndCasesKt.getPawnList()) {
+            if (pawn.getHasTarget()) pawn.interpolate(0.4f, Interpolation.bounce);
             pawn.handleInput(Multiplayer.me);
         }
         for (Pawn pawn : pawnToRemove) {
-            pawnList.remove(pawn);
+            TileAndCasesKt.getPawnList().remove(pawn);
         }
-        if (queue.toRemove) queue.remove();
+        if (TileAndCasesKt.getQueue().toRemove) TileAndCasesKt.getQueue().remove();
         batch.end();
 
-        if (!isInPhaseB) {
+        if (!TileAndCasesKt.isInPhaseB()) {
             // Avant il y avait des choses différentes ici, d'où le double if
             // Je le garde pour le else
-            if (numberWeaponsRetrieved == 4) {
+            if (TileAndCasesKt.getNumberWeaponsRetrieved() == 4) {
                 gameInterface.instrumental.dispose();
                 instrumental = Gdx.audio.newMusic(Gdx.files.internal("Music&Sound/PhaseB.mp3"));
                 instrumental.setLooping(true);
                 instrumental.setVolume(game.audioVolume);
                 instrumental.play();
-                isInPhaseB = true;
+                TileAndCasesKt.setInPhaseB(true);
                 GameInterface.logs.clear();
                 GameInterface.logs.newMessage("PASSAGE A LA PHASE B");
                 //numberPawnsOut = 0;
                 // S'ils ont tous leurs armes, on commence la phase B
-                for (Pawn pawn : pawnList) {
+                for (Pawn pawn : TileAndCasesKt.getPawnList()) {
                     pawn.unlock();
                     // Parce que les pions se bloquent lorsqu'ils récupérent leur arme
                 }
@@ -204,21 +201,12 @@ public class GameScreen extends BaseScreen {
         else {
             // Si on est en phase B
             // Once again, je pourrais faire ça de manière plus propre mais meh
-            if (numberPawnsOut == 4) {
+            if (TileAndCasesKt.getNumberPawnsOut() == 4) {
                 victoryScreen = new VictoryScreen(game);
                 game.setScreen(victoryScreen);
 
             }
         }
-
-
-//            for (Tile tile : tileList) {
-//                for (case : tile.caseList ) {
-//                    if (case)
-//                }
-//            }
-
-
     }
 
 
@@ -226,10 +214,10 @@ public class GameScreen extends BaseScreen {
     public void dispose() {
         batch.dispose();
         gameInterface.dispose();
-        for (Tile tile : tileList) {
+        for (Tile tile : TileAndCasesKt.getTileList()) {
             tile.dispose();
         }
-        for (Pawn pawn : pawnList) {
+        for (Pawn pawn : TileAndCasesKt.getPawnList()) {
             pawn.dispose();
         }
     }
