@@ -1,0 +1,9 @@
+package tsp.genint.multiplayer.messages;
+
+public class Ping  extends Message{
+    public Ping(String target) {
+        action = "ping";
+        this.target = target;
+        logMessage = getSender() + " a pingé " + target;
+    }
+}
